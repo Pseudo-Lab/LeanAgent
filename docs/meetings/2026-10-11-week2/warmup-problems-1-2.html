@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Warm-up 1 · 2 Refactor Report — LeanAgent Week 2</title>
+  <style>
+    :root {
+      --bg: #f6f7fb;
+      --surface: #ffffff;
+      --surface-2: #f1f4f9;
+      --text: #1b2333;
+      --muted: #5c6b82;
+      --border: #e2e7ef;
+      --accent: #0f4c81;
+      --accent-2: #3776ab;
+      --accent-soft: #e6eef7;
+      --good: #12805c;
+      --good-soft: #e3f4ec;
+      --bad: #b4413a;
+      --bad-soft: #fbeceb;
+      --code-bg: #0f1726;
+      --code-text: #d6deeb;
+      --radius: 14px;
+      --shadow: 0 1px 2px rgba(16, 24, 40, .04), 0 4px 16px rgba(16, 24, 40, .06);
+      --mono: "JetBrains Mono", "SF Mono", Menlo, Consolas, monospace;
+      --sans: "Pretendard", -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Segoe UI", Roboto, sans-serif;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #0b111c;
+        --surface: #121a28;
+        --surface-2: #182234;
+        --text: #e4e9f2;
+        --muted: #93a1b8;
+        --border: #233046;
+        --accent: #6aa8e0;
+        --accent-2: #8bbbe6;
+        --accent-soft: #16263b;
+        --good: #4cc79a;
+        --good-soft: #10291f;
+        --bad: #ef8a83;
+        --bad-soft: #2d1716;
+        --code-bg: #0a0f19;
+        --shadow: 0 1px 2px rgba(0, 0, 0, .3), 0 4px 16px rgba(0, 0, 0, .25);
+      }
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    code { font-family: var(--mono); font-size: .88em; }
+    :not(pre) > code {
+      background: var(--accent-soft);
+      color: var(--accent);
+      padding: .1em .4em;
+      border-radius: 6px;
+      white-space: nowrap;
+    }
+
+    /* ---------- Hero ---------- */
+    .hero {
+      background: linear-gradient(135deg, #0f4c81 0%, #1e6aa8 55%, #3776ab 100%);
+      color: #fff;
+      padding: 56px 24px 88px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::after {
+      content: "⊢";
+      position: absolute;
+      right: -20px;
+      top: -60px;
+      font-size: 340px;
+      opacity: .07;
+      font-family: var(--mono);
+      line-height: 1;
+    }
+    .hero-inner { max-width: 1080px; margin: 0 auto; position: relative; z-index: 1; }
+    .eyebrow {
+      display: inline-flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 18px;
+    }
+    .pill {
+      font-size: 12.5px;
+      font-weight: 600;
+      letter-spacing: .02em;
+      padding: 4px 12px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, .14);
+      border: 1px solid rgba(255, 255, 255, .25);
+    }
+    .hero h1 {
+      font-size: clamp(28px, 4vw, 42px);
+      line-height: 1.25;
+      margin: 0 0 12px;
+      letter-spacing: -.02em;
+    }
+    .hero p { margin: 0; opacity: .9; max-width: 720px; }
+    .hero .meta {
+      margin-top: 22px;
+      display: flex;
+      gap: 24px;
+      flex-wrap: wrap;
+      font-size: 14px;
+      opacity: .92;
+    }
+    .hero .meta b { font-weight: 600; }
+    .hero code { background: rgba(255, 255, 255, .15); color: #fff; }
+
+    /* ---------- Layout ---------- */
+    .wrap { max-width: 1080px; margin: -56px auto 0; padding: 0 24px 80px; position: relative; z-index: 2; }
+    nav.toc {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 10px;
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      position: sticky;
+      top: 12px;
+      z-index: 10;
+      backdrop-filter: blur(8px);
+    }
+    nav.toc a {
+      padding: 7px 14px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--muted);
+    }
+    nav.toc a:hover { background: var(--surface-2); color: var(--text); text-decoration: none; }
+
+    section { margin-top: 48px; scroll-margin-top: 80px; }
+    h2 {
+      font-size: 24px;
+      margin: 0 0 18px;
+      letter-spacing: -.01em;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    h2 .num {
+      display: inline-grid;
+      place-items: center;
+      width: 32px; height: 32px;
+      border-radius: 9px;
+      background: var(--accent);
+      color: #fff;
+      font-size: 15px;
+    }
+    h3 { font-size: 17px; margin: 28px 0 10px; }
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 24px 26px;
+    }
+    .lead { font-size: 16.5px; }
+    .muted { color: var(--muted); }
+
+    /* ---------- KPI ---------- */
+    .kpis {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 14px;
+      margin-top: 20px;
+    }
+    .kpi {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px 20px;
+      box-shadow: var(--shadow);
+    }
+    .kpi .label { font-size: 13px; color: var(--muted); font-weight: 500; }
+    .kpi .value { font-size: 30px; font-weight: 700; letter-spacing: -.02em; margin-top: 2px; }
+    .kpi .value.good { color: var(--good); }
+    .kpi .sub { font-size: 13px; color: var(--muted); }
+
+    /* ---------- Metric bars ---------- */
+    .metric-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(440px, 1fr)); gap: 18px; }
+    @media (max-width: 560px) { .metric-grid { grid-template-columns: 1fr; } }
+    .metric-card h4 { margin: 0 0 4px; font-size: 16px; }
+    .metric-card .thm { font-size: 13px; color: var(--muted); margin-bottom: 14px; }
+    .metric { margin: 14px 0; }
+    .metric-head { display: flex; justify-content: space-between; font-size: 13.5px; margin-bottom: 6px; }
+    .metric-head .delta { font-weight: 700; color: var(--good); }
+    .bar {
+      position: relative;
+      height: 22px;
+      background: var(--surface-2);
+      border-radius: 6px;
+      overflow: hidden;
+      margin-bottom: 4px;
+    }
+    .bar span {
+      position: absolute; inset: 0 auto 0 0;
+      display: flex; align-items: center;
+      padding-left: 8px;
+      font-size: 12px; font-weight: 600; color: #fff;
+      border-radius: 6px;
+      white-space: nowrap;
+    }
+    .bar.before span { background: linear-gradient(90deg, #b4413a, #d3665e); }
+    .bar.after span  { background: linear-gradient(90deg, #12805c, #1fa57a); min-width: 34px; }
+    .axiom-row {
+      display: flex; justify-content: space-between; align-items: center;
+      padding-top: 12px; margin-top: 16px;
+      border-top: 1px dashed var(--border);
+      font-size: 13.5px;
+    }
+    .badge {
+      font-size: 12px; font-weight: 700;
+      padding: 3px 10px; border-radius: 999px;
+      background: var(--good-soft); color: var(--good);
+    }
+
+    /* ---------- Table ---------- */
+    .table-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: 14px; }
+    th, td { padding: 10px 14px; text-align: left; border-bottom: 1px solid var(--border); }
+    thead th { font-size: 12.5px; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); background: var(--surface-2); }
+    tbody tr:hover { background: var(--surface-2); }
+    td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+    td.delta { color: var(--good); font-weight: 700; }
+    td.group { font-weight: 700; vertical-align: top; }
+
+    /* ---------- Diagnosis ---------- */
+    .diag { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 14px; }
+    .diag-item {
+      background: var(--bad-soft);
+      border: 1px solid color-mix(in srgb, var(--bad) 20%, transparent);
+      border-radius: 12px;
+      padding: 16px 18px;
+      font-size: 14.5px;
+    }
+    .diag-item strong { display: block; color: var(--bad); margin-bottom: 4px; font-size: 15px; }
+    .strategy {
+      background: var(--good-soft);
+      border-left: 4px solid var(--good);
+      border-radius: 10px;
+      padding: 16px 20px;
+      font-size: 15px;
+    }
+    .pipeline {
+      display: flex; flex-wrap: wrap; align-items: center; gap: 6px;
+      margin-top: 12px; font-size: 13px;
+    }
+    .pipeline code { white-space: nowrap; }
+    .pipeline .arrow { color: var(--muted); font-family: var(--mono); }
+
+    /* ---------- Code ---------- */
+    pre {
+      margin: 0;
+      background: var(--code-bg);
+      color: var(--code-text);
+      padding: 18px 20px;
+      border-radius: 0 0 12px 12px;
+      overflow-x: auto;
+      font-family: var(--mono);
+      font-size: 13px;
+      line-height: 1.65;
+      tab-size: 2;
+    }
+    .code-block { border-radius: 12px; overflow: hidden; border: 1px solid #1d2a40; margin: 10px 0; }
+    .code-title {
+      display: flex; justify-content: space-between; align-items: center;
+      background: #162033; color: #aebbd0;
+      padding: 9px 16px;
+      font-size: 12.5px; font-family: var(--mono);
+    }
+    .code-title .dots { display: inline-flex; gap: 6px; margin-right: 12px; }
+    .code-title .dots i { width: 10px; height: 10px; border-radius: 50%; background: #3a4a63; display: inline-block; }
+    .code-title .tag { padding: 2px 8px; border-radius: 6px; font-weight: 600; }
+    .tag.before { background: rgba(211, 102, 94, .18); color: #f19e97; }
+    .tag.after  { background: rgba(31, 165, 122, .18); color: #6fe0b5; }
+    .compare { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; align-items: start; }
+    @media (max-width: 900px) { .compare { grid-template-columns: 1fr; } }
+    .compare .code-block.before pre { max-height: 520px; }
+    .compare .code-block.after { position: sticky; top: 80px; }
+
+    /* Lean token colors */
+    .tk-kw  { color: #c792ea; }
+    .tk-tac { color: #82aaff; }
+    .tk-comb{ color: #ffcb6b; font-weight: 600; }
+    .tk-id  { color: #addb67; }
+    .tk-num { color: #f78c6c; }
+    .tk-com { color: #637777; font-style: italic; }
+
+    /* ---------- Verification ---------- */
+    .verify { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; }
+    .check { display: flex; gap: 12px; align-items: flex-start; margin: 10px 0; font-size: 14.5px; }
+    .check .ok {
+      flex: none; width: 22px; height: 22px; border-radius: 50%;
+      background: var(--good); color: #fff;
+      display: grid; place-items: center; font-size: 13px; font-weight: 700;
+      margin-top: 2px;
+    }
+
+    footer {
+      margin-top: 64px; padding-top: 24px;
+      border-top: 1px solid var(--border);
+      font-size: 13px; color: var(--muted);
+      display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px;
+    }
+  </style>
+</head>
+<body>
+
+  <header class="hero">
+    <div class="hero-inner">
+      <div class="eyebrow">
+        <span class="pill">LeanAgent · Week 2</span>
+        <span class="pill">Lean Refactor Arena · Warm-up</span>
+        <span class="pill">Problem 1 · 2</span>
+      </div>
+      <h1>Proof Refactoring Report<br>Warm-up Problems 1 &amp; 2</h1>
+      <p>AST 순회에 대한 리스트 부분집합 보조정리 두 개를, 동일한 공리 기반을 유지한 채 수십 줄의 수작업 증명에서 4–5줄의 자동화된 증명으로 리팩토링했습니다.</p>
+      <div class="meta">
+        <span><b>Target</b> · Strata (<code>Strata/Transform/CallElimCorrect.lean</code>)</span>
+        <span><b>Lean</b> · v4.26.0</span>
+        <span><b>담당</b> · 남성우</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <nav class="toc" aria-label="목차">
+      <a href="#summary">요약</a>
+      <a href="#metrics">지표 비교</a>
+      <a href="#problem-1">Problem 1</a>
+      <a href="#problem-2">Problem 2</a>
+      <a href="#verification">검증</a>
+      <a href="#takeaways">정리</a>
+    </nav>
+
+    <!-- ========== Summary ========== -->
+    <section id="summary">
+      <div class="card">
+        <h2>Executive Summary</h2>
+        <p class="lead">
+          두 문제 모두 원본 증명은 8개 이상의 AST 케이스를 하나씩 수동으로 다루면서
+          <code>rename_i</code>로 변수 이름을 바꾸고, append된 리스트에 대한 membership 가설을 분해하고,
+          <code>List.Subset.app</code> · <code>List.Subset.trans</code>를 반복 적용하는 구조였습니다.
+        </p>
+        <p>
+          이를 <strong>induction + targeted unfolding + case split + 자동 단순화(<code>simp_all</code>, <code>simp +contextual</code>) + combinator 반복</strong>으로 재구성했습니다.
+          리팩토링된 증명은 여전히 constructive하며 공리 footprint <code>[propext, Quot.sound]</code>가 원본과 동일하고,
+          <code>Classical.choice</code>나 외부 의존성을 추가하지 않았습니다.
+        </p>
+      </div>
+
+      <div class="kpis">
+        <div class="kpi">
+          <div class="label">Proof Lines</div>
+          <div class="value good">168 → 9</div>
+          <div class="sub">두 문제 합계 · −94.6%</div>
+        </div>
+        <div class="kpi">
+          <div class="label">Tactic Invocations</div>
+          <div class="value good">189 → 25</div>
+          <div class="sub">두 문제 합계 · −86.8%</div>
+        </div>
+        <div class="kpi">
+          <div class="label">Lean Tokens</div>
+          <div class="value good">534 → 85</div>
+          <div class="sub">두 문제 합계 · −84.1%</div>
+        </div>
+        <div class="kpi">
+          <div class="label">Axioms</div>
+          <div class="value good">Identical</div>
+          <div class="sub"><code>[propext, Quot.sound]</code></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== Metrics ========== -->
+    <section id="metrics">
+      <h2>Overall Metrics Comparison</h2>
+
+      <div class="metric-grid">
+        <div class="card metric-card">
+          <h4>Problem 1</h4>
+          <div class="thm"><code>CallElimCorrect.substOldPostSubset</code></div>
+
+          <div class="metric">
+            <div class="metric-head"><span>Proof Lines</span><span class="delta">−95.6%</span></div>
+            <div class="bar before"><span style="width:100%">91</span></div>
+            <div class="bar after"><span style="width:4.4%">4</span></div>
+          </div>
+          <div class="metric">
+            <div class="metric-head"><span>Characters (w/o whitespace)</span><span class="delta">−85.8%</span></div>
+            <div class="bar before"><span style="width:100%">1,668</span></div>
+            <div class="bar after"><span style="width:14.2%">237</span></div>
+          </div>
+          <div class="metric">
+            <div class="metric-head"><span>Lean Tokens</span><span class="delta">−85.9%</span></div>
+            <div class="bar before"><span style="width:100%">312</span></div>
+            <div class="bar after"><span style="width:14.1%">44</span></div>
+          </div>
+          <div class="metric">
+            <div class="metric-head"><span>Tactic Invocations</span><span class="delta">−87.7%</span></div>
+            <div class="bar before"><span style="width:100%">106</span></div>
+            <div class="bar after"><span style="width:12.3%">13</span></div>
+          </div>
+          <div class="axiom-row">
+            <span>Axioms <code>[propext, Quot.sound]</code></span>
+            <span class="badge">Axiom-safe</span>
+          </div>
+        </div>
+
+        <div class="card metric-card">
+          <h4>Problem 2</h4>
+          <div class="thm"><code>CallElimCorrect.extractedOldExprInVars</code></div>
+
+          <div class="metric">
+            <div class="metric-head"><span>Proof Lines</span><span class="delta">−93.5%</span></div>
+            <div class="bar before"><span style="width:100%">77</span></div>
+            <div class="bar after"><span style="width:6.5%">5</span></div>
+          </div>
+          <div class="metric">
+            <div class="metric-head"><span>Characters (w/o whitespace)</span><span class="delta">−80.2%</span></div>
+            <div class="bar before"><span style="width:100%">1,172</span></div>
+            <div class="bar after"><span style="width:19.8%">232</span></div>
+          </div>
+          <div class="metric">
+            <div class="metric-head"><span>Lean Tokens</span><span class="delta">−81.5%</span></div>
+            <div class="bar before"><span style="width:100%">222</span></div>
+            <div class="bar after"><span style="width:18.5%">41</span></div>
+          </div>
+          <div class="metric">
+            <div class="metric-head"><span>Tactic Invocations</span><span class="delta">−85.5%</span></div>
+            <div class="bar before"><span style="width:100%">83</span></div>
+            <div class="bar after"><span style="width:14.5%">12</span></div>
+          </div>
+          <div class="axiom-row">
+            <span>Axioms <code>[propext, Quot.sound]</code></span>
+            <span class="badge">Axiom-safe</span>
+          </div>
+        </div>
+      </div>
+
+      <h3>상세 표</h3>
+      <div class="card table-wrap" style="padding:0">
+        <table>
+          <thead>
+            <tr><th>Problem</th><th>Metric</th><th class="num">Original</th><th class="num">Refactored</th><th class="num">Δ</th></tr>
+          </thead>
+          <tbody>
+            <tr><td class="group" rowspan="5">P1 · <code>substOldPostSubset</code></td><td>Proof Lines</td><td class="num">91</td><td class="num">4</td><td class="num delta">−95.6%</td></tr>
+            <tr><td>Characters (w/o whitespace)</td><td class="num">1,668</td><td class="num">237</td><td class="num delta">−85.8%</td></tr>
+            <tr><td>Lean Tokens</td><td class="num">312</td><td class="num">44</td><td class="num delta">−85.9%</td></tr>
+            <tr><td>Tactic Invocations</td><td class="num">106</td><td class="num">13</td><td class="num delta">−87.7%</td></tr>
+            <tr><td>Axioms</td><td class="num"><code>[propext, Quot.sound]</code></td><td class="num"><code>[propext, Quot.sound]</code></td><td class="num delta">Identical</td></tr>
+            <tr><td class="group" rowspan="5">P2 · <code>extractedOldExprInVars</code></td><td>Proof Lines</td><td class="num">77</td><td class="num">5</td><td class="num delta">−93.5%</td></tr>
+            <tr><td>Characters (w/o whitespace)</td><td class="num">1,172</td><td class="num">232</td><td class="num delta">−80.2%</td></tr>
+            <tr><td>Lean Tokens</td><td class="num">222</td><td class="num">41</td><td class="num delta">−81.5%</td></tr>
+            <tr><td>Tactic Invocations</td><td class="num">83</td><td class="num">12</td><td class="num delta">−85.5%</td></tr>
+            <tr><td>Axioms</td><td class="num"><code>[propext, Quot.sound]</code></td><td class="num"><code>[propext, Quot.sound]</code></td><td class="num delta">Identical</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ========== Problem 1 ========== -->
+    <section id="problem-1">
+      <h2><span class="num">1</span> <code>CallElimCorrect.substOldPostSubset</code></h2>
+
+      <h3>Theorem Statement</h3>
+      <div class="code-block">
+        <div class="code-title"><span><span class="dots"><i></i><i></i><i></i></span>CallElimCorrect.lean</span></div>
+        <pre class="lean"><code>open OldExpressions in
+theorem substOldPostSubset:
+  (Imperative.HasVarsPure.getVars (P:=Expression)
+    (substOld h2 (Lambda.LExpr.fvar m h1 ty) post)).Subset
+    (Imperative.HasVarsPure.getVars (P:=Expression) post ++ [h1])</code></pre>
+      </div>
+
+      <h3>비효율의 원인</h3>
+      <div class="diag">
+        <div class="diag-item">
+          <strong>반복되는 케이스 핸들러</strong>
+          <code>fvar</code>, <code>op</code>, <code>const</code>, <code>bvar</code>, <code>abs</code>, <code>ite</code>, <code>app</code>, <code>quant</code>, <code>eq</code> — 9개 분기가 사실상 동일한 추론을 반복.
+        </div>
+        <div class="diag-item">
+          <strong>깨지기 쉬운 tactic 배관</strong>
+          위치 기반 <code>rename_i</code>와 임의 변수에 대한 무의미한 <code>simp at ...</code> 호출이 다수.
+        </div>
+        <div class="diag-item">
+          <strong>수동 Subset 분해</strong>
+          재귀 분기마다 <code>List.Subset.app</code> · <code>List.Subset.trans</code>를 최대 3회 수동 체이닝 후 동일한 <code>simp_all; cases Hin &lt;;&gt; simp_all</code> 반복.
+        </div>
+      </div>
+
+      <h3>리팩토링 전략</h3>
+      <div class="strategy">
+        induction 전체에 걸쳐 <code>substOld</code>를 unfold하고, application 노드의 내부 match는 <code>try split</code>으로 펼친 뒤
+        <code>simp_all</code>로 정의를 단순화합니다. 이후 <code>List.Subset.app</code>를 반복 적용하고 <code>List.Subset.trans</code>로 귀납 가설을 연결,
+        남은 membership 목표는 <code>simp +contextual [List.Subset, or_imp]</code>로 일괄 처리합니다.
+        <div class="pipeline">
+          <code>induction</code><span class="arrow">&lt;;&gt;</span>
+          <code>unfold substOld</code><span class="arrow">&lt;;&gt;</span>
+          <code>try split</code><span class="arrow">&lt;;&gt;</span>
+          <code>simp_all</code><span class="arrow">&lt;;&gt;</span>
+          <code>repeat' Subset.app</code><span class="arrow">&lt;;&gt;</span>
+          <code>Subset.trans</code><span class="arrow">&lt;;&gt;</span>
+          <code>simp +contextual</code>
+        </div>
+      </div>
+
+      <h3>Code Comparison</h3>
+      <div class="compare">
+        <div class="code-block before">
+          <div class="code-title"><span><span class="dots"><i></i><i></i><i></i></span>Original</span><span class="tag before">91 lines · 106 tactics</span></div>
+          <pre class="lean"><code>  induction post &lt;;&gt; simp [substOld]
+  case fvar =&gt;
+    intros x Hin
+    rename_i m name ty2
+    simp at m
+    simp at name
+    simp at ty2
+
+    simp_all
+  case op =&gt;
+    intros x Hin
+    rename_i m name ty2
+    simp at m
+    simp at name
+    simp at ty2
+    simp_all
+  case const =&gt;
+    intros x Hin
+    rename_i m name
+    simp at m
+    simp_all
+  case bvar =&gt;
+    intros x Hin
+    rename_i m d
+    simp at m
+    simp_all
+  case abs ih =&gt;
+    exact ih
+  case ite cih tih eih =&gt;
+    simp [Imperative.HasVarsPure.getVars, Lambda.LExpr.LExpr.getVars] at *
+    apply List.Subset.app
+    . apply List.Subset.trans
+      apply cih &lt;;&gt; assumption
+      intros x Hin
+      simp_all
+      cases Hin &lt;;&gt; simp_all
+    apply List.Subset.app
+    . apply List.Subset.trans
+      apply tih &lt;;&gt; assumption
+      intros x Hin
+      simp_all
+      cases Hin &lt;;&gt; simp_all
+    . apply List.Subset.trans
+      apply eih &lt;;&gt; assumption
+      intros x Hin
+      simp_all
+  case app ih1 ih2 =&gt;
+    split
+    . split
+      . simp [Imperative.HasVarsPure.getVars, Lambda.LExpr.LExpr.getVars] at *
+        intros x Hin
+        simp_all
+      . simp [Imperative.HasVarsPure.getVars, Lambda.LExpr.LExpr.getVars] at *
+        intros x Hin
+        simp_all
+    . simp [Imperative.HasVarsPure.getVars, Lambda.LExpr.LExpr.getVars] at *
+      apply List.Subset.app
+      . apply List.Subset.trans
+        apply ih1 &lt;;&gt; assumption
+        intros x Hin
+        simp_all
+        cases Hin &lt;;&gt; simp_all
+      . apply List.Subset.trans
+        apply ih2 &lt;;&gt; assumption
+        intros x Hin
+        simp_all
+  case quant trih eih =&gt;
+    simp [Imperative.HasVarsPure.getVars, Lambda.LExpr.LExpr.getVars] at *
+    apply List.Subset.app
+    . apply List.Subset.trans
+      apply trih &lt;;&gt; assumption
+      intros x Hin
+      rename_i m1 k1 ty1 trigger1 e1
+      have assoc := List.append_assoc (Lambda.LExpr.LExpr.getVars trigger1) (Lambda.LExpr.LExpr.getVars e1) [h1]
+      simp_all
+      cases Hin &lt;;&gt; simp_all
+    . apply List.Subset.trans
+      apply eih &lt;;&gt; assumption
+      intros x Hin
+      simp_all
+  case eq ih1 ih2 =&gt;
+    simp [Imperative.HasVarsPure.getVars, Lambda.LExpr.LExpr.getVars] at *
+    apply List.Subset.app
+    . apply List.Subset.trans
+      apply ih1 &lt;;&gt; assumption
+      intros x Hin
+      simp_all
+      cases Hin &lt;;&gt; simp_all
+    . apply List.Subset.trans
+      apply ih2 &lt;;&gt; assumption
+      intros x Hin
+      simp_all</code></pre>
+        </div>
+
+        <div class="code-block after">
+          <div class="code-title"><span><span class="dots"><i></i><i></i><i></i></span>Refactored</span><span class="tag after">4 lines · 13 tactics</span></div>
+          <pre class="lean"><code>  induction post &lt;;&gt; unfold substOld &lt;;&gt; (try split &lt;;&gt; try split) &lt;;&gt;
+    simp_all [Imperative.HasVarsPure.getVars, Lambda.LExpr.LExpr.getVars] &lt;;&gt;
+    (repeat' apply List.Subset.app) &lt;;&gt; (try (apply List.Subset.trans; assumption)) &lt;;&gt;
+    simp +contextual [List.Subset, or_imp]</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== Problem 2 ========== -->
+    <section id="problem-2">
+      <h2><span class="num">2</span> <code>CallElimCorrect.extractedOldExprInVars</code></h2>
+
+      <h3>Theorem Statement</h3>
+      <div class="code-block">
+        <div class="code-title"><span><span class="dots"><i></i><i></i><i></i></span>CallElimCorrect.lean</span></div>
+        <pre class="lean"><code>open OldExpressions in
+theorem extractedOldExprInVars :
+  NormalizedOldExpr post →
+  (extractOldExprVars post).Subset
+  (Imperative.HasVarsPure.getVars post)</code></pre>
+      </div>
+
+      <h3>비효율의 원인</h3>
+      <div class="diag">
+        <div class="diag-item">
+          <strong>잘못된 대상에 대한 귀납</strong>
+          <code>induction post</code> 후 거의 모든 분기(<code>app</code>, <code>abs</code>, <code>quant</code>, <code>ite</code>, <code>eq</code>)에서 <code>Hnorm : NormalizedOldExpr post</code>를 다시 분해.
+        </div>
+        <div class="diag-item">
+          <strong>불가능한 케이스의 수동 모순 증명</strong>
+          정규화되지 않은 분기를 반박하기 위해 <code>cases Hnorm … exfalso … specialize Hn … rfl</code>로 이어지는 11줄 유도.
+        </div>
+        <div class="diag-item">
+          <strong>중복된 transitivity 체이닝</strong>
+          Problem 1과 마찬가지로 모든 재귀 AST 변형에 대해 <code>List.Subset.app</code> · <code>List.Subset.trans</code>를 수동 체이닝.
+        </div>
+      </div>
+
+      <h3>리팩토링 전략</h3>
+      <div class="strategy">
+        원시 표현식 구문 대신 <strong>귀납적 유도 <code>h : NormalizedOldExpr post</code> 자체에 대해 induction</strong>합니다.
+        이렇게 하면 유효한 생성자만 남아 잘못된 AST 상태가 자동으로 제거되고, 정규화된 부분항에 바로 접근할 수 있습니다.
+        남은 subset 목표는 combinator와 contextual simplification으로 균일하게 처리합니다.
+        <div class="pipeline">
+          <code>intro h</code><span class="arrow">→</span>
+          <code>induction h</code><span class="arrow">&lt;;&gt;</span>
+          <code>unfold extractOldExprVars</code><span class="arrow">&lt;;&gt;</span>
+          <code>try split</code><span class="arrow">&lt;;&gt;</span>
+          <code>simp_all</code><span class="arrow">&lt;;&gt;</span>
+          <code>repeat' Subset.app</code><span class="arrow">&lt;;&gt;</span>
+          <code>simp +contextual</code>
+        </div>
+      </div>
+
+      <h3>Code Comparison</h3>
+      <div class="compare">
+        <div class="code-block before">
+          <div class="code-title"><span><span class="dots"><i></i><i></i><i></i></span>Original</span><span class="tag before">77 lines · 83 tactics</span></div>
+          <pre class="lean"><code>  intros Hnorm
+  induction post &lt;;&gt;
+    simp [Imperative.HasVarsPure.getVars, extractOldExprVars,
+          Lambda.LExpr.LExpr.getVars] at * &lt;;&gt;
+    try simp_all
+  case app fn e fn_ih e_ih =&gt;
+    unfold extractOldExprVars
+    split
+    . simp [Lambda.LExpr.LExpr.getVars]
+      intros x Hin
+      exact Hin
+    . next Hfalse =&gt;
+      cases Hnorm with
+      | app H1 H2 Hn =&gt;
+      exfalso
+      specialize Hn ?_
+      constructor
+      cases Hn
+      apply Hfalse
+      rfl
+    . cases Hnorm with
+      | app H1 H2 Hn =&gt;
+      apply List.Subset.app
+      . apply List.Subset.trans
+        apply fn_ih
+        exact H1
+        intros x Hin
+        simp_all
+      . apply List.Subset.trans
+        apply e_ih
+        exact H2
+        intros x Hin
+        simp_all
+  case abs ih =&gt;
+    cases Hnorm
+    apply ih &lt;;&gt; assumption
+  case quant trih eih =&gt;
+    cases Hnorm
+    rename_i e_normalized
+    rename_i tr_normalized
+    rename_i tr e ty k
+    apply List.Subset.app
+    . apply List.Subset.trans
+      apply trih &lt;;&gt; assumption
+      intros x Hin
+      simp_all
+    . apply List.Subset.trans
+      apply eih &lt;;&gt; assumption
+      intros x Hin
+      simp_all
+  case ite cih tih eih =&gt;
+    cases Hnorm
+    apply List.Subset.app
+    . apply List.Subset.trans
+      apply cih &lt;;&gt; assumption
+      intros x Hin
+      simp_all
+    apply List.Subset.app
+    . apply List.Subset.trans
+      apply tih &lt;;&gt; assumption
+      intros x Hin
+      simp_all
+    . apply List.Subset.trans
+      apply eih &lt;;&gt; assumption
+      intros x Hin
+      simp_all
+  case eq ih1 ih2 =&gt;
+    cases Hnorm
+    apply List.Subset.app
+    . apply List.Subset.trans
+      apply ih1 &lt;;&gt; assumption
+      intros x Hin
+      simp_all
+    . apply List.Subset.trans
+      apply ih2 &lt;;&gt; assumption
+      intros x Hin
+      simp_all</code></pre>
+        </div>
+
+        <div class="code-block after">
+          <div class="code-title"><span><span class="dots"><i></i><i></i><i></i></span>Refactored</span><span class="tag after">5 lines · 12 tactics</span></div>
+          <pre class="lean"><code>  intro h
+  induction h &lt;;&gt; unfold extractOldExprVars &lt;;&gt; (try split) &lt;;&gt;
+    simp_all [Imperative.HasVarsPure.getVars, Lambda.LExpr.LExpr.getVars] &lt;;&gt;
+    (repeat' apply List.Subset.app) &lt;;&gt; (try (apply List.Subset.trans; assumption)) &lt;;&gt;
+    simp +contextual [List.Subset]</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== Verification ========== -->
+    <section id="verification">
+      <h2>Verification &amp; Axiom Check</h2>
+      <div class="verify">
+        <div class="card">
+          <h3 style="margin-top:0">Build Verification</h3>
+          <p class="muted" style="margin-top:0">변경 사항을 <code>Strata/Transform/CallElimCorrect.lean</code>에 직접 반영하고 Lake로 빌드했습니다.</p>
+          <div class="code-block">
+            <div class="code-title"><span><span class="dots"><i></i><i></i><i></i></span>terminal</span></div>
+            <pre><code>$ lake build Strata.Transform.CallElimCorrect
+Build completed successfully (81 jobs).</code></pre>
+          </div>
+          <div class="check"><span class="ok">✓</span><span>모듈 내 모든 하위 정리와 사용처가 문제 1·2로 인한 경고나 깨짐 없이 검증됨</span></div>
+        </div>
+
+        <div class="card">
+          <h3 style="margin-top:0">Axiom Verification</h3>
+          <p class="muted" style="margin-top:0">Lean <code>#print axioms</code> 결과:</p>
+          <div class="code-block">
+            <div class="code-title"><span><span class="dots"><i></i><i></i><i></i></span>#print axioms</span></div>
+            <pre><code>substOldPostSubset     → [propext, Quot.sound]
+extractedOldExprInVars → [propext, Quot.sound]</code></pre>
+          </div>
+          <div class="check"><span class="ok">✓</span><span><code>Classical.choice</code> 미사용</span></div>
+          <div class="check"><span class="ok">✓</span><span><code>sorryAx</code> 미사용</span></div>
+          <div class="check"><span class="ok">✓</span><span>proof term이 constructive하며 원본과 수학적 기반이 동일</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== Takeaways ========== -->
+    <section id="takeaways">
+      <h2>정리 · LeanAgent에 주는 시사점</h2>
+      <div class="card">
+        <div class="check"><span class="ok">1</span><span><strong>귀납 대상 선택이 가장 큰 레버.</strong> 구문 트리 대신 불변식(<code>NormalizedOldExpr</code>)의 유도에 대해 귀납하면 불가능한 케이스가 자동으로 사라집니다.</span></div>
+        <div class="check"><span class="ok">2</span><span><strong>케이스별 동일 추론은 <code>&lt;;&gt;</code> 파이프라인으로 접기.</strong> <code>unfold → split → simp_all → repeat' apply → simp +contextual</code> 패턴은 다른 AST 보조정리에도 재사용 가능합니다.</span></div>
+        <div class="check"><span class="ok">3</span><span><strong>위치 기반 <code>rename_i</code> 제거로 견고성 향상.</strong> 자동화된 증명은 생성자 순서·인자 이름 변경에 덜 민감합니다.</span></div>
+        <div class="check"><span class="ok">4</span><span><strong>공리 검사는 리팩토링 평가의 필수 항목.</strong> 길이 감소와 함께 <code>#print axioms</code> 동일성을 확인해야 Arena 기준에서 안전한 개선이라 볼 수 있습니다.</span></div>
+      </div>
+    </section>
+
+    <footer>
+      <span>LeanAgent · PseudoLab S13 · Week 2 (2026.10.11)</span>
+      <a href="./README.md">← Week 2 README</a>
+    </footer>
+  </main>
+
+  <script>
+    // Minimal Lean 4 syntax highlighter (no external deps).
+    (function () {
+      const KW = ["theorem","lemma","open","in","case","with","next","have","fun","match","by","at"];
+      const TAC = ["induction","simp","simp_all","intros","intro","rename_i","exact","apply","split","cases",
+                   "unfold","assumption","exfalso","specialize","constructor","rfl","try","repeat'","repeat"];
+      const esc = s => s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+      const re = /(--[^\n]*)|(&lt;;&gt;|=&gt;|→|\+contextual)|([A-Za-z_][\w'.]*)|(\d+)/g;
+      document.querySelectorAll("pre.lean code").forEach(el => {
+        const src = esc(el.textContent);
+        el.innerHTML = src.replace(re, (m, com, comb, id, num) => {
+          if (com)  return '<span class="tk-com">' + com + '</span>';
+          if (comb) return '<span class="tk-comb">' + comb + '</span>';
+          if (num)  return '<span class="tk-num">' + num + '</span>';
+          if (id) {
+            if (KW.includes(id))  return '<span class="tk-kw">' + id + '</span>';
+            if (TAC.includes(id)) return '<span class="tk-tac">' + id + '</span>';
+            if (id.includes(".")) return '<span class="tk-id">' + id + '</span>';
+          }
+          return m;
+        });
+      });
+    })();
+  </script>
+</body>
+</html>
