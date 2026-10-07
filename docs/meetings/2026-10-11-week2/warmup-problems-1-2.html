@@ -340,6 +340,7 @@
 
   <main class="wrap">
     <nav class="toc" aria-label="목차">
+      <a href="#eli5">문제부터 이해하기</a>
       <a href="#summary">요약</a>
       <a href="#metrics">지표 비교</a>
       <a href="#problem-1">Problem 1</a>
@@ -347,6 +348,35 @@
       <a href="#verification">검증</a>
       <a href="#takeaways">정리</a>
     </nav>
+
+    <section id="eli5">
+      <h2>문제부터 이해하기 · ELI5</h2>
+      <div class="card">
+        <p class="lead"><strong>이 두 문제는 “프로그램 식을 바꿔도 예상 못 한 변수 이름이 생기지 않는다”를 확인하는 작은 안전장치입니다.</strong></p>
+        <p>통장에 10원이 있고 함수가 3원을 더한다면, 실행 후 잔액은 13원입니다. <code>old(balance)</code>는 호출 전 잔액 10원을 가리킵니다. 실행 후 조건 <code>balance = old(balance) + 3</code>에서 호출 전 값을 <code>saved_balance</code>에 저장해 두면 old 부분을 그 변수로 바꿀 수 있습니다.</p>
+        <p><code>getVars</code>는 값이 아니라 식에 쓰인 자유 변수의 <strong>이름 목록</strong>을 모읍니다. <code>Subset</code>은 “왼쪽에 있는 이름은 모두 오른쪽에도 있다”입니다. 순서와 반복 횟수는 비교하지 않습니다.</p>
+      </div>
+      <div class="diag" style="margin-top:18px">
+        <div class="card">
+          <h3 style="margin-top:0">1번 · 치환의 안전장치</h3>
+          <p><code>old(h2)</code>를 변수 <code>h1</code>으로 바꾸면, 결과 변수는 원래 있던 변수 또는 h1입니다.</p>
+          <p><code>x = old(y) + z</code><br>↓ old(y)를 saved_y로 교체<br><code>x = saved_y + z</code></p>
+          <p>결과에 허용되는 이름은 원래 이름에 <code>saved_y</code>를 더한 목록입니다. 이것이 정리 오른쪽에 <code>++ [h1]</code>이 있는 이유입니다.</p>
+          <p><strong>리팩터링:</strong> 나무의 각 종류마다 쓰던 같은 검사표를 공통 절차 하나로 묶었습니다. 작은 식에서 성립하는 성질을 큰 식으로 연결하는 귀납은 그대로입니다.</p>
+        </div>
+        <div class="card">
+          <h3 style="margin-top:0">2번 · 추출의 안전장치</h3>
+          <p>old가 규칙에 맞게 쓰였을 때, old 안에서 뽑은 이름은 원래 식에도 있습니다.</p>
+          <p><code>x = old(y) + old(z) + w</code><br>old에서 뽑은 이름: <code>[y, z]</code><br>전체 이름: <code>[x, y, z, w]</code></p>
+          <p>추출 함수는 <code>old(변수)</code> 모양을 기대합니다. 직접 <code>old(x + y)</code>를 받는 경우를 제외하는 정규화 증거가 필요합니다.</p>
+          <p><strong>리팩터링:</strong> 모든 장난감을 검사하는 대신 “규칙대로 조립했다”는 설명서에 귀납합니다. 부분 식의 정규화 증거를 함께 얻어 반복 분해가 줄어듭니다.</p>
+        </div>
+      </div>
+      <div class="strategy" style="margin-top:18px">
+        <strong>결과 코멘트:</strong> 1번은 공통 처리의 자동화, 2번은 귀납 대상 선택이 핵심입니다. 두 정리의 공리 목록은 원본과 같습니다. 길이가 줄었다고 Lean의 처리 비용도 줄었다고 결론낼 수는 없습니다. heartbeat와 다른 버전 호환성은 아직 미측정입니다.
+      </div>
+      <p><a href="./warmup-problems-1-2-eli5.md">예제·tactic 설명·연습 문제까지 읽기 →</a> · <a href="../../research/autoformalization/refactor-arena-study-guide.md">논문 추천과 Arena 공부 지도 →</a></p>
+    </section>
 
     <!-- ========== Summary ========== -->
     <section id="summary">
@@ -359,7 +389,7 @@
         </p>
         <p>
           이를 <strong>induction + targeted unfolding + case split + 자동 단순화(<code>simp_all</code>, <code>simp +contextual</code>) + combinator 반복</strong>으로 재구성했습니다.
-          리팩토링된 증명은 여전히 constructive하며 공리 footprint <code>[propext, Quot.sound]</code>가 원본과 동일하고,
+          리팩토링된 증명의 공리 footprint <code>[propext, Quot.sound]</code>가 원본과 동일하고,
           <code>Classical.choice</code>나 외부 의존성을 추가하지 않았습니다.
         </p>
       </div>
@@ -391,6 +421,7 @@
     <!-- ========== Metrics ========== -->
     <section id="metrics">
       <h2>Overall Metrics Comparison</h2>
+      <p class="muted">줄 수는 증명 몸체의 비어 있지 않은 줄입니다. 공백 제외 문자 수와 줄 수는 2026-10-06 재계산했습니다. 아래 Lean Tokens 및 Tactic Invocations는 기존 보고서 값으로, 산정 도구가 없어 재검증하지 않았습니다. JSONL의 1번 proof_length는 313이며 표의 312와 다릅니다. 공식 점수·heartbeat·버전 호환성 결과는 아직 없습니다.</p>
 
       <div class="metric-grid">
         <div class="card metric-card">
@@ -647,7 +678,7 @@ theorem extractedOldExprInVars :
       <h3>비효율의 원인</h3>
       <div class="diag">
         <div class="diag-item">
-          <strong>잘못된 대상에 대한 귀납</strong>
+          <strong>덜 직접적인 대상에 대한 귀납</strong>
           <code>induction post</code> 후 거의 모든 분기(<code>app</code>, <code>abs</code>, <code>quant</code>, <code>ite</code>, <code>eq</code>)에서 <code>Hnorm : NormalizedOldExpr post</code>를 다시 분해.
         </div>
         <div class="diag-item">
@@ -663,7 +694,7 @@ theorem extractedOldExprInVars :
       <h3>리팩토링 전략</h3>
       <div class="strategy">
         원시 표현식 구문 대신 <strong>귀납적 유도 <code>h : NormalizedOldExpr post</code> 자체에 대해 induction</strong>합니다.
-        이렇게 하면 유효한 생성자만 남아 잘못된 AST 상태가 자동으로 제거되고, 정규화된 부분항에 바로 접근할 수 있습니다.
+        이렇게 하면 정규화 증거의 생성자를 따라 부분항의 정규화 증거와 귀납 가설을 함께 얻습니다. application 내부의 조건 분기는 여전히 나누고 단순화로 처리합니다.
         남은 subset 목표는 combinator와 contextual simplification으로 균일하게 처리합니다.
         <div class="pipeline">
           <code>intro h</code><span class="arrow">→</span>
@@ -782,7 +813,7 @@ theorem extractedOldExprInVars :
             <pre><code>$ lake build Strata.Transform.CallElimCorrect
 Build completed successfully (81 jobs).</code></pre>
           </div>
-          <div class="check"><span class="ok">✓</span><span>모듈 내 모든 하위 정리와 사용처가 문제 1·2로 인한 경고나 깨짐 없이 검증됨</span></div>
+          <div class="check"><span class="ok">✓</span><span>2026-10-06 모듈 빌드 성공. 다른 정리의 기존 sorry 경고가 있으며, 두 대상 정리의 공리 검사에는 sorryAx가 없음</span></div>
         </div>
 
         <div class="card">
@@ -795,7 +826,7 @@ extractedOldExprInVars → [propext, Quot.sound]</code></pre>
           </div>
           <div class="check"><span class="ok">✓</span><span><code>Classical.choice</code> 미사용</span></div>
           <div class="check"><span class="ok">✓</span><span><code>sorryAx</code> 미사용</span></div>
-          <div class="check"><span class="ok">✓</span><span>proof term이 constructive하며 원본과 수학적 기반이 동일</span></div>
+          <div class="check"><span class="ok">✓</span><span>원본과 후보를 함께 재검증하여 공리 목록 동일성 확인</span></div>
         </div>
       </div>
     </section>
@@ -804,10 +835,10 @@ extractedOldExprInVars → [propext, Quot.sound]</code></pre>
     <section id="takeaways">
       <h2>정리 · LeanAgent에 주는 시사점</h2>
       <div class="card">
-        <div class="check"><span class="ok">1</span><span><strong>귀납 대상 선택이 가장 큰 레버.</strong> 구문 트리 대신 불변식(<code>NormalizedOldExpr</code>)의 유도에 대해 귀납하면 불가능한 케이스가 자동으로 사라집니다.</span></div>
+        <div class="check"><span class="ok">1</span><span><strong>귀납 대상 선택이 가장 큰 레버.</strong> 구문 트리 대신 불변식(<code>NormalizedOldExpr</code>)의 유도에 대해 귀납하면 정규화 가정을 반복 분해할 필요가 줄고, 불가능한 분기의 배제에 필요한 증거를 바로 얻습니다.</span></div>
         <div class="check"><span class="ok">2</span><span><strong>케이스별 동일 추론은 <code>&lt;;&gt;</code> 파이프라인으로 접기.</strong> <code>unfold → split → simp_all → repeat' apply → simp +contextual</code> 패턴은 다른 AST 보조정리에도 재사용 가능합니다.</span></div>
-        <div class="check"><span class="ok">3</span><span><strong>위치 기반 <code>rename_i</code> 제거로 견고성 향상.</strong> 자동화된 증명은 생성자 순서·인자 이름 변경에 덜 민감합니다.</span></div>
-        <div class="check"><span class="ok">4</span><span><strong>공리 검사는 리팩토링 평가의 필수 항목.</strong> 길이 감소와 함께 <code>#print axioms</code> 동일성을 확인해야 Arena 기준에서 안전한 개선이라 볼 수 있습니다.</span></div>
+        <div class="check"><span class="ok">3</span><span><strong>위치 기반 <code>rename_i</code> 제거로 견고성 향상.</strong> 위치 기반 이름 변경은 줄었습니다. simp 규칙과 문맥 변화에도 견고한지는 버전별 검증이 필요합니다.</span></div>
+        <div class="check"><span class="ok">4</span><span><strong>공리 검사는 리팩토링 평가의 필수 항목.</strong> 길이 감소와 함께 <code>#print axioms</code> 의존성과 명제 보존을 확인합니다. 공식 유효성은 대회 harness와 전체 규칙으로 별도 평가합니다.</span></div>
       </div>
     </section>
 

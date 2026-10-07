@@ -1,0 +1,319 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Lean과 증명 리팩터링을 처음 접하는 사람을 위한 세 논문 설명: Process-Driven, ProofBridge, miniF2F-Lean Revisited.">
+  <title>AI의 수학 풀이를 어떻게 믿을까? · 세 논문 입문 가이드</title>
+  <style>
+    :root{--bg:#f5f3ed;--paper:#fffefb;--ink:#203331;--muted:#62716c;--line:#d9dfd7;--green:#176d59;--green-soft:#e8f3ed;--blue:#305e9e;--blue-soft:#edf2fc;--orange:#a74e28;--orange-soft:#fff0e5;--radius:20px}
+    *{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:28px}body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR",sans-serif;font-size:17px;line-height:1.85;word-break:keep-all;overflow-wrap:anywhere}a{color:var(--green);text-underline-offset:4px}a:hover{text-decoration-thickness:2px}button,summary{font:inherit}button{cursor:pointer}::selection{background:#d3e9da}
+    .progress{position:fixed;top:0;left:0;height:4px;background:var(--green);width:0;z-index:20}.layout{max-width:1250px;margin:auto;padding:48px 32px 80px;display:grid;grid-template-columns:205px minmax(0,1fr);gap:52px}.sidebar{position:sticky;top:40px;align-self:start;font-size:14px}.brand{font-weight:800;letter-spacing:.04em;margin-bottom:22px}.sidebar a{display:block;text-decoration:none;color:var(--muted);padding:11px 13px;margin:5px 0;border-radius:10px;line-height:1.55}.sidebar a:hover,.sidebar a[aria-current="location"]{background:var(--green-soft);color:var(--green)}.sidebar small{display:block;color:var(--muted);line-height:1.7;padding:20px 13px}.index{font-family:ui-monospace,monospace;font-size:12px;margin-right:8px;color:var(--green)}
+    main{min-width:0}.eyebrow{font-size:12px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--green)}h1{font-size:clamp(36px,4.8vw,59px);line-height:1.2;letter-spacing:-.055em;margin:17px 0 24px}h2{font-size:clamp(27px,3vw,38px);line-height:1.35;letter-spacing:-.04em;margin:10px 0 18px}h3{font-size:21px;line-height:1.5;letter-spacing:-.025em;margin:28px 0 12px}h4{font-size:17px;margin:0 0 8px}.intro{font-size:20px;line-height:1.75;max-width:740px}.muted,.caption{color:var(--muted)}.caption{font-size:13px;line-height:1.7;margin:13px 0 0}.meta{display:flex;flex-wrap:wrap;gap:8px;margin:25px 0 30px}.pill{border:1px solid var(--line);border-radius:99px;padding:5px 12px;font-size:12px;background:var(--paper)}.hero{border-bottom:1px solid var(--line);padding-bottom:34px}.section{padding-top:58px}.section+.section{margin-top:34px;border-top:1px solid var(--line)}p{margin:12px 0 18px}strong{font-weight:750}ul,ol{padding-left:23px}li{margin:9px 0}
+    .card{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:25px 28px}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;margin:20px 0}.three{grid-template-columns:repeat(3,minmax(0,1fr))}.card p:last-child{margin-bottom:0}.card h3:first-child{margin-top:0}.label{display:block;font-size:12px;font-weight:800;letter-spacing:.05em;margin-bottom:9px;color:var(--muted)}.take{border-left:4px solid var(--green);background:var(--green-soft);border-radius:0 16px 16px 0;padding:19px 24px;margin:24px 0}.take.blue{border-color:var(--blue);background:var(--blue-soft)}.take.orange{border-color:var(--orange);background:var(--orange-soft)}.take p{margin:5px 0}.number{font-size:12px;color:var(--muted);font-weight:800;letter-spacing:.15em}.title-en{font-size:15px;line-height:1.65;color:var(--muted);margin:0 0 22px}.paper1 .eyebrow{color:var(--green)}.paper2 .eyebrow{color:var(--blue)}.paper3 .eyebrow{color:var(--orange)}
+    .flow{display:flex;align-items:stretch;gap:8px;margin:20px 0}.node{flex:1;background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:17px 15px;line-height:1.65;font-size:14px;min-width:0}.node b{display:block;font-size:16px;margin-bottom:6px}.node em{font-style:normal;color:var(--muted);font-size:12px}.node.focus{background:var(--green-soft);border-color:#b5d8c4}.node.focus-blue{background:var(--blue-soft);border-color:#becde7}.arrow{align-self:center;color:var(--muted);font-size:19px}.example{font-size:16px;background:#f0f2ed;border-radius:12px;padding:18px 20px;line-height:1.9}.example .line{display:block}.good{color:var(--green);font-weight:700}.bad{color:var(--orange);font-weight:700}.lesson{font-size:24px;font-weight:750;line-height:1.5;letter-spacing:-.025em}.step-list{list-style:none;padding:0;margin:20px 0}.step-list li{display:flex;gap:14px;padding:13px 0;border-bottom:1px solid var(--line)}.step-num{flex:0 0 30px;width:30px;height:30px;border-radius:50%;background:var(--green-soft);color:var(--green);font-size:13px;font-weight:800;text-align:center;line-height:30px;margin-top:4px}.steps-output{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:18px}.step-box{text-align:center;border-radius:12px;padding:14px 6px;font-size:13px;background:#e9efe8}.step-box.fail{background:var(--orange-soft)}.step-box b{display:block;font-size:16px}.compare-label{font-size:13px;font-weight:800}.source{font-size:13px;border-top:1px dashed var(--line);padding-top:17px;margin-top:25px;line-height:1.8}.source a{color:inherit}.application{font-size:15px;border:1px solid var(--line);border-radius:14px;padding:18px 22px;margin:23px 0;background:var(--paper)}.application .label{color:var(--green)}.application p{margin:0}
+    .meaning-map{border:1px solid var(--line);border-radius:18px;padding:22px;background:var(--blue-soft);margin:20px 0}.pair{display:grid;grid-template-columns:1fr 35px 1fr;gap:10px;align-items:center;margin:12px 0}.pair span{background:var(--paper);padding:15px;border-radius:12px;font-size:14px}.pair .join{background:transparent;padding:0;text-align:center;font-size:22px;color:var(--blue)}.table-scroll{overflow-x:auto;border:1px solid var(--line);border-radius:16px;margin:20px 0}table{border-collapse:collapse;width:100%;font-size:14px;min-width:550px;background:var(--paper)}th,td{text-align:left;padding:15px 18px;border-bottom:1px solid var(--line);vertical-align:top}th{background:#edf0e9;font-size:13px}tr:last-child td{border-bottom:none}details{border:1px solid var(--line);border-radius:14px;background:var(--paper);margin:12px 0;padding:0 20px}summary{cursor:pointer;padding:15px 0;font-weight:700;font-size:15px}details p{font-size:15px}code{font-size:.9em;background:#e9ede6;padding:2px 5px;border-radius:5px;font-family:ui-monospace,SFMono-Regular,monospace}.footer{margin-top:55px;padding-top:22px;border-top:1px solid var(--line);font-size:13px;color:var(--muted)}.print-button{background:var(--paper);color:var(--ink);border:1px solid var(--line);border-radius:9px;padding:8px 12px;font-size:13px;margin:8px 13px}.print-button:hover{background:var(--green-soft)}:focus-visible{outline:3px solid var(--blue);outline-offset:4px}
+    .code-block{margin:16px 0;padding:20px;background:#203331;color:#edf5ee;border-radius:12px;overflow-x:auto;font-size:14px;line-height:1.8;white-space:pre;word-break:normal;overflow-wrap:normal}.code-block code{background:transparent;color:inherit;padding:0;font-size:inherit}.case-study{margin:25px 0}.case-study .label{color:var(--green)}.formula{font-size:20px;text-align:center;padding:15px;background:var(--green-soft);border-radius:12px;margin:16px 0}.case-nav{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0}.case-nav a{font-size:13px;padding:6px 12px;border:1px solid var(--line);border-radius:99px;text-decoration:none}.case-nav a:hover{background:var(--green-soft)}
+    @media(max-width:1000px){.layout{grid-template-columns:160px minmax(0,1fr);gap:28px;padding:32px 24px}.three{grid-template-columns:1fr}.flow{flex-wrap:wrap}.node{flex:1 1 150px}.flow .arrow{display:none}}
+    @media(max-width:720px){body{font-size:16px}.layout{display:block;padding:24px 18px 55px}.sidebar{position:static;margin-bottom:30px}.brand{margin-bottom:10px}.sidebar nav{display:flex;flex-wrap:wrap;gap:4px}.sidebar a{font-size:12px;margin:0;padding:7px 9px}.sidebar small,.print-button{display:none}.grid{grid-template-columns:1fr}.card{padding:20px}.intro{font-size:18px}.section{padding-top:38px}.pair{grid-template-columns:1fr}.pair .join{transform:rotate(90deg)}.steps-output{grid-template-columns:repeat(2,1fr)}.lesson{font-size:21px}}
+    @media print{body{background:white;font-size:11pt}.layout{display:block;padding:0;max-width:none}.sidebar,.progress,.print-button{display:none}.card,.take,.example,.meaning-map,.application{break-inside:avoid;box-shadow:none}.section{padding-top:20px}.section+.section{margin-top:20px}.flow{flex-wrap:wrap}.source{font-size:9pt}h1{font-size:30pt}h2{font-size:22pt}h3{break-after:avoid}a{color:inherit}details{break-inside:avoid}details>p{display:block}.grid{gap:10px}.hero{padding-bottom:15px}}
+    @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+  </style>
+</head>
+<body>
+  <div class="progress" aria-hidden="true"></div>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="brand">LeanAgent<br><span class="muted">Paper Reading Guide</span></div>
+      <nav aria-label="문서 목차">
+        <a href="#start"><span class="index">00</span>먼저, 기본 개념</a>
+        <a href="#process"><span class="index">01</span>어디서 틀렸을까?</a>
+        <a href="#bridge"><span class="index">02</span>무엇을 참고할까?</a>
+        <a href="#benchmark"><span class="index">03</span>무엇을 채점할까?</a>
+        <a href="#connect"><span class="index">04</span>리팩터링으로 연결</a>
+        <a href="#check"><span class="index">05</span>이해했는지 확인</a>
+      </nav>
+      <small>위에서 아래로 읽으세요.<br>Lean 코드나 논문을<br>읽어본 경험이 없어도 됩니다.</small>
+      <button class="print-button" type="button" onclick="window.print()">인쇄 / PDF로 저장</button>
+    </aside>
+
+    <main>
+      <header class="hero">
+        <div class="eyebrow">Three papers · One learning journey</div>
+        <h1>AI의 수학 풀이를<br>어떻게 믿을까?</h1>
+        <p class="intro">틀린 지점을 찾고, 좋은 예제를 참고하고,<br>원래 문제를 풀었는지 확인하는 세 가지 이야기.</p>
+        <p class="muted">증명 리팩터링을 처음 접하는 사람을 위한 입문 자료입니다. 기본 개념을 익힌 뒤 세 논문의 핵심 아이디어를 순서대로 살펴봅니다.</p>
+        <div class="meta"><span class="pill">한국어 · 초보자용</span><span class="pill">약 20–25분</span><span class="pill">2026.10.07</span><span class="pill">FORML4 실제 예시 포함</span></div>
+        <div class="flow" aria-label="세 논문의 학습 순서">
+          <div class="node"><em>01 · Process-Driven</em><b>과정을 보고 배우기</b>“마지막 답”보다<br>“처음 틀린 곳”</div>
+          <span class="arrow" aria-hidden="true">→</span>
+          <div class="node"><em>02 · ProofBridge</em><b>예제를 찾아 옮기기</b>사람의 설명과<br>Lean 코드를 연결</div>
+          <span class="arrow" aria-hidden="true">→</span>
+          <div class="node"><em>03 · miniF2F Revisited</em><b>채점 기준 돌아보기</b>증명 성공과<br>원래 문제의 해결</div>
+        </div>
+      </header>
+
+      <section class="section" id="start">
+        <div class="eyebrow">00 · Starting from zero</div>
+        <h2>증명을 컴퓨터가 검사한다는 것</h2>
+        <p>친구가 “이 계산은 맞아”라고 말하면, 우리는 풀이를 읽고 납득합니다. Lean에서는 <strong>무엇을 주장하는지, 어떤 근거로 결론에 도달하는지</strong>를 정해진 언어로 적습니다. 컴퓨터는 그 증거가 주장을 뒷받침하는지 규칙에 따라 확인합니다.</p>
+        <div class="grid">
+          <div class="card"><span class="label">명제 · STATEMENT</span><h3>무엇을 보일 것인가?</h3><p>“a가 b와 같고, b가 c와 같다면, a는 c와 같다.”</p></div>
+          <div class="card"><span class="label">증명 · PROOF</span><h3>왜 그런가?</h3><p>“같다는 관계는 이어 붙일 수 있다. 두 근거를 연결하면 결론을 얻는다.”</p></div>
+        </div>
+        <div class="take"><p><strong>Lean은 작성된 명제에 대한 증거를 검사합니다.</strong> 우리가 머릿속에 생각한 문제를 자동으로 알아내는 것은 아닙니다. 문제를 정확하게 옮기는 일도 필요합니다.</p></div>
+
+        <h3>형식화, 증명 찾기, 리팩터링은 다른 단계입니다</h3>
+        <div class="grid three">
+          <div class="card"><span class="label">A · AUTOFORMALIZATION</span><h4>형식화</h4><p>사람 말로 쓴 문제를 Lean 언어로 옮깁니다.</p><p class="caption">비유: 요리 설명을 정확한 레시피로 옮기기.</p></div>
+          <div class="card"><span class="label">B · THEOREM PROVING</span><h4>증명 찾기</h4><p>주어진 Lean 명제를 만족하는 증거를 만듭니다.</p><p class="caption">비유: 레시피가 목표한 요리를 만드는지 보이기.</p></div>
+          <div class="card"><span class="label">C · PROOF REFACTORING</span><h4>증명 리팩터링</h4><p>기존 증명을 정리해 같은 명제의 더 나은 증명을 만듭니다.</p><p class="caption">비유: 같은 요리가 나오도록 중복된 절차를 정리하기.</p></div>
+        </div>
+
+        <h3>리팩터링: 결론은 유지하고 설명을 개선하기</h3>
+        <div class="grid">
+          <div class="card"><span class="label">정리하기 전</span><div class="example"><span class="line">1. a = b라는 근거를 꺼낸다.</span><span class="line">2. 그 근거를 새 이름으로 복사한다.</span><span class="line">3. b = c라는 근거를 꺼낸다.</span><span class="line">4. 이것도 새 이름으로 복사한다.</span><span class="line">5. 복사한 근거들을 연결한다.</span></div></div>
+          <div class="card"><span class="label">정리한 뒤</span><div class="example"><strong>a = b와 b = c를 바로 연결한다.</strong><br>따라서 a = c.</div><p class="caption">이 예시는 중복 제거를 설명하기 위한 풀이입니다. 논문에서 발췌한 코드가 아닙니다.</p></div>
+        </div>
+        <p>더 좋은 증명이란 짧기만 한 증명이 아닙니다. Lean이 처리하는 계산량, 읽기 쉬움, 다른 버전에서도 쓸 수 있는지도 고려합니다. 짧은 자동화 명령 하나가 내부에서 많은 탐색을 할 수도 있습니다.</p>
+
+        <h3>이 자료에 나오는 용어 네 개</h3>
+        <div class="table-scroll"><table><thead><tr><th>용어</th><th>쉬운 뜻</th><th>역할</th></tr></thead><tbody>
+          <tr><td>LLM</td><td>문장을 만들고 코드를 제안하는 AI 모델</td><td>풀이와 Lean 후보를 생성</td></tr>
+          <tr><td>컴파일·타입 검사</td><td>코드를 읽고 규칙에 맞는지 확인하는 과정</td><td>잘못된 코드와 증명 오류를 발견</td></tr>
+          <tr><td>Verifier</td><td>후보를 평가하는 검사자</td><td>논문에 따라 학습된 모델일 수도 있음</td></tr>
+          <tr><td>Benchmark</td><td>여러 시스템을 같은 조건에서 비교하는 문제집</td><td>무엇을 성공으로 세는지가 중요</td></tr>
+        </tbody></table></div>
+        <p class="caption">이제 세 논문을 읽을 준비가 됐습니다. 다음 설명은 핵심 아이디어를 간추린 것이며, 모든 학습 설정이나 실험을 재현하는 안내서는 아닙니다.</p>
+      </section>
+
+      <section class="section paper1" id="process">
+        <div class="eyebrow">01 · Learn from the process</div>
+        <h2>“틀렸어” 대신<br>“여기서부터 틀렸어”</h2>
+        <p class="title-en">Process-Driven Autoformalization in Lean 4<br>Jianqiao Lu 외 · 2024 · arXiv v2</p>
+        <div class="take"><p class="lesson">마지막 결과만 채점하지 말고,<br>처음 오류가 난 위치를 학습 신호로 쓰자.</p></div>
+
+        <h3>문제: 실패 한 마디는 정보가 적다</h3>
+        <p>논문은 Lean 컴파일러가 제공하는 과정 피드백으로 형식화 모델을 개선합니다. <strong>FormL4</strong>라는 데이터와, 후보가 잘 번역됐을지 예측하는 학습 모델 <strong>PSV</strong>를 제안합니다.</p>
+        <div class="grid">
+          <div class="card"><span class="label">OSV · 결과 기반 학습</span><h4>“이 풀이는 실패”</h4><p>최종 컴파일 결과에 따른 같은 라벨을 모든 단계에 줍니다.</p></div>
+          <div class="card"><span class="label">PSV · 과정 기반 학습</span><h4>“첫 오류는 3단계”</h4><p>첫 오류 전은 맞음, 오류 단계부터 이후는 틀림으로 라벨링합니다.</p></div>
+        </div>
+        <h3>실제 FORML4 예시를 끝까지 따라가 보기</h3>
+        <p>공개 <code>basic_test.json</code>의 <code>volume_univ</code>를 사용합니다. <strong>정리와 자연어 증명은 실제 데이터</strong>이며, 아래의 잘못 생성한 후보와 단계별 라벨은 PDA의 동작을 설명하기 위한 재구성입니다. 이 테스트 예시를 실제로 학습에 사용했다는 뜻은 아닙니다.</p>
+        <nav class="case-nav" aria-label="FORML4 예시 읽기 순서"><a href="#forml4-input">① 입력</a><a href="#forml4-lean">② Lean 표현</a><a href="#forml4-error">③ 실패 후보</a><a href="#forml4-label">④ 과정 라벨</a><a href="#forml4-learning">⑤ 학습에 활용</a></nav>
+
+        <div class="card case-study" id="forml4-input">
+          <span class="label">① 실제 데이터 · 자연어 입력을 한국어로 요약</span>
+          <h4>실수 전체의 르베그 측도는 무한대다</h4>
+          <p>여기서 측도는 길이를 일반화한 개념입니다. 구간 [0, 3]의 측도는 3이고, 실수 전체의 측도는 무한대입니다.</p>
+          <div class="example"><strong>정리</strong><br>실수 전체 ℝ의 르베그 측도가 무한대임을 증명하라.<br><br><strong>자연어 증명</strong><br>임의의 r ≥ 0을 잡는다. 구간 [0, r]의 측도는 r이다. 이 구간은 실수 전체에 포함되므로, 실수 전체의 측도는 r 이상이다. 모든 유한한 r ≥ 0에 대해 이 관계가 성립하므로 실수 전체의 측도는 무한대다.</div>
+          <div class="formula" aria-label="구간의 측도 r은 실수 전체의 측도 이하">r = μ([0, r]) ≤ μ(ℝ) &nbsp; → &nbsp; μ(ℝ) = ∞</div>
+          <p class="caption">데이터 필드: <code>nl_problem</code>은 정리, <code>nl_proof</code>는 자연어 증명, <code>formal</code>은 Lean 정리·증명입니다. <code>nl_explanation</code>은 Lean 표현의 해설입니다. 원본 Lean 코드는 정답 쪽 자료이며, 자연어에서 Lean 후보를 생성하는 과제와 구분합니다.</p>
+        </div>
+
+        <div class="card case-study" id="forml4-lean">
+          <span class="label">② 형식화 · 어떤 타입과 근거를 선택해야 할까?</span>
+          <p>목표는 <code>volume (Set.univ : Set ℝ) = ∞</code>입니다. 집합의 원소는 실수 ℝ이고, 측도의 값은 <strong>∞를 포함하는 비음수 확장실수 ℝ≥0∞</strong>입니다. 자연어의 “무한대”를 쓰려면 값의 타입도 올바르게 선택해야 합니다.</p>
+          <pre class="code-block" aria-label="원본 증명의 구조를 풀어 쓴 Lean 코드"><code>-- 원본의 증명 구조를 풀어 쓴 설명용 코드
+-- Mathlib import와 이름 공간 설정이 있는 환경을 전제
+example : MeasureTheory.volume (Set.univ : Set ℝ) = ∞ := by
+  refine ENNReal.eq_top_of_forall_nnreal_le ?_
+  intro r
+  have interval_length :
+      MeasureTheory.volume (Set.Icc (0 : ℝ) (r : ℝ)) =
+        (r : ℝ≥0∞) := by simp
+  rw [← interval_length]
+  exact MeasureTheory.measure_mono (Set.subset_univ _)</code></pre>
+          <div class="table-scroll"><table><thead><tr><th>Lean의 선택</th><th>수학적 역할</th></tr></thead><tbody>
+            <tr><td><code>eq_top_of_forall_nnreal_le</code></td><td>무한대를 직접 계산하는 대신, 모든 유한한 비음수 값 r 이상임을 보인다.</td></tr>
+            <tr><td><code>intro r</code></td><td>임의의 비음수 실수 r을 잡는다. 이후 ℝ과 ℝ≥0∞로 변환해 사용한다.</td></tr>
+            <tr><td>구간 측도 계산과 <code>rw</code></td><td>목표 r ≤ μ(ℝ)을 μ([0, r]) ≤ μ(ℝ)로 바꾼다.</td></tr>
+            <tr><td><code>measure_mono</code>와 집합 포함 근거</td><td>[0, r] ⊆ ℝ로부터 원하는 부등식을 얻어 증명을 끝낸다.</td></tr>
+          </tbody></table></div>
+          <p class="caption">코드는 공개 예시의 구조를 읽기 쉽게 재작성했습니다. 원본은 <code>calc</code>로 등식과 부등식을 연결합니다. 여기서는 원본 Mathlib 버전에서의 실행을 재현한 결과로 제시하지 않습니다.</p>
+        </div>
+
+        <div class="card case-study" id="forml4-error">
+          <span class="label">③ 설명용 실패 후보 · 실제 모델 출력이나 컴파일 로그 아님</span>
+          <h4>모델이 부등식의 방향을 반대로 옮겼다면?</h4>
+          <div class="grid">
+            <div class="example"><span class="good">필요한 관계</span><br>μ([0, r]) ≤ μ(ℝ)<br><span class="caption">작은 집합의 측도 ≤ 큰 집합의 측도</span></div>
+            <div class="example"><span class="bad">잘못 작성한 관계</span><br>μ(ℝ) ≤ μ([0, r])<br><span class="caption">포함 관계로 얻는 결론과 방향이 반대</span></div>
+          </div>
+          <p>모델이 오른쪽 부등식을 중간 목표로 작성한 뒤, <code>measure_mono</code>에 [0, r] ⊆ ℝ라는 근거를 넣었다고 가정합시다. 이 명령은 왼쪽 부등식의 증거를 만듭니다. <strong>단조성으로 얻은 증거의 방향은 올바르지만, 모델이 작성한 중간 목표의 방향이 잘못됐기 때문에</strong> 해당 단계에서 실패합니다.</p>
+          <div class="example"><span class="line"><strong>원래 증명에 필요한 올바른 목표:</strong> μ([0, r]) ≤ μ(ℝ)</span><span class="line bad"><strong>모델이 잘못 작성한 중간 목표:</strong> μ(ℝ) ≤ μ([0, r])</span><span class="line good"><strong>단조성으로 얻은 증거의 타입:</strong> μ([0, r]) ≤ μ(ℝ)</span></div>
+          <p>Lean은 모델이 코드에 적은 중간 목표와 제출한 증거의 타입을 비교합니다. 이 둘이 반대 방향이라 타입 검사가 실패합니다. 여기서 잘못된 것은 단조성의 결론이 아니라 <strong>모델이 설정한 중간 목표</strong>입니다.</p>
+          <p>두 부등식 모두 Lean에서 명제로 표현할 수 있습니다. 문장을 적을 수 있다는 사실과 그 문장을 증명했다는 사실은 다릅니다. 증명을 함께 검사해야 이 불일치가 드러납니다.</p>
+        </div>
+
+        <div class="card case-study" id="forml4-label">
+          <span class="label">④ 컴파일 피드백 → 학습 라벨 · 단계를 단순화한 재구성</span>
+          <p>위 후보의 첫 오류가 3단계에서 발견됐다고 가정하면, 동일한 실패 결과도 OSV와 PSV는 다르게 학습합니다.</p>
+          <div class="table-scroll"><table><thead><tr><th>생성 과정</th><th>OSV</th><th>PSV</th></tr></thead><tbody>
+            <tr><td>1. 무한대 판정 보조정리 적용</td><td>0 · 최종 실패</td><td class="good">1 · 첫 오류 이전</td></tr>
+            <tr><td>2. 구간 측도 계산</td><td>0 · 최종 실패</td><td class="good">1 · 첫 오류 이전</td></tr>
+            <tr><td>3. 반대 방향 부등식에 단조성 적용</td><td>0 · 최종 실패</td><td class="bad">0 · 첫 오류</td></tr>
+            <tr><td>4. 이후의 결론 단계</td><td>0 · 최종 실패</td><td class="bad">0 · 오류 이후</td></tr>
+          </tbody></table></div>
+          <p>PSV는 “전체가 실패했다”에 더해 <strong>실패하기 전까지의 prefix</strong>도 학습 자료로 얻습니다. 자연어 문제 q와 t단계까지 생성한 Lean 코드를 보고 그 단계의 맞음 확률을 예측하도록 학습합니다.</p>
+          <p class="caption">1과 0은 컴파일 피드백으로 만든 대리 라벨입니다. 1은 자연어와의 의미 일치를 보장하지 않으며, 오류 이후의 0도 각 문장이 독립적으로 틀렸음을 확인했다는 뜻은 아닙니다.</p>
+        </div>
+
+        <h3 id="forml4-learning">⑤ 핵심 방법: 번역기와 평가자를 함께 개선한다</h3>
+        <div class="flow" aria-label="Process-Driven 학습 과정">
+          <div class="node"><em>생성</em><b>형식화 모델</b>Lean 후보 만들기</div><span class="arrow" aria-hidden="true">→</span>
+          <div class="node focus"><em>검사</em><b>Lean 컴파일러</b>첫 오류 위치 얻기</div><span class="arrow" aria-hidden="true">→</span>
+          <div class="node"><em>학습</em><b>PSV</b>과정 라벨로 훈련</div><span class="arrow" aria-hidden="true">→</span>
+          <div class="node"><em>개선</em><b>후보 선별</b>형식화 모델 재학습</div>
+        </div>
+        <p>PSV가 좋은 후보를 선별해 형식화 모델의 추가 학습에 활용하고, 새 후보와 컴파일 피드백으로 평가자도 개선합니다. 목표는 <strong>명제 형식화</strong>이며, 증명 단계는 번역을 평가하는 문맥과 피드백을 얻기 위해 이용합니다.</p>
+        <p>이 예시에서는 구간 측도와 단조성을 올바르게 연결한 후보가 유망한 학습 자료가 됩니다. 이 과정은 실패한 코드 한 줄을 그 자리에서 자동 수정하는 절차와는 다릅니다. <strong>후보 선별 → 생성 모델 미세조정 → 새 출력 컴파일 → PSV 추가 학습</strong>으로 두 모델을 개선하는 학습 루프입니다.</p>
+        <details><summary>Lean과 PSV는 같은 검사자인가요?</summary><p>Lean은 형식 규칙에 따라 실제 후보를 검사합니다. PSV는 Lean 피드백으로 학습한 예측 모델입니다. 좋은 후보를 고르는 데 도움을 주지만, 최종 Lean 검증을 대신하지는 않습니다.</p></details>
+        <div class="take"><p><strong>컴파일 성공은 자연어 번역의 정확성까지 보장할까?</strong></p><p>원래 입력이 “μ(ℝ) = ∞”인데 모델이 <code>0 = 0</code>을 생성하고 증명해도 Lean 검사는 통과할 수 있습니다. 증명까지 붙이면 검사 신호가 강해지지만, 원래 문제와 의미가 같은지는 별도로 확인해야 합니다.</p></div>
+        <p>논문은 과정 정보를 이용한 학습의 이점을 보고합니다. 여기서 기억할 것은 <strong>최종 성공 여부보다 오류 위치가 더 풍부한 학습 자료</strong>라는 아이디어입니다.</p>
+        <div class="application"><span class="label">리팩터링에 연결 · 우리의 응용 아이디어</span><p>수정한 증명이 실패했을 때 “실패”만 남기지 않고 첫 오류와 남은 목표를 기록하면 다음 수정에 도움이 됩니다. 다만 이 추론 중 수정 아이디어와 논문의 PSV 학습 방법은 구분해야 합니다.</p></div>
+        <div class="source">출처: <a href="https://arxiv.org/html/2406.01940v2" target="_blank" rel="noopener noreferrer">논문 v2</a> · Figure 1의 증명 보조 역할, §4.1의 OSV/PSV 라벨, §4.2의 반복 학습, §5.1.2의 의미 일치 한계.<br>실제 예시: <a href="https://github.com/rookie-joe/PDA/blob/main/data/FormL4/basic_test.json" target="_blank" rel="noopener noreferrer">공식 FORML4 basic_test.json</a>의 <code>volume_univ</code>. 자연어 내용은 한국어 요약, Lean 코드는 설명용 재작성입니다. 실패 후보·오류 설명·단계 라벨은 실제 실행 기록이 아닌 재구성입니다.</div>
+      </section>
+
+      <section class="section paper2" id="bridge">
+        <div class="eyebrow">02 · Find a useful example</div>
+        <h2>사람의 설명과 Lean 코드가<br>같은 예제 노트를 찾게 하자</h2>
+        <p class="title-en">ProofBridge: Auto-Formalization of Natural Language Proofs in Lean via Joint Embeddings<br>Prithwish Jana 외 · 2025 제출, 2026 수정 · arXiv v3</p>
+        <div class="take blue"><p class="lesson">비슷한 풀이를 검색해 참고하고,<br>정리와 증명을 함께 Lean으로 옮기자.</p></div>
+
+        <h3>문제: 같은 아이디어가 서로 다르게 쓰인다</h3>
+        <p>ProofBridge는 자연어의 <strong>정리와 증명 전체</strong>를 Lean으로 번역합니다. 사람의 설명과 Lean 정리·증명 쌍을 같은 벡터 공간에 배치하는 <strong>공동 임베딩</strong>으로 관련 예제를 검색합니다.</p>
+        <div class="meaning-map">
+          <span class="label">공동 임베딩 · 같은 아이디어 지도에 두기</span>
+          <div class="pair"><span><strong>사람 말</strong><br>“a=b와 b=c를 연결한다”</span><span class="join" aria-hidden="true">↔</span><span><strong>Lean 예제의 풀이 구조</strong><br>등식 두 개를 이어 결론 얻기</span></div>
+          <div class="pair"><span><strong>사람 말</strong><br>“작은 부분부터 큰 나무로 확장한다”</span><span class="join" aria-hidden="true">↔</span><span><strong>Lean 예제의 풀이 구조</strong><br>부분 식에 귀납 가설 적용하기</span></div>
+          <p class="caption">위 짝은 개념 설명용입니다. 실제 검색 결과나 임베딩 측정값이 아닙니다. 임베딩은 자료를 숫자 목록으로 표현해 가까운 자료를 찾는 방법입니다.</p>
+        </div>
+
+        <h3>핵심 방법: 검색 → 번역 → 검사 → 수정</h3>
+        <div class="flow" aria-label="ProofBridge의 핵심 과정">
+          <div class="node"><em>입력</em><b>사람의 정리·증명</b>무엇을 어떻게 보였나?</div><span class="arrow" aria-hidden="true">→</span>
+          <div class="node focus-blue"><em>검색</em><b>관련 Lean 예제</b>공동 임베딩으로 찾기</div><span class="arrow" aria-hidden="true">→</span>
+          <div class="node"><em>생성</em><b>정리·증명 번역</b>예제를 참고하기</div><span class="arrow" aria-hidden="true">→</span>
+          <div class="node"><em>피드백</em><b>검사와 repair</b>후보 반복 수정</div>
+        </div>
+        <p>자연어와 Lean의 대응 쌍을 가깝게 학습하고, Lean 쪽에는 증명 상태의 변화 정보도 이용합니다. 검색 예제는 번역 모델의 학습과 생성에 활용하며, 이후 검사 피드백으로 반복 수정합니다.</p>
+
+        <h3>검사는 두 질문으로 나눈다</h3>
+        <div class="grid">
+          <div class="card"><span class="label">TC · TYPE CORRECTNESS</span><h4>작성한 명제를 증명했나?</h4><p>정리와 증명이 Lean의 타입 검사를 통과하는지 확인합니다.</p></div>
+          <div class="card"><span class="label">SC · SEMANTIC CORRECTNESS</span><h4>참조 명제와 같은 뜻인가?</h4><p>생성한 Lean 명제와 참조 Lean 명제 사이의 쌍방향 함의를 증명하는 평가를 사용합니다.</p></div>
+        </div>
+        <details><summary>쌍방향 함의란 무엇인가요?</summary><p>“A라면 B”와 “B라면 A”를 모두 보이는 것입니다. 두 표현의 논리적 동치를 확인합니다. 다만 이것을 자연어의 모든 뉘앙스까지 자동으로 확인한 결과로 해석해서는 안 됩니다.</p></details>
+        <p>이 평가는 참조 Lean 명제가 원래 자연어를 충실하게 표현한다는 가정에 의존합니다. 논문은 검색·번역의 개선을 보고하며, <strong>코드 통과와 의미 충실도를 따로 평가한다</strong>는 관점이 중요합니다.</p>
+        <div class="application"><span class="label">리팩터링에 연결 · 우리의 응용 아이디어</span><p>“귀납 대상 바꾸기”처럼 도움이 될 전략과 예제를 먼저 찾고 증명을 수정할 수 있습니다. ProofBridge의 원래 과제는 번역이며, 리팩터링 전략 검색은 우리가 확장해 볼 방향입니다.</p></div>
+        <div class="source">출처: <a href="https://arxiv.org/html/2510.15681v3" target="_blank" rel="noopener noreferrer">원문 v3</a> · §4의 공동 임베딩과 시스템, §5의 평가, Appendix A.4의 semantic equivalence. 지도와 예시는 설명용 재구성입니다.</div>
+      </section>
+
+      <section class="section paper3" id="benchmark">
+        <div class="eyebrow">03 · Check what success means</div>
+        <h2>증명이 맞아도,<br>다른 문제를 풀었다면?</h2>
+        <p class="title-en">miniF2F-Lean Revisited: Reviewing Limitations and Charting a Path Forward<br>Azim Ospanov, Farzan Farnia, Roozbeh Yousefzadeh · 2025 · arXiv v1</p>
+        <div class="take orange"><p class="lesson">번역과 증명을 따로 채점하는 데서 나아가,<br>원래 문제를 해결했는지 확인하자.</p></div>
+
+        <h3>문제: 문제집의 번역에도 오류가 있을 수 있다</h3>
+        <p><strong>miniF2F</strong>는 수학 문제와 형식 명제를 연결한 벤치마크입니다. 이 논문은 자연어와 Lean 명제의 불일치를 분석하고, 수정 버전을 제시하며, 형식화와 증명을 연결한 전체 과정을 평가합니다.</p>
+        <div class="grid">
+          <div class="card"><span class="label">원래 숙제 · 설명용 예시</span><h4>“모든 상자에 사과가 있다”</h4><p>상자를 하나만 확인해서는 끝나지 않습니다. 각 상자에 대해 보여야 합니다.</p></div>
+          <div class="card"><span class="label">잘못 옮긴 숙제 · 설명용 예시</span><h4>“어떤 상자에 사과가 있다”</h4><p>사과가 든 상자 하나를 찾으면 끝납니다. 더 쉬운 다른 문제입니다.</p></div>
+        </div>
+        <p class="caption">위 예시는 양화사 변경의 영향을 보여주기 위한 비유입니다. miniF2F의 특정 오류 사례를 인용한 것이 아닙니다.</p>
+
+        <h3>핵심 방법: 처음 입력부터 마지막 정답까지 보기</h3>
+        <div class="flow" aria-label="원래 문제부터 최종 평가까지">
+          <div class="node"><em>출발</em><b>자연어 문제</b>학생이 받은 숙제</div><span class="arrow" aria-hidden="true">→</span>
+          <div class="node"><em>번역</em><b>Lean 명제</b>같은 문제인가?</div><span class="arrow" aria-hidden="true">→</span>
+          <div class="node"><em>풀이</em><b>Lean 증명</b>검증을 통과하나?</div><span class="arrow" aria-hidden="true">→</span>
+          <div class="node"><em>최종 채점</em><b>원래 문제의 해결</b>뜻까지 맞는가?</div>
+        </div>
+        <p>Lean 검증 통과만 세는 평가와, 원래 문제에 충실한 풀이만 인정하는 평가를 구분합니다. 형식화 결과에는 Lean 전문가의 의미 검토도 사용합니다.</p>
+
+        <h3>성공률을 읽을 때 함께 물어야 할 것</h3>
+        <div class="card">
+          <ol class="step-list">
+            <li><span class="step-num">1</span><div><strong>어느 단계의 성공률인가?</strong><br>번역만 성공했는지, 증명만 성공했는지, 전체가 성공했는지.</div></li>
+            <li><span class="step-num">2</span><div><strong>성공을 누가 판단했는가?</strong><br>Lean 검사인지, AI의 의미 평가인지, 전문가 검토인지.</div></li>
+            <li><span class="step-num">3</span><div><strong>시도를 몇 번 허용했는가?</strong><br>한 번의 결과와 여러 후보 중 성공 하나를 찾는 평가는 조건이 다릅니다.</div></li>
+          </ol>
+          <p class="caption">이 세 질문은 논문을 읽기 위한 체크포인트입니다. 숫자가 높다는 이유만으로 서로 다른 평가를 바로 비교할 수는 없습니다.</p>
+        </div>
+        <p>논문은 명제 불일치와 평가자에 따른 차이를 보고합니다. 기억할 결론은 <strong>개별 도구의 높은 성능이 원래 문제에 대한 전체 성공률을 보장하지 않는다</strong>는 것입니다.</p>
+        <div class="application"><span class="label">리팩터링에 연결 · 우리의 응용 아이디어</span><p>리팩터링은 주어진 Lean 명제를 유지해야 합니다. 더 쉬운 명제로 바꾸고 짧게 증명하면 개선이 아닙니다. 먼저 명제와 환경 보존을 확인하고, 그 뒤 길이와 처리 비용을 비교해야 합니다.</p></div>
+        <div class="source">출처: <a href="https://arxiv.org/html/2511.03108v1" target="_blank" rel="noopener noreferrer">원문 v1</a> · §2의 벤치마크 분석, §3의 전체 파이프라인, §4의 번역 평가. 상자·사과 예시는 설명을 위해 만들었습니다.</div>
+      </section>
+
+      <section class="section" id="connect">
+        <div class="eyebrow">04 · Putting the ideas together</div>
+        <h2>세 논문을 리팩터링에 연결하면</h2>
+        <p>세 논문은 모두 증명 리팩터링을 직접 연구한 논문은 아닙니다. <strong>형식화와 평가 연구에서 개선 시스템의 설계 원리</strong>를 배우는 자료입니다. 아래는 그 아이디어를 Refactor Arena에 옮겨 보는 제안입니다.</p>
+        <div class="table-scroll"><table><thead><tr><th>논문</th><th>원래 핵심</th><th>리팩터링에서 가져올 질문</th></tr></thead><tbody>
+          <tr><td>Process-Driven</td><td>컴파일 과정 피드백으로 학습</td><td>실패 위치와 목표를 기록하면 수정이 나아질까?</td></tr>
+          <tr><td>ProofBridge</td><td>관련 예제 검색과 전체 번역</td><td>비슷한 증명 전략을 찾아 수정하면 도움이 될까?</td></tr>
+          <tr><td>miniF2F Revisited</td><td>의미 충실도와 전체 과정 평가</td><td>같은 명제를 유지하면서 실제로 개선했을까?</td></tr>
+        </tbody></table></div>
+        <div class="card">
+          <span class="label">우리가 만들 수 있는 최소 개선 루프</span>
+          <ol>
+            <li><strong>기존 명제와 증명을 읽는다.</strong> 무엇을 증명하고 있는지 한 문장으로 설명한다.</li>
+            <li><strong>전략과 예제를 찾는다.</strong> 중복 제거, 귀납 대상 변경 같은 후보를 만든다.</li>
+            <li><strong>Lean으로 확인한다.</strong> 실패하면 첫 오류와 남은 목표를 보고 고친다.</li>
+            <li><strong>개선을 측정한다.</strong> 명제·공리 의존성을 확인하고 길이, 처리 비용, 지정 버전 호환성을 비교한다.</li>
+          </ol>
+        </div>
+        <h3>우리 warm-up 2번도 이렇게 읽을 수 있습니다</h3>
+        <p>기존 증명은 표현식의 모양을 따라가며, 매번 “정규화됐다”는 가정을 다시 분해했습니다. 새 증명은 <strong>정규화됐다는 증거 자체</strong>에 귀납해 부분 식의 증거를 함께 얻습니다. 처음엔 짧아진 줄 수보다, <em>왜 반복이 필요 없어졌는지</em>를 이해하면 됩니다.</p>
+        <div class="take"><p>좋은 리팩터링은 지워도 되는 이유를 설명할 수 있는 수정입니다. 그리고 짧아졌다는 관찰과 계산 비용도 줄었다는 측정은 따로 확인합니다.</p></div>
+        <p><a href="../../meetings/2026-10-11-week2/warmup-problems-1-2.html">Warm-up 1·2 HTML 설명으로 연결 →</a></p>
+      </section>
+
+      <section class="section" id="check">
+        <div class="eyebrow">05 · Check your understanding</div>
+        <h2>이 세 질문에 답할 수 있다면</h2>
+        <p>답을 보기 전에 한 문장으로 설명해 보세요.</p>
+        <details><summary>1. Process-Driven은 왜 첫 오류 위치를 사용하나요?</summary><p>최종 실패 하나보다 어느 단계부터 문제가 생겼는지 더 많은 정보를 주기 때문입니다. 논문은 이 라벨로 PSV를 학습하고 형식화 모델 개선에 활용합니다.</p></details>
+        <details><summary>2. ProofBridge의 공동 임베딩은 무엇을 연결하나요?</summary><p>자연어 정리·증명과 Lean 정리·증명 쌍을 같은 공간에서 연결해 관련 예제를 찾도록 합니다. 찾은 예제는 번역을 돕고, 최종 후보는 따로 검사합니다.</p></details>
+        <details><summary>3. Lean이 통과시킨 증명도 원래 문제의 정답이 아닐 수 있나요?</summary><p>그럴 수 있습니다. Lean은 작성된 명제를 검사합니다. 명제를 잘못 번역하거나 더 쉽게 바꿨다면, 통과해도 원래 문제를 풀었다고 할 수 없습니다.</p></details>
+        <div class="grid three">
+          <div class="card"><span class="label">01</span><h4>어디서 틀렸나?</h4><p>과정 피드백</p></div>
+          <div class="card"><span class="label">02</span><h4>무엇을 참고하나?</h4><p>관련 예제 검색</p></div>
+          <div class="card"><span class="label">03</span><h4>무엇을 해결했나?</h4><p>의미와 평가 기준</p></div>
+        </div>
+        <p><a href="./refactor-arena-study-guide.md">논문 읽기 순서와 비교 실험 설계 더 보기 →</a></p>
+      </section>
+
+      <footer class="footer">
+        LeanAgent · Autoformalization 입문 자료 · 2026.10.07<br>
+        원문을 바탕으로 핵심을 요약했습니다. FORML4 정리·자연어 증명은 공개 데이터의 실제 예시입니다. 도식, 실패 후보와 일상 비유는 설명용이며 실제 실험 기록이 아닙니다.<br>
+        <a href="./README.md">자료 목록</a> · <a href="#start">처음으로</a>
+      </footer>
+    </main>
+  </div>
+  <script>
+    const progress = document.querySelector('.progress');
+    function updateProgress() {
+      const available = document.documentElement.scrollHeight - window.innerHeight;
+      progress.style.width = (available > 0 ? Math.min(100, window.scrollY / available * 100) : 0) + '%';
+    }
+    window.addEventListener('scroll', updateProgress, {passive:true});
+    window.addEventListener('resize', updateProgress); updateProgress();
+    if ('IntersectionObserver' in window) {
+      const links = [...document.querySelectorAll('.sidebar nav a')];
+      const observer = new IntersectionObserver(entries => {
+        for (const entry of entries) if (entry.isIntersecting) {
+          links.forEach(link => {
+            if (link.hash === '#' + entry.target.id) link.setAttribute('aria-current', 'location');
+            else link.removeAttribute('aria-current');
+          });
+        }
+      }, {rootMargin:'-8% 0px -65% 0px',threshold:0});
+      document.querySelectorAll('main section[id]').forEach(section => observer.observe(section));
+    }
+  </script>
+</body>
+</html>

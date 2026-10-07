@@ -24,6 +24,8 @@
 | --- | --- | --- |
 | 남성우 | 1, 2 | [Refactor Report · Warm-up 1 & 2](./warmup-problems-1-2.html) |
 
+문제 자체를 먼저 이해하려면 [Warm-up 1·2 ELI5](./warmup-problems-1-2-eli5.md)를 읽습니다. 이어서 [Refactor Arena 공부 지도와 논문 추천](../../research/autoformalization/refactor-arena-study-guide.md)에서 읽기 순서와 실험 아이디어를 확인합니다.
+
 ## 논문 분야 담당
 
 | 분야 | 담당자 | 자료 공유 폴더 |
@@ -37,3 +39,7 @@
 
 - [관련 논문 목록 · 37편](../../research/papers.md)
 - [연구 자료 안내](../../research/README.md)
+
+### 검증 및 재현 자료
+
+원본 보고서, 검증 JSON, 증명 변경 패치와 원본 비교 파일은 [Warm-up 1·2 결과 묶음](artifacts/warmup-1-2/README.md)에 보관합니다.
