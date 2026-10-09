@@ -1,0 +1,56 @@
+../TensorGapsRefactored.lean:1210:2: error: Type mismatch: After simplification, term
+  prob_split_last_uniform_sampling_of_finFun fun r_last r_init =>
+    multilinearCombine_affineComb_split_last_close MC u e r_last r_init
+ has type
+  @Eq ENNReal
+    ((do
+        let r ← $ᵖ (Fin (n + 1) → F)
+        pure
+            (Δ₀(multilinearCombine
+                  (affineLineEvaluation (splitHalfRowWiseInterleavedWords u).1 (splitHalfRowWiseInterleavedWords u).2
+                    (r (Fin.last n)))
+                  fun i => r i.castSucc,
+                ↑MC) ≤
+              ↑e))
+      True)
+    ((do
+        let r_last ← $ᵖ F
+        let r_init ← $ᵖ (Fin n → F)
+        pure
+            (Δ₀(multilinearCombine
+                  (affineLineEvaluation (splitHalfRowWiseInterleavedWords u).1 (splitHalfRowWiseInterleavedWords u).2
+                    r_last)
+                  r_init,
+                ↑MC) ≤
+              ↑e))
+      True)
+but is expected to have type
+  @Eq ENNReal
+    ((do
+        let r ← $ᵖ (Fin (n + 1) → F)
+        pure
+            (Δ₀(multilinearCombine
+                  (affineLineEvaluation (splitHalfRowWiseInterleavedWords u).1 (splitHalfRowWiseInterleavedWords u).2
+                    (r (Fin.last n)))
+                  (Fin.init r),
+                ↑MC) ≤
+              ↑e))
+      True)
+    ((do
+        let r_last ← $ᵖ F
+        let r_init ← $ᵖ (Fin n → F)
+        pure
+            (Δ₀(multilinearCombine
+                  (affineLineEvaluation (splitHalfRowWiseInterleavedWords u).1 (splitHalfRowWiseInterleavedWords u).2
+                    r_last)
+                  r_init,
+                ↑MC) ≤
+              ↑e))
+      True)
+interleaved_affine_gaps_imply_tensor_gaps.{l} {ι : Type l} [Fintype ι] [Nonempty ι] [DecidableEq ι] {F : Type}
+  [CommRing F] [Fintype F] {A : Type} [DecidableEq A] [AddCommGroup A] [Module F A] (MC : ModuleCode ι F A) {e ε : ℕ}
+  (hC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε)
+  (h_interleaved_gaps :
+    ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε)
+  (ϑ : ℕ) (hϑ_gt_0 : ϑ > 0) : δ_ε_multilinearCorrelatedAgreement_Nat (↑MC) ϑ e ε
+'interleaved_affine_gaps_imply_tensor_gaps' depends on axioms: [propext, sorryAx, Classical.choice, Quot.sound]
