@@ -1,0 +1,283 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<meta name="description" content="LeanAgent Week 2 ATP 지식 공유. LeanDojo, LeanHammer, InternLM2.5-StepProver, Lean Refactor의 핵심 방법을 설명하는 발표자료.">
+<title>LeanAgent Week 2 · Automated Theorem Proving</title>
+<style>
+:root{--ink:#202735;--muted:#687184;--line:#e4e7ee;--accent:#6252cc;--soft:#f1effb;--green:#177354;--sans:Pretendard,"Apple SD Gothic Neo","Noto Sans KR",system-ui,sans-serif;--mono:"SFMono-Regular",Consolas,monospace}
+*{box-sizing:border-box}body{margin:0;color:var(--ink);background:#edf0f5;font-family:var(--sans)}button{font:inherit;cursor:pointer}button:disabled{opacity:.35;cursor:default}a{color:var(--accent);text-underline-offset:4px}button:focus-visible,a:focus-visible{outline:3px solid var(--accent);outline-offset:4px}[hidden]{display:none!important}
+.toolbar{height:66px;display:flex;align-items:center;justify-content:space-between;padding:0 26px;background:#fff;border-bottom:1px solid var(--line)}.brand{font-size:20px;font-weight:750;text-decoration:none;color:var(--ink)}.brand span{font-size:13px;color:var(--muted);font-weight:500;margin-left:16px}.toolbar nav{display:flex;gap:5px}.toolbar button,.close{border:0;background:transparent;padding:10px 12px;border-radius:6px;color:#535b6d;font-size:13px}.toolbar button:hover,.toolbar button[aria-pressed=true],.close:hover{background:var(--soft);color:var(--accent)}kbd{font:11px var(--mono);border:1px solid var(--line);border-radius:4px;padding:2px 4px;margin-left:5px}
+.workspace{height:calc(100dvh - 124px);display:flex}.viewport{display:flex;align-items:center;justify-content:center;flex:1;min-width:0;overflow:hidden;padding:20px 24px}.frame{position:relative;flex:none}.stage{position:absolute;top:0;left:0;width:1600px;height:900px;transform-origin:top left;background:#fff;box-shadow:0 8px 45px #24304914}
+.slide{width:1600px;height:900px;position:relative;padding:74px 96px 94px;background:#fff;overflow:hidden;display:flex;flex-direction:column}.slide h1{font-size:104px;line-height:1.13;letter-spacing:-5px;margin:0 0 36px;font-weight:760}.slide h2{font-size:58px;line-height:1.2;letter-spacing:-2.3px;margin:0 0 38px}.slide h3{font-size:30px;margin:0 0 15px;font-weight:650;line-height:1.45}.slide p{font-size:29px;line-height:1.65;margin:0 0 22px;letter-spacing:-.4px}.slide li{font-size:29px;line-height:1.65;margin-bottom:16px}.slide ul{margin:0;padding-left:32px}.slide li::marker{color:var(--accent)}.lead{font-size:37px!important;line-height:1.5!important;letter-spacing:-1px!important}.muted{color:var(--muted)}.accent{color:var(--accent)}.small{font-size:23px!important;line-height:1.65!important}.tagline{font-size:22px!important;color:var(--accent);margin-bottom:23px!important}.bottom{margin-top:auto!important;padding-top:20px;color:var(--muted);font-size:23px!important}.two{display:grid;grid-template-columns:1fr 1fr;gap:64px}.two.wide{grid-template-columns:1.15fr 1fr}.rule{border-left:2px solid var(--line);padding-left:46px}.three{display:grid;grid-template-columns:repeat(3,1fr);gap:40px}.process{display:grid;gap:34px;margin:27px 0 36px}.process.four{grid-template-columns:repeat(4,1fr)}.process.five{grid-template-columns:repeat(5,1fr)}.process.three{grid-template-columns:repeat(3,1fr)}.process article{border-top:3px solid var(--accent);padding-top:22px}.process .num{font:23px var(--mono);color:var(--accent);margin-bottom:18px;display:block}.process p{font-size:25px;line-height:1.6}.paperline{font-size:21px!important;color:var(--muted);margin-top:-18px!important;margin-bottom:32px!important}.code{font:27px/1.7 var(--mono);padding:28px 32px;background:#f5f6fa;border:1px solid var(--line);border-radius:8px;margin:0;white-space:pre-wrap;overflow-wrap:anywhere;letter-spacing:-.5px}.code .kw{color:var(--accent)}.legend{display:grid;grid-template-columns:150px 1fr;gap:22px;font-size:26px;line-height:1.5;margin:16px 0}.legend dt{font-weight:650;color:var(--accent)}.legend dd{margin:0}.emphasis{border-left:5px solid var(--accent);padding-left:32px;margin:28px 0;font-size:36px!important;line-height:1.55!important}.term{border-top:1px solid var(--line);padding-top:25px;margin-top:25px}.term p{font-size:26px}.metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:50px;margin:20px 0 36px}.metrics.two-metrics{grid-template-columns:1fr 1fr}.metric{border-top:3px solid var(--line);padding-top:25px}.metric.highlight{border-color:var(--accent)}.metric .value{font-size:94px;line-height:1.1;letter-spacing:-3px;display:block;font-weight:720;margin:22px 0}.metric.highlight .value{color:var(--accent)}.metric h3{font-size:27px}.metric p{font-size:23px;color:var(--muted)}.condition{border-top:1px solid var(--line);padding-top:21px;font-size:23px!important;line-height:1.6!important}.comparison{border-collapse:collapse;width:100%;font-size:27px;line-height:1.5}.comparison th{text-align:left;font-size:22px;color:var(--muted);font-weight:500;border-bottom:2px solid var(--line);padding:0 20px 17px 0}.comparison td{padding:23px 22px 23px 0;border-bottom:1px solid var(--line);vertical-align:top}.comparison td:first-child{font-weight:650;width:24%}.comparison.compact td{padding:18px 22px 18px 0;font-size:26px}.cover{padding-top:112px}.cover h1{font-size:116px;margin-bottom:30px}.cover .subtitle{font-size:42px!important;letter-spacing:-1.5px}.cover .date{font-size:24px!important;color:var(--muted);margin-top:42px!important}.cover-list{display:flex;gap:40px;margin-top:54px;padding-top:28px;border-top:1px solid var(--line)}.cover-list span{font-size:25px}.cover-list small{display:block;font-size:19px;color:var(--muted);margin-top:8px}.section-index{font-size:24px;color:var(--accent);font-family:var(--mono);margin-bottom:28px}.slide-footer{position:absolute;bottom:33px;left:96px;right:96px;border-top:1px solid var(--line);padding-top:18px;display:flex;justify-content:space-between;align-items:center;gap:20px;font-size:17px;color:var(--muted)}.slide-footer a{font-size:16px;color:var(--muted)}.slide-footer .source{display:flex;gap:16px;flex-wrap:wrap}.slide-footer .number{font:17px var(--mono)}
+.demo-buttons{display:flex;gap:12px;margin-top:22px;margin-bottom:20px}.demo-buttons button{padding:12px 20px;background:#fff;border:1px solid var(--line);border-radius:6px;font-size:21px;color:var(--ink)}.demo-buttons button[aria-pressed=true]{background:var(--accent);color:#fff;border-color:var(--accent)}.demo-status{font-size:25px!important;color:var(--green)}.rank-list{list-style:none!important;padding:0!important;margin:8px 0 25px!important}.rank-list li{display:grid;grid-template-columns:60px 160px 1fr;gap:24px;border-bottom:1px solid var(--line);padding:22px 0;margin:0;align-items:center;font-size:27px}.rank-list li:first-child{color:var(--accent);font-weight:650}.rank-list .position{font:24px var(--mono)}.rank-list .detail{font-size:24px;color:var(--muted);font-weight:400}.refs{list-style:none!important;padding:0!important}.refs li{border-top:1px solid var(--line);padding:22px 0;margin:0;font-size:25px}.refs a{font-size:25px}.refs p{font-size:22px;margin:9px 0 0;color:var(--muted)}
+.controls{height:58px;display:flex;align-items:center;justify-content:space-between;padding:0 28px;background:#fff;font-size:13px;color:var(--muted);position:relative}.progress-track{position:absolute;top:0;left:0;right:0;height:3px;background:var(--line)}#progress{height:100%;background:var(--accent)}.pager{display:flex;align-items:center;gap:18px}.pager button{width:35px;height:31px;border:1px solid var(--line);border-radius:5px;background:#fff;font-size:18px}.pager output{min-width:65px;text-align:center;font:13px var(--mono)}
+.notes{width:340px;flex:none;overflow:auto;padding:25px;background:#fff;border-left:1px solid var(--line)}.notes-head{display:flex;align-items:center;justify-content:space-between}.notes h2{font-size:17px;margin:0}.notes h3{font-size:22px;line-height:1.5;margin:24px 0 16px}.notes p{font-size:15px;line-height:1.85;color:#535b6d}.notes .note-hint{font-size:12px;border-top:1px solid var(--line);padding-top:20px;margin-top:28px}.time{color:var(--accent)!important;font-size:12px!important}
+dialog{border:1px solid var(--line);border-radius:12px;padding:28px;width:min(880px,calc(100% - 36px));max-height:85dvh;box-shadow:0 25px 90px #20273522}dialog::backdrop{background:#20273566}.dialog-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}.dialog-head h2{font-size:25px;margin:0}#toc-list{display:grid;grid-template-columns:1fr 1fr;gap:5px 16px}#toc-list button{text-align:left;border:0;background:transparent;border-radius:6px;padding:13px 12px;font-size:14px;line-height:1.5}#toc-list button:hover,#toc-list button[aria-current=true]{background:var(--soft);color:var(--accent)}#toc-list button span{display:inline-block;width:34px;font-family:var(--mono);color:var(--accent)}#status{position:fixed;bottom:76px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:12px 20px;border-radius:6px;z-index:10;font-size:14px}.noscript{padding:25px;background:#fff}html.no-js .workspace{height:auto}html.no-js .viewport{display:block;overflow:visible}html.no-js .frame,html.no-js .stage{position:static;width:auto;height:auto}html.no-js .slide{display:flex;width:auto;height:auto;min-height:600px}
+@media screen and (max-width:760px){.toolbar{height:auto;min-height:62px;padding:12px 16px;gap:8px;flex-wrap:wrap}.brand{font-size:18px}.brand span{font-size:12px}.toolbar nav{gap:2px}.toolbar button{font-size:12px;padding:8px}.toolbar kbd{display:none}.workspace{height:auto;display:block}.viewport{padding:16px 12px;display:block;overflow:visible}.frame,.stage{position:static!important;width:100%!important;height:auto!important;transform:none!important}.slide{width:100%;height:auto;min-height:640px;padding:35px 25px 30px;overflow:visible}.slide h1{font-size:49px;letter-spacing:-2px}.cover h1{font-size:57px}.slide h2{font-size:31px;letter-spacing:-1px;margin-bottom:26px}.slide h3{font-size:22px}.slide p,.slide li{font-size:19px;line-height:1.7}.lead{font-size:25px!important}.tagline{font-size:16px!important}.small,.bottom,.condition{font-size:16px!important}.paperline{font-size:14px!important;margin-top:-12px!important}.two,.two.wide,.three,.process.four,.process.five,.process.three,.metrics,.metrics.two-metrics{grid-template-columns:1fr;gap:22px}.process{margin:15px 0 24px}.process article{padding-top:15px}.process .num{font-size:16px;margin-bottom:8px}.process p{font-size:18px}.rule{border-left:0;padding:22px 0 0;border-top:1px solid var(--line)}.code{font-size:17px;padding:20px}.legend{grid-template-columns:90px 1fr;gap:16px;font-size:17px}.emphasis{font-size:25px!important;padding-left:20px}.term p{font-size:18px}.cover{padding-top:40px}.cover .subtitle{font-size:25px!important}.cover-list{display:block;margin-top:26px}.cover-list span{display:block;font-size:19px;margin-bottom:20px}.cover-list small{font-size:14px}.cover .date{font-size:16px!important;margin-top:20px!important}.section-index{font-size:17px}.slide-footer{position:static;margin-top:32px;font-size:12px;flex-wrap:wrap;padding-top:15px}.slide-footer a,.slide-footer .number{font-size:11px}.comparison{font-size:16px;display:block;overflow-x:auto}.comparison th{font-size:13px;padding-bottom:10px}.comparison td,.comparison.compact td{font-size:16px;padding:14px 12px 14px 0;min-width:90px}.metric .value{font-size:58px;margin:12px 0}.metric h3{font-size:20px}.metric p{font-size:16px}.demo-buttons{flex-wrap:wrap}.demo-buttons button{font-size:15px;padding:10px 13px}.demo-status{font-size:18px!important}.rank-list li{grid-template-columns:26px 70px 1fr;gap:10px;font-size:17px;padding:18px 0}.rank-list .detail{font-size:14px}.rank-list .position{font-size:16px}.refs a,.refs li{font-size:17px}.refs p{font-size:14px}.notes{position:fixed;inset:64px 12px 70px;width:auto;z-index:5;border:1px solid var(--line);border-radius:10px;box-shadow:0 12px 70px #20273544}.controls{padding:0 16px;position:sticky;bottom:0;border-top:1px solid var(--line)}.keyboard-help{display:none}#toc-list{grid-template-columns:1fr}}
+@media print{@page{size:16in 9in;margin:0}body{background:#fff}.toolbar,.controls,.notes,dialog,#status,.demo-buttons{display:none!important}.workspace,.viewport,.frame,.stage{display:block!important;position:static!important;overflow:visible!important;width:1600px!important;height:auto!important;padding:0!important;transform:none!important;box-shadow:none!important}.slide,.slide[hidden]{display:flex!important;width:1600px!important;height:900px!important;break-after:page;page-break-after:always;padding:74px 96px 94px!important}.slide:last-child{break-after:auto;page-break-after:auto}.slide-footer{position:absolute!important}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<header class="toolbar">
+<a class="brand" href="#slide-1">LeanAgent<span>Week 2 ATP</span></a>
+<nav aria-label="발표 도구"><button id="contents" aria-haspopup="dialog">목차 <kbd>T</kbd></button><button id="notes-toggle" aria-pressed="false" aria-controls="notes">발표자 노트 <kbd>N</kbd></button><button id="fullscreen">전체화면 <kbd>F</kbd></button><button id="print">PDF / 인쇄</button></nav>
+</header>
+<main class="workspace">
+<div class="viewport" id="viewport"><div class="frame" id="frame"><div class="stage" id="stage" aria-label="ATP 지식 공유 발표">
+<section class="slide cover" data-section="소개" data-time="1분" data-notes="이번 공유는 ATP의 대표 방법과 증명 최적화를 이해하는 시간입니다. 모델 학습 수식보다 무엇을 입력받고 어떤 선택을 하는지 설명합니다. 약 20분을 기준으로 구성했습니다.">
+<p class="tagline">가짜연구소 LeanAgent / Week 2</p>
+<h1>Automated<br><span class="accent">Theorem Proving</span></h1>
+<p class="subtitle">Lean 자동 증명 시스템의 작동 방식</p>
+<div class="cover-list"><span>LeanDojo<small>검색 기반 tactic 생성</small></span><span>LeanHammer<small>전제 선택과 자동화</small></span><span>StepProver<small>critic 기반 탐색</small></span><span>Lean Refactor<small>전략 검색과 증명 최적화</small></span></div>
+<p class="date">2026년 10월 11일 / ATP부터 증명 최적화까지</p>
+</section>
+<section class="slide" data-section="기초" data-time="1분" data-notes="자연어 문제를 Lean statement로 옮기는 것은 Autoformalization입니다. 오늘은 이미 formal statement가 주어졌을 때 증명을 만드는 ATP를 다룹니다. 에이전트는 이 도구를 호출하고 피드백으로 다음 시도를 조율합니다." data-source="dojo">
+<h2>프로젝트에서 ATP의 위치</h2>
+<p class="lead">ATP의 입력은 형식 명제,<br>출력은 Lean이 검사할 수 있는 증명입니다.</p>
+<div class="process four">
+<article><span class="num">01</span><h3>Lean&Mathlib</h3><p>명제 표현과 라이브러리<br>증명을 작성할 기반</p></article>
+<article><span class="num">02</span><h3>Autoformalization</h3><p>자연어 수학을<br>형식 명제·증명으로 변환</p></article>
+<article><span class="num">03</span><h3 class="accent">ATP</h3><p>주어진 형식 명제에<br>대한 증명 생성·탐색</p></article>
+<article><span class="num">04</span><h3>Verifier-guided Agent</h3><p>도구 호출과 검증 피드백으로<br>시도·수정 과정을 조율</p></article>
+</div>
+<p class="bottom">여러 분야가 하나의 시스템에서 함께 작동할 수 있습니다.</p>
+</section>
+<section class="slide" data-section="기초" data-time="1분" data-notes="논문의 복잡한 예제 대신 작은 Lean 4 예제로 용어를 설명합니다. 현재 n + 0 = n을 증명해야 하고, Nat.add_zero가 사용할 수 있는 보조정리입니다. exact는 그 증명을 목표에 적용하는 tactic입니다. 화면은 설명용이며 Lean을 실행하지 않습니다.">
+<h2>증명 상태, 전제, tactic</h2>
+<div class="two">
+<div><h3>작은 Lean 4 예제</h3><pre class="code"><span class="kw">example</span> (n : Nat) : n + 0 = n := <span class="kw">by</span>
+  exact Nat.add_zero n</pre><div class="term"><p class="small muted">설명용 예제. 브라우저에서 Lean을 실행하지 않습니다.</p></div></div>
+<div><dl class="legend"><dt>Proof state</dt><dd>현재의 가정과 남은 증명 목표<br><code>n : Nat ⊢ n + 0 = n</code></dd><dt>Premise</dt><dd>사용할 수 있는 정리·정의<br><code>Nat.add_zero</code></dd><dt>Tactic</dt><dd>증명 상태에 적용할 명령<br><code>exact Nat.add_zero n</code></dd></dl></div>
+</div>
+<p class="bottom">실제 문제에서는 tactic 하나로 끝나지 않아, 여러 후보와 중간 상태를 탐색합니다.</p>
+</section>
+<section class="slide" data-section="기초" data-time="1분" data-notes="각 명령이 유효한지 확인하면서 여러 상태를 관리합니다. 실패하면 다른 후보를 시도하고, 하나의 분기가 모든 목표를 닫으면 증명을 얻습니다. 전체 증명을 한 번에 생성하는 방식도 있지만 오늘의 주제는 단계별 생성과 자동화 도구입니다." data-source="dojo,step">
+<h2>단계별 증명 탐색</h2>
+<div class="process five">
+<article><span class="num">01</span><h3>상태 읽기</h3><p>가정과 남은<br>목표 확인</p></article>
+<article><span class="num">02</span><h3>후보 생성</h3><p>정리를 찾고<br>tactic 제안</p></article>
+<article><span class="num">03</span><h3>Lean 실행</h3><p>후보가 유효한지<br>상태 변화 확인</p></article>
+<article><span class="num">04</span><h3>경로 선택</h3><p>다음에 확장할<br>상태 선택</p></article>
+<article><span class="num">05</span><h3>증명 완성</h3><p>모든 목표를 닫은<br>분기에서 증명 확보</p></article>
+</div>
+<p class="emphasis">어떤 정리를 쓸지,<br>어떤 상태를 먼저 탐색할지가 중요합니다.</p>
+<p class="bottom">유효한 tactic도 남은 목표를 만들 수 있습니다. 유효성과 탐색 효율은 각각 확인합니다.</p>
+</section>
+<section class="slide" data-section="논문 지도" data-time="45초" data-notes="앞의 세 논문으로 증명 생성과 탐색을 이해하고, Lean Refactor에서 웜업 문제와의 연결을 살펴봅니다." data-source="dojo,hammer,step,refactor">
+<h2>네 논문의 초점</h2>
+<table class="comparison compact"><thead><tr><th>논문 / 시스템</th><th>주요 질문</th><th>핵심 방법</th></tr></thead><tbody>
+<tr><td>LeanDojo / ReProver</td><td>무슨 정리를 참고해<br>다음 tactic을 만들까?</td><td>정리 검색을 활용한 tactic 생성</td></tr>
+<tr><td>LeanPremise / LeanHammer</td><td>어떤 전제를 주면<br>자동화 도구가 목표를 풀까?</td><td>전제 선택과 기호적 증명 탐색</td></tr>
+<tr><td>InternLM2.5-StepProver</td><td>어느 중간 상태를<br>먼저 탐색할까?</td><td>critic으로 상태 우선순위 결정</td></tr>
+<tr><td>Lean Refactor</td><td>기존 증명을<br>어떻게 개선할까?</td><td>리팩터링 전략 검색과 검증</td></tr>
+</tbody></table>
+<p class="bottom">서로 다른 역할을 이해하면 하나의 시스템에서 조합할 지점도 보입니다.</p>
+</section>
+<section class="slide" data-section="LeanDojo" data-time="1분" data-source="dojo" data-notes="LeanDojo는 데이터·상호작용 환경을 제공하고, 논문 안의 ReProver는 검색 기반 prover입니다. 두 이름을 구분합니다. 원문 v2의 본문 실험은 Lean 3 중심이며 Lean 4 내용은 부록 D에 있습니다.">
+<p class="section-index">01 / LeanDojo</p><h2>검색을 활용한 증명 생성</h2>
+<p class="paperline">Yang et al., 2023 / arXiv:2306.15626v2</p>
+<div class="two"><div><h3>LeanDojo: 환경과 데이터</h3><p>증명 상태·tactic·전제 정보를 추출하고,<br>모델이 Lean과 상호작용하도록 연결합니다.</p></div><div class="rule"><h3>ReProver: 증명 모델</h3><p>현재 상태와 검색한 정리를 함께 입력받아<br>다음 tactic 후보를 생성합니다.</p></div></div>
+<div class="process three"><article><span class="num">01</span><h3>사용 가능한 전제</h3><p>import와 선언 위치를 반영</p></article><article><span class="num">02</span><h3>관련 정리 검색</h3><p>증명 상태를 검색 질의로 사용</p></article><article><span class="num">03</span><h3>tactic 후보 생성</h3><p>Lean 실행과 best-first 탐색</p></article></div>
+<p class="bottom">읽은 버전의 본문은 Lean 3 중심입니다. Lean 4 결과는 Appendix D를 참고합니다.</p>
+</section>
+<section class="slide" data-section="LeanDojo" data-time="1분" data-source="dojo" data-notes="첫 버튼은 입력 상태, 두 번째 버튼은 정리를 이용한 tactic을 적용한 뒤의 상태입니다. 이 예시는 ReProver의 실제 출력이 아닌 설명용입니다. 검색한 정리의 이름을 모델이 활용한다는 점만 보여 줍니다.">
+<h2>검색한 정리를 사용하는 예</h2>
+<div class="two wide"><div><h3>현재 상태</h3><pre class="code" id="goal-state" aria-live="polite">n : Nat
+⊢ n + 0 = n</pre><div class="demo-buttons"><button data-goal="before" aria-pressed="true">입력 상태</button><button data-goal="after" aria-pressed="false">tactic 적용 후</button></div><p class="demo-status" id="goal-status">남은 목표 1개</p></div>
+<div class="rule"><h3>검색으로 찾은 보조정리</h3><pre class="code">Nat.add_zero
+  (n : Nat) : n + 0 = n</pre><h3 style="margin-top:28px">생성할 수 있는 tactic</h3><pre class="code">exact Nat.add_zero n</pre></div></div>
+<p class="bottom">설명용 상태 전환입니다. 브라우저가 Lean이나 ReProver를 호출하지 않습니다.</p>
+</section>
+<section class="slide" data-section="LeanDojo" data-time="45초" data-source="dojo" data-notes="논문 Table 2의 novel_premises 조건을 봅니다. 검색을 추가한 모델의 성능이 더 높지만, 이것을 우리 환경의 성능으로 해석하지 않습니다. 처음 보는 전제에 대한 일반화를 평가한 비교입니다.">
+<h2>처음 보는 전제에서의 검색 효과</h2>
+<p class="paperline">LeanDojo Benchmark / novel_premises / 논문 Table 2</p>
+<div class="metrics two-metrics"><div class="metric"><h3>ReProver / 검색 제외</h3><strong class="value">23.2%</strong><p>검색한 전제를 입력에 추가하지 않은 비교 모델</p></div><div class="metric highlight"><h3>ReProver / 검색 사용</h3><strong class="value">26.3%</strong><p>현재 상태에 관련 전제를 검색해 제공</p></div></div>
+<p class="condition">Lean 3 / Pass@1 / 문제당 탐색 시간 최대 10분<br>테스트 증명은 학습 중 사용되지 않은 전제를 적어도 하나 사용합니다.</p>
+<p class="bottom">우리 프로젝트의 결과가 아닌, 해당 논문에서 보고한 비교입니다.</p>
+</section>
+<section class="slide" data-section="LeanHammer" data-time="1분 30초" data-source="hammer" data-notes="일반 hammer는 전제 선택, 외부 증명기, 재구성으로 설명하지만 LeanHammer는 Aesop이 먼저 실행되고 전제를 내부·외부 양쪽에 사용합니다. 단순한 직선 파이프라인으로 오해하지 않도록 설명합니다.">
+<p class="section-index">02 / LeanHammer</p><h2>전제 선택과 기호적 자동화</h2>
+<p class="paperline">Premise Selection for a Lean Hammer / Zhu et al. / 읽은 버전: v2, 2026</p>
+<p class="lead">LeanPremise가 전제를 고르고,<br>LeanHammer가 자동화 도구로 목표를 풉니다.</p>
+<div class="process four"><article><span class="num">01</span><h3>Aesop</h3><p>기본 규칙으로 빠르게 시도</p></article><article><span class="num">02</span><h3>LeanPremise</h3><p>목표를 풀 전제를 선택<br>로컬 정리도 포함</p></article><article><span class="num">03</span><h3>두 활용 경로</h3><p>Aesop의 전제 적용<br>Lean-auto의 외부 탐색</p></article><article><span class="num">04</span><h3>Lean 증명 확보</h3><p>내부에서 직접 완성하거나<br>Duper로 재구성</p></article></div>
+<p class="bottom">다음 tactic에 쓸 전제보다, 목표를 끝까지 풀 때 필요한 전제를 학습합니다.</p>
+</section>
+<section class="slide" data-section="LeanHammer" data-time="1분" data-source="hammer" data-notes="Lean-auto는 번역·연결을 담당하고 Zipperposition이 외부 탐색을 합니다. 외부에서 성공해도 Lean 증명을 확보해야 합니다. 재구성에는 외부 증명이 실제 사용한 전제 집합을 Duper에 전달합니다.">
+<h2>외부 증명기의 결과를 Lean에서 확인</h2>
+<div class="process four"><article><span class="num">01</span><h3>Lean-auto</h3><p>목표·전제를<br>고차 논리 문제로 변환</p></article><article><span class="num">02</span><h3>Zipperposition</h3><p>변환한 문제에서<br>기호적으로 증명 탐색</p></article><article><span class="num">03</span><h3>Duper</h3><p>외부 탐색이 사용한 전제로<br>Lean 증명 재구성</p></article><article><span class="num">04</span><h3>Lean kernel</h3><p>최종 증명항의<br>정당성 검사</p></article></div>
+<p class="emphasis">필요한 전제를 찾는 것과<br>그 전제로 증명을 완성하는 것은 별개의 단계입니다.</p>
+<p class="bottom">논문은 전제 누락, 번역 범위, 자동화가 지원하는 추론의 한계를 분석합니다.</p>
+</section>
+<section class="slide" data-section="LeanHammer" data-time="45초" data-source="hammer" data-notes="같은 LeanHammer full 파이프라인에서 전제 선택기만 달리한 결과입니다. MePo와 LeanPremise large를 비교합니다. 누적·앙상블 조건과 혼동하지 않고 full의 숫자만 사용합니다.">
+<h2>전제 선택기가 증명 성공률에 주는 영향</h2>
+<p class="paperline">Mathlib-test / LeanHammer full / 논문 Table 2</p>
+<div class="metrics two-metrics"><div class="metric"><h3>MePo / 기호적 전제 선택</h3><strong class="value">26.3%</strong><p>기존 선택기를 사용하는 비교 조건</p></div><div class="metric highlight"><h3>LeanPremise large / 학습 기반 선택</h3><strong class="value">30.1%</strong><p>동일한 full 파이프라인에서 비교</p></div></div>
+<p class="condition">Lean 4.16.0 / Mathlib 테스트 정리 500개 / 정리당 최대 300초<br>Lean heartbeat 한도 200,000 / 외부 증명기 호출당 최대 10초</p>
+<p class="bottom">앞의 LeanDojo 실험과 데이터·버전·시간 조건이 달라 수치를 직접 비교할 수 없습니다.</p>
+</section>
+<section class="slide" data-section="StepProver" data-time="1분" data-source="step" data-notes="Prover는 후보 tactic을 생성하고 critic은 현재 상태에 점수를 줍니다. critic의 점수는 탐색 휴리스틱이고 Lean이 실제 유효성을 판정합니다. 검색 중 얻은 성공 경로에서 선호 쌍을 만들어 critic을 학습합니다.">
+<p class="section-index">03 / InternLM2.5-StepProver</p><h2>critic을 활용한 경로 선택</h2>
+<p class="paperline">Wu et al. / 최초 공개 2024 / 읽은 버전: v2, 2025</p>
+<div class="two"><div><h3>Prover</h3><p>증명 상태·이전 tactic 문맥을 보고<br>다음 tactic 후보를 생성합니다.</p><div class="term"><h3>Lean</h3><p>후보를 실행해 유효성을 확인하고<br>새 증명 상태를 만듭니다.</p></div></div><div class="rule"><h3 class="accent">Critic</h3><p>중간 상태에 점수를 주고<br>다음에 탐색할 상태를 고릅니다.</p><div class="term"><h3>학습 신호</h3><p>성공 경로에서 상태의 선호 관계를 추출합니다.<br>탐색·재학습을 expert iteration으로 반복합니다.</p></div></div></div>
+<p class="bottom">critic 점수는 탐색 우선순위입니다. 증명의 정당성은 Lean이 검사합니다.</p>
+</section>
+<section class="slide" data-section="StepProver" data-time="1분" data-source="step" data-notes="버튼을 바꾸면 다음에 확장할 후보의 순서가 바뀝니다. 이름과 순서는 개념 설명용이며 논문 실험 데이터나 실제 Lean 실행 결과가 아닙니다. 핵심은 생성 확률만 보는 방식에 중간 상태 평가를 추가한다는 것입니다.">
+<h2>다음에 확장할 상태의 우선순위</h2>
+<p class="lead">후보 생성 이후에도<br>어떤 상태부터 볼지 결정해야 합니다.</p>
+<div class="demo-buttons"><button data-ranking="baseline" aria-pressed="true">생성 확률 기반</button><button data-ranking="critic" aria-pressed="false">critic 상태 평가 기반</button></div>
+<ol class="rank-list" id="rank-list" aria-live="polite" style="margin-top:0!important">
+<li data-candidate="A"><span class="position">01</span><span>상태 A</span><span class="detail">후보 경로 A의 중간 상태</span></li>
+<li data-candidate="B"><span class="position">02</span><span>상태 B</span><span class="detail">후보 경로 B의 중간 상태</span></li>
+<li data-candidate="C"><span class="position">03</span><span>상태 C</span><span class="detail">후보 경로 C의 중간 상태</span></li>
+</ol>
+<p class="small" id="rank-description">생성한 tactic의 확률 정보를 활용해 상태 A를 먼저 확장합니다.</p>
+<p class="bottom small" style="padding-top:8px">설명용 순서 예시입니다. 실제 모델 점수·실험 데이터가 아닙니다.</p>
+</section>
+<section class="slide" data-section="StepProver" data-time="45초" data-source="step" data-notes="같은 논문의 동일한 예산 행을 비교합니다. BF 59.4, CG 65.6, BF+CG 65.9입니다. 65.9를 critic 단독 결과라고 말하지 않습니다. 표의 Pass 항목은 시도 수, tactic 수, 확장 한도로 표시한 값입니다.">
+<h2>탐색 방식에 따른 성공률</h2>
+<p class="paperline">miniF2F-test / InternLM2.5-StepProver 7B / 논문 Table 1</p>
+<div class="metrics"><div class="metric"><h3>Best-first / BF</h3><strong class="value">59.4%</strong><p>생성 확률 기반 탐색</p></div><div class="metric highlight"><h3>Critic-guided / CG</h3><strong class="value">65.6%</strong><p>상태 평가 기반 탐색</p></div><div class="metric"><h3>BF + CG</h3><strong class="value">65.9%</strong><p>두 탐색 방식 결합</p></div></div>
+<p class="condition">Lean 4.7.0에 맞춘 miniF2F / 표의 예산: 256 × 32 × 600<br>256회 시도, 확장당 32개 tactic 후보, 시도당 최대 600개 상태 확장</p>
+<p class="bottom">여기서는 같은 논문의 같은 예산 행을 비교합니다. 세 논문의 순위를 매기는 수치는 아닙니다.</p>
+</section>
+<section class="slide" data-section="Lean Refactor" data-time="1분 30초" data-source="refactor" data-notes="LLM 본체는 고정하고 전략 검색기는 학습합니다. 검색 전략의 비용·버전 정보를 활용합니다. Algorithm 1은 컴파일 성공과 길이 감소를 후보 수용 조건으로 둡니다.">
+<p class="section-index">04 / Lean Refactor</p><h2>전략 검색으로 증명 최적화</h2>
+<p class="paperline">Lu et al., 2026 / arXiv:2605.20244v2</p>
+<p class="lead">기존 증명의 길이·컴파일 비용·버전 호환성을 개선합니다.</p>
+<div class="process four">
+<article><span class="num">01 / Retrieval</span><h3>전략 검색</h3><p>적용 조건과 예시 검색<br>비용 재정렬·버전 필터</p></article>
+<article><span class="num">02 / Planner</span><h3>수정 계획</h3><p>어느 구간을<br>어떻게 바꿀지 선택</p></article>
+<article><span class="num">03 / Refactorer</span><h3>후보 작성</h3><p>계획에 따라 변경<br>Lean으로 검증</p></article>
+<article><span class="num">04 / Debugger</span><h3>오류 수정</h3><p>컴파일 피드백으로 수정<br>성공하면 다시 계획</p></article>
+</div>
+<p class="bottom">검색 대상: 보조정리뿐 아니라, 언제·어떻게 증명을 바꿀지 설명하는 전략.</p>
+</section>
+<section class="slide" data-section="Lean Refactor" data-time="1분 30초" data-source="refactor" data-notes="두 수치는 서로 다른 설정입니다. 길이 중심 검색은 miniF2F의 평균 상대 컴파일 시간을 103.98% 늘렸고, 비용 재정렬이 이를 개선합니다. ProofOptimizer와 모델·예산이 일치하지 않습니다.">
+<h2>길이와 실행 비용을 함께 측정</h2>
+<p class="paperline">miniF2F / Lean Refactor / Tables 1, 4 및 Appendix K</p>
+<div class="metrics two-metrics"><div class="metric"><h3>길이 중심 검색</h3><strong class="value">88.40%</strong><p>평균 상대 토큰 감소율</p></div><div class="metric highlight"><h3>비용 기준 재정렬</h3><strong class="value">30.17%</strong><p>평균 상대 컴파일 시간 감소율</p></div></div>
+<p class="condition">Gemini 3 Flash / Lean 4.24.0 / 정리당 API 호출 예산 30<br>시간 측정은 import 제외, 5회 반복. Heartbeat는 별도 측정: 원본 36.3K → 재정렬 9.2K.</p>
+<p class="bottom">짧아진 후보도 비용이 커질 수 있습니다. 우리 웜업에서는 실제 측정값으로 선택합니다.</p>
+</section>
+<section class="slide" data-section="비교와 적용" data-time="1분" data-source="dojo,hammer,step,refactor" data-notes="네 방법은 기능 단위로 함께 사용할 수 있습니다. 정리를 검색해 tactic을 만들고, critic으로 탐색 순서를 정하며, 중간 목표를 hammer로 닫는 조합을 생각할 수 있습니다. 전략 검색은 개선 후보를 만드는 데 연결합니다. 이는 팀 적용 아이디어입니다.">
+<h2>방법을 기능별로 비교</h2>
+<table class="comparison compact"><thead><tr><th>방법</th><th>모델의 역할</th><th>증명 탐색·최적화</th></tr></thead><tbody>
+<tr><td>ReProver</td><td>관련 전제 검색<br>다음 tactic 생성</td><td>후보 tactic을 Lean에서 실행<br>best-first 탐색</td></tr>
+<tr><td>LeanHammer</td><td>목표를 풀 전제 선택</td><td>Aesop, 외부 증명기와<br>Duper 재구성</td></tr>
+<tr><td>StepProver</td><td>tactic 생성<br>critic으로 상태 평가</td><td>유효한 중간 상태 중<br>탐색 우선순위 결정</td></tr>
+<tr><td>Lean Refactor</td><td>전략 검색과 수정 계획</td><td>기존 증명을 변경하고<br>컴파일 피드백으로 수정</td></tr>
+</tbody></table>
+<p class="bottom">팀 적용 아이디어: 검색·tactic 생성·목표 자동화·상태 평가를 필요한 위치에 조합합니다.</p>
+</section>
+<section class="slide" data-section="비교와 적용" data-time="1분 30초" data-notes="우리 대회에는 이미 원래 증명이 있습니다. 앞의 세 논문은 증명 생성·탐색을, Lean Refactor는 기존 증명의 최적화를 다룹니다. 검색과 자동화로 후보를 만들고 원본과 함께 측정하는 아이디어를 설명합니다. 이 장은 팀의 적용 아이디어입니다.">
+<h2>웜업 문제 연구에 적용할 아이디어</h2>
+<p class="lead">원래 증명을 이해하고,<br>검증 가능한 대안 증명을 비교합니다.</p>
+<div class="process three"><article><span class="num">01 / 검색</span><h3>기존 정리 활용</h3><p>긴 증명 구간을 대체할<br>보조정리 후보 찾기</p></article><article><span class="num">02 / 자동화</span><h3>부분 목표 해결</h3><p>자동화 tactic을 사용한<br>대안 증명 확인</p></article><article><span class="num">03 / 후보 선택</span><h3>여러 풀이 비교</h3><p>검증 결과와 측정값으로<br>최종 후보 선택</p></article></div>
+<p class="small">제안한 정리가 현재 import·버전에서 사용 가능한지 먼저 확인합니다.<br>증명 길이, heartbeat, 버전 호환성을 함께 측정하고 모델 호출 비용을 기록합니다.</p>
+<p class="bottom">팀 적용 아이디어입니다. 논문의 증명 성공률과 대회의 최적화 점수는 다른 지표입니다.</p>
+</section>
+<section class="slide" data-section="마무리" data-time="45초" data-notes="오늘의 핵심을 확인하는 질문입니다. 정리 검색, 증명 생성, 탐색 우선순위, 전략 검색의 역할을 구분하고 실제 웜업에 연결합니다." data-source="dojo,hammer,step,refactor">
+<h2>오늘 공유할 핵심</h2>
+<div class="process four"><article><span class="num">LeanDojo / ReProver</span><h3>관련 정리를 찾아<br>다음 tactic 생성</h3></article><article><span class="num">LeanHammer</span><h3>선택한 전제로<br>자동화 도구 실행</h3></article><article><span class="num">StepProver</span><h3>중간 상태를 평가해<br>탐색 순서 결정</h3></article><article><span class="num">Lean Refactor</span><h3>전략을 찾아<br>증명 개선</h3></article></div>
+<p class="emphasis">후보를 제안하는 모델과<br>증명을 검사하는 Lean은 다른 역할을 합니다.</p>
+<p class="bottom">함께 생각할 질문: 우리 문제에서는 정리 검색과 증명 탐색 중 어디에서 더 막혔나요?</p>
+</section>
+<section class="slide" data-section="출처" data-time="참고" data-notes="확인한 원문 버전과 읽은 부분을 기록했습니다. 화면의 개념 예시는 논문 그림을 재현한 실험이 아닙니다. 모든 실험 수치는 해당 논문에서 가져왔습니다.">
+<h2>출처와 읽은 부분</h2>
+<ul class="refs">
+<li><a href="https://arxiv.org/abs/2306.15626v2" target="_blank" rel="noopener noreferrer">LeanDojo: Theorem Proving with Retrieval-Augmented Language Models</a><p>Yang et al. / 2023 / v2 · §3–6, Table 2, Appendix C.1 및 D</p></li>
+<li><a href="https://arxiv.org/abs/2506.07477v2" target="_blank" rel="noopener noreferrer">Premise Selection for a Lean Hammer</a><p>Zhu et al. / 최초 공개 2025 / 읽은 버전 v2, 2026 · §3.1–3.4, §4.1–4.2, Table 2</p></li>
+<li><a href="https://arxiv.org/abs/2410.15700v2" target="_blank" rel="noopener noreferrer">InternLM2.5-StepProver: Advancing Automated Theorem Proving via Critic-Guided Search</a><p>Wu et al. / 최초 공개 2024 / 읽은 버전 v2, 2025 · §2.1–2.2, §3.1, Table 1</p></li>
+<li><a href="https://arxiv.org/abs/2605.20244v2" target="_blank" rel="noopener noreferrer">Lean Refactor: Multi-Objective Controllable Proof Optimization via Agentic Strategy Search</a><p>Lu et al. / 2026 / v2 · §3–4, §6, Tables 1·4, Algorithm 1, Appendices C·K</p></li>
+</ul>
+<p class="bottom">각 방법의 세부 알고리즘과 실험 조건은 원문에서 확인할 수 있습니다.</p>
+</section>
+</div></div></div>
+<aside id="notes" class="notes" hidden aria-label="발표자 노트"><div class="notes-head"><h2>발표자 노트</h2><button id="notes-close" class="close">닫기</button></div><p class="time" id="notes-time"></p><h3 id="notes-title"></h3><p id="notes-body"></p><p class="note-hint">노트는 화면 옆에 표시됩니다. 화면 공유 전 닫아주세요.</p></aside>
+</main>
+<footer class="controls"><div class="progress-track" aria-hidden="true"><div id="progress"></div></div><span id="section-label"></span><div class="pager"><button id="previous" aria-label="이전 슬라이드">←</button><output id="counter" aria-live="polite"></output><button id="next" aria-label="다음 슬라이드">→</button></div><span class="keyboard-help">← → 이동 / Home · End 처음과 끝</span></footer>
+<dialog id="toc" aria-labelledby="toc-title"><div class="dialog-head"><h2 id="toc-title">발표 목차</h2><button id="toc-close" class="close">닫기 <kbd>Esc</kbd></button></div><div id="toc-list"></div></dialog>
+<div id="status" role="status" hidden></div>
+<noscript><style>.workspace{height:auto}.viewport{display:block;overflow:visible}.frame,.stage{position:static;width:auto;height:auto}.slide{display:flex;width:auto;height:auto;min-height:600px}.toolbar,.controls{display:none}</style><p class="noscript">JavaScript가 꺼져 있어 모든 슬라이드를 순서대로 표시합니다.</p></noscript>
+<script>
+'use strict';
+(() => {
+const slides=[...document.querySelectorAll('.slide')];
+const $=id=>document.getElementById(id);
+const sources={
+dojo:{label:'LeanDojo §3–6',url:'https://arxiv.org/html/2306.15626v2'},
+hammer:{label:'LeanHammer §3–4',url:'https://arxiv.org/html/2506.07477v2'},
+step:{label:'StepProver §2–3',url:'https://arxiv.org/html/2410.15700v2'},
+refactor:{label:'Lean Refactor §3–4, App. K',url:'https://arxiv.org/html/2605.20244v2'}
+};
+let index=0,statusTimer;
+slides.forEach((slide,i)=>{
+slide.id='slide-'+(i+1);
+const footer=document.createElement('footer');footer.className='slide-footer';
+const left=document.createElement('span');left.className='source';
+if(slide.dataset.source){slide.dataset.source.split(',').forEach(key=>{const s=sources[key];const a=document.createElement('a');a.href=s.url;a.target='_blank';a.rel='noopener noreferrer';a.textContent=s.label;left.append(a);});}
+else left.textContent='LeanAgent Week 2 / '+slide.dataset.section;
+const right=document.createElement('span');right.className='number';right.textContent=String(i+1).padStart(2,'0')+' / '+slides.length;
+footer.append(left,right);slide.append(footer);
+const b=document.createElement('button');b.type='button';b.dataset.slide=i;b.innerHTML='<span>'+String(i+1).padStart(2,'0')+'</span>'+slide.querySelector('h1,h2').textContent;
+b.addEventListener('click',()=>{show(i);$('toc').close();$('contents').focus();});$('toc-list').append(b);
+});
+function resize(){
+if(matchMedia('(max-width:760px)').matches)return;
+const viewport=$('viewport'),scale=Math.min((viewport.clientWidth-48)/1600,(viewport.clientHeight-40)/900);
+$('frame').style.width=1600*Math.max(scale,.05)+'px';$('frame').style.height=900*Math.max(scale,.05)+'px';$('stage').style.transform='scale('+Math.max(scale,.05)+')';
+}
+function show(next,updateHash=true){
+index=Math.max(0,Math.min(slides.length-1,next));
+slides.forEach((s,i)=>{s.hidden=i!==index;if(i===index)s.setAttribute('aria-current','step');else s.removeAttribute('aria-current');});
+$('counter').textContent=(index+1)+' / '+slides.length;$('section-label').textContent=slides[index].dataset.section;
+$('previous').disabled=index===0;$('next').disabled=index===slides.length-1;
+$('progress').style.width=((index+1)/slides.length*100)+'%';
+$('notes-title').textContent=slides[index].querySelector('h1,h2').textContent;$('notes-body').textContent=slides[index].dataset.notes||'';$('notes-time').textContent=slides[index].dataset.time||'';
+[...$('toc-list').children].forEach((b,i)=>{if(i===index)b.setAttribute('aria-current','true');else b.removeAttribute('aria-current');});
+if(updateHash)history.replaceState(null,'','#slide-'+(index+1));resize();
+if(matchMedia('(max-width:760px)').matches)window.scrollTo({top:0,behavior:'instant'});
+}
+function toggleNotes(force){const open=force===undefined?$('notes').hidden:force;$('notes').hidden=!open;$('notes-toggle').setAttribute('aria-pressed',String(open));resize();}
+function notify(message){clearTimeout(statusTimer);$('status').textContent=message;$('status').hidden=false;statusTimer=setTimeout(()=>{$('status').hidden=true;},3000);}
+function fromHash(){const m=location.hash.match(/^#slide-(\d+)$/);show(m?Number(m[1])-1:0,false);}
+$('previous').addEventListener('click',()=>show(index-1));$('next').addEventListener('click',()=>show(index+1));
+$('contents').addEventListener('click',()=>$('toc').showModal());$('toc-close').addEventListener('click',()=>$('toc').close());
+$('notes-toggle').addEventListener('click',()=>toggleNotes());$('notes-close').addEventListener('click',()=>{toggleNotes(false);$('notes-toggle').focus();});
+$('fullscreen').addEventListener('click',async()=>{try{if(document.fullscreenElement)await document.exitFullscreen();else if(document.documentElement.requestFullscreen)await document.documentElement.requestFullscreen();else notify('이 브라우저는 전체화면을 지원하지 않습니다.');}catch{notify('전체화면을 열 수 없습니다. 브라우저 설정을 확인해주세요.');}});
+$('print').addEventListener('click',()=>window.print());
+document.querySelectorAll('[data-goal]').forEach(b=>b.addEventListener('click',()=>{
+const after=b.dataset.goal==='after';$('goal-state').textContent=after?'no goals':'n : Nat\n⊢ n + 0 = n';$('goal-status').textContent=after?'남은 목표 0개 / 예시 증명 완성':'남은 목표 1개';
+document.querySelectorAll('[data-goal]').forEach(btn=>btn.setAttribute('aria-pressed',String(btn===b)));
+}));
+const rankItems=Object.fromEntries([...$('rank-list').children].map(li=>[li.dataset.candidate,li]));
+document.querySelectorAll('[data-ranking]').forEach(b=>b.addEventListener('click',()=>{
+const critic=b.dataset.ranking==='critic',order=critic?['C','A','B']:['A','B','C'];
+order.forEach((key,i)=>{rankItems[key].querySelector('.position').textContent=String(i+1).padStart(2,'0');$('rank-list').append(rankItems[key]);});
+$('rank-description').textContent=critic?'중간 상태의 critic 평가를 활용해 상태 C를 먼저 확장합니다.':'생성한 tactic의 확률 정보를 활용해 상태 A를 먼저 확장합니다.';
+document.querySelectorAll('[data-ranking]').forEach(btn=>btn.setAttribute('aria-pressed',String(btn===b)));
+}));
+document.addEventListener('keydown',e=>{
+if(e.altKey||e.metaKey||e.ctrlKey||/INPUT|TEXTAREA|SELECT/.test(e.target.tagName)||e.target.isContentEditable)return;
+if($('toc').open)return;
+if(e.key==='Escape'){toggleNotes(false);return;}
+if(e.key==='ArrowRight'||e.key==='PageDown'){e.preventDefault();show(index+1);}
+else if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();show(index-1);}
+else if(e.key===' '&&e.target===document.body){e.preventDefault();show(index+1);}
+else if(e.key==='Home'){e.preventDefault();show(0);}
+else if(e.key==='End'){e.preventDefault();show(slides.length-1);}
+else if(e.key.toLowerCase()==='t')$('contents').click();
+else if(e.key.toLowerCase()==='n')toggleNotes();
+else if(e.key.toLowerCase()==='f')$('fullscreen').click();
+});
+window.addEventListener('resize',resize);window.addEventListener('hashchange',fromHash);window.addEventListener('afterprint',resize);
+new ResizeObserver(resize).observe($('viewport'));
+fromHash();
+})();
+</script>
+</body>
+</html>
