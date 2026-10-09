@@ -24,7 +24,7 @@
 | --- | --- | --- |
 | 남성우 | 1, 2 | [Refactor Report · Warm-up 1 & 2](./warmup-problems-1-2.html) |
 
-문제 자체를 먼저 이해하려면 [Warm-up 1·2 ELI5](./warmup-problems-1-2-eli5.md)를 읽습니다. 이어서 [Refactor Arena 공부 지도와 논문 추천](../../research/autoformalization/refactor-arena-study-guide.md)에서 읽기 순서와 실험 아이디어를 확인합니다.
+처음 소개할 때는 [Warm-up 1·2 HTML 해설](./warmup-problems-1-2.html)의 Strata 소개 → AST 순회 데모 → 두 정리 → 새 증명과 측정 결과 순서로 읽습니다. 텍스트로 공부하려면 [Warm-up 1·2 ELI5](./warmup-problems-1-2-eli5.md)를 참고합니다. 이어서 [Refactor Arena 공부 지도와 논문 추천](../../research/autoformalization/refactor-arena-study-guide.md)에서 읽기 순서와 실험 아이디어를 확인합니다.
 
 ## 논문 분야 담당
 
