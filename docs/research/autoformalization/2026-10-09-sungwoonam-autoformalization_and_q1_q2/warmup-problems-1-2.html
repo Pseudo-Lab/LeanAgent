@@ -393,43 +393,165 @@
       <div class="diag" style="margin-top:18px">
         <div class="card">
           <h3 style="margin-top:0">원래 프로젝트에 왜 필요한 정리인가?</h3>
-          <p>이름을 추출하거나 식을 바꿀 때, 변환 결과에 엉뚱한 변수 이름이 끼어들지 않는다는 보조 성질이 필요합니다. 1·2번은 이 <strong>변수 이름 관리</strong>를 증명하는 작은 부품입니다. 두 정리만으로 변환 전체의 의미 보존을 증명하지는 않습니다.</p>
+          <p>이름을 추출하거나 식을 바꿀 때, 변환 결과에 엉뚱한 변수 이름이 끼어들지 않는다는 보조 성질이 필요합니다. 1·2번은 이 <strong>변수 이름 관리</strong>를 증명하는 작은 부품입니다. 두 정리만으로 변환 전체의 의미 보존을 증명하지는 않습니다. 우리의 과제는 <strong>같은 명제를 증명하면서 반복을 줄이고 읽기 좋은 구조로 고치는 것</strong>입니다. 이 두 문제는 AST의 경우 분석과 목록 포함 관계가 반복되어, 공통 처리와 귀납 대상 선택을 연습하기 좋습니다. 이는 이 사례를 공부하는 이유에 대한 설명입니다.</p>
         </div>
         <div class="card">
-          <h3 style="margin-top:0">왜 리팩터링 연습 문제인가?</h3>
-          <p>원래 증명은 이미 있습니다. 우리의 과제는 <strong>같은 명제를 증명하면서 반복을 줄이고 읽기 좋은 구조로 고치는 것</strong>입니다. 이 두 문제는 AST의 경우 분석과 목록 포함 관계가 반복되어, 공통 처리와 귀납 대상 선택을 연습하기 좋습니다. 이는 이 사례를 공부하는 이유에 대한 설명입니다.</p>
+          <h3 style="margin-top:0">용어 정리</h3>
+          <p>bvar: bound variable, fvar: free variable. <div style="text-align: center; margin: 20px 0;">
+    <math display="block" style="font-size: 1.5rem;">
+      <munderover>
+        <mo>&sum;</mo>
+        <mrow>
+          <mi style="color: #2563eb; font-weight: bold;">k</mi>
+          <mo>=</mo>
+          <mn>1</mn>
+        </mrow>
+        <mn>10</mn>
+      </munderover>
+      <mrow>
+        <mo>(</mo>
+        <mi style="color: #2563eb; font-weight: bold;">k</mi>
+        <mo>+</mo>
+        <mi style="color: #dc2626; font-weight: bold;">a</mi>
+        <mo>)</mo>
+      </mrow>
+    </math>
+  </div> 여기서 k가 bvar, a는 fvar에 해당합니다. const: 전역에 정의된 상수, lit: literal. 컴파일러가 바로 인식하는 값, op: operation, abs: 추상화, quant:quantifier, eq: equality, ite: if-then-else, cih, tih, eih: 조건식 자체가 성립하는지 판정하는 근거나 then/else분기 안에서 쓸 수 있는 가설 </p>
         </div>
       </div>
       <p class="muted">변환 알고리즘을 빠르게 만드는 작업과, 그 성질을 보이는 증명 코드를 고치는 작업은 별개입니다. 여기서는 증명 코드를 고칩니다. 실습은 Lean v4.26.0과 Strata revision <code>451e5f0</code>입니다.</p>
     </section>
 
+    
     <section id="ast">
-      <h2>AST와 순회: 식을 나무로 보고 따라가기</h2>
-      <div class="card">
-        <p><strong>AST(Abstract Syntax Tree, 추상 구문 트리)</strong>는 식의 구조를 나무 형태의 데이터로 나타낸 것입니다. <code>x = old(y) + z</code>를 보면 맨 위에는 등식, 그 아래에는 왼쪽 식 x와 오른쪽 덧셈이 있습니다. 괄호의 글자 위치보다 “어떤 연산에 어떤 식이 들어가는가”를 담습니다.</p>
-        <div class="ast-demo">
-          <div>
-            <p class="muted">이해를 위한 단순화된 나무</p>
-            <pre class="tree" aria-label="등식의 왼쪽은 x, 오른쪽은 old(y)와 z의 덧셈"><code><span data-node="0">= (등식)</span>
-├─ <span data-node="1">x</span>
-└─ <span data-node="2">+ (덧셈)</span>
-   ├─ <span data-node="3">old</span>
-   │  └─ <span data-node="4">y</span>
-   └─ <span data-node="5">z</span></code></pre>
-          </div>
-          <div>
-            <p><strong>순회(traversal)</strong>는 나무의 노드를 일정한 규칙으로 방문하는 일입니다. 방문하면서 이름을 모을 수도 있고, 특정 모양을 찾아 다른 식으로 바꿀 수도 있습니다.</p>
-            <p>아래에서는 위에서 시작해 왼쪽 가지부터 방문합니다. 변수 노드일 때만 이름을 모으면 <code>[x, y, z]</code>를 얻습니다. <code>old</code>와 <code>+</code>는 연산자이므로 변수 이름에 넣지 않습니다.</p>
-            <div class="demo-controls"><button type="button" id="ast-next">다음 노드 방문</button><button type="button" id="ast-reset">처음으로</button></div>
-            <p id="ast-status" role="status" aria-live="polite">방문 전 · 모은 이름: []</p>
-          </div>
-        </div>
-        <p class="muted">이 데모는 설명용이며 Lean 실행 결과가 아닙니다. 실제 Strata에서는 <code>old(y)</code>를 <code>app (op old) (fvar y)</code>처럼 표현합니다. <code>app</code>은 함수 적용, <code>op</code>는 연산자, <code>fvar</code>는 자유 변수입니다. 타입과 메타데이터는 그림에서 생략했습니다.</p>
-        <h3>순회와 귀납은 어떻게 연결될까?</h3>
-        <p>순회 함수는 큰 식을 작은 식으로 나누어 처리합니다. <strong>구조 귀납</strong>은 그 함수의 성질을 증명할 때, “작은 식에서 성질이 성립한다고 가정하고, 그 식들을 조립한 큰 식에서도 성립함”을 보이는 방법입니다. 이름을 모으는 실행과, 그 실행이 올바르다는 증명은 서로 다른 작업입니다.</p>
-        <p>예를 들어 덧셈의 왼쪽에서 얻은 이름이 허용 범위 안에 있고 오른쪽도 그렇다면, 둘을 합친 목록도 전체 허용 범위 안에 있습니다. 이 반복되는 논리가 뒤에서 나올 <code>List.Subset.app</code>과 귀납 가설 연결의 핵심입니다.</p>
+  <h2>AST와 순회: 식을 나무로 보고 따라가기</h2>
+  <div class="card">
+    <p><strong>AST(Abstract Syntax Tree, 추상 구문 트리)</strong>는 식의 논리 구조를 나무 형태의 데이터로 나타낸 것입니다. <code>∀ x, if x = 0 then 1 else x + a</code> 같은 명제를 보면, 바깥쪽의 한정자(quant)부터 안쪽의 조건 분기(ite)와 등식(eq), 그리고 묶인 변수(bvar)와 열린 변수(fvar)까지 계층적으로 연결됩니다.</p>
+    <div class="ast-demo">
+      <div>
+        <p class="muted">이해를 위한 단순화된 나무</p>
+        <pre class="tree" aria-label="한정자 아래에 ite 분기, 조건에는 등식, then/else 분기에는 각 식과 가설이 위치함"><code><span data-node="0">quant (∀ x)</span>
+└─ <span data-node="1">ite (조건 분기)</span>
+   ├─ <span data-node="2">eq (조건식: =)</span>
+   │  ├─ <span data-node="3">bvar (x)</span>
+   │  └─ <span data-node="4">lit (0)</span>
+   ├─ <span data-node="5">then (tih: x = 0 가설)</span>
+   │  └─ <span data-node="6">lit (1)</span>
+   └─ <span data-node="7">else (eih: x ≠ 0 가설)</span>
+      └─ <span data-node="8">op (+)</span>
+         ├─ <span data-node="9">bvar (x)</span>
+         └─ <span data-node="10">fvar (a)</span></code></pre>
       </div>
-    </section>
+      <div>
+        <p><strong>순회(traversal)</strong>는 나무의 노드를 일정한 규칙으로 방문하는 일입니다. 방문하면서 자유 변수나 가설을 수집할 수도 있고, 특정 형태의 부분식을 찾아 재작성할 수도 있습니다.</p>
+        <p>아래 순회에서는 위에서 시작해 조건부부터 차례로 방문합니다. 현재 문맥에 바깥에서 주어진 <strong>자유 변수(fvar)</strong>만 모으면 <code>[a]</code>를 얻습니다. 바인더에 묶인 <code>x</code>는 임시 파라미터(<code>bvar</code>)이므로 전역 자유 변수 목록에 넣지 않습니다.</p>
+        <div class="demo-controls">
+          <button type="button" id="ast-next">다음 노드 방문</button>
+          <button type="button" id="ast-reset">처음으로</button>
+        </div>
+        <p id="ast-status" role="status" aria-live="polite">방문 전 · 모은 자유 변수: []</p>
+      </div>
+    </div>
+    <p class="muted">
+      <strong>주요 생성자 역할:</strong><br>
+      • <code>quant</code>: 변수를 한정짓는 바인더(∀, ∃)로, 내부의 <code>x</code>를 <code>bvar</code>(바운드 변수)로 묶습니다.<br>
+      • <code>ite</code>: 조건에 따라 분기하는 식으로, 조건(<code>eq</code>)과 참/거짓 분기를 가집니다.<br>
+      • <code>tih</code> / <code>eih</code>: then/else 분기 내부에서 사용할 수 있는 조건의 참/거짓 가설(Hypothesis) 정보입니다.<br>
+      • <code>fvar</code>: 바깥 로컬 컨텍스트에 이미 존재하는 독립된 자유 변수(<code>a</code>)입니다.
+    </p>
+    <h3>순회와 귀납은 어떻게 연결될까?</h3>
+    <p>순회 함수는 큰 식을 작은 식(하위 트리)으로 나누어 처리합니다. <strong>구조 귀납</strong>은 그 함수의 성질을 증명할 때, “조건식, then 분기, else 분기 등 하위 노드에서 성질이 성립한다고 가정하고, 이를 조립한 <code>ite</code> 전체에서도 성립함”을 보이는 방법입니다.</p>
+    <p>예를 들어 then 분기에서 수집한 자유 변수와 else 분기에서 수집한 변수가 각각 유효 범위 안에 있다면, 이들을 합친 목록 전체도 유효 범위 안에 들어옵니다. 이 구조적 재귀 논리가 바로 <code>Expr</code> 귀납 증명의 핵심입니다.</p>
+  </div>
+
+  <script>
+    (function () {
+      const nodes = [
+        { id: 0, text: 'quant (∀ x)', isFvar: false },
+        { id: 1, text: 'ite (조건 분기)', isFvar: false },
+        { id: 2, text: 'eq (조건식: =)', isFvar: false },
+        { id: 3, text: 'bvar (x)', isFvar: false, note: 'bvar는 바운드 변수이므로 제외' },
+        { id: 4, text: 'lit (0)', isFvar: false },
+        { id: 5, text: 'then (tih)', isFvar: false },
+        { id: 6, text: 'lit (1)', isFvar: false },
+        { id: 7, text: 'else (eih)', isFvar: false },
+        { id: 8, text: 'op (+)', isFvar: false },
+        { id: 9, text: 'bvar (x)', isFvar: false, note: 'bvar는 바운드 변수이므로 제외' },
+        { id: 10, text: 'fvar (a)', isFvar: true, name: 'a' }
+      ];
+
+      let currentIndex = -1;
+      let collectedFvars = [];
+
+      const nextBtn = document.getElementById('ast-next');
+      const resetBtn = document.getElementById('ast-reset');
+      const statusText = document.getElementById('ast-status');
+
+      function highlightNode(idx) {
+        document.querySelectorAll('.tree [data-node]').forEach((el) => {
+          el.style.backgroundColor = 'transparent';
+          el.style.fontWeight = 'normal';
+        });
+
+        if (idx >= 0 && idx < nodes.length) {
+          const target = document.querySelector(`.tree [data-node="${idx}"]`);
+          if (target) {
+            target.style.backgroundColor = '#fef08a';
+            target.style.borderRadius = '3px';
+            target.style.padding = '1px 4px';
+            target.style.fontWeight = 'bold';
+          }
+        }
+      }
+
+      function updateStatus() {
+        if (currentIndex === -1) {
+          statusText.textContent = '방문 전 · 모은 자유 변수: []';
+          return;
+        }
+
+        const curr = nodes[currentIndex];
+        let msg = `현재 방문: ${curr.text}`;
+
+        if (curr.isFvar) {
+          msg += ` → 자유 변수 '${curr.name}' 추가!`;
+        } else if (curr.note) {
+          msg += ` (${curr.note})`;
+        }
+
+        msg += ` · 모은 자유 변수: [${collectedFvars.join(', ')}]`;
+
+        if (currentIndex === nodes.length - 1) {
+          msg += ' (순회 완료)';
+        }
+
+        statusText.textContent = msg;
+      }
+
+      if (nextBtn && resetBtn && statusText) {
+        nextBtn.addEventListener('click', function () {
+          if (currentIndex < nodes.length - 1) {
+            currentIndex++;
+            const curr = nodes[currentIndex];
+            if (curr.isFvar && !collectedFvars.includes(curr.name)) {
+              collectedFvars.push(curr.name);
+            }
+            highlightNode(currentIndex);
+            updateStatus();
+          }
+        });
+
+        resetBtn.addEventListener('click', function () {
+          currentIndex = -1;
+          collectedFvars = [];
+          highlightNode(-1);
+          updateStatus();
+        });
+      }
+    })();
+  </script>
+</section>
+  
 
     <section id="eli5">
       <h2>같은 예제로 이해하는 Warm-up 1·2</h2>
@@ -467,7 +589,7 @@
     <section id="summary">
       <h2>풀이의 공통 아이디어: 작은 식의 결과를 합치기</h2>
       <div class="card">
-        <p class="lead"><strong>여러 부분 식을 가진 노드는 같은 목록 결합 성질을 사용합니다.</strong> 이 성질을 <code>combine</code>이라는 작은 보조 증명으로 한 번 적어 두면, AST의 경우마다 같은 membership 추론을 반복할 필요가 없습니다.</p>
+        <p class="lead"><strong>여러 부분 식을 가진 노드는 같은 목록 결합 성질을 사용합니다.</strong> 이 성질을 <code>combine</code>이라는 작은 lemma로 한 번 적어 두면, AST의 경우마다 같은 membership 추론을 반복할 필요가 없습니다. 두 lemma의 이름은 같게 붙였지만, 다른 lemma입니다. 이런 lemma의 재사용을 통해 Lean4 컴파일러 내부의 타입 검사 엔진 부담을 덜어주고 전술 실행  횟수를 줄여 heartbeat를 줄여줍니다.</p>
         <p>1번의 combine은 <strong>새 이름 h1 하나를 허용한 포함 관계</strong>를 합칩니다. 2번의 combine은 <strong>각 부분 식의 이름 안에 들어간다는 포함 관계</strong>를 합칩니다. 두 증명 모두 상수·변수·여러 부분 식·old 적용의 역할을 구분해 읽을 수 있습니다.</p>
         <details><summary>코드를 읽기 전에: 기호와 tactic 뜻</summary>
           <dl>
@@ -519,7 +641,12 @@ theorem substOldPostSubset:
     (substOld h2 (Lambda.LExpr.fvar m h1 ty) post)).Subset
     (Imperative.HasVarsPure.getVars (P:=Expression) post ++ [h1])</code></pre>
       </div>
-
+      <div class="strategy">
+        <p><code>open OldExpressions in</code>: 바로 다음 theorem에서만 OldExpressions 네임스페이스의 이름들을 접두사 없이 쓰겠다는 뜻.</p>
+        <p><code>substOld h2 (fvar m h1 ty) post</code>: post 안의 old(h2)를 free variable h1(타입 ty, 메타데이터 m)로 치환한 결과 식.</p>
+        <p><code>getVars e</code>: 식 e에 등장하는 변수들의 리스트.</p>
+        <p><code>A.Subset B</code>: 리스트 포함 관계. 즉 ∀ v, v ∈ A → v ∈ B.</p>
+      </div>	
       <h3>코드의 흐름</h3>
       <div class="strategy">
         <p><strong>① 목록 결합 성질 → ② 식에 대한 귀납 → ③ old 적용만 별도 처리.</strong> <code>combine</code>의 a·b는 변환 결과의 이름 목록이고, c·d는 원래 부분 식의 이름 목록입니다. a의 이름은 c 또는 h1에, b의 이름은 d 또는 h1에 있으면, 합친 결과의 이름도 c·d 또는 h1에 있습니다.</p>
@@ -808,51 +935,87 @@ extractedOldExprInVars → [propext, Quot.sound]</code></pre></div>
     </footer>
   </main>
   <script>
-    // Educational traversal of the simplified tree; does not execute Lean.
-    (() => {
-      const steps = [
-        ['등식: 두 부분 식을 방문합니다.', []],
-        ['x: 변수 이름 x를 모읍니다.', ['x']],
-        ['덧셈: 두 부분 식을 방문합니다.', ['x']],
-        ['old: 연산자이므로 이름에 넣지 않고 인수로 내려갑니다.', ['x']],
-        ['y: old 안의 변수 이름도 모읍니다.', ['x', 'y']],
-        ['z: 방문 완료. 식의 값을 계산하지 않고 이름만 모았습니다.', ['x', 'y', 'z']]
-      ];
-      let index = -1;
-      const next = document.getElementById('ast-next');
-      const status = document.getElementById('ast-status');
-      function render() {
-        document.querySelectorAll('[data-node]').forEach((node, i) => {
-          node.classList.toggle('visited', i <= index);
-          node.classList.toggle('active', i === index);
-        });
-        status.textContent = index < 0 ? '방문 전 · 모은 이름: []' :
-          (index + 1) + '/6 · ' + steps[index][0] + ' 모은 이름: [' + steps[index][1].join(', ') + ']';
+  // Educational traversal of the simplified tree; does not execute Lean.
+  (() => {
+    // 0번부터 10번 노드까지 11단계 순회 단계 정의
+    const steps = [
+      ['한정자 quant: 바운드 변수 x를 도입하며 본문으로 내려갑니다.', []],
+      ['조건 분기 ite: 조건식, 참 분기(then), 거짓 분기(else)를 차례로 방문합니다.', []],
+      ['등식 eq: 조건식의 좌항과 우항을 방문합니다.', []],
+      ['bvar (x): 바인더(quant)에 묶인 바운드 변수이므로 자유 변수에 넣지 않습니다.', []],
+      ['lit (0): 상수 리터럴 0입니다.', []],
+      ['then 분기: 참일 때의 가설(tih: x = 0) 문맥으로 들어갑니다.', []],
+      ['lit (1): 상수 리터럴 1입니다.', []],
+      ['else 분기: 거짓일 때의 가설(eih: x ≠ 0) 문맥으로 들어갑니다.', []],
+      ['덧셈 op (+): 두 피연산자 식으로 내려갑니다.', []],
+      ['bvar (x): 바운드 변수 x이므로 자유 변수에 넣지 않습니다.', []],
+      ['fvar (a): 외부 컨텍스트의 자유 변수 a를 목록에 추가합니다.', ['a']]
+    ];
+
+    let index = -1;
+    const next = document.getElementById('ast-next');
+    const reset = document.getElementById('ast-reset');
+    const status = document.getElementById('ast-status');
+
+    function render() {
+      document.querySelectorAll('.tree [data-node]').forEach((node, i) => {
+        node.classList.toggle('visited', i <= index);
+        node.classList.toggle('active', i === index);
+      });
+
+      if (index < 0) {
+        status.textContent = '방문 전 · 모은 자유 변수: []';
+      } else {
+        const stepNum = index + 1;
+        const total = steps.length;
+        const desc = steps[index][0];
+        const collected = steps[index][1].length > 0 ? steps[index][1].join(', ') : '';
+        status.textContent = `${stepNum}/${total} · ${desc} 모은 자유 변수: [${collected}]`;
+      }
+
+      if (next) {
         next.disabled = index === steps.length - 1;
       }
-      next.addEventListener('click', () => { if (index < steps.length - 1) index++; render(); });
-      document.getElementById('ast-reset').addEventListener('click', () => { index = -1; render(); });
-      render();
-    })();
-    // Minimal Lean 4 syntax highlighter (no external dependencies).
-    (() => {
-      const KW = ['theorem','lemma','open','in','case','with','next','have','fun','match','by','at'];
-      const TAC = ['induction','simp','simp_all','intros','intro','rename_i','exact','apply','split','cases','rcases',
-                   'unfold','assumption','exfalso','specialize','constructor','rfl','try',"repeat'",'repeat'];
-      const esc = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-      const re = /(--[^\n]*)|(&lt;;&gt;|=&gt;|→|\+contextual)|([A-Za-z_][\w'.]*)|(\d+)/g;
-      document.querySelectorAll('pre.lean code').forEach(el => {
-        el.innerHTML = esc(el.textContent).replace(re, (m, com, comb, id, num) => {
-          if (com) return '<span class="tk-com">' + com + '</span>';
-          if (comb) return '<span class="tk-comb">' + comb + '</span>';
-          if (num) return '<span class="tk-num">' + num + '</span>';
-          if (KW.includes(id)) return '<span class="tk-kw">' + id + '</span>';
-          if (TAC.includes(id)) return '<span class="tk-tac">' + id + '</span>';
-          if (id && id.includes('.')) return '<span class="tk-id">' + id + '</span>';
-          return m;
-        });
+    }
+
+    if (next) {
+      next.addEventListener('click', () => {
+        if (index < steps.length - 1) {
+          index++;
+          render();
+        }
       });
-    })();
-  </script>
+    }
+
+    if (reset) {
+      reset.addEventListener('click', () => {
+        index = -1;
+        render();
+      });
+    }
+
+    render();
+  })();
+
+  // Minimal Lean 4 syntax highlighter (no external dependencies).
+  (() => {
+    const KW = ['theorem','lemma','open','in','case','with','next','have','fun','match','by','at'];
+    const TAC = ['induction','simp','simp_all','intros','intro','rename_i','exact','apply','split','cases','rcases',
+                 'unfold','assumption','exfalso','specialize','constructor','rfl','try',"repeat'",'repeat'];
+    const esc = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    const re = /(--[^\n]*)|(&lt;;&gt;|=&gt;|→|\+contextual)|([A-Za-z_][\w'.]*)|(\d+)/g;
+    document.querySelectorAll('pre.lean code').forEach(el => {
+      el.innerHTML = esc(el.textContent).replace(re, (m, com, comb, id, num) => {
+        if (com) return '<span class="tk-com">' + com + '</span>';
+        if (comb) return '<span class="tk-comb">' + comb + '</span>';
+        if (num) return '<span class="tk-num">' + num + '</span>';
+        if (KW.includes(id)) return '<span class="tk-kw">' + id + '</span>';
+        if (TAC.includes(id)) return '<span class="tk-tac">' + id + '</span>';
+        if (id && id.includes('.')) return '<span class="tk-id">' + id + '</span>';
+        return m;
+      });
+    });
+  })();
+</script>
 </body>
 </html>
