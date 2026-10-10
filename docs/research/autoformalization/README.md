@@ -16,7 +16,8 @@
 
 | 작성자 | 주제 | 자료 링크 | 공유일 |
 | --- | --- | --- | --- |
-| 남성우 | Arena 연결 논문 추천 · 학습 순서 · 비교 실험 설계 | [Refactor Arena 공부 지도](./refactor-arena-study-guide.md) | 2026-10-06 |
-| 남성우 | 기본 개념부터 세 논문의 핵심 아이디어까지 · 초보자용 HTML | [Process-Driven → ProofBridge → miniF2F Revisited](./three-papers-eli5.html) | 2026-10-07 |
+| 남성우 | Arena 연결 논문 추천 · 학습 순서 · 비교 실험 설계 | [Refactor Arena 공부 지도](./2026-10-09-sungwoonam-autoformalization_and_q1_q2/refactor-arena-study-guide.md) | 2026-10-06 |
+| 남성우 | 기본 개념부터 세 논문의 핵심 아이디어까지 · 초보자용 HTML | [Process-Driven → ProofBridge → miniF2F Revisited](./2026-10-09-sungwoonam-autoformalization_and_q1_q2/three-papers-eli5.html) | 2026-10-07 |
+| 남성우 | Strata·AST 소개, Warm-up 1·2 풀이와 heartbeat 측정 | [Warm-up 1·2 해설](./2026-10-09-sungwoonam-autoformalization_and_q1_q2/warmup-problems-1-2.html) | 2026-10-10 |
 
 자료를 이 폴더에 자유로운 형식으로 작성하고, 위 표에 링크를 추가합니다.

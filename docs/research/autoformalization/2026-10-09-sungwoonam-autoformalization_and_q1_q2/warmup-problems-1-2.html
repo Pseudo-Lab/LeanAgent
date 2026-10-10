@@ -461,7 +461,7 @@
         <p>2번은 <code>NormalizedOldExpr</code>라는 정규화 증거를 가정합니다. old가 적용되는 곳의 인수는 자유 변수여야 합니다. 예를 들어 <code>old(y + z)</code>는 그대로 추출하는 입력이 아니고, 정규화 과정을 거쳐야 합니다. 추출 함수의 잘못된 입력 분기에는 <code>panic!</code>이 있습니다.</p>
         <p><code>Subset</code>은 포함 관계입니다. <code>[y, y] ⊆ [y]</code>도 성립하므로 이름의 중복 횟수나 순서를 보장한다는 뜻은 아닙니다. “새 이름이 없다”는 사실만으로 “식의 값도 같다”가 따라오지는 않습니다.</p>
       </div>
-      <p><a href="./warmup-problems-1-2-eli5.md">예제·tactic 설명·연습 문제까지 읽기 →</a> · <a href="../../research/autoformalization/refactor-arena-study-guide.md">논문 추천과 Arena 공부 지도 →</a></p>
+      <p><a href="./warmup-problems-1-2-eli5.md">예제·tactic 설명·연습 문제까지 읽기 →</a> · <a href="./refactor-arena-study-guide.md">논문 추천과 Arena 공부 지도 →</a></p>
     </section>
 
     <section id="summary">
@@ -489,14 +489,14 @@
           <caption>원본 → 아래에 소개하는 새 증명</caption>
           <thead><tr><th>항목</th><th>1번</th><th>2번</th></tr></thead>
           <tbody>
-            <tr><th>증명 몸체 줄 수</th><td>91 → 23</td><td>77 → 20</td></tr>
-            <tr><th>공백 제외 문자</th><td>1,668 → 769</td><td>1,172 → 533</td></tr>
-            <tr><th>Heartbeat</th><td>5,207.667 → 1,105.482<br>약 78.8% 감소</td><td>2,612.070 → 461.131<br>약 82.3% 감소</td></tr>
+            <tr><th>증명 몸체 줄 수</th><td>91 → 25</td><td>77 → 20</td></tr>
+            <tr><th>공백 제외 문자</th><td>1,668 → 754</td><td>1,172 → 533</td></tr>
+            <tr><th>Heartbeat</th><td>5,207.655 → 907.116<br>약 82.6% 감소</td><td>2,612.070 → 461.131<br>약 82.3% 감소</td></tr>
             <tr><th>공리 의존성</th><td colspan="2"><code>[propext, Quot.sound]</code> 동일</td></tr>
           </tbody>
         </table>
         <p>Heartbeat는 Lean이 증명을 처리하는 데 사용한 작업량을 나타내는 계수입니다. 초 단위 실행 시간과는 다릅니다. 위 줄·문자 수에는 <code>combine</code> 보조 증명도 포함합니다.</p>
-        <p class="muted">2026-10-09 · Lean v4.26.0 · 동일 이름의 선언을 별도 프로세스에서 3회 새로 처리한 중앙값입니다. 선언 elaboration·검사 구간의 내부 계수를 1,000으로 나눴으며 import는 제외했습니다. 공식 Arena harness의 점수는 아닙니다. <a href="./artifacts/warmup-1-2/heartbeat-2026-10-09/measurements.json">측정값</a> · <a href="./artifacts/warmup-1-2/README.md">재현 방법</a></p>
+        <p class="muted">2026-10-10 · Lean v4.26.0 · 동일 이름의 선언을 별도 프로세스에서 3회 새로 처리한 중앙값입니다. 선언 elaboration·검사 구간의 내부 계수를 1,000으로 나눴으며 import는 제외했습니다. 공식 Arena harness의 점수는 아닙니다. <a href="./artifacts/warmup-1-2/heartbeat-2026-10-10/measurements.json">측정값</a> · <a href="./artifacts/warmup-1-2/README.md">재현 방법</a></p>
       </div>
     </section>
 
@@ -523,7 +523,7 @@ theorem substOldPostSubset:
       <h3>코드의 흐름</h3>
       <div class="strategy">
         <p><strong>① 목록 결합 성질 → ② 식에 대한 귀납 → ③ old 적용만 별도 처리.</strong> <code>combine</code>의 a·b는 변환 결과의 이름 목록이고, c·d는 원래 부분 식의 이름 목록입니다. a의 이름은 c 또는 h1에, b의 이름은 d 또는 h1에 있으면, 합친 결과의 이름도 c·d 또는 h1에 있습니다.</p>
-        <p>상수·연산자는 빈 목록, 일반 변수는 원래 목록 안에 있습니다. abs는 부분 식의 귀납 가설을 그대로 쓰고, quant·eq는 combine 한 번, 세 부분 식을 가진 ite는 두 번 사용합니다. app에서는 <code>old(h2)</code>의 치환 여부를 나눈 뒤 간단히 정리하고, 일반 적용은 다시 combine을 씁니다.</p>
+        <p>상수·연산자는 빈 목록, 일반 변수는 원래 목록 안에 있습니다. abs는 부분 식의 귀납 가설을 그대로 쓰고, quant·eq는 combine 한 번, 세 부분 식을 가진 ite는 두 번 사용합니다. app에서는 <code>old(h2)</code>가 치환되면 새 이름이 오른쪽 목록 [h1]에, 유지되면 이름이 왼쪽의 원래 목록에 포함됨을 직접 보입니다. 일반 적용은 다시 combine을 씁니다.</p>
       </div>
 
       <h3>원본과 새 증명</h3>
@@ -647,7 +647,9 @@ theorem substOldPostSubset:
   | app _ fn arg ihfn iharg =&gt;
     unfold substOld
     split
-    · split &lt;;&gt; simp [Imperative.HasVarsPure.getVars, Lambda.LExpr.LExpr.getVars, List.Subset]
+    · split
+      · exact List.subset_append_right _ _
+      · exact List.subset_append_left _ _
     · exact combine ihfn iharg</code></pre>
         </div>
       </div>
@@ -792,7 +794,7 @@ theorem extractedOldExprInVars :
       <h2>Lean으로 확인한 결과</h2>
       <div class="card">
         <p>두 정리의 명제는 그대로 유지했습니다. 새 증명을 실제 <code>Strata/Transform/CallElimCorrect.lean</code>에 적용한 모듈 빌드와 별도 검증 파일의 컴파일을 모두 통과했습니다.</p>
-        <div class="code-block"><div class="code-title">Lean v4.26.0 · 2026-10-09</div><pre><code>lake build Strata.Transform.CallElimCorrect
+        <div class="code-block"><div class="code-title">Lean v4.26.0 · 2026-10-10</div><pre><code>lake build Strata.Transform.CallElimCorrect
 Build completed successfully (81 jobs).
 
 substOldPostSubset     → [propext, Quot.sound]
@@ -803,7 +805,7 @@ extractedOldExprInVars → [propext, Quot.sound]</code></pre></div>
     </section>
     <footer>
       <span>LeanAgent · PseudoLab S13 · Week 2 (2026.10.11)</span>
-      <a href="./README.md">← Week 2 README</a>
+      <a href="../README.md">← Autoformalization 자료</a>
     </footer>
   </main>
   <script>

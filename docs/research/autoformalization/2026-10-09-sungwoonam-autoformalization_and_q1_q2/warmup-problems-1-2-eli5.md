@@ -1,6 +1,6 @@
 # Warm-up 1·2 ELI5 — 무엇을 증명하는 문제인가?
 
-작성일: 2026-10-06 · 설명 보완: 2026-10-09 · 읽는 순서: Strata → AST 순회 → 문제 뜻 → 증명 → 리팩터링 결과
+작성일: 2026-10-06 · 설명 보완: 2026-10-10 · 읽는 순서: Strata → AST 순회 → 문제 뜻 → 증명 → 리팩터링 결과
 
 ## 먼저: Strata는 무엇이고, 왜 이런 문제를 풀까?
 
@@ -140,7 +140,9 @@ old 상자 속 이름을 모아도, 식에 없는 이름을 만들어 내지는 
   | app _ fn arg ihfn iharg =>
     unfold substOld
     split
-    · split <;> simp [Imperative.HasVarsPure.getVars, Lambda.LExpr.LExpr.getVars, List.Subset]
+    · split
+      · exact List.subset_append_right _ _
+      · exact List.subset_append_left _ _
     · exact combine ihfn iharg
 ```
 
@@ -184,18 +186,18 @@ old 상자 속 이름을 모아도, 식에 없는 이름을 만들어 내지는 
 
 ## 7. 검증과 측정 결과
 
-2026-10-09에 Lean v4.26.0과 Strata revision `451e5f047bafa010d178856db76c00029bfa4d7f`에서 모듈 빌드, 명제 동일성, 공리 의존성을 확인했다.
+2026-10-10에 Lean v4.26.0과 Strata revision `451e5f047bafa010d178856db76c00029bfa4d7f`에서 모듈 빌드, 명제 동일성, 공리 의존성을 확인했다.
 
 | 항목 | 1번 원본 → 새 증명 | 2번 원본 → 새 증명 |
 | --- | --- | --- |
-| 증명 몸체 비어 있지 않은 줄 | 91 → 23 | 77 → 20 |
-| 공백 제외 문자 | 1,668 → 769 | 1,172 → 533 |
-| heartbeat 중앙값 | 5,207.667 → 1,105.482 | 2,612.070 → 461.131 |
+| 증명 몸체 비어 있지 않은 줄 | 91 → 25 | 77 → 20 |
+| 공백 제외 문자 | 1,668 → 754 | 1,172 → 533 |
+| heartbeat 중앙값 | 5,207.655 → 907.116 | 2,612.070 → 461.131 |
 | 공리 | [propext, Quot.sound] 동일 | [propext, Quot.sound] 동일 |
 
 크기에는 combine 보조 증명도 포함한다. Heartbeat는 Lean의 작업량 계수이며 실행 시간은 아니다. 같은 선언 이름으로 각각 새 Lean 프로세스에서 3회 측정했다. import 이후 동기 선언 elaboration·검사의 내부 계수를 1,000으로 나눈 값이다. 공식 Arena 점수와 다른 버전의 호환성 결과는 별개다.
 
-[새 증명 파일](./artifacts/warmup-1-2/improved_proofs.lean) · [측정 원자료](./artifacts/warmup-1-2/heartbeat-2026-10-09/measurements.json) · [재현 방법](./artifacts/warmup-1-2/README.md)
+[새 증명 파일](./artifacts/warmup-1-2/improved_proofs.lean) · [측정 원자료](./artifacts/warmup-1-2/heartbeat-2026-10-10/measurements.json) · [재현 방법](./artifacts/warmup-1-2/README.md)
 
 ## 8. 내가 이해했는지 확인하기
 
@@ -206,4 +208,4 @@ old 상자 속 이름을 모아도, 식에 없는 이름을 만들어 내지는 
 
 답: 1. `saved_y`. 2. 그렇다. subset은 중복 횟수를 제한하지 않는다. 3. 정규화 증거의 생성자가 부분 식의 증거를 갖고 있기 때문이다. 4. 측정 전에는 알 수 없다.
 
-다음으로 [논문 추천과 실험 지도](../../research/autoformalization/refactor-arena-study-guide.md)를 읽자.
+다음으로 [논문 추천과 실험 지도](./refactor-arena-study-guide.md)를 읽자.

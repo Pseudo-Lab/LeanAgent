@@ -1,0 +1,229 @@
+diff --git a/Strata/Transform/CallElimCorrect.lean b/Strata/Transform/CallElimCorrect.lean
+index 0870358d..01ed91a0 100644
+--- a/Strata/Transform/CallElimCorrect.lean
++++ b/Strata/Transform/CallElimCorrect.lean
+@@ -2860,83 +2860,26 @@ theorem extractedOldExprInVars :
+   NormalizedOldExpr post →
+   (extractOldExprVars post).Subset
+   (Imperative.HasVarsPure.getVars post) := by
+-  intros Hnorm
+-  induction post <;>
+-    simp [Imperative.HasVarsPure.getVars, extractOldExprVars,
+-          Lambda.LExpr.LExpr.getVars] at * <;>
+-    try simp_all
+-  case app fn e fn_ih e_ih =>
++  have combine {a b c d : List CoreIdent}
++      (ha : a.Subset c) (hb : b.Subset d) : (a ++ b).Subset (c ++ d) :=
++    fun _ hx => (List.mem_append.mp hx).elim
++      (fun hx => List.mem_append_left _ (ha hx))
++      (fun hx => List.mem_append_right _ (hb hx))
++  intro h
++  induction h with
++  | const | op | bvar | fvar => exact List.Subset.empty
++  | abs _ ih => exact ih
++  | quant _ _ ih1 ih2 => exact combine ih1 ih2
++  | ite _ _ _ ih1 ih2 ih3 => exact combine (combine ih1 ih2) ih3
++  | eq _ _ ih1 ih2 => exact combine ih1 ih2
++  | app hfn harg hold ihfn iharg =>
+     unfold extractOldExprVars
+     split
+-    . simp [Lambda.LExpr.LExpr.getVars]
+-      intros x Hin
+-      exact Hin
+-    . next Hfalse =>
+-      cases Hnorm with
+-      | app H1 H2 Hn =>
+-      exfalso
+-      specialize Hn ?_
+-      constructor
+-      cases Hn
+-      apply Hfalse
+-      rfl
+-    . cases Hnorm with
+-      | app H1 H2 Hn =>
+-      apply List.Subset.app
+-      . apply List.Subset.trans
+-        apply fn_ih
+-        exact H1
+-        intros x Hin
+-        simp_all
+-      . apply List.Subset.trans
+-        apply e_ih
+-        exact H2
+-        intros x Hin
+-        simp_all
+-  case abs ih =>
+-    cases Hnorm
+-    apply ih <;> assumption
+-  case quant trih eih =>
+-    cases Hnorm
+-    rename_i e_normalized
+-    rename_i tr_normalized
+-    rename_i tr e ty k
+-    apply List.Subset.app
+-    . apply List.Subset.trans
+-      apply trih <;> assumption
+-      intros x Hin
+-      simp_all
+-    . apply List.Subset.trans
+-      apply eih <;> assumption
+-      intros x Hin
+-      simp_all
+-  case ite cih tih eih =>
+-    cases Hnorm
+-    apply List.Subset.app
+-    . apply List.Subset.trans
+-      apply cih <;> assumption
+-      intros x Hin
+-      simp_all
+-    apply List.Subset.app
+-    . apply List.Subset.trans
+-      apply tih <;> assumption
+-      intros x Hin
+-      simp_all
+-    . apply List.Subset.trans
+-      apply eih <;> assumption
+-      intros x Hin
+-      simp_all
+-  case eq ih1 ih2 =>
+-    cases Hnorm
+-    apply List.Subset.app
+-    . apply List.Subset.trans
+-      apply ih1 <;> assumption
+-      intros x Hin
+-      simp_all
+-    . apply List.Subset.trans
+-      apply ih2 <;> assumption
+-      intros x Hin
+-      simp_all
++    · exact fun _ hx => hx
++    · next hfalse =>
++      cases hold .oldPred
++      exact False.elim (hfalse _ _ _ rfl)
++    · exact combine ihfn iharg
+ 
+ open OldExpressions in
+ theorem normalizeOldExprInVarsTrue:
+@@ -3091,98 +3034,31 @@ theorem substOldPostSubset:
+   (Imperative.HasVarsPure.getVars (P:=Expression)
+     (substOld h2 (Lambda.LExpr.fvar m h1 ty) post)).Subset
+     (Imperative.HasVarsPure.getVars (P:=Expression) post ++ [h1]) := by
+-  induction post <;> simp [substOld]
+-  case fvar =>
+-    intros x Hin
+-    rename_i m name ty2
+-    simp at m
+-    simp at name
+-    simp at ty2
+-
+-    simp_all
+-  case op =>
+-    intros x Hin
+-    rename_i m name ty2
+-    simp at m
+-    simp at name
+-    simp at ty2
+-    simp_all
+-  case const =>
+-    intros x Hin
+-    rename_i m name
+-    simp at m
+-    simp_all
+-  case bvar =>
+-    intros x Hin
+-    rename_i m d
+-    simp at m
+-    simp_all
+-  case abs ih =>
+-    exact ih
+-  case ite cih tih eih =>
+-    simp [Imperative.HasVarsPure.getVars, Lambda.LExpr.LExpr.getVars] at *
+-    apply List.Subset.app
+-    . apply List.Subset.trans
+-      apply cih <;> assumption
+-      intros x Hin
+-      simp_all
+-      cases Hin <;> simp_all
+-    apply List.Subset.app
+-    . apply List.Subset.trans
+-      apply tih <;> assumption
+-      intros x Hin
+-      simp_all
+-      cases Hin <;> simp_all
+-    . apply List.Subset.trans
+-      apply eih <;> assumption
+-      intros x Hin
+-      simp_all
+-  case app ih1 ih2 =>
++  have combine {a b c d : List CoreIdent}
++      (ha : a.Subset (c ++ [h1])) (hb : b.Subset (d ++ [h1])) :
++      (a ++ b).Subset ((c ++ d) ++ [h1]) := by
++    intro x hx
++    rcases List.mem_append.mp hx with hx | hx
++    · rcases List.mem_append.mp (ha hx) with hx | hx
++      · exact List.mem_append_left _ (List.mem_append_left _ hx)
++      · exact List.mem_append_right _ hx
++    · rcases List.mem_append.mp (hb hx) with hx | hx
++      · exact List.mem_append_left _ (List.mem_append_right _ hx)
++      · exact List.mem_append_right _ hx
++  induction post with
++  | const | bvar | op => exact List.Subset.empty
++  | fvar => exact List.subset_append_left _ _
++  | abs _ _ _ ih => exact ih
++  | quant _ _ _ _ _ ih1 ih2 => exact combine ih1 ih2
++  | ite _ _ _ _ ih1 ih2 ih3 => exact combine (combine ih1 ih2) ih3
++  | eq _ _ _ ih1 ih2 => exact combine ih1 ih2
++  | app _ fn arg ihfn iharg =>
++    unfold substOld
+     split
+-    . split
+-      . simp [Imperative.HasVarsPure.getVars, Lambda.LExpr.LExpr.getVars] at *
+-        intros x Hin
+-        simp_all
+-      . simp [Imperative.HasVarsPure.getVars, Lambda.LExpr.LExpr.getVars] at *
+-        intros x Hin
+-        simp_all
+-    . simp [Imperative.HasVarsPure.getVars, Lambda.LExpr.LExpr.getVars] at *
+-      apply List.Subset.app
+-      . apply List.Subset.trans
+-        apply ih1 <;> assumption
+-        intros x Hin
+-        simp_all
+-        cases Hin <;> simp_all
+-      . apply List.Subset.trans
+-        apply ih2 <;> assumption
+-        intros x Hin
+-        simp_all
+-  case quant trih eih =>
+-    simp [Imperative.HasVarsPure.getVars, Lambda.LExpr.LExpr.getVars] at *
+-    apply List.Subset.app
+-    . apply List.Subset.trans
+-      apply trih <;> assumption
+-      intros x Hin
+-      rename_i m1 k1 ty1 trigger1 e1
+-      have assoc := List.append_assoc (Lambda.LExpr.LExpr.getVars trigger1) (Lambda.LExpr.LExpr.getVars e1) [h1]
+-      simp_all
+-      cases Hin <;> simp_all
+-    . apply List.Subset.trans
+-      apply eih <;> assumption
+-      intros x Hin
+-      simp_all
+-  case eq ih1 ih2 =>
+-    simp [Imperative.HasVarsPure.getVars, Lambda.LExpr.LExpr.getVars] at *
+-    apply List.Subset.app
+-    . apply List.Subset.trans
+-      apply ih1 <;> assumption
+-      intros x Hin
+-      simp_all
+-      cases Hin <;> simp_all
+-    . apply List.Subset.trans
+-      apply ih2 <;> assumption
+-      intros x Hin
+-      simp_all
++    · split
++      · exact List.subset_append_right _ _
++      · exact List.subset_append_left _ _
++    · exact combine ihfn iharg
+ 
+ theorem substOldExprPostSubset':
+   (Imperative.HasVarsPure.getVars (P:=Expression)
