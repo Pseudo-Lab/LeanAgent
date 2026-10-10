@@ -916,6 +916,326 @@ theorem extractedOldExprInVars :
         </div>
       </div>
     </section>
+    
+    <!-- ================================================================= -->
+<!-- SECTION: End-to-End Workflow Pipeline & Core Engineering Mechanisms -->
+<!-- ================================================================= -->
+<div class="workflow-showcase-container" style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background-color: #0b0f19; border: 1px solid #1e293b; border-radius: 16px; padding: 28px; color: #cbd5e1; line-height: 1.6; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);">
+
+  <!-- 1. Pipeline Header -->
+  <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 1px solid #1e293b;">
+    <div style="display: flex; align-items: center; gap: 12px;">
+      <div style="width: 38px; height: 38px; border-radius: 10px; background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(52, 211, 153, 0.4); display: flex; align-items: center; justify-content: center; color: #34d399; font-weight: 800; font-size: 18px; box-shadow: 0 0 15px rgba(16, 185, 129, 0.15);">
+        ⚡
+      </div>
+      <div>
+        <h3 style="margin: 0; font-size: 20px; font-weight: 700; color: #f8fafc; letter-spacing: -0.02em;">End-to-End Refactoring Pipeline</h3>
+        <p style="margin: 2px 0 0; font-size: 13px; color: #94a3b8;">Tactic Soup 분석부터 결정론적 Canonical Proof 완성까지의 5단계</p>
+      </div>
+    </div>
+    <span style="font-size: 11px; font-family: monospace; background: #1e293b; border: 1px solid #334155; padding: 5px 12px; border-radius: 9999px; color: #34d399; font-weight: 600;">
+      LEAN 4 KERNEL VERIFIED
+    </span>
+  </div>
+
+  <!-- 2. Step 1 ~ 5 Timeline Grid -->
+  <div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 36px;">
+    
+    <!-- Step 1 -->
+    <div style="background-color: #131b2e; border: 1px solid #243049; border-radius: 12px; padding: 18px 20px;">
+      <div style="display: flex; align-items: flex-start; gap: 16px;">
+        <div style="background: rgba(16, 185, 129, 0.2); border: 1px solid #10b981; color: #34d399; font-weight: 700; font-size: 11px; font-family: monospace; padding: 4px 8px; border-radius: 6px; white-space: nowrap; margin-top: 2px;">
+          STEP 01
+        </div>
+        <div style="flex: 1;">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;">
+            <h4 style="margin: 0; font-size: 15px; font-weight: 600; color: #f8fafc;">AST Parsing & Slicing <span style="font-size: 13px; font-weight: 400; color: #94a3b8;">(공통 서브골 구조 탐지)</span></h4>
+            <span style="font-size: 11px; color: #64748b; font-family: monospace;">Syntax Tree Analysis</span>
+          </div>
+          <p style="margin: 0; font-size: 13px; color: #cbd5e1; line-height: 1.6;">
+            입력된 원본 증명 스크립트를 Lean 4 구문 트리(AST) 수준에서 분해합니다. 특히 <code style="background: #0b0f19; color: #38bdf8; padding: 2px 6px; border-radius: 4px; font-size: 12px; border: 1px solid #1e293b;">ite</code>, <code style="background: #0b0f19; color: #38bdf8; padding: 2px 6px; border-radius: 4px; font-size: 12px; border: 1px solid #1e293b;">quant</code>, <code style="background: #0b0f19; color: #38bdf8; padding: 2px 6px; border-radius: 4px; font-size: 12px; border: 1px solid #1e293b;">eq</code> 등 여러 브랜치에서 반복 호출되는 <code style="background: #0b0f19; color: #34d399; padding: 2px 6px; border-radius: 4px; font-size: 12px; border: 1px solid #1e293b;">List.Subset.app</code>, <code style="background: #0b0f19; color: #34d399; padding: 2px 6px; border-radius: 4px; font-size: 12px; border: 1px solid #1e293b;">List.Subset.trans</code> 조작 패턴을 빈도 분석해 독립 추출 가능한 연산 템플릿을 식별합니다.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 2 -->
+    <div style="background-color: #131b2e; border: 1px solid #243049; border-radius: 12px; padding: 18px 20px;">
+      <div style="display: flex; align-items: flex-start; gap: 16px;">
+        <div style="background: rgba(14, 165, 233, 0.2); border: 1px solid #0ea5e9; color: #38bdf8; font-weight: 700; font-size: 11px; font-family: monospace; padding: 4px 8px; border-radius: 6px; white-space: nowrap; margin-top: 2px;">
+          STEP 02
+        </div>
+        <div style="flex: 1;">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;">
+            <h4 style="margin: 0; font-size: 15px; font-weight: 600; color: #f8fafc;">Lemma Extraction & Isolation <span style="font-size: 13px; font-weight: 400; color: #94a3b8;">(보조 정리 가설화 및 선검증)</span></h4>
+            <span style="font-size: 11px; color: #64748b; font-family: monospace;">Local Lemma Synthesis</span>
+          </div>
+          <p style="margin: 0; font-size: 13px; color: #cbd5e1; line-height: 1.6;">
+            식별된 반복 조작 패턴을 최소 가설만을 갖는 독립 로컬 레마(<code style="background: #0b0f19; color: #34d399; padding: 2px 6px; border-radius: 4px; font-size: 12px; border: 1px solid #1e293b;">have combine</code>)로 합성합니다. 본체 증명에 결합하기 전에 독립적인 서브프로세스로 Lean 커널에 전달하여 타입 건전성(Soundness)을 사전에 100% 보장합니다.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 3 -->
+    <div style="background-color: #131b2e; border: 1px solid #243049; border-radius: 12px; padding: 18px 20px;">
+      <div style="display: flex; align-items: flex-start; gap: 16px;">
+        <div style="background: rgba(245, 158, 11, 0.2); border: 1px solid #f59e0b; color: #fbbf24; font-weight: 700; font-size: 11px; font-family: monospace; padding: 4px 8px; border-radius: 6px; white-space: nowrap; margin-top: 2px;">
+          STEP 03
+        </div>
+        <div style="flex: 1;">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;">
+            <h4 style="margin: 0; font-size: 15px; font-weight: 600; color: #f8fafc;">Skeleton Generation <span style="font-size: 13px; font-weight: 400; color: #94a3b8;">(골격 생성 및 취약 구문 배제)</span></h4>
+            <span style="font-size: 11px; color: #64748b; font-family: monospace;">Pattern Matching & Holes</span>
+          </div>
+          <p style="margin: 0; font-size: 13px; color: #cbd5e1; line-height: 1.6;">
+            버전에 매우 취약한 <code style="background: #0b0f19; color: #fb7185; padding: 2px 6px; border-radius: 4px; font-size: 12px; border: 1px solid #1e293b;">rename_i</code>와 연산 폭증을 부르는 <code style="background: #0b0f19; color: #fb7185; padding: 2px 6px; border-radius: 4px; font-size: 12px; border: 1px solid #1e293b;">simp_all</code>을 완전히 배제합니다. <code style="background: #0b0f19; color: #34d399; padding: 2px 6px; border-radius: 4px; font-size: 12px; border: 1px solid #1e293b;">induction post with | ... =></code> 패턴으로 재편하고 사소한 기저 사례(<code style="background: #0b0f19; color: #e2e8f0; padding: 2px 6px; border-radius: 4px; font-size: 12px; border: 1px solid #1e293b;">const | bvar | op</code>)를 한 줄로 압축한 뒤 복잡한 브랜치에 <code style="background: #0b0f19; color: #fbbf24; padding: 2px 6px; border-radius: 4px; font-size: 12px; border: 1px solid #1e293b;">sorry</code> 홀을 뚫어둔 골격을 생성합니다.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 4 -->
+    <div style="background-color: #131b2e; border: 1px solid #243049; border-radius: 12px; padding: 18px 20px;">
+      <div style="display: flex; align-items: flex-start; gap: 16px;">
+        <div style="background: rgba(168, 85, 247, 0.2); border: 1px solid #a855f7; color: #c084fc; font-weight: 700; font-size: 11px; font-family: monospace; padding: 4px 8px; border-radius: 6px; white-space: nowrap; margin-top: 2px;">
+          STEP 04
+        </div>
+        <div style="flex: 1;">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;">
+            <h4 style="margin: 0; font-size: 15px; font-weight: 600; color: #f8fafc;">Branch Filling with Lean REPL <span style="font-size: 13px; font-weight: 400; color: #94a3b8;">(대화형 브랜치 완결)</span></h4>
+            <span style="font-size: 11px; color: #64748b; font-family: monospace;">Interactive Term Unification</span>
+          </div>
+          <p style="margin: 0; font-size: 13px; color: #cbd5e1; line-height: 1.6;">
+            골격의 각 홀에 대해 Lean REPL 세션과 통신하여 목표(Goal)와 유도 가설의 타입을 조회합니다. 사전 정의된 <code style="background: #0b0f19; color: #34d399; padding: 2px 6px; border-radius: 4px; font-size: 12px; border: 1px solid #1e293b;">combine ih1 ih2</code> 합성식 또는 표준 레마를 직접 대입해 휴리스틱 검색 없이 즉각적인 전방향 유니피케이션을 달성합니다.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 5 -->
+    <div style="background-color: #131b2e; border: 1px solid #243049; border-radius: 12px; padding: 18px 20px;">
+      <div style="display: flex; align-items: flex-start; gap: 16px;">
+        <div style="background: rgba(244, 63, 94, 0.2); border: 1px solid #f43f5e; color: #fb7185; font-weight: 700; font-size: 11px; font-family: monospace; padding: 4px 8px; border-radius: 6px; white-space: nowrap; margin-top: 2px;">
+          STEP 05
+        </div>
+        <div style="flex: 1;">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;">
+            <h4 style="margin: 0; font-size: 15px; font-weight: 600; color: #f8fafc;">Kernel Verification & Heartbeat Gating <span style="font-size: 13px; font-weight: 400; color: #94a3b8;">(검증 및 효율성 게이팅)</span></h4>
+            <span style="font-size: 11px; color: #64748b; font-family: monospace;">Profiling & Self-Correction</span>
+          </div>
+          <p style="margin: 0; font-size: 13px; color: #cbd5e1; line-height: 1.6;">
+            완성된 전체 증명을 Lean 4 커널에서 최종 검증합니다. 엄격한 <code style="background: #0b0f19; color: #38bdf8; padding: 2px 6px; border-radius: 4px; font-size: 12px; border: 1px solid #1e293b;">maxHeartbeats</code> 한도 내 통과 여부를 체크하며, 실패 시 커널의 컴파일러 진단 에러를 하네스 프롬프트로 역주입해 자가 교정(Self-Correction) 사이클을 실행합니다.
+          </p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- 3. Key Mechanisms Section Header -->
+  <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 20px; padding-top: 10px; border-top: 1px solid #1e293b;">
+    <div style="width: 38px; height: 38px; border-radius: 10px; background: rgba(56, 189, 248, 0.15); border: 1px solid rgba(56, 189, 248, 0.4); display: flex; align-items: center; justify-content: center; color: #38bdf8; font-weight: 800; font-size: 18px;">
+      ⚙️
+    </div>
+    <div>
+      <h3 style="margin: 0; font-size: 18px; font-weight: 700; color: #f8fafc; letter-spacing: -0.01em;">3가지 핵심 엔지니어링 장치</h3>
+      <p style="margin: 2px 0 0; font-size: 12px; color: #94a3b8;">하네스가 환각 없이 모범 증명으로 수렴하도록 강제하는 장치들</p>
+    </div>
+  </div>
+
+  <!-- 4. Key Mechanisms 3-Card Grid -->
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px;">
+
+    <!-- Mechanism 1 -->
+    <div style="background-color: #131b2e; border: 1px solid #243049; border-radius: 12px; padding: 20px; display: flex; flex-direction: column; justify-content: space-between; position: relative; overflow: hidden;">
+      <div style="position: absolute; top: 0; left: 0; right: 0; height: 3px; background: #38bdf8;"></div>
+      <div>
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+          <span style="font-family: monospace; font-size: 11px; font-weight: 700; color: #38bdf8; background: rgba(56, 189, 248, 0.15); padding: 3px 8px; border-radius: 4px; border: 1px solid rgba(56, 189, 248, 0.3);">MECHANISM 01</span>
+          <span style="font-size: 11px; color: #94a3b8;">Two-pass</span>
+        </div>
+        <h4 style="margin: 0 0 8px 0; font-size: 15px; font-weight: 700; color: #f8fafc;">Two-pass Refactoring<br><span style="font-size: 12px; color: #38bdf8; font-weight: 500;">보조 정리 분리 우선 탐색</span></h4>
+        <p style="margin: 0 0 14px 0; font-size: 12px; color: #94a3b8; line-height: 1.6;">
+          전체 증명을 한 번에 압축하려 하면 모델이 거대한 컨텍스트 속에서 길을 잃고 브랜치 내부만 건드리다 환각을 일으킵니다. 문제를 2단계로 강제 분할합니다.
+        </p>
+        <div style="background-color: #0b0f19; border: 1px solid #1e293b; border-radius: 8px; padding: 12px; font-size: 12px; color: #cbd5e1; line-height: 1.6;">
+          <div style="margin-bottom: 6px;"><strong style="color: #38bdf8;">Pass 1:</strong> 공통 리스트 조작을 <code style="color: #38bdf8;">have</code> 레마로 추출 후 단독 증명</div>
+          <div><strong style="color: #38bdf8;">Pass 2:</strong> 추출된 레마를 바탕으로 본체 귀납 분기를 일괄 축약</div>
+        </div>
+      </div>
+      <div style="margin-top: 14px; padding-top: 10px; border-top: 1px solid #1e293b; font-size: 11px; color: #94a3b8;">
+        🎯 효과: 모델의 탐색 공간을 분할해 수렴 성공률 극대화
+      </div>
+    </div>
+
+    <!-- Mechanism 2 -->
+    <div style="background-color: #131b2e; border: 1px solid #243049; border-radius: 12px; padding: 20px; display: flex; flex-direction: column; justify-content: space-between; position: relative; overflow: hidden;">
+      <div style="position: absolute; top: 0; left: 0; right: 0; height: 3px; background: #fb7185;"></div>
+      <div>
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+          <span style="font-family: monospace; font-size: 11px; font-weight: 700; color: #fb7185; background: rgba(244, 63, 94, 0.15); padding: 3px 8px; border-radius: 4px; border: 1px solid rgba(244, 63, 94, 0.3);">MECHANISM 02</span>
+          <span style="font-size: 11px; color: #94a3b8;">Tactic Blacklist</span>
+        </div>
+        <h4 style="margin: 0 0 8px 0; font-size: 15px; font-weight: 700; color: #f8fafc;">Banned Tactics Enforcement<br><span style="font-size: 12px; color: #fb7185; font-weight: 500;">취약 전술 블랙리스트 강제</span></h4>
+        <p style="margin: 0 0 14px 0; font-size: 12px; color: #94a3b8; line-height: 1.6;">
+          제약이 없으면 LLM은 당장 컴파일만 통과하기 위해 무거운 <code style="color: #fb7185;">simp_all</code>이나 버전 취약적인 <code style="color: #fb7185;">rename_i</code>로 쉽게 회귀합니다.
+        </p>
+        <div style="background-color: #0b0f19; border: 1px solid #1e293b; border-radius: 8px; padding: 12px; font-size: 12px; color: #cbd5e1; line-height: 1.6;">
+          <div style="margin-bottom: 6px;"><strong style="color: #fb7185;">Strictly Banned:</strong> <code style="color: #fda4af;">rename_i</code>, <code style="color: #fda4af;">simp_all</code>, <code style="color: #fda4af;">simp at *</code></div>
+          <div><strong style="color: #34d399;">Required Target:</strong> <code style="color: #6ee7b7;">rcases</code>, <code style="color: #6ee7b7;">exact</code>, 패턴 매칭 전개</div>
+        </div>
+      </div>
+      <div style="margin-top: 14px; padding-top: 10px; border-top: 1px solid #1e293b; font-size: 11px; color: #94a3b8;">
+        🎯 효과: 버전 불변성(Portability) 및 Elaboration 속도 강제
+      </div>
+    </div>
+
+    <!-- Mechanism 3 -->
+    <div style="background-color: #131b2e; border: 1px solid #243049; border-radius: 12px; padding: 20px; display: flex; flex-direction: column; justify-content: space-between; position: relative; overflow: hidden;">
+      <div style="position: absolute; top: 0; left: 0; right: 0; height: 3px; background: #fbbf24;"></div>
+      <div>
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+          <span style="font-family: monospace; font-size: 11px; font-weight: 700; color: #fbbf24; background: rgba(245, 158, 11, 0.15); padding: 3px 8px; border-radius: 4px; border: 1px solid rgba(245, 158, 11, 0.3);">MECHANISM 03</span>
+          <span style="font-size: 11px; color: #94a3b8;">REPL Feedback</span>
+        </div>
+        <h4 style="margin: 0 0 8px 0; font-size: 15px; font-weight: 700; color: #f8fafc;">Interactive REPL Feedback<br><span style="font-size: 12px; color: #fbbf24; font-weight: 500;">진단 정보 기반 핀포인트 복구</span></h4>
+        <p style="margin: 0 0 14px 0; font-size: 12px; color: #94a3b8; line-height: 1.6;">
+          전체 스크립트를 재작성시키는 대신 홀(<code style="color: #fbbf24;">sorry</code>) 단위로 REPL 상태를 추적하고, 커널이 거부했을 때 정확한 타입 에러 메시지만 프롬프트에 주입합니다.
+        </p>
+        <div style="background-color: #0b0f19; border: 1px solid #1e293b; border-radius: 8px; padding: 12px; font-size: 12px; color: #cbd5e1; line-height: 1.6;">
+          <div style="margin-bottom: 6px;"><strong style="color: #fbbf24;">Interactive Proof Tree:</strong> 브랜치별 목표 상태를 격리 추적</div>
+          <div><strong style="color: #fbbf24;">Diagnostic Pinpointing:</strong> 실패한 브랜치만 선별 수정해 연쇄 붕괴 방지</div>
+        </div>
+      </div>
+      <div style="margin-top: 14px; padding-top: 10px; border-top: 1px solid #1e293b; font-size: 11px; color: #94a3b8;">
+        🎯 효과: 복잡한 인덕션에서도 환각 없이 단계적 증명 완성
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+
+
+   <!-- ================================================================= -->
+<!-- SECTION: Advanced Insights from Problem 2 (Induction Axis Shift)  -->
+<!-- ================================================================= -->
+<div class="advanced-insights-container" style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background-color: #0b0f19; border: 1px solid #1e293b; border-radius: 16px; padding: 28px; color: #cbd5e1; line-height: 1.6; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3); margin-top: 24px;">
+
+  <!-- 1. Header -->
+  <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 1px solid #1e293b;">
+    <div style="display: flex; align-items: center; gap: 12px;">
+      <div style="width: 38px; height: 38px; border-radius: 10px; background: rgba(168, 85, 247, 0.15); border: 1px solid rgba(192, 132, 252, 0.4); display: flex; align-items: center; justify-content: center; color: #c084fc; font-weight: 800; font-size: 18px; box-shadow: 0 0 15px rgba(168, 85, 247, 0.15);">
+        💡
+      </div>
+      <div>
+        <h3 style="margin: 0; font-size: 20px; font-weight: 700; color: #f8fafc; letter-spacing: -0.02em;">Problem 2 핵심 교훈: 구조적 관점의 전환</h3>
+        <p style="margin: 2px 0 0; font-size: 13px; color: #94a3b8;">단순 전술 축약을 넘어선 귀납 원리와 증명 항(Proof Term) 수준의 최적화</p>
+      </div>
+    </div>
+    <span style="font-size: 11px; font-family: monospace; background: #1e293b; border: 1px solid #334155; padding: 5px 12px; border-radius: 9999px; color: #c084fc; font-weight: 600;">
+      SEMANTIC INDUCTION
+    </span>
+  </div>
+
+  <!-- 2. Core Lessons (4 Cards Grid) -->
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin-bottom: 24px;">
+
+    <!-- Lesson 1 -->
+    <div style="background-color: #131b2e; border: 1px solid #243049; border-radius: 12px; padding: 20px; display: flex; flex-direction: column; justify-content: space-between; position: relative; overflow: hidden;">
+      <div style="position: absolute; top: 0; left: 0; right: 0; height: 3px; background: #c084fc;"></div>
+      <div>
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+          <span style="font-family: monospace; font-size: 11px; font-weight: 700; color: #c084fc; background: rgba(168, 85, 247, 0.15); padding: 3px 8px; border-radius: 4px; border: 1px solid rgba(168, 85, 247, 0.3);">AXIS SHIFT</span>
+          <span style="font-size: 11px; color: #94a3b8;">Syntax vs Evidence</span>
+        </div>
+        <h4 style="margin: 0 0 8px 0; font-size: 15px; font-weight: 700; color: #f8fafc;">구문이 아닌 '증거'에 대한 귀납<br><span style="font-size: 12px; color: #c084fc; font-weight: 500;">induction post ➔ induction h</span></h4>
+        <p style="margin: 0 0 14px 0; font-size: 12px; color: #94a3b8; line-height: 1.6;">
+          식의 구문 트리(<code style="color: #cbd5e1;">post</code>)에 귀납을 걸면 내부에서 매번 증거(<code style="color: #cbd5e1;">Hnorm</code>)를 해체해야 합니다. 정규화 술어 증거 자체에 귀납을 걸어 불가능한 케이스를 정의상 사전 차단했습니다.
+        </p>
+        <div style="background-color: #0b0f19; border: 1px solid #1e293b; border-radius: 8px; padding: 12px; font-size: 12px; color: #cbd5e1; line-height: 1.6;">
+          <div style="margin-bottom: 6px;"><strong style="color: #fb7185;">Before:</strong> AST 분기 후 매번 <code style="color: #fda4af;">cases Hnorm</code> 호출 (컨텍스트 오염)</div>
+          <div><strong style="color: #34d399;">After:</strong> 의미론적 규칙 생성자 매칭으로 자연스러운 변수 바인딩</div>
+        </div>
+      </div>
+      <div style="margin-top: 14px; padding-top: 10px; border-top: 1px solid #1e293b; font-size: 11px; color: #94a3b8;">
+        🎯 효과: 구문-의미론 간 불일치 해소 및 불필요한 케이스 원천 소거
+      </div>
+    </div>
+
+    <!-- Lesson 2 -->
+    <div style="background-color: #131b2e; border: 1px solid #243049; border-radius: 12px; padding: 20px; display: flex; flex-direction: column; justify-content: space-between; position: relative; overflow: hidden;">
+      <div style="position: absolute; top: 0; left: 0; right: 0; height: 3px; background: #38bdf8;"></div>
+      <div>
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+          <span style="font-family: monospace; font-size: 11px; font-weight: 700; color: #38bdf8; background: rgba(56, 189, 248, 0.15); padding: 3px 8px; border-radius: 4px; border: 1px solid rgba(56, 189, 248, 0.3);">TERM MODE</span>
+          <span style="font-size: 11px; color: #94a3b8;">Pure Lambda & .elim</span>
+        </div>
+        <h4 style="margin: 0 0 8px 0; font-size: 15px; font-weight: 700; color: #f8fafc;">전술 블록 탈피: 순수 항(Term) 기술<br><span style="font-size: 12px; color: #38bdf8; font-weight: 500;">by intro ... ➔ fun ... => .elim</span></h4>
+        <p style="margin: 0 0 14px 0; font-size: 12px; color: #94a3b8; line-height: 1.6;">
+          보조 정리 증명조차 Tactic 엔진(<code style="color: #cbd5e1;">by ...</code>)을 켜지 않고 순수 람다 표현식과 타입 제거자(<code style="color: #38bdf8;">.elim</code>), 항등 함수(<code style="color: #38bdf8;">fun _ hx => hx</code>)로 직결했습니다.
+        </p>
+        <div style="background-color: #0b0f19; border: 1px solid #1e293b; border-radius: 8px; padding: 12px; font-size: 12px; color: #cbd5e1; line-height: 1.6;">
+          <div style="margin-bottom: 6px;"><strong style="color: #fb7185;">Before:</strong> <code style="color: #fda4af;">intros x Hin; exact Hin</code> (불필요한 Tactic 러너 기동)</div>
+          <div><strong style="color: #34d399;">After:</strong> <code style="color: #6ee7b7;">fun _ hx => hx</code> 및 명시적 Elimination 함수 직접 호출</div>
+        </div>
+      </div>
+      <div style="margin-top: 14px; padding-top: 10px; border-top: 1px solid #1e293b; font-size: 11px; color: #94a3b8;">
+        🎯 효과: Elaboration 오버헤드 '0' 수렴 및 버전 파편화 완전 면역
+      </div>
+    </div>
+
+    <!-- Lesson 3 -->
+    <div style="background-color: #131b2e; border: 1px solid #243049; border-radius: 12px; padding: 20px; display: flex; flex-direction: column; justify-content: space-between; position: relative; overflow: hidden;">
+      <div style="position: absolute; top: 0; left: 0; right: 0; height: 3px; background: #fb7185;"></div>
+      <div>
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+          <span style="font-family: monospace; font-size: 11px; font-weight: 700; color: #fb7185; background: rgba(244, 63, 94, 0.15); padding: 3px 8px; border-radius: 4px; border: 1px solid rgba(244, 63, 94, 0.3);">CONTRADICTION</span>
+          <span style="font-size: 11px; color: #94a3b8;">exfalso vs False.elim</span>
+        </div>
+        <h4 style="margin: 0 0 8px 0; font-size: 15px; font-weight: 700; color: #f8fafc;">모순 유도의 닫힌 항(Closed Term)화<br><span style="font-size: 12px; color: #fb7185; font-weight: 500;">메타변수 연쇄 ➔ False.elim</span></h4>
+        <p style="margin: 0 0 14px 0; font-size: 12px; color: #94a3b8; line-height: 1.6;">
+          불가능한 브랜치(Dead branch) 처리 시 메타변수(<code style="color: #fb7185;">?_</code>)를 양산하는 우회 전술 체인을 버리고, 모순 증거 항을 조립해 단번에 종결했습니다.
+        </p>
+        <div style="background-color: #0b0f19; border: 1px solid #1e293b; border-radius: 8px; padding: 12px; font-size: 12px; color: #cbd5e1; line-height: 1.6;">
+          <div style="margin-bottom: 6px;"><strong style="color: #fb7185;">Before:</strong> <code style="color: #fda4af;">exfalso; specialize Hn ?_; constructor ...</code> (불안정)</div>
+          <div><strong style="color: #34d399;">After:</strong> <code style="color: #6ee7b7;">exact False.elim (hfalse _ _ _ rfl)</code> (명시적 항 종결)</div>
+        </div>
+      </div>
+      <div style="margin-top: 14px; padding-top: 10px; border-top: 1px solid #1e293b; font-size: 11px; color: #94a3b8;">
+        🎯 효과: 미해결 메타변수 누수 차단 및 전술 상태 공간 단순화
+      </div>
+    </div>
+
+    <!-- Lesson 4 -->
+    <div style="background-color: #131b2e; border: 1px solid #243049; border-radius: 12px; padding: 20px; display: flex; flex-direction: column; justify-content: space-between; position: relative; overflow: hidden;">
+      <div style="position: absolute; top: 0; left: 0; right: 0; height: 3px; background: #10b981;"></div>
+      <div>
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+          <span style="font-family: monospace; font-size: 11px; font-weight: 700; color: #34d399; background: rgba(16, 185, 129, 0.15); padding: 3px 8px; border-radius: 4px; border: 1px solid rgba(16, 185, 129, 0.3);">HARNESS SPEC</span>
+          <span style="font-size: 11px; color: #94a3b8;">Induction Target Selection</span>
+        </div>
+        <h4 style="margin: 0 0 8px 0; font-size: 15px; font-weight: 700; color: #f8fafc;">에이전트 하네스 메타 규칙 수립<br><span style="font-size: 12px; color: #34d399; font-weight: 500;">귀납 대상 선정 우선순위 부여</span></h4>
+        <p style="margin: 0 0 14px 0; font-size: 12px; color: #94a3b8; line-height: 1.6;">
+          LLM은 기존의 <code style="color: #cbd5e1;">induction post</code> 틀에 갇히기 쉽습니다. 하네스가 가설의 의존성을 판별하여 적절한 귀납 축을 모델에 제안해야 합니다.
+        </p>
+        <div style="background-color: #0b0f19; border: 1px solid #1e293b; border-radius: 8px; padding: 12px; font-size: 12px; color: #cbd5e1; line-height: 1.6;">
+          <div style="color: #34d399; font-family: monospace; font-size: 11px;">
+            "Rule: If the goal requires an inductive hypothesis `h : Pred x`, prioritize inducing on `h` rather than the underlying syntax `x`."
+          </div>
+        </div>
+      </div>
+      <div style="margin-top: 14px; padding-top: 10px; border-top: 1px solid #1e293b; font-size: 11px; color: #94a3b8;">
+        🎯 효과: 모델이 기존 틀에 갇히지 않고 캐노니컬 구조로 직행하도록 유도
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
 
     <section id="verification">
       <h2>Lean으로 확인한 결과</h2>
