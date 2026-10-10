@@ -1,0 +1,44 @@
+../TensorGapsRefactored.lean:1214:6: error: Tactic `apply` failed: could not unify the conclusion of `congrArg fun P => ?m.158`
+  ?m.159 ?m.150 = ?m.159 ?m.151
+with the goal
+  (do
+        let r ← $ᵖ (Fin (n + 1) → F)
+        pure (Δ₀(multilinearCombine u r, ↑MC) ≤ ↑e))
+      True =
+    (do
+        let r ← $ᵖ (Fin (n + 1) → F)
+        pure (multilinearCombine_affineComb_split_last_close MC u e (r (Fin.last n)) fun i => r i.castSucc))
+      True
+
+Note: The full type of `congrArg fun P => ?m.158` is
+  ?m.150 = ?m.151 → ?m.159 ?m.150 = ?m.159 ?m.151
+
+ι : Type l
+inst✝⁷ : Fintype ι
+inst✝⁶ : Nonempty ι
+inst✝⁵ : DecidableEq ι
+F : Type
+inst✝⁴ : CommRing F
+inst✝³ : Fintype F
+A : Type
+inst✝² : DecidableEq A
+inst✝¹ : AddCommGroup A
+inst✝ : Module F A
+MC : ModuleCode ι F A
+e n : ℕ
+u : WordStack A (Fin (2 ^ (n + 1))) ι
+⊢ (do
+        let r ← $ᵖ (Fin (n + 1) → F)
+        pure (Δ₀(multilinearCombine u r, ↑MC) ≤ ↑e))
+      True =
+    (do
+        let r ← $ᵖ (Fin (n + 1) → F)
+        pure (multilinearCombine_affineComb_split_last_close MC u e (r (Fin.last n)) fun i => r i.castSucc))
+      True
+interleaved_affine_gaps_imply_tensor_gaps.{l} {ι : Type l} [Fintype ι] [Nonempty ι] [DecidableEq ι] {F : Type}
+  [CommRing F] [Fintype F] {A : Type} [DecidableEq A] [AddCommGroup A] [Module F A] (MC : ModuleCode ι F A) {e ε : ℕ}
+  (hC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε)
+  (h_interleaved_gaps :
+    ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε)
+  (ϑ : ℕ) (hϑ_gt_0 : ϑ > 0) : δ_ε_multilinearCorrelatedAgreement_Nat (↑MC) ϑ e ε
+'interleaved_affine_gaps_imply_tensor_gaps' depends on axioms: [propext, sorryAx, Classical.choice, Quot.sound]

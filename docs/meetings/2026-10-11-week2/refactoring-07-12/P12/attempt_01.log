@@ -1,0 +1,37 @@
+../TensorGapsRefactored.lean:1214:2: error: `simp` made no progress
+
+Note: The target expression is not type-correct under the `instances` transparency level, which may have triggered the failure. This is usually caused by unfolding of semireducible definitions in prior tactic steps. Use `set_option linter.tacticCheckInstances true` to investigate the source of the issue.
+Full error:
+  Application type mismatch: The argument
+    u
+  has type
+    WordStack A (Fin (2 ^ (n + 1))) ι
+  but is expected to have type
+    Fin (2 ^ (n + 1)) → ι → A
+  in the application
+    multilinearCombine u
+../TensorGapsRefactored.lean:1222:58: error: Application type mismatch: The argument
+  MC
+has type
+  ModuleCode ι F A
+but is expected to have type
+  Set (?m.30 → ?m.24)
+in the application
+  δ_ε_multilinearCorrelatedAgreement_Nat MC
+../TensorGapsRefactored.lean:1238:58: error: Application type mismatch: The argument
+  MC
+has type
+  ModuleCode ι F A
+but is expected to have type
+  Set (?m.52 → ?m.46)
+in the application
+  δ_ε_multilinearCorrelatedAgreement_Nat MC
+../TensorGapsRefactored.lean:1270:29: error(lean.unknownIdentifier): Unknown identifier `tensor_gap_one`
+../TensorGapsRefactored.lean:1273:12: error(lean.unknownIdentifier): Unknown identifier `tensor_gap_succ`
+interleaved_affine_gaps_imply_tensor_gaps.{l} {ι : Type l} [Fintype ι] [Nonempty ι] [DecidableEq ι] {F : Type}
+  [CommRing F] [Fintype F] {A : Type} [DecidableEq A] [AddCommGroup A] [Module F A] (MC : ModuleCode ι F A) {e ε : ℕ}
+  (hC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε)
+  (h_interleaved_gaps :
+    ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε)
+  (ϑ : ℕ) (hϑ_gt_0 : ϑ > 0) : δ_ε_multilinearCorrelatedAgreement_Nat (↑MC) ϑ e ε
+'interleaved_affine_gaps_imply_tensor_gaps' depends on axioms: [propext, sorryAx, Classical.choice, Quot.sound]
