@@ -4,7 +4,7 @@
 
 | 태그 | 분류 기준 | 자료 공유 폴더 |
 | --- | --- | --- |
-| `Lean&Mathlib` | Lean 환경·인터페이스, 라이브러리 구축, 선언·의존성 탐색과 활용 | [lean-mathlib](lean-mathlib/README.md) |
+| `Lean&Mathlib` | Lean 환경·인터페이스, 라이브러리 구축, 선언·의존성 탐색과 활용 | Lean&Mathlib 자료 |
 | `Autoformalization` | 자연어 수학 명제·증명의 Lean 변환, 대응 데이터, 의미적 일치 평가 | [autoformalization](autoformalization/README.md) |
 | `Automated Theorem Proving` | 형식 명제의 증명 생성, tactic·전제 선택, 탐색, 모델 학습과 평가 | [automated-theorem-proving](automated-theorem-proving/README.md) |
 | `Verifier-guided Agent` | 검증기와 상호작용하는 에이전트·도구, 피드백 기반 수정·최적화와 그 평가 | [verifier-guided-agent](verifier-guided-agent/README.md) |

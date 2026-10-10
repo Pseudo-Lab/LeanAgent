@@ -8,7 +8,7 @@
 
 | 주제 / 태그 | 담당자 | 폴더 |
 | --- | --- | --- |
-| `Lean&Mathlib` | 박채원 | [lean-mathlib](lean-mathlib/README.md) |
+| `Lean&Mathlib` | 박채원 | Lean&Mathlib 자료 |
 | `Autoformalization` | 박선영 · 남성우 | [autoformalization](autoformalization/README.md) |
 | `Automated Theorem Proving` (ATP) | 권주원 · 손지연 | [automated-theorem-proving](automated-theorem-proving/README.md) |
 | `Verifier-guided Agent` | 정소미 · 박성호 | [verifier-guided-agent](verifier-guided-agent/README.md) |
