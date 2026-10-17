@@ -10,7 +10,7 @@ Lean Refactor Arena Warm-up 15문제의 Week 2 공유 자료입니다. 자료는
 | 박성호 | 5·10 | [보고서](박성호/report.md) | [안내](박성호/README.md) |
 | 손지연 | 7·12 | [발표자료](손지연/presentation.html) · [보고서](손지연/report.md) | [안내](손지연/README.md) |
 | 박선영 | 8·11 | [발표자료](박선영/presentation.html) | [안내](박선영/README.md) |
-| 박채원 | 14·15 | [보고서](박채원/report.md) | [안내](박채원/README.md) |
+| 박채원 | 14·15 | [보고서](박채원/report.md) · [로컬 측정](박채원/local-measurement.md) | [안내](박채원/README.md) |
 
 - [폴더·파일명 지침](../../../STRUCTURE.md).
 - [Warm-up·논문 조사 혼합 여부](../README.md#공유-파일의-warm-up논문-조사-혼합-여부).
