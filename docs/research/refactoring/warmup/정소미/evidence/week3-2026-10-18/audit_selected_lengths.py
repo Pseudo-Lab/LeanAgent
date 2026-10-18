@@ -34,6 +34,10 @@ FILES = {
         "results.json",
         "3bfe39a977ebc895c895adb35c8d75bb676a8de9132b2c440f31300ca6fa6799",
     ),
+    "candidates.jsonl": (
+        "candidates.jsonl",
+        "496f673618aebd451531cfe4b62f838bda48ec301f4e4a898d114823b62a717e",
+    ),
 }
 
 
