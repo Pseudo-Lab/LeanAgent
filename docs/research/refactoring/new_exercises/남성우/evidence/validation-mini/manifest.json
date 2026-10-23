@@ -1,0 +1,245 @@
+{
+  "name": "validation-mini",
+  "created": "2026-10-20T21:26:43+0900",
+  "generator": "Antigravity agent (Claude Opus) acting on gemini-validation-data-request.md; no model API used inside the harness",
+  "pipeline": {
+    "escalation_policy.py_sha256": "8f0a2a47f3c696db70c62dba583f4cc0b09fcbc3c2da1140ebefebaff1bc58e3",
+    "escalation-policy-and-data-recipe.md_sha256": "c60dce1862958852c3e3893188877c4b2a8e3cf5f7534f633ebbb761e243c0b8",
+    "reproduce.py_sha256": "157dfc3f9eaac0bcc6822510eed4ef22141b48b014b5b22b99a519d194a1480d",
+    "case_specs.py_sha256": "07fe9a95ee36f5107b5cece66c0df2e4ba58ab5cd35f1da31897e05a9e22f058",
+    "note": "No implemented Lean pipeline/local tactic list existed in the repository; local-ops-v1 below was defined by this harness and frozen before the first case run. Not changed afterwards."
+  },
+  "local_policy": {
+    "version": "local-ops-v1",
+    "frozen_at": "2026-10-15T21:10+09:00 (before the first case run)",
+    "target": "first error inside the target declaration of the candidate",
+    "span": "error line plus following lines with strictly larger indentation (text heuristic, not a parser)",
+    "unsolved_goals_rule": "if the first error message starts with 'unsolved goals', ops append the solver at the end of the reported block instead of replacing/deleting it (delete_span is skipped)",
+    "rounds": 1,
+    "stop_rule": "stop at the first op whose whole-file replay is valid",
+    "extract_rule": "for *? ops take the 'Try this' suggestion reported inside the span, substitute it and re-check",
+    "timeout_s_per_lean_run": 300,
+    "ops": [
+      {
+        "op": "delete_span",
+        "tactic": null
+      },
+      {
+        "op": "replace_span",
+        "tactic": "assumption"
+      },
+      {
+        "op": "replace_span",
+        "tactic": "rfl"
+      },
+      {
+        "op": "replace_span",
+        "tactic": "omega"
+      },
+      {
+        "op": "replace_span",
+        "tactic": "simp_all"
+      },
+      {
+        "op": "replace_span_extract",
+        "tactic": "simp?"
+      },
+      {
+        "op": "replace_span_extract",
+        "tactic": "exact?"
+      },
+      {
+        "op": "replace_span_extract",
+        "tactic": "aesop?",
+        "requires": "aesop"
+      }
+    ]
+  },
+  "resource_settings": {
+    "timeout_s_per_lean_run": 300,
+    "maxHeartbeats": "project default (not changed)",
+    "parallelism": "sequential runs"
+  },
+  "environments": {
+    "strata": {
+      "dir": "/Users/sungwoo/lean_project/refactor_arena/strata",
+      "lean_version": "Lean (version 4.26.0, arm64-apple-darwin24.6.0, commit d8204c9fd894f91bbb2cdfec5912ec8196fd8562, Release)",
+      "lake_version": "Lake version 5.0.0-src+d8204c9 (Lean version 4.26.0)",
+      "lean_toolchain": "leanprover/lean4:v4.26.0",
+      "repo_commit": "451e5f047bafa010d178856db76c00029bfa4d7f",
+      "lake_manifest_sha256": "5aab41f14cc55b5049ae81535506b6998bfadd9d983af6130fa92f4a39bd244c",
+      "lakefile_sha256": {
+        "lakefile.toml": "5c0abe83aaa82d837d50cf987102ff3138a15aec988912f06166a39e5ee578ae"
+      },
+      "uncommitted_status": [
+        "M Strata/Transform/CallElimCorrect.lean"
+      ],
+      "uncommitted_diff_sha256": "4f46664d01716151ce17d064218040e096c82504d719e877901e39271b9c8d4c",
+      "packages": {
+        "plausible": "b949552f6ca8e223f424b3e3b33f74185bbf1179"
+      },
+      "has_aesop": false,
+      "environment_hash": "b2c42272ae50e12d1472e380395e82dd422746e97da291bdb2684a96c2ba850d"
+    },
+    "mathlib_toy": {
+      "dir": "/Users/sungwoo/lean_project/autoformalization_lab",
+      "lean_version": "Lean (version 4.35.0-rc4, arm64-apple-darwin24.6.0, commit c29b6dda4f7c20e3eeaa717c4e565663c5cfa364, Release)",
+      "lake_version": "Lake version 5.0.0-src+c29b6dd (Lean version 4.35.0-rc4)",
+      "lean_toolchain": "leanprover/lean4:v4.35.0-rc4",
+      "repo_commit": "454cc4cd2f28c71eaa3f37df40ef5616a96b947e",
+      "lake_manifest_sha256": "e9e2f6717972d3fc7266e2e8e02236c289f24a6b8ca824e0799d7ef01ab79a7a",
+      "lakefile_sha256": {
+        "lakefile.toml": "c75d913834f1403f56639d57320b39a355d2a3ad76ea86336d13b061a08b05f5"
+      },
+      "uncommitted_status": [
+        "M AGENTS.md",
+        " M AutoformalizationLab.lean",
+        " M README.md",
+        " M docs/hilbert-scheme/outline.md",
+        " M docs/hilbert-scheme/verification.md"
+      ],
+      "uncommitted_diff_sha256": "93487ca4becf62c7ede7d950ca76304f58bba3b9ca77445c999f02975f3310d6",
+      "packages": {
+        "mathlib": "e6bbacd0e1b7307ff6e17da09cd2455f60804fa6",
+        "plausible": "aef59637faa9e85fa2486acaaf906ce3f572af7c",
+        "LeanSearchClient": "234d9e074fbd6e911b920baf32db5291c3125be0",
+        "importGraph": "579f558774c4ac6840e715ba60dabf3030619349",
+        "proofwidgets": "d5ad4a0b79fa7f9818fe1380d05a3f6143823c09",
+        "aesop": "04879b1e1de744d5c9777c8cf63fa55a8f652e5e",
+        "Qq": "e7c4cdd2f1bf9df361ef7f621b4d6867012ab65e",
+        "batteries": "b71aaf60877e673fdb921f06f20987d12ee8a290",
+        "Cli": "82c11b9717083154aefc5fe8d4cba4bbf046298f"
+      },
+      "has_aesop": true,
+      "environment_hash": "eaa66a54671323fdb00c2ab25c3e52d1a8dd93a4c37fef763b259574ff3920a3"
+    }
+  },
+  "data_sources": {
+    "arena_warmup": {
+      "file": "~/lean_project/refactor_arena/benchmark_data_warmup.jsonl",
+      "copied_records": "sources/warmup_seeds_1_3.jsonl (lines 1-3)",
+      "sha256_of_full_file": "6209680cf00cde0765b77b24834cd72c64dd585b2f7e3f2a58209980ab59a804",
+      "line_number_note": "dataset start_line values (2964/2733/950) differ from the git HEAD file positions (3089/2858/931); declarations were located by exact text match of `src` (unique)"
+    },
+    "strata_sources": {
+      "strata_CallElimCorrect_HEAD.lean": "1c5e76014548db4a380b5c225f561c726a0db1184dcddfefb7191052e67dd79a",
+      "strata_StatementSemanticsProps_HEAD.lean": "bb67b50c5a2c9021ba7b2b5c705e2ace30dea100fda687397fa09d7774a69602"
+    },
+    "toy_sources": {
+      "R01_and_swap.lean": "5e2b9900949374c1b5175f863b50b84a92d317edf526f004161ab10c155393a7",
+      "R04_inter_union.lean": "3a60aaf2d5bb52556c1fb1730d508db3d07434bb5c77ab18cbd83d87ccfc7940",
+      "R05_mem_cons.lean": "b0a6488e9a51d6ced32fcf051e8fa6ba4dbc315b4f60f75c3ba9d113fe743667"
+    }
+  },
+  "cases": {
+    "R01": {
+      "seed_id": "toy:ValidationMini.r01_and_swap",
+      "source_kind": "toy",
+      "source_path": "validation-mini/sources/toy/R01_and_swap.lean (educational example written for this dataset)",
+      "observed_result": "invalid",
+      "expected_route": "local_success",
+      "policy_decision": {
+        "decision.json": "MEASURE",
+        "decision.configured_budget.json": null
+      },
+      "validation_status": "lean_observed+gold_verified+string_contract_only_no_lean_adapter_term_check+robustness_incomplete"
+    },
+    "R02": {
+      "seed_id": "warmup-2:CallElimCorrect.extractedOldExprInVars",
+      "source_kind": "arena_derived",
+      "source_path": "benchmark_data_warmup.jsonl line 2; Strata/Transform/CallElimCorrect.lean @ 451e5f047 (git HEAD copy, uncommitted patch excluded)",
+      "observed_result": "invalid",
+      "expected_route": "escalate_after_local_exhausted",
+      "policy_decision": {
+        "decision.json": "PRICE_REQUEST",
+        "decision.configured_budget.json": "EMIT_LLM_PROMPT"
+      },
+      "validation_status": "lean_observed+gold_verified+string_contract_only_no_lean_adapter_term_check"
+    },
+    "R03": {
+      "seed_id": "warmup-2:CallElimCorrect.extractedOldExprInVars",
+      "source_kind": "arena_derived",
+      "source_path": "benchmark_data_warmup.jsonl line 2; Strata/Transform/CallElimCorrect.lean @ 451e5f047 (git HEAD copy, uncommitted patch excluded)",
+      "observed_result": "invalid",
+      "expected_route": "escalate_after_local_exhausted",
+      "policy_decision": {
+        "decision.json": "PRICE_REQUEST",
+        "decision.configured_budget.json": "EMIT_LLM_PROMPT"
+      },
+      "validation_status": "lean_observed+gold_verified+string_contract_only_no_lean_adapter_term_check"
+    },
+    "R04": {
+      "seed_id": "toy:ValidationMini.r04_inter_union",
+      "source_kind": "toy",
+      "source_path": "validation-mini/sources/toy/R04_inter_union.lean (educational example written for this dataset)",
+      "observed_result": "valid",
+      "expected_route": "valid_measure_then_select",
+      "policy_decision": {
+        "decision.json": "MEASURE",
+        "decision.configured_budget.json": null
+      },
+      "validation_status": "lean_observed+gold_verified+string_contract_only_no_lean_adapter_term_check+robustness_incomplete"
+    },
+    "R05": {
+      "seed_id": "toy:ValidationMini.r05_mem_cons",
+      "source_kind": "toy",
+      "source_path": "validation-mini/sources/toy/R05_mem_cons.lean (educational example written for this dataset)",
+      "observed_result": "invalid",
+      "expected_route": "escalate_after_local_exhausted",
+      "policy_decision": {
+        "decision.json": "PRICE_REQUEST",
+        "decision.configured_budget.json": "EMIT_LLM_PROMPT"
+      },
+      "validation_status": "lean_observed+gold_verified+string_contract_only_no_lean_adapter_term_check+robustness_incomplete"
+    },
+    "R06": {
+      "seed_id": "warmup-3:Core.InitsUpdatesComm",
+      "source_kind": "arena_derived",
+      "source_path": "benchmark_data_warmup.jsonl line 3; Strata/Languages/Core/StatementSemanticsProps.lean @ 451e5f047 (git HEAD copy, uncommitted patch excluded)",
+      "observed_result": "valid",
+      "expected_route": "valid_measure_then_select",
+      "policy_decision": {
+        "decision.json": "MEASURE",
+        "decision.configured_budget.json": null
+      },
+      "validation_status": "lean_observed+gold_verified+string_contract_only_no_lean_adapter_term_check+robustness_incomplete"
+    },
+    "R06b": {
+      "seed_id": "warmup-3:Core.InitsUpdatesComm",
+      "source_kind": "arena_derived",
+      "source_path": "benchmark_data_warmup.jsonl line 3; Strata/Languages/Core/StatementSemanticsProps.lean @ 451e5f047 (git HEAD copy, uncommitted patch excluded)",
+      "observed_result": "invalid",
+      "expected_route": "escalate_after_local_exhausted",
+      "policy_decision": {
+        "decision.json": "PRICE_REQUEST",
+        "decision.configured_budget.json": "EMIT_LLM_PROMPT"
+      },
+      "validation_status": "lean_observed+gold_verified+string_contract_only_no_lean_adapter_term_check+robustness_incomplete"
+    },
+    "R07": {
+      "seed_id": "warmup-1:CallElimCorrect.substOldPostSubset",
+      "source_kind": "arena_derived",
+      "source_path": "benchmark_data_warmup.jsonl line 1; Strata/Transform/CallElimCorrect.lean @ 451e5f047 (git HEAD copy, uncommitted patch excluded)",
+      "observed_result": "invalid",
+      "expected_route": "escalate_after_local_exhausted",
+      "policy_decision": {
+        "decision.json": "PRICE_REQUEST",
+        "decision.configured_budget.json": "EMIT_LLM_PROMPT"
+      },
+      "validation_status": "lean_observed+gold_verified+string_contract_only_no_lean_adapter_term_check"
+    },
+    "R08": {
+      "seed_id": "warmup-1:CallElimCorrect.substOldPostSubset",
+      "source_kind": "arena_derived",
+      "source_path": "benchmark_data_warmup.jsonl line 1; Strata/Transform/CallElimCorrect.lean @ 451e5f047 (git HEAD copy, uncommitted patch excluded)",
+      "observed_result": "invalid",
+      "expected_route": "escalate_after_local_exhausted",
+      "policy_decision": {
+        "decision.json": "PRICE_REQUEST",
+        "decision.configured_budget.json": "EMIT_LLM_PROMPT"
+      },
+      "validation_status": "lean_observed+gold_verified+string_contract_only_no_lean_adapter_term_check"
+    }
+  },
+  "policy_fixtures": "policy-fixtures/ (synthetic=true; generated by make_policy_fixtures.py)"
+}

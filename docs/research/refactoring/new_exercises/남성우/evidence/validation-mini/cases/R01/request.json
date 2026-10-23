@@ -1,0 +1,97 @@
+{
+  "problem_id": "R01:toy:ValidationMini.r01_and_swap",
+  "status": "valid",
+  "baseline_verified": true,
+  "environment": {
+    "lean_version": "Lean (version 4.35.0-rc4, arm64-apple-darwin24.6.0, commit c29b6dda4f7c20e3eeaa717c4e565663c5cfa364, Release)",
+    "lean_toolchain": "leanprover/lean4:v4.35.0-rc4",
+    "repo_commit": "454cc4cd2f28c71eaa3f37df40ef5616a96b947e",
+    "lake_manifest_sha256": "e9e2f6717972d3fc7266e2e8e02236c289f24a6b8ca824e0799d7ef01ab79a7a"
+  },
+  "environment_hash": "eaa66a54671323fdb00c2ab25c3e52d1a8dd93a4c37fef763b259574ff3920a3",
+  "statement": "theorem r01_and_swap (P Q R : Prop) (h : (P ∧ Q) ∧ R) : R ∧ P",
+  "context": "-- [harness] imports/open/namespace lines of the prefix:\nimport Mathlib.Data.Set.Basic\nimport Mathlib.Util.CountHeartbeats\nnamespace ValidationMini\n-- [harness] TRUNCATED: full prefix is 6 lines (sources/toy/R01_and_swap.lean); only the last 25 lines before the declaration follow\nimport Mathlib.Data.Set.Basic\nimport Mathlib.Util.CountHeartbeats\n\nnamespace ValidationMini\n\n",
+  "original_proof": "by\n  constructor\n  · exact h.2\n  · exact h.1.1",
+  "candidate_proof": "by\n  simp_all",
+  "candidate_hash": "272e3535151c950ed9f58fa5c3265060c4928e53f371381ca1f4b0f850770921",
+  "diagnostics": [],
+  "localization": {
+    "scope": "body",
+    "trusted_pre_state": false
+  },
+  "local": {
+    "state": "exhausted",
+    "evidence": [
+      {
+        "n": 1,
+        "op": "delete_span",
+        "tactic": null,
+        "result": "original_error_cleared_full_replay_failed",
+        "reason": null,
+        "suggestion": null,
+        "full_replay": "invalid"
+      },
+      {
+        "n": 2,
+        "op": "replace_span",
+        "tactic": "assumption",
+        "result": "failed",
+        "reason": null,
+        "suggestion": null,
+        "full_replay": "invalid"
+      },
+      {
+        "n": 3,
+        "op": "replace_span",
+        "tactic": "rfl",
+        "result": "failed",
+        "reason": null,
+        "suggestion": null,
+        "full_replay": "invalid"
+      },
+      {
+        "n": 4,
+        "op": "replace_span",
+        "tactic": "omega",
+        "result": "failed",
+        "reason": null,
+        "suggestion": null,
+        "full_replay": "invalid"
+      },
+      {
+        "n": 5,
+        "op": "replace_span",
+        "tactic": "simp_all",
+        "result": "full_replay_valid",
+        "reason": null,
+        "suggestion": null,
+        "full_replay": "valid"
+      }
+    ]
+  },
+  "llm_history": [],
+  "limits": {
+    "repair_requests": 2,
+    "optimization_requests": 1
+  },
+  "budget": {
+    "cap_usd": null,
+    "spent_usd": 0.0,
+    "reserved_usd": 0.0,
+    "next_call_upper_bound_usd": null,
+    "source": "no price table / model selected; spent=0 is observed (no API call made)"
+  },
+  "constraints": [
+    "Body only: statement, binders, imports and surrounding declarations are fixed",
+    "No sorry/admit/new axioms/new declarations/self-reference",
+    "Same body must pass every listed version"
+  ],
+  "source_contract": {
+    "original_source": "import Mathlib.Data.Set.Basic\nimport Mathlib.Util.CountHeartbeats\n\nnamespace ValidationMini\n\ntheorem r01_and_swap (P Q R : Prop) (h : (P ∧ Q) ∧ R) : R ∧ P := by\n  constructor\n  · exact h.2\n  · exact h.1.1\n\nend ValidationMini\n",
+    "candidate_source": "import Mathlib.Data.Set.Basic\nimport Mathlib.Util.CountHeartbeats\n\nnamespace ValidationMini\n\ntheorem r01_and_swap (P Q R : Prop) (h : (P ∧ Q) ∧ R) : R ∧ P := by\n  simp_all\n\nend ValidationMini\n",
+    "body_start": 158,
+    "body_end": 204,
+    "offsets": "python character offsets computed by harness string search (not a Lean parser)"
+  },
+  "note": "candidate_proof is the locally repaired body after full replay; original candidate in case.json"
+}

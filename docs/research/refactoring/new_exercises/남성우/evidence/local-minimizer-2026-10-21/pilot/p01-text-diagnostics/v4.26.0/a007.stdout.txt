@@ -1,0 +1,27 @@
+/Users/sungwoo/lean_project/LeanAgent/docs/research/verifier-guided-agent/experiments/local-minimizer-2026-10-21/runs/01/v4.26.0/a007.lean:171:8: warning: declaration uses 'sorry'
+/Users/sungwoo/lean_project/LeanAgent/docs/research/verifier-guided-agent/experiments/local-minimizer-2026-10-21/runs/01/v4.26.0/a007.lean:3133:4: error: Tactic `assumption` failed
+
+h2 : Expression.Ident
+m : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata
+h1 :
+  Lambda.Identifier
+    { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.IDMeta
+ty : Option { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.TypeType
+m✝ : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata
+fn✝ e✝ : Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }
+ih1 :
+  (Imperative.HasVarsPure.getVars (substOld h2 (Lambda.LExpr.fvar m h1 ty) fn✝)).Subset
+    (Imperative.HasVarsPure.getVars fn✝ ++ [h1])
+ih2 :
+  (Imperative.HasVarsPure.getVars (substOld h2 (Lambda.LExpr.fvar m h1 ty) e✝)).Subset
+    (Imperative.HasVarsPure.getVars e✝ ++ [h1])
+⊢ (Imperative.HasVarsPure.getVars
+        (match fn✝, e✝ with
+        | Lambda.LExpr.op m_1 { name := "old", metadata := Visibility.unres } ty_1, Lambda.LExpr.fvar m_2 x ty_2 =>
+          if x = h2 then Lambda.LExpr.fvar m h1 ty else Lambda.LExpr.app m✝ fn✝ e✝
+        | x, x_1 =>
+          Lambda.LExpr.app m✝ (substOld h2 (Lambda.LExpr.fvar m h1 ty) fn✝)
+            (substOld h2 (Lambda.LExpr.fvar m h1 ty) e✝))).Subset
+    (Imperative.HasVarsPure.getVars (Lambda.LExpr.app m✝ fn✝ e✝) ++ [h1])
+/Users/sungwoo/lean_project/LeanAgent/docs/research/verifier-guided-agent/experiments/local-minimizer-2026-10-21/runs/01/v4.26.0/a007.lean:3257:8: warning: declaration uses 'sorry'
+'CallElimCorrect.substOldPostSubset' depends on axioms: [propext, sorryAx, Quot.sound]

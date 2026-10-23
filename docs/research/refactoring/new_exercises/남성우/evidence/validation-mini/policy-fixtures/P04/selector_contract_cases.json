@@ -1,0 +1,286 @@
+{
+  "synthetic": true,
+  "note": "escalation_policy.py does NOT implement a score selector. These cases test a separate selector contract (combined = mean of token reduction %, HB reduction %, robustness %). Values are invented; they are not Lean measurements.",
+  "cases": [
+    {
+      "id": "s01_table_from_design_doc",
+      "baseline": {
+        "t": 0,
+        "h": 0,
+        "r": 100
+      },
+      "candidates": [
+        {
+          "id": "very_short_expensive",
+          "eligible": true,
+          "t": 40,
+          "h": -80,
+          "r": 100
+        },
+        {
+          "id": "balanced",
+          "eligible": true,
+          "t": 20,
+          "h": 30,
+          "r": 100
+        },
+        {
+          "id": "shorter_version_loss",
+          "eligible": true,
+          "t": 50,
+          "h": 10,
+          "r": 66.66666666666667
+        },
+        {
+          "id": "best_combined",
+          "eligible": true,
+          "t": 10,
+          "h": 50,
+          "r": 100
+        },
+        {
+          "id": "fake_high_invalid",
+          "eligible": false,
+          "t": 90,
+          "h": 90,
+          "r": 100
+        }
+      ],
+      "expected_winner": "best_combined"
+    },
+    {
+      "id": "s02_tie_with_baseline",
+      "baseline": {
+        "t": 0,
+        "h": 0,
+        "r": 100
+      },
+      "candidates": [
+        {
+          "id": "tie",
+          "eligible": true,
+          "t": 10,
+          "h": -10,
+          "r": 100
+        }
+      ],
+      "expected_winner": "ORIGINAL",
+      "note": "equal combined -> keep verified original"
+    },
+    {
+      "id": "s03_all_worse",
+      "baseline": {
+        "t": 0,
+        "h": 0,
+        "r": 100
+      },
+      "candidates": [
+        {
+          "id": "w1",
+          "eligible": true,
+          "t": 5,
+          "h": -20,
+          "r": 100
+        }
+      ],
+      "expected_winner": "ORIGINAL"
+    },
+    {
+      "id": "s04_display_rounding_tie",
+      "baseline": {
+        "t": 0,
+        "h": 0,
+        "r": 100
+      },
+      "candidates": [
+        {
+          "id": "a",
+          "eligible": true,
+          "t": 10.0001,
+          "h": 0,
+          "r": 100
+        },
+        {
+          "id": "b",
+          "eligible": true,
+          "t": 10.0002,
+          "h": 0,
+          "r": 100
+        }
+      ],
+      "expected_winner": "b",
+      "note": "both display as 36.67; compare raw values"
+    },
+    {
+      "id": "s05_high_score_but_hb_missing",
+      "baseline": {
+        "t": 0,
+        "h": 0,
+        "r": 100
+      },
+      "candidates": [
+        {
+          "id": "no_hb",
+          "eligible": true,
+          "t": 60,
+          "h": null,
+          "r": 100
+        },
+        {
+          "id": "ok",
+          "eligible": true,
+          "t": 5,
+          "h": 5,
+          "r": 100
+        }
+      ],
+      "expected_winner": "ok",
+      "note": "incomplete metrics are not comparable"
+    },
+    {
+      "id": "s06_partial_robustness_unchecked",
+      "baseline": {
+        "t": 0,
+        "h": 0,
+        "r": 100
+      },
+      "candidates": [
+        {
+          "id": "partial",
+          "eligible": true,
+          "t": 30,
+          "h": 30,
+          "r": 100,
+          "versions_complete": false
+        }
+      ],
+      "expected_winner": "ORIGINAL"
+    },
+    {
+      "id": "s07_no_candidates",
+      "baseline": {
+        "t": 0,
+        "h": 0,
+        "r": 100
+      },
+      "candidates": [],
+      "expected_winner": "ORIGINAL"
+    },
+    {
+      "id": "s08_all_invalid",
+      "baseline": {
+        "t": 0,
+        "h": 0,
+        "r": 100
+      },
+      "candidates": [
+        {
+          "id": "x",
+          "eligible": false,
+          "t": 50,
+          "h": 50,
+          "r": 100
+        }
+      ],
+      "expected_winner": "ORIGINAL"
+    },
+    {
+      "id": "s09_baseline_unverified",
+      "baseline": {
+        "t": 0,
+        "h": 0,
+        "r": 100,
+        "verified": false
+      },
+      "candidates": [
+        {
+          "id": "x",
+          "eligible": true,
+          "t": 10,
+          "h": 10,
+          "r": 100
+        }
+      ],
+      "expected_winner": "BLOCKED_BASELINE",
+      "note": "not a normal fallback success"
+    },
+    {
+      "id": "s10_model_failure_after_best",
+      "baseline": {
+        "t": 0,
+        "h": 0,
+        "r": 100
+      },
+      "candidates": [
+        {
+          "id": "local_best",
+          "eligible": true,
+          "t": 20,
+          "h": 20,
+          "r": 100
+        },
+        {
+          "id": "model_opt_failed",
+          "eligible": false,
+          "t": 70,
+          "h": 70,
+          "r": 100
+        },
+        {
+          "id": "model_no_response",
+          "eligible": false,
+          "t": null,
+          "h": null,
+          "r": null
+        }
+      ],
+      "expected_winner": "local_best",
+      "note": "existing best preserved after later failures"
+    },
+    {
+      "id": "s11_one_axis_worse_still_wins",
+      "baseline": {
+        "t": 0,
+        "h": 0,
+        "r": 100
+      },
+      "candidates": [
+        {
+          "id": "hb_worse",
+          "eligible": true,
+          "t": 60,
+          "h": -10,
+          "r": 100
+        },
+        {
+          "id": "t_only",
+          "eligible": true,
+          "t": 15,
+          "h": 0,
+          "r": 100
+        }
+      ],
+      "expected_winner": "hb_worse",
+      "note": "do not reject on one-axis regression; do not pick on one axis"
+    },
+    {
+      "id": "s12_baseline_robustness_partial",
+      "baseline": {
+        "t": 0,
+        "h": 0,
+        "r": 66.66666666666667
+      },
+      "candidates": [
+        {
+          "id": "fixes_version",
+          "eligible": true,
+          "t": 0,
+          "h": 0,
+          "r": 100
+        }
+      ],
+      "expected_winner": "fixes_version",
+      "note": "baseline combined is 22.22, not 33.33 and not 0"
+    }
+  ]
+}

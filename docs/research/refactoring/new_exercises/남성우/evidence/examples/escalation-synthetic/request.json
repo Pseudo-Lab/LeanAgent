@@ -1,0 +1,49 @@
+{
+  "problem_id": "synthetic-routing-example",
+  "status": "invalid",
+  "baseline_verified": true,
+  "environment": {
+    "note": "synthetic routing fixture; no Lean run"
+  },
+  "statement": "example (P Q : Prop) (h : P ∨ Q) : Q ∨ P",
+  "context": "import Lean",
+  "original_proof": "by cases h with\n  | inl hp => exact Or.inr hp\n  | inr hq => exact Or.inl hq",
+  "candidate_proof": "by\n  left\n  assumption",
+  "candidate_hash": "cf8767b8b9bf9d98f5f6de5a3576391485fae6e4799ec520a7ca055e51a2b4e8",
+  "diagnostics": [
+    {
+      "kind": "synthetic",
+      "message": "assumption cannot close selected goal"
+    }
+  ],
+  "localization": {
+    "scope": "block",
+    "trusted_pre_state": false,
+    "reason": "No actual goal-state capture in this fixture"
+  },
+  "local": {
+    "state": "not_applicable",
+    "evidence": [
+      "Synthetic routing input, not a claim that actual aesop would fail"
+    ]
+  },
+  "llm_history": [],
+  "budget": {
+    "cap_usd": 3,
+    "spent_usd": 0.5,
+    "reserved_usd": 0,
+    "next_call_upper_bound_usd": 0.3
+  },
+  "constraints": [
+    "Body only",
+    "No sorry/admit/new axioms"
+  ],
+  "gold_repair": "SECRET_GOLD_MUST_NOT_LEAK",
+  "source_contract": {
+    "original_source": "import Lean\nexample (P Q : Prop) (h : P ∨ Q) : Q ∨ P := by cases h with\n  | inl hp => exact Or.inr hp\n  | inr hq => exact Or.inl hq\n",
+    "candidate_source": "import Lean\nexample (P Q : Prop) (h : P ∨ Q) : Q ∨ P := by\n  left\n  assumption\n",
+    "body_start": 56,
+    "body_end": 131
+  },
+  "environment_hash": "synthetic-env"
+}

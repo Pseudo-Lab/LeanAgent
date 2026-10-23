@@ -1,0 +1,484 @@
+{
+  "id": "R08",
+  "seed_id": "warmup-1:CallElimCorrect.substOldPostSubset",
+  "source_kind": "arena_derived",
+  "source_path": "benchmark_data_warmup.jsonl line 1; Strata/Transform/CallElimCorrect.lean @ 451e5f047 (git HEAD copy, uncommitted patch excluded)",
+  "decl_full_name": "CallElimCorrect.substOldPostSubset",
+  "environment": {
+    "dir": "/Users/sungwoo/lean_project/refactor_arena/strata",
+    "lean_version": "Lean (version 4.26.0, arm64-apple-darwin24.6.0, commit d8204c9fd894f91bbb2cdfec5912ec8196fd8562, Release)",
+    "lake_version": "Lake version 5.0.0-src+d8204c9 (Lean version 4.26.0)",
+    "lean_toolchain": "leanprover/lean4:v4.26.0",
+    "repo_commit": "451e5f047bafa010d178856db76c00029bfa4d7f",
+    "lake_manifest_sha256": "5aab41f14cc55b5049ae81535506b6998bfadd9d983af6130fa92f4a39bd244c",
+    "lakefile_sha256": {
+      "lakefile.toml": "5c0abe83aaa82d837d50cf987102ff3138a15aec988912f06166a39e5ee578ae"
+    },
+    "uncommitted_status": [
+      "M Strata/Transform/CallElimCorrect.lean"
+    ],
+    "uncommitted_diff_sha256": "4f46664d01716151ce17d064218040e096c82504d719e877901e39271b9c8d4c",
+    "packages": {
+      "plausible": "b949552f6ca8e223f424b3e3b33f74185bbf1179"
+    },
+    "has_aesop": false,
+    "environment_hash": "b2c42272ae50e12d1472e380395e82dd422746e97da291bdb2684a96c2ba850d",
+    "project": "strata"
+  },
+  "immutable_context_hash": "b86166f4b5e8d0e953e0da8112c7c3ebda902e3611e1dfa5a53a52b3e355be5f",
+  "statement": "open OldExpressions in\ntheorem substOldPostSubset:\n  (Imperative.HasVarsPure.getVars (P:=Expression)\n    (substOld h2 (Lambda.LExpr.fvar m h1 ty) post)).Subset\n    (Imperative.HasVarsPure.getVars (P:=Expression) post ++ [h1])",
+  "original_body": "by\n  induction post <;> simp [substOld]\n  case fvar =>\n    intros x Hin\n    rename_i m name ty2\n    simp at m\n    simp at name\n    simp at ty2\n\n    simp_all\n  case op =>\n    intros x Hin\n    rename_i m name ty2\n    simp at m\n    simp at name\n    simp at ty2\n    simp_all\n  case const =>\n    intros x Hin\n    rename_i m name\n    simp at m\n    simp_all\n  case bvar =>\n    intros x Hin\n    rename_i m d\n    simp at m\n    simp_all\n  case abs ih =>\n    exact ih\n  case ite cih tih eih =>\n    simp [Imperative.HasVarsPure.getVars, Lambda.LExpr.LExpr.getVars] at *\n    apply List.Subset.app\n    . apply List.Subset.trans\n      apply cih <;> assumption\n      intros x Hin\n      simp_all\n      cases Hin <;> simp_all\n    apply List.Subset.app\n    . apply List.Subset.trans\n      apply tih <;> assumption\n      intros x Hin\n      simp_all\n      cases Hin <;> simp_all\n    . apply List.Subset.trans\n      apply eih <;> assumption\n      intros x Hin\n      simp_all\n  case app ih1 ih2 =>\n    split\n    . split\n      . simp [Imperative.HasVarsPure.getVars, Lambda.LExpr.LExpr.getVars] at *\n        intros x Hin\n        simp_all\n      . simp [Imperative.HasVarsPure.getVars, Lambda.LExpr.LExpr.getVars] at *\n        intros x Hin\n        simp_all\n    . simp [Imperative.HasVarsPure.getVars, Lambda.LExpr.LExpr.getVars] at *\n      apply List.Subset.app\n      . apply List.Subset.trans\n        apply ih1 <;> assumption\n        intros x Hin\n        simp_all\n        cases Hin <;> simp_all\n      . apply List.Subset.trans\n        apply ih2 <;> assumption\n        intros x Hin\n        simp_all\n  case quant trih eih =>\n    simp [Imperative.HasVarsPure.getVars, Lambda.LExpr.LExpr.getVars] at *\n    apply List.Subset.app\n    . apply List.Subset.trans\n      apply trih <;> assumption\n      intros x Hin\n      rename_i m1 k1 ty1 trigger1 e1\n      have assoc := List.append_assoc (Lambda.LExpr.LExpr.getVars trigger1) (Lambda.LExpr.LExpr.getVars e1) [h1]\n      simp_all\n      cases Hin <;> simp_all\n    . apply List.Subset.trans\n      apply eih <;> assumption\n      intros x Hin\n      simp_all\n  case eq ih1 ih2 =>\n    simp [Imperative.HasVarsPure.getVars, Lambda.LExpr.LExpr.getVars] at *\n    apply List.Subset.app\n    . apply List.Subset.trans\n      apply ih1 <;> assumption\n      intros x Hin\n      simp_all\n      cases Hin <;> simp_all\n    . apply List.Subset.trans\n      apply ih2 <;> assumption\n      intros x Hin\n      simp_all",
+  "original_body_sha256": "c8dbfad735c0468c45f289befb9a73f4ef784fb1ac6fb9c8cd549b8e6309838b",
+  "body_range": {
+    "body_start_char": 97166,
+    "body_end_char": 99575,
+    "body_first_line": 3093,
+    "decl_first_line": 3089
+  },
+  "candidate_body": "by\n  induction post <;> simp [substOld]\n  case fvar =>\n    intros x Hin\n    simp at m\n    simp at name\n    simp at ty2\n\n    simp_all\n  case op =>\n    intros x Hin\n    rename_i m name ty2\n    simp at m\n    simp at name\n    simp at ty2\n    simp_all\n  case const =>\n    intros x Hin\n    rename_i m name\n    simp at m\n    simp_all\n  case bvar =>\n    intros x Hin\n    rename_i m d\n    simp at m\n    simp_all\n  case abs ih =>\n    exact ih\n  case ite cih tih eih =>\n    simp [Imperative.HasVarsPure.getVars, Lambda.LExpr.LExpr.getVars] at *\n    apply List.Subset.app\n    . apply List.Subset.trans\n      apply cih <;> assumption\n      intros x Hin\n      simp_all\n      cases Hin <;> simp_all\n    apply List.Subset.app\n    . apply List.Subset.trans\n      apply tih <;> assumption\n      intros x Hin\n      simp_all\n      cases Hin <;> simp_all\n    . apply List.Subset.trans\n      apply eih <;> assumption\n      intros x Hin\n      simp_all\n  case app ih1 ih2 =>\n    split\n    . split\n      . simp [Imperative.HasVarsPure.getVars, Lambda.LExpr.LExpr.getVars] at *\n        intros x Hin\n        simp_all\n      . simp [Imperative.HasVarsPure.getVars, Lambda.LExpr.LExpr.getVars] at *\n        intros x Hin\n        simp_all\n    . simp [Imperative.HasVarsPure.getVars, Lambda.LExpr.LExpr.getVars] at *\n      apply List.Subset.app\n      . apply List.Subset.trans\n        apply ih1 <;> assumption\n        intros x Hin\n        simp_all\n        cases Hin <;> simp_all\n      . apply List.Subset.trans\n        apply ih2 <;> assumption\n        intros x Hin\n        simp_all\n  case quant trih eih =>\n    simp [Imperative.HasVarsPure.getVars, Lambda.LExpr.LExpr.getVars] at *\n    apply List.Subset.app\n    . apply List.Subset.trans\n      apply trih <;> assumption\n      intros x Hin\n      rename_i m1 k1 ty1 trigger1 e1\n      have assoc := List.append_assoc (Lambda.LExpr.LExpr.getVars trigger1) (Lambda.LExpr.LExpr.getVars e1) [h1]\n      simp_all\n      cases Hin <;> simp_all\n    . apply List.Subset.trans\n      apply eih <;> assumption\n      intros x Hin\n      simp_all\n  case eq ih1 ih2 =>\n    simp [Imperative.HasVarsPure.getVars, Lambda.LExpr.LExpr.getVars] at *\n    apply List.Subset.app\n    . apply List.Subset.trans\n      apply ih1 <;> assumption\n      intros x Hin\n      simp_all\n      cases Hin <;> simp_all\n    . apply List.Subset.trans\n      apply ih2 <;> assumption\n      intros x Hin\n      simp_all",
+  "candidate_hash": "a5df58e182e1ec53713793348a855eb0a69873266db277387012a617224a94ae",
+  "expected_intent": "Delete the `rename_i m name ty2` line of the fvar case as cosmetic; the following `simp at m/name/ty2` lines depend on those names.",
+  "baseline_check": {
+    "kind": "valid",
+    "exit_code": 0,
+    "axioms": [
+      "propext",
+      "Quot.sound"
+    ],
+    "n_errors_in_target": 0,
+    "first_error": null,
+    "errors_outside_target": 0,
+    "run": "cases/R08/logs/00_baseline.result.json",
+    "wall_s_local": 7.52
+  },
+  "observed_result": "invalid",
+  "candidate_check": {
+    "kind": "invalid",
+    "exit_code": 1,
+    "axioms": [
+      "propext",
+      "sorryAx",
+      "Quot.sound"
+    ],
+    "n_errors_in_target": 1,
+    "first_error": {
+      "line": 3098,
+      "col": 12,
+      "message": "Unknown identifier `name`"
+    },
+    "errors_outside_target": 0,
+    "run": "cases/R08/logs/01_candidate.result.json",
+    "wall_s_local": 7.01
+  },
+  "diagnostics": [
+    {
+      "severity": "error",
+      "file_line": 3098,
+      "col": 12,
+      "body_line": 5,
+      "message": "Unknown identifier `name`"
+    }
+  ],
+  "pre_error_state": {
+    "source": "instrumented_trace_state_run",
+    "trusted": false,
+    "untrusted_reason": "no clean-prefix replay certificate / state digest (Lean adapter not implemented)",
+    "file_line": 3098,
+    "body_line": 5,
+    "goals_text": "h2 : Expression.Ident\nm : ExpressionMetadata\nh1 :\n  Lambda.Identifier\n    { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.IDMeta\nty : Option { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.TypeType\nm✝ : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\nname✝ :\n  Lambda.Identifier\n    { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.IDMeta\nty✝ : Option { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.TypeType\nx : CoreIdent\nHin : x ∈ Imperative.HasVarsPure.getVars (Lambda.LExpr.fvar m✝ name✝ ty✝)\n⊢ x ∈ Imperative.HasVarsPure.getVars (Lambda.LExpr.fvar m✝ name✝ ty✝) ++ [h1]",
+    "run": "cases/R08/logs/02_trace_state.result.json"
+  },
+  "pre_error_state_null_reason": null,
+  "inferred_state": null,
+  "localization": {
+    "scope": "tactic",
+    "file_line": 3098,
+    "col": 12,
+    "body_line": 5,
+    "line_text": "    simp at name",
+    "method": "text heuristic on first error position (not a parser)",
+    "trusted_pre_state": false
+  },
+  "local_attempts": [
+    {
+      "n": 1,
+      "op": "delete_span",
+      "tactic": null,
+      "span_body_lines": [
+        5,
+        5
+      ],
+      "span_text": "    simp at name",
+      "check": {
+        "kind": "invalid",
+        "exit_code": 1,
+        "axioms": [
+          "propext",
+          "sorryAx",
+          "Quot.sound"
+        ],
+        "n_errors_in_target": 1,
+        "first_error": {
+          "line": 3098,
+          "col": 12,
+          "message": "Unknown identifier `ty2`"
+        },
+        "errors_outside_target": 0,
+        "run": "cases/R08/attempts/01_delete_span_none.result.json",
+        "wall_s_local": 7.51
+      },
+      "local_error_cleared": false,
+      "full_replay": "invalid",
+      "result": "failed"
+    },
+    {
+      "n": 2,
+      "op": "replace_span",
+      "tactic": "assumption",
+      "span_body_lines": [
+        5,
+        5
+      ],
+      "span_text": "    simp at name",
+      "check": {
+        "kind": "invalid",
+        "exit_code": 1,
+        "axioms": [
+          "propext",
+          "sorryAx",
+          "Quot.sound"
+        ],
+        "n_errors_in_target": 1,
+        "first_error": {
+          "line": 3098,
+          "col": 4,
+          "message": "Tactic `assumption` failed\n\nh2 : Expression.Ident\nm : ExpressionMetadata\nh1 :\n  Lambda.Identifier\n    { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.IDMeta\nty : Option { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.TypeType\nm✝ : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\nname✝ :\n  Lambda.Identifier\n    { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.IDMeta\nty✝ : Option { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.TypeType\nx : CoreIdent\nHin : x ∈ Imperative.HasVarsPure.getVars (Lambda.LExpr.fvar m✝ name✝ ty✝)\n⊢ x ∈ Imperative.HasVarsPure.getVars (Lambda.LExpr.fvar m✝ name✝ ty✝) ++ [h1]"
+        },
+        "errors_outside_target": 0,
+        "run": "cases/R08/attempts/02_replace_span_assumption.result.json",
+        "wall_s_local": 7.24
+      },
+      "local_error_cleared": false,
+      "full_replay": "invalid",
+      "result": "failed"
+    },
+    {
+      "n": 3,
+      "op": "replace_span",
+      "tactic": "rfl",
+      "span_body_lines": [
+        5,
+        5
+      ],
+      "span_text": "    simp at name",
+      "check": {
+        "kind": "invalid",
+        "exit_code": 1,
+        "axioms": [
+          "propext",
+          "sorryAx",
+          "Quot.sound"
+        ],
+        "n_errors_in_target": 1,
+        "first_error": {
+          "line": 3098,
+          "col": 4,
+          "message": "Tactic `rfl` failed: The left-hand side\n  Imperative.HasVarsPure.getVars (Lambda.LExpr.fvar m✝ name✝ ty✝) ++ [h1]\nis not definitionally equal to the right-hand side\n  x\n\nh2 : Expression.Ident\nm : ExpressionMetadata\nh1 :\n  Lambda.Identifier\n    { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.IDMeta\nty : Option { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.TypeType\nm✝ : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\nname✝ :\n  Lambda.Identifier\n    { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.IDMeta\nty✝ : Option { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.TypeType\nx : CoreIdent\nHin : x ∈ Imperative.HasVarsPure.getVars (Lambda.LExpr.fvar m✝ name✝ ty✝)\n⊢ x ∈ Imperative.HasVarsPure.getVars (Lambda.LExpr.fvar m✝ name✝ ty✝) ++ [h1]"
+        },
+        "errors_outside_target": 0,
+        "run": "cases/R08/attempts/03_replace_span_rfl.result.json",
+        "wall_s_local": 8.79
+      },
+      "local_error_cleared": false,
+      "full_replay": "invalid",
+      "result": "failed"
+    },
+    {
+      "n": 4,
+      "op": "replace_span",
+      "tactic": "omega",
+      "span_body_lines": [
+        5,
+        5
+      ],
+      "span_text": "    simp at name",
+      "check": {
+        "kind": "invalid",
+        "exit_code": 1,
+        "axioms": [
+          "propext",
+          "sorryAx",
+          "Quot.sound"
+        ],
+        "n_errors_in_target": 1,
+        "first_error": {
+          "line": 3098,
+          "col": 4,
+          "message": "omega could not prove the goal:\nNo usable constraints found. You may need to unfold definitions so `omega` can see linear arithmetic facts about `Nat` and `Int`, which may also involve multiplication, division, and modular remainder by constants."
+        },
+        "errors_outside_target": 0,
+        "run": "cases/R08/attempts/04_replace_span_omega.result.json",
+        "wall_s_local": 9.19
+      },
+      "local_error_cleared": false,
+      "full_replay": "invalid",
+      "result": "failed"
+    },
+    {
+      "n": 5,
+      "op": "replace_span",
+      "tactic": "simp_all",
+      "span_body_lines": [
+        5,
+        5
+      ],
+      "span_text": "    simp at name",
+      "check": {
+        "kind": "invalid",
+        "exit_code": 1,
+        "axioms": [
+          "propext",
+          "sorryAx",
+          "Quot.sound"
+        ],
+        "n_errors_in_target": 1,
+        "first_error": {
+          "line": 3099,
+          "col": 4,
+          "message": "No goals to be solved"
+        },
+        "errors_outside_target": 0,
+        "run": "cases/R08/attempts/05_replace_span_simp_all.result.json",
+        "wall_s_local": 8.25
+      },
+      "local_error_cleared": true,
+      "full_replay": "invalid",
+      "result": "original_error_cleared_full_replay_failed"
+    },
+    {
+      "n": 6,
+      "op": "replace_span_extract",
+      "tactic": "simp?",
+      "span_body_lines": [
+        5,
+        5
+      ],
+      "span_text": "    simp at name",
+      "check": {
+        "kind": "invalid",
+        "exit_code": 1,
+        "axioms": [
+          "propext",
+          "sorryAx",
+          "Quot.sound"
+        ],
+        "n_errors_in_target": 1,
+        "first_error": {
+          "line": 3099,
+          "col": 12,
+          "message": "Unknown identifier `ty2`"
+        },
+        "errors_outside_target": 0,
+        "run": "cases/R08/attempts/06_replace_span_extract_simpQ.result.json",
+        "wall_s_local": 7.6
+      },
+      "raw_tool_output": "Try this:\n  [apply] simp only [List.mem_append, List.mem_cons, List.not_mem_nil, or_false]",
+      "suggestion": "simp only [List.mem_append, List.mem_cons, List.not_mem_nil, or_false]",
+      "substituted_check": {
+        "kind": "invalid",
+        "exit_code": 1,
+        "axioms": [
+          "propext",
+          "sorryAx",
+          "Quot.sound"
+        ],
+        "n_errors_in_target": 1,
+        "first_error": {
+          "line": 3099,
+          "col": 12,
+          "message": "Unknown identifier `ty2`"
+        },
+        "errors_outside_target": 0,
+        "run": "cases/R08/attempts/06_replace_span_extract_simpQ_substituted.result.json",
+        "wall_s_local": 7.35
+      },
+      "local_error_cleared": true,
+      "full_replay": "invalid",
+      "result": "original_error_cleared_full_replay_failed"
+    },
+    {
+      "n": 7,
+      "op": "replace_span_extract",
+      "tactic": "exact?",
+      "span_body_lines": [
+        5,
+        5
+      ],
+      "span_text": "    simp at name",
+      "check": {
+        "kind": "invalid",
+        "exit_code": 1,
+        "axioms": [
+          "propext",
+          "sorryAx",
+          "Quot.sound"
+        ],
+        "n_errors_in_target": 1,
+        "first_error": {
+          "line": 3099,
+          "col": 4,
+          "message": "No goals to be solved"
+        },
+        "errors_outside_target": 0,
+        "run": "cases/R08/attempts/07_replace_span_extract_exactQ.result.json",
+        "wall_s_local": 7.45
+      },
+      "raw_tool_output": "Try this:\n  [apply] exact List.mem_append_left [h1] Hin",
+      "suggestion": "exact List.mem_append_left [h1] Hin",
+      "substituted_check": {
+        "kind": "invalid",
+        "exit_code": 1,
+        "axioms": [
+          "propext",
+          "sorryAx",
+          "Quot.sound"
+        ],
+        "n_errors_in_target": 1,
+        "first_error": {
+          "line": 3099,
+          "col": 4,
+          "message": "No goals to be solved"
+        },
+        "errors_outside_target": 0,
+        "run": "cases/R08/attempts/07_replace_span_extract_exactQ_substituted.result.json",
+        "wall_s_local": 7.28
+      },
+      "local_error_cleared": true,
+      "full_replay": "invalid",
+      "result": "original_error_cleared_full_replay_failed"
+    },
+    {
+      "n": 8,
+      "op": "replace_span_extract",
+      "tactic": "aesop?",
+      "span_body_lines": [
+        5,
+        5
+      ],
+      "span_text": "    simp at name",
+      "result": "skipped",
+      "reason": "Aesop not available in pinned environment (not added)"
+    }
+  ],
+  "local_result": null,
+  "valid_path_extraction": [],
+  "gold_repair_path": "gold_repair.lean",
+  "gold_strategy": "first try: also delete the name-dependent simp lines (intent: remove auxiliary steps); fallback: original restored",
+  "gold_check": {
+    "kind": "valid",
+    "exit_code": 0,
+    "axioms": [
+      "propext",
+      "Quot.sound"
+    ],
+    "n_errors_in_target": 0,
+    "first_error": null,
+    "errors_outside_target": 0,
+    "run": "cases/R08/logs/03_gold_alt0.result.json",
+    "wall_s_local": 7.3
+  },
+  "gold_attempts": [
+    {
+      "alternative": 0,
+      "edits": [
+        [
+          "case fvar =>\n    intros x Hin\n    simp at m\n    simp at name\n    simp at ty2\n\n    simp_all",
+          "case fvar =>\n    intros x Hin\n    simp_all"
+        ]
+      ],
+      "check": {
+        "kind": "valid",
+        "exit_code": 0,
+        "axioms": [
+          "propext",
+          "Quot.sound"
+        ],
+        "n_errors_in_target": 0,
+        "first_error": null,
+        "errors_outside_target": 0,
+        "run": "cases/R08/logs/03_gold_alt0.result.json",
+        "wall_s_local": 7.3
+      }
+    }
+  ],
+  "full_replay_result": {
+    "kind": "valid",
+    "exit_code": 0,
+    "axioms": [
+      "propext",
+      "Quot.sound"
+    ],
+    "n_errors_in_target": 0,
+    "first_error": null,
+    "errors_outside_target": 0,
+    "run": "cases/R08/logs/03_gold_alt0.result.json",
+    "wall_s_local": 7.3
+  },
+  "full_replay_result_source": "gold_repair",
+  "measurements": {
+    "baseline": {
+      "body_nonwhitespace_chars": {
+        "value": 1670,
+        "kind": "local_estimate",
+        "note": "character count, NOT the official token count"
+      },
+      "official_tokens": {
+        "value": null,
+        "kind": "not_measured",
+        "reason": "official tokenizer not available"
+      },
+      "heartbeats": {
+        "value": 5176,
+        "kind": "local_estimate",
+        "method": "instrumented run: IO.getNumHeartbeats delta /1000 around the declaration with Elab.async=false (same mechanism as Mathlib #count_heartbeats); single run; not the official Arena measurement",
+        "run": "cases/R08/logs/04_measure_baseline.result.json"
+      }
+    },
+    "gold": {
+      "body_nonwhitespace_chars": {
+        "value": 1628,
+        "kind": "local_estimate",
+        "note": "character count, NOT the official token count"
+      },
+      "official_tokens": {
+        "value": null,
+        "kind": "not_measured",
+        "reason": "official tokenizer not available"
+      },
+      "heartbeats": {
+        "value": 5172,
+        "kind": "local_estimate",
+        "method": "instrumented run: IO.getNumHeartbeats delta /1000 around the declaration with Elab.async=false (same mechanism as Mathlib #count_heartbeats); single run; not the official Arena measurement",
+        "run": "cases/R08/logs/04_measure_gold.result.json"
+      }
+    },
+    "robustness": {
+      "listed_versions": [
+        "v4.26.0"
+      ],
+      "checked_versions": [
+        "v4.26.0"
+      ],
+      "complete": true,
+      "note": ""
+    }
+  },
+  "expected_route": "escalate_after_local_exhausted",
+  "expected_route_reason": "all applicable local-ops-v1 attempts failed on full replay; ops [5, 6, 7] cleared the original error locally but full replay still failed; no replay certificate so policy widens scope to body",
+  "author_prediction_before_run": "first error at `simp at m` (or name); deleting it moves the error to the next line -> full replay fails",
+  "policy_decision": {
+    "decision.json": "PRICE_REQUEST",
+    "decision.configured_budget.json": "EMIT_LLM_PROMPT"
+  },
+  "validation_status": "lean_observed+gold_verified+string_contract_only_no_lean_adapter_term_check"
+}
