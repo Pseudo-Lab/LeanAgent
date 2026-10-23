@@ -1,0 +1,479 @@
+{
+  "id": "R03",
+  "seed_id": "warmup-2:CallElimCorrect.extractedOldExprInVars",
+  "source_kind": "arena_derived",
+  "source_path": "benchmark_data_warmup.jsonl line 2; Strata/Transform/CallElimCorrect.lean @ 451e5f047 (git HEAD copy, uncommitted patch excluded)",
+  "decl_full_name": "CallElimCorrect.extractedOldExprInVars",
+  "environment": {
+    "dir": "/Users/sungwoo/lean_project/refactor_arena/strata",
+    "lean_version": "Lean (version 4.26.0, arm64-apple-darwin24.6.0, commit d8204c9fd894f91bbb2cdfec5912ec8196fd8562, Release)",
+    "lake_version": "Lake version 5.0.0-src+d8204c9 (Lean version 4.26.0)",
+    "lean_toolchain": "leanprover/lean4:v4.26.0",
+    "repo_commit": "451e5f047bafa010d178856db76c00029bfa4d7f",
+    "lake_manifest_sha256": "5aab41f14cc55b5049ae81535506b6998bfadd9d983af6130fa92f4a39bd244c",
+    "lakefile_sha256": {
+      "lakefile.toml": "5c0abe83aaa82d837d50cf987102ff3138a15aec988912f06166a39e5ee578ae"
+    },
+    "uncommitted_status": [
+      "M Strata/Transform/CallElimCorrect.lean"
+    ],
+    "uncommitted_diff_sha256": "4f46664d01716151ce17d064218040e096c82504d719e877901e39271b9c8d4c",
+    "packages": {
+      "plausible": "b949552f6ca8e223f424b3e3b33f74185bbf1179"
+    },
+    "has_aesop": false,
+    "environment_hash": "b2c42272ae50e12d1472e380395e82dd422746e97da291bdb2684a96c2ba850d",
+    "project": "strata"
+  },
+  "immutable_context_hash": "8f68a74c45c727571014efbf19aeb25ae703d2feefdc31795331361fcfd4c901",
+  "statement": "open OldExpressions in\ntheorem extractedOldExprInVars :\n  NormalizedOldExpr post →\n  (extractOldExprVars post).Subset\n  (Imperative.HasVarsPure.getVars post)",
+  "original_body": "by\n  intros Hnorm\n  induction post <;>\n    simp [Imperative.HasVarsPure.getVars, extractOldExprVars,\n          Lambda.LExpr.LExpr.getVars] at * <;>\n    try simp_all\n  case app fn e fn_ih e_ih =>\n    unfold extractOldExprVars\n    split\n    . simp [Lambda.LExpr.LExpr.getVars]\n      intros x Hin\n      exact Hin\n    . next Hfalse =>\n      cases Hnorm with\n      | app H1 H2 Hn =>\n      exfalso\n      specialize Hn ?_\n      constructor\n      cases Hn\n      apply Hfalse\n      rfl\n    . cases Hnorm with\n      | app H1 H2 Hn =>\n      apply List.Subset.app\n      . apply List.Subset.trans\n        apply fn_ih\n        exact H1\n        intros x Hin\n        simp_all\n      . apply List.Subset.trans\n        apply e_ih\n        exact H2\n        intros x Hin\n        simp_all\n  case abs ih =>\n    cases Hnorm\n    apply ih <;> assumption\n  case quant trih eih =>\n    cases Hnorm\n    rename_i e_normalized\n    rename_i tr_normalized\n    rename_i tr e ty k\n    apply List.Subset.app\n    . apply List.Subset.trans\n      apply trih <;> assumption\n      intros x Hin\n      simp_all\n    . apply List.Subset.trans\n      apply eih <;> assumption\n      intros x Hin\n      simp_all\n  case ite cih tih eih =>\n    cases Hnorm\n    apply List.Subset.app\n    . apply List.Subset.trans\n      apply cih <;> assumption\n      intros x Hin\n      simp_all\n    apply List.Subset.app\n    . apply List.Subset.trans\n      apply tih <;> assumption\n      intros x Hin\n      simp_all\n    . apply List.Subset.trans\n      apply eih <;> assumption\n      intros x Hin\n      simp_all\n  case eq ih1 ih2 =>\n    cases Hnorm\n    apply List.Subset.app\n    . apply List.Subset.trans\n      apply ih1 <;> assumption\n      intros x Hin\n      simp_all\n    . apply List.Subset.trans\n      apply ih2 <;> assumption\n      intros x Hin\n      simp_all",
+  "original_body_sha256": "f7b78d9ba7d8f5b613b96d15f84f6a6403027cf3ba98028f1bc9792395588088",
+  "body_range": {
+    "body_start_char": 91247,
+    "body_end_char": 93038,
+    "body_first_line": 2862,
+    "decl_first_line": 2858
+  },
+  "candidate_body": "by\n  intros Hnorm\n  induction post <;>\n    simp only [Imperative.HasVarsPure.getVars, extractOldExprVars] at * <;>\n    try simp_all\n  case app fn e fn_ih e_ih =>\n    unfold extractOldExprVars\n    split\n    . simp [Lambda.LExpr.LExpr.getVars]\n      intros x Hin\n      exact Hin\n    . next Hfalse =>\n      cases Hnorm with\n      | app H1 H2 Hn =>\n      exfalso\n      specialize Hn ?_\n      constructor\n      cases Hn\n      apply Hfalse\n      rfl\n    . cases Hnorm with\n      | app H1 H2 Hn =>\n      apply List.Subset.app\n      . apply List.Subset.trans\n        apply fn_ih\n        exact H1\n        intros x Hin\n        simp_all\n      . apply List.Subset.trans\n        apply e_ih\n        exact H2\n        intros x Hin\n        simp_all\n  case abs ih =>\n    cases Hnorm\n    apply ih <;> assumption\n  case quant trih eih =>\n    cases Hnorm\n    rename_i e_normalized\n    rename_i tr_normalized\n    rename_i tr e ty k\n    apply List.Subset.app\n    . apply List.Subset.trans\n      apply trih <;> assumption\n      intros x Hin\n      simp_all\n    . apply List.Subset.trans\n      apply eih <;> assumption\n      intros x Hin\n      simp_all\n  case ite cih tih eih =>\n    cases Hnorm\n    apply List.Subset.app\n    . apply List.Subset.trans\n      apply cih <;> assumption\n      intros x Hin\n      simp_all\n    apply List.Subset.app\n    . apply List.Subset.trans\n      apply tih <;> assumption\n      intros x Hin\n      simp_all\n    . apply List.Subset.trans\n      apply eih <;> assumption\n      intros x Hin\n      simp_all\n  case eq ih1 ih2 =>\n    cases Hnorm\n    apply List.Subset.app\n    . apply List.Subset.trans\n      apply ih1 <;> assumption\n      intros x Hin\n      simp_all\n    . apply List.Subset.trans\n      apply ih2 <;> assumption\n      intros x Hin\n      simp_all",
+  "candidate_hash": "5c1ad5e8fd04d8a267f8fe8076f0e919507791ae7d62f763fc359e9a702c22ae",
+  "expected_intent": "Make the broad initial simp explicit (`simp only`) for robustness, but forget `Lambda.LExpr.LExpr.getVars` and the default simp set lemmas it relied on.",
+  "baseline_check": {
+    "kind": "valid",
+    "exit_code": 0,
+    "axioms": [
+      "propext",
+      "Quot.sound"
+    ],
+    "n_errors_in_target": 0,
+    "first_error": null,
+    "errors_outside_target": 0,
+    "run": "cases/R03/logs/00_baseline.result.json",
+    "wall_s_local": 7.28
+  },
+  "observed_result": "invalid",
+  "candidate_check": {
+    "kind": "invalid",
+    "exit_code": 1,
+    "axioms": [
+      "propext",
+      "sorryAx",
+      "Quot.sound"
+    ],
+    "n_errors_in_target": 9,
+    "first_error": {
+      "line": 2885,
+      "col": 6,
+      "message": "unsolved goals\ncase h_3.app.a.a\nm✝ : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\nfn e e1✝ e2✝ :\n  Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\nx : CoreIdent\nfn_ih : (extractOldExprVars fn).Subset (Lambda.LExpr.LExpr.getVars fn)\ne_ih : (extractOldExprVars e).Subset (Lambda.LExpr.LExpr.getVars e)\nx✝ :\n  ∀ (m : ExpressionMetadata) (ty : Option Lambda.LMonoTy),\n    ¬fn = Lambda.LExpr.op m { name := \"old\", metadata := Visibility.unres } ty\nH1 : NormalizedOldExpr fn\nH2 : NormalizedOldExpr e\nHn : IsOldPred fn → IsFvar e\nHin : x ∈ Lambda.LExpr.LExpr.getVars fn\n⊢ x ∈ Lambda.LExpr.LExpr.getVars (Lambda.LExpr.app m✝ fn e)"
+    },
+    "errors_outside_target": 0,
+    "run": "cases/R03/logs/01_candidate.result.json",
+    "wall_s_local": 7.22
+  },
+  "diagnostics": [
+    {
+      "severity": "error",
+      "file_line": 2885,
+      "col": 6,
+      "body_line": 23,
+      "message": "unsolved goals\ncase h_3.app.a.a\nm✝ : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\nfn e e1✝ e2✝ :\n  Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\nx : CoreIdent\nfn_ih : (extractOldExprVars fn).Subset (Lambda.LExpr.LExpr.getVars fn)\ne_ih : (extractOldExprVars e).Subset (Lambda.LExpr.LExpr.getVars e)\nx✝ :\n  ∀ (m : ExpressionMetadata) (ty : Option Lambda.LMonoTy),\n    ¬fn = Lambda.LExpr.op m { name := \"old\", metadata := Visibility.unres } ty\nH1 : NormalizedOldExpr fn\nH2 : NormalizedOldExpr e\nHn : IsOldPred fn → IsFvar e\nHin : x ∈ Lambda.LExpr.LExpr.getVars fn\n⊢ x ∈ Lambda.LExpr.LExpr.getVars (Lambda.LExpr.app m✝ fn e)"
+    },
+    {
+      "severity": "error",
+      "file_line": 2890,
+      "col": 6,
+      "body_line": 28,
+      "message": "unsolved goals\ncase h_3.app.a.a\nm✝ : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\nfn e e1✝ e2✝ :\n  Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\nx : CoreIdent\nfn_ih : (extractOldExprVars fn).Subset (Lambda.LExpr.LExpr.getVars fn)\ne_ih : (extractOldExprVars e).Subset (Lambda.LExpr.LExpr.getVars e)\nx✝ :\n  ∀ (m : ExpressionMetadata) (ty : Option Lambda.LMonoTy),\n    ¬fn = Lambda.LExpr.op m { name := \"old\", metadata := Visibility.unres } ty\nH1 : NormalizedOldExpr fn\nH2 : NormalizedOldExpr e\nHn : IsOldPred fn → IsFvar e\nHin : x ∈ Lambda.LExpr.LExpr.getVars e\n⊢ x ∈ Lambda.LExpr.LExpr.getVars (Lambda.LExpr.app m✝ fn e)"
+    },
+    {
+      "severity": "error",
+      "file_line": 2904,
+      "col": 4,
+      "body_line": 42,
+      "message": "unsolved goals\ncase quant.a.a\nm✝ : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\ntr : Lambda.QuantifierKind\ne : Option { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.TypeType\nty k : Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\nx : CoreIdent\ntrih : (extractOldExprVars ty).Subset (Lambda.LExpr.LExpr.getVars ty)\neih : (extractOldExprVars k).Subset (Lambda.LExpr.LExpr.getVars k)\ntr_normalized : NormalizedOldExpr ty\ne_normalized : NormalizedOldExpr k\nHin : x ∈ Lambda.LExpr.LExpr.getVars ty\n⊢ x ∈ Lambda.LExpr.LExpr.getVars (Lambda.LExpr.quant m✝ tr e ty k)"
+    },
+    {
+      "severity": "error",
+      "file_line": 2908,
+      "col": 4,
+      "body_line": 46,
+      "message": "unsolved goals\ncase quant.a.a\nm✝ : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\ntr : Lambda.QuantifierKind\ne : Option { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.TypeType\nty k : Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\nx : CoreIdent\ntrih : (extractOldExprVars ty).Subset (Lambda.LExpr.LExpr.getVars ty)\neih : (extractOldExprVars k).Subset (Lambda.LExpr.LExpr.getVars k)\ntr_normalized : NormalizedOldExpr ty\ne_normalized : NormalizedOldExpr k\nHin : x ∈ Lambda.LExpr.LExpr.getVars k\n⊢ x ∈ Lambda.LExpr.LExpr.getVars (Lambda.LExpr.quant m✝ tr e ty k)"
+    },
+    {
+      "severity": "error",
+      "file_line": 2915,
+      "col": 4,
+      "body_line": 53,
+      "message": "unsolved goals\ncase ite.a.a\nm✝ : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\nc✝ t✝ e✝ : Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\nx : CoreIdent\ncih : (extractOldExprVars c✝).Subset (Lambda.LExpr.LExpr.getVars c✝)\ntih : (extractOldExprVars t✝).Subset (Lambda.LExpr.LExpr.getVars t✝)\neih : (extractOldExprVars e✝).Subset (Lambda.LExpr.LExpr.getVars e✝)\na✝² : NormalizedOldExpr c✝\na✝¹ : NormalizedOldExpr t✝\na✝ : NormalizedOldExpr e✝\nHin : x ∈ Lambda.LExpr.LExpr.getVars c✝\n⊢ x ∈ Lambda.LExpr.LExpr.getVars (Lambda.LExpr.ite m✝ c✝ t✝ e✝)"
+    },
+    {
+      "severity": "error",
+      "file_line": 2920,
+      "col": 4,
+      "body_line": 58,
+      "message": "unsolved goals\ncase ite.a.a.a\nm✝ : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\nc✝ t✝ e✝ : Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\nx : CoreIdent\ncih : (extractOldExprVars c✝).Subset (Lambda.LExpr.LExpr.getVars c✝)\ntih : (extractOldExprVars t✝).Subset (Lambda.LExpr.LExpr.getVars t✝)\neih : (extractOldExprVars e✝).Subset (Lambda.LExpr.LExpr.getVars e✝)\na✝² : NormalizedOldExpr c✝\na✝¹ : NormalizedOldExpr t✝\na✝ : NormalizedOldExpr e✝\nHin : x ∈ Lambda.LExpr.LExpr.getVars t✝\n⊢ x ∈ Lambda.LExpr.LExpr.getVars (Lambda.LExpr.ite m✝ c✝ t✝ e✝)"
+    },
+    {
+      "severity": "error",
+      "file_line": 2924,
+      "col": 4,
+      "body_line": 62,
+      "message": "unsolved goals\ncase ite.a.a.a\nm✝ : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\nc✝ t✝ e✝ : Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\nx : CoreIdent\ncih : (extractOldExprVars c✝).Subset (Lambda.LExpr.LExpr.getVars c✝)\ntih : (extractOldExprVars t✝).Subset (Lambda.LExpr.LExpr.getVars t✝)\neih : (extractOldExprVars e✝).Subset (Lambda.LExpr.LExpr.getVars e✝)\na✝² : NormalizedOldExpr c✝\na✝¹ : NormalizedOldExpr t✝\na✝ : NormalizedOldExpr e✝\nHin : x ∈ Lambda.LExpr.LExpr.getVars e✝\n⊢ x ∈ Lambda.LExpr.LExpr.getVars (Lambda.LExpr.ite m✝ c✝ t✝ e✝)"
+    },
+    {
+      "severity": "error",
+      "file_line": 2931,
+      "col": 4,
+      "body_line": 69,
+      "message": "unsolved goals\ncase eq.a.a\nm✝ : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\ne1✝ e2✝ : Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\nx : CoreIdent\nih1 : (extractOldExprVars e1✝).Subset (Lambda.LExpr.LExpr.getVars e1✝)\nih2 : (extractOldExprVars e2✝).Subset (Lambda.LExpr.LExpr.getVars e2✝)\na✝¹ : NormalizedOldExpr e1✝\na✝ : NormalizedOldExpr e2✝\nHin : x ∈ Lambda.LExpr.LExpr.getVars e1✝\n⊢ x ∈ Lambda.LExpr.LExpr.getVars (Lambda.LExpr.eq m✝ e1✝ e2✝)"
+    },
+    {
+      "severity": "error",
+      "file_line": 2935,
+      "col": 4,
+      "body_line": 73,
+      "message": "unsolved goals\ncase eq.a.a\nm✝ : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\ne1✝ e2✝ : Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\nx : CoreIdent\nih1 : (extractOldExprVars e1✝).Subset (Lambda.LExpr.LExpr.getVars e1✝)\nih2 : (extractOldExprVars e2✝).Subset (Lambda.LExpr.LExpr.getVars e2✝)\na✝¹ : NormalizedOldExpr e1✝\na✝ : NormalizedOldExpr e2✝\nHin : x ∈ Lambda.LExpr.LExpr.getVars e2✝\n⊢ x ∈ Lambda.LExpr.LExpr.getVars (Lambda.LExpr.eq m✝ e1✝ e2✝)"
+    }
+  ],
+  "pre_error_state": {
+    "source": "instrumented_trace_state_run",
+    "trusted": false,
+    "untrusted_reason": "no clean-prefix replay certificate / state digest (Lean adapter not implemented)",
+    "file_line": 2885,
+    "body_line": 23,
+    "goals_text": "case h_3.app.a\nm✝ : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\nfn e : Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\nfn_ih : NormalizedOldExpr fn → (extractOldExprVars fn).Subset (Lambda.LExpr.LExpr.getVars fn)\ne_ih : NormalizedOldExpr e → (extractOldExprVars e).Subset (Lambda.LExpr.LExpr.getVars e)\ne1✝ e2✝ : Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\nx✝¹ :\n  ∀ (m : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata)\n    (ty :\n      Option { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.TypeType),\n    fn = Lambda.LExpr.op m { name := \"old\", metadata := Visibility.unres } ty → False\nx✝ :\n  ∀ (m : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata)\n    (ty :\n      Option { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.TypeType)\n    (m_1 :\n      { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata)\n    (v :\n      Lambda.Identifier\n        { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.IDMeta)\n    (ty_1 :\n      Option { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.TypeType),\n    fn = Lambda.LExpr.op m { name := \"old\", metadata := Visibility.unres } ty → e = Lambda.LExpr.fvar m_1 v ty_1 → False\nH1 : NormalizedOldExpr fn\nH2 : NormalizedOldExpr e\nHn : IsOldPred fn → IsFvar e\n⊢ (extractOldExprVars fn).Subset (Lambda.LExpr.LExpr.getVars (Lambda.LExpr.app m✝ fn e))",
+    "run": "cases/R03/logs/02_trace_state.result.json"
+  },
+  "pre_error_state_null_reason": null,
+  "inferred_state": null,
+  "localization": {
+    "scope": "block",
+    "file_line": 2885,
+    "col": 6,
+    "body_line": 23,
+    "line_text": "      . apply List.Subset.trans",
+    "method": "text heuristic on first error position (not a parser)",
+    "trusted_pre_state": false
+  },
+  "local_attempts": [
+    {
+      "n": 1,
+      "op": "delete_span",
+      "tactic": null,
+      "span_body_lines": [
+        23,
+        27
+      ],
+      "span_text": "      . apply List.Subset.trans\n        apply fn_ih\n        exact H1\n        intros x Hin\n        simp_all",
+      "result": "skipped",
+      "reason": "unsolved-goals error: deleting the block cannot close goals"
+    },
+    {
+      "n": 2,
+      "op": "replace_span",
+      "tactic": "assumption",
+      "span_body_lines": [
+        23,
+        27
+      ],
+      "span_text": "      . apply List.Subset.trans\n        apply fn_ih\n        exact H1\n        intros x Hin\n        simp_all",
+      "check": {
+        "kind": "invalid",
+        "exit_code": 1,
+        "axioms": [
+          "propext",
+          "sorryAx",
+          "Quot.sound"
+        ],
+        "n_errors_in_target": 9,
+        "first_error": {
+          "line": 2890,
+          "col": 8,
+          "message": "Tactic `assumption` failed\n\ncase h_3.app.a.a\nm✝ : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\nfn e e1✝ e2✝ :\n  Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\nx : CoreIdent\nfn_ih : (extractOldExprVars fn).Subset (Lambda.LExpr.LExpr.getVars fn)\ne_ih : (extractOldExprVars e).Subset (Lambda.LExpr.LExpr.getVars e)\nx✝ :\n  ∀ (m : ExpressionMetadata) (ty : Option Lambda.LMonoTy),\n    ¬fn = Lambda.LExpr.op m { name := \"old\", metadata := Visibility.unres } ty\nH1 : NormalizedOldExpr fn\nH2 : NormalizedOldExpr e\nHn : IsOldPred fn → IsFvar e\nHin : x ∈ Lambda.LExpr.LExpr.getVars fn\n⊢ x ∈ Lambda.LExpr.LExpr.getVars (Lambda.LExpr.app m✝ fn e)"
+        },
+        "errors_outside_target": 0,
+        "run": "cases/R03/attempts/02_replace_span_assumption.result.json",
+        "wall_s_local": 9.3
+      },
+      "local_error_cleared": true,
+      "full_replay": "invalid",
+      "result": "original_error_cleared_full_replay_failed"
+    },
+    {
+      "n": 3,
+      "op": "replace_span",
+      "tactic": "rfl",
+      "span_body_lines": [
+        23,
+        27
+      ],
+      "span_text": "      . apply List.Subset.trans\n        apply fn_ih\n        exact H1\n        intros x Hin\n        simp_all",
+      "check": {
+        "kind": "invalid",
+        "exit_code": 1,
+        "axioms": [
+          "propext",
+          "sorryAx",
+          "Quot.sound"
+        ],
+        "n_errors_in_target": 9,
+        "first_error": {
+          "line": 2890,
+          "col": 8,
+          "message": "Tactic `rfl` failed: The left-hand side\n  Lambda.LExpr.LExpr.getVars (Lambda.LExpr.app m✝ fn e)\nis not definitionally equal to the right-hand side\n  x\n\ncase h_3.app.a.a\nm✝ : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\nfn e e1✝ e2✝ :\n  Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\nx : CoreIdent\nfn_ih : (extractOldExprVars fn).Subset (Lambda.LExpr.LExpr.getVars fn)\ne_ih : (extractOldExprVars e).Subset (Lambda.LExpr.LExpr.getVars e)\nx✝ :\n  ∀ (m : ExpressionMetadata) (ty : Option Lambda.LMonoTy),\n    ¬fn = Lambda.LExpr.op m { name := \"old\", metadata := Visibility.unres } ty\nH1 : NormalizedOldExpr fn\nH2 : NormalizedOldExpr e\nHn : IsOldPred fn → IsFvar e\nHin : x ∈ Lambda.LExpr.LExpr.getVars fn\n⊢ x ∈ Lambda.LExpr.LExpr.getVars (Lambda.LExpr.app m✝ fn e)"
+        },
+        "errors_outside_target": 0,
+        "run": "cases/R03/attempts/03_replace_span_rfl.result.json",
+        "wall_s_local": 9.51
+      },
+      "local_error_cleared": true,
+      "full_replay": "invalid",
+      "result": "original_error_cleared_full_replay_failed"
+    },
+    {
+      "n": 4,
+      "op": "replace_span",
+      "tactic": "omega",
+      "span_body_lines": [
+        23,
+        27
+      ],
+      "span_text": "      . apply List.Subset.trans\n        apply fn_ih\n        exact H1\n        intros x Hin\n        simp_all",
+      "check": {
+        "kind": "invalid",
+        "exit_code": 1,
+        "axioms": [
+          "propext",
+          "sorryAx",
+          "Quot.sound"
+        ],
+        "n_errors_in_target": 9,
+        "first_error": {
+          "line": 2890,
+          "col": 8,
+          "message": "omega could not prove the goal:\nNo usable constraints found. You may need to unfold definitions so `omega` can see linear arithmetic facts about `Nat` and `Int`, which may also involve multiplication, division, and modular remainder by constants."
+        },
+        "errors_outside_target": 0,
+        "run": "cases/R03/attempts/04_replace_span_omega.result.json",
+        "wall_s_local": 8.75
+      },
+      "local_error_cleared": true,
+      "full_replay": "invalid",
+      "result": "original_error_cleared_full_replay_failed"
+    },
+    {
+      "n": 5,
+      "op": "replace_span",
+      "tactic": "simp_all",
+      "span_body_lines": [
+        23,
+        27
+      ],
+      "span_text": "      . apply List.Subset.trans\n        apply fn_ih\n        exact H1\n        intros x Hin\n        simp_all",
+      "check": {
+        "kind": "invalid",
+        "exit_code": 1,
+        "axioms": [
+          "propext",
+          "sorryAx",
+          "Quot.sound"
+        ],
+        "n_errors_in_target": 9,
+        "first_error": {
+          "line": 2890,
+          "col": 8,
+          "message": "simp_all made no progress"
+        },
+        "errors_outside_target": 0,
+        "run": "cases/R03/attempts/05_replace_span_simp_all.result.json",
+        "wall_s_local": 8.88
+      },
+      "local_error_cleared": true,
+      "full_replay": "invalid",
+      "result": "original_error_cleared_full_replay_failed"
+    },
+    {
+      "n": 6,
+      "op": "replace_span_extract",
+      "tactic": "simp?",
+      "span_body_lines": [
+        23,
+        27
+      ],
+      "span_text": "      . apply List.Subset.trans\n        apply fn_ih\n        exact H1\n        intros x Hin\n        simp_all",
+      "check": {
+        "kind": "invalid",
+        "exit_code": 1,
+        "axioms": [
+          "propext",
+          "sorryAx",
+          "Quot.sound"
+        ],
+        "n_errors_in_target": 9,
+        "first_error": {
+          "line": 2890,
+          "col": 8,
+          "message": "`simp` made no progress"
+        },
+        "errors_outside_target": 0,
+        "run": "cases/R03/attempts/06_replace_span_extract_simpQ.result.json",
+        "wall_s_local": 8.65
+      },
+      "raw_tool_output": null,
+      "result": "no_suggestion"
+    },
+    {
+      "n": 7,
+      "op": "replace_span_extract",
+      "tactic": "exact?",
+      "span_body_lines": [
+        23,
+        27
+      ],
+      "span_text": "      . apply List.Subset.trans\n        apply fn_ih\n        exact H1\n        intros x Hin\n        simp_all",
+      "check": {
+        "kind": "invalid",
+        "exit_code": 1,
+        "axioms": [
+          "propext",
+          "sorryAx",
+          "Quot.sound"
+        ],
+        "n_errors_in_target": 9,
+        "first_error": {
+          "line": 2890,
+          "col": 8,
+          "message": "`exact?` could not close the goal. Try `apply?` to see partial suggestions."
+        },
+        "errors_outside_target": 0,
+        "run": "cases/R03/attempts/07_replace_span_extract_exactQ.result.json",
+        "wall_s_local": 9.62
+      },
+      "raw_tool_output": null,
+      "result": "no_suggestion"
+    },
+    {
+      "n": 8,
+      "op": "replace_span_extract",
+      "tactic": "aesop?",
+      "span_body_lines": [
+        23,
+        27
+      ],
+      "span_text": "      . apply List.Subset.trans\n        apply fn_ih\n        exact H1\n        intros x Hin\n        simp_all",
+      "result": "skipped",
+      "reason": "Aesop not available in pinned environment (not added)"
+    }
+  ],
+  "local_result": null,
+  "valid_path_extraction": [],
+  "gold_repair_path": "gold_repair.lean",
+  "gold_strategy": "first try: simp only with the dropped rule restored (intent kept); fallback: original simp restored",
+  "gold_check": {
+    "kind": "valid",
+    "exit_code": 0,
+    "axioms": [
+      "propext",
+      "Quot.sound"
+    ],
+    "n_errors_in_target": 0,
+    "first_error": null,
+    "errors_outside_target": 0,
+    "run": "cases/R03/logs/03_gold_alt0.result.json",
+    "wall_s_local": 9.45
+  },
+  "gold_attempts": [
+    {
+      "alternative": 0,
+      "edits": [
+        [
+          "simp only [Imperative.HasVarsPure.getVars, extractOldExprVars] at *",
+          "simp only [Imperative.HasVarsPure.getVars, extractOldExprVars,\n          Lambda.LExpr.LExpr.getVars] at *"
+        ]
+      ],
+      "check": {
+        "kind": "valid",
+        "exit_code": 0,
+        "axioms": [
+          "propext",
+          "Quot.sound"
+        ],
+        "n_errors_in_target": 0,
+        "first_error": null,
+        "errors_outside_target": 0,
+        "run": "cases/R03/logs/03_gold_alt0.result.json",
+        "wall_s_local": 9.45
+      }
+    }
+  ],
+  "full_replay_result": {
+    "kind": "valid",
+    "exit_code": 0,
+    "axioms": [
+      "propext",
+      "Quot.sound"
+    ],
+    "n_errors_in_target": 0,
+    "first_error": null,
+    "errors_outside_target": 0,
+    "run": "cases/R03/logs/03_gold_alt0.result.json",
+    "wall_s_local": 9.45
+  },
+  "full_replay_result_source": "gold_repair",
+  "measurements": {
+    "baseline": {
+      "body_nonwhitespace_chars": {
+        "value": 1174,
+        "kind": "local_estimate",
+        "note": "character count, NOT the official token count"
+      },
+      "official_tokens": {
+        "value": null,
+        "kind": "not_measured",
+        "reason": "official tokenizer not available"
+      },
+      "heartbeats": {
+        "value": 2697,
+        "kind": "local_estimate",
+        "method": "instrumented run: IO.getNumHeartbeats delta /1000 around the declaration with Elab.async=false (same mechanism as Mathlib #count_heartbeats); single run; not the official Arena measurement",
+        "run": "cases/R03/logs/04_measure_baseline.result.json"
+      }
+    },
+    "gold": {
+      "body_nonwhitespace_chars": {
+        "value": 1178,
+        "kind": "local_estimate",
+        "note": "character count, NOT the official token count"
+      },
+      "official_tokens": {
+        "value": null,
+        "kind": "not_measured",
+        "reason": "official tokenizer not available"
+      },
+      "heartbeats": {
+        "value": 2509,
+        "kind": "local_estimate",
+        "method": "instrumented run: IO.getNumHeartbeats delta /1000 around the declaration with Elab.async=false (same mechanism as Mathlib #count_heartbeats); single run; not the official Arena measurement",
+        "run": "cases/R03/logs/04_measure_gold.result.json"
+      }
+    },
+    "robustness": {
+      "listed_versions": [
+        "v4.26.0"
+      ],
+      "checked_versions": [
+        "v4.26.0"
+      ],
+      "complete": true,
+      "note": ""
+    }
+  },
+  "expected_route": "escalate_after_local_exhausted",
+  "expected_route_reason": "all applicable local-ops-v1 attempts failed on full replay; ops [2, 3, 4, 5] cleared the original error locally but full replay still failed; no replay certificate so policy widens scope to body",
+  "author_prediction_before_run": "the `<;> try simp_all` may hide part of it; a later case probably fails with unsolved goals",
+  "policy_decision": {
+    "decision.json": "PRICE_REQUEST",
+    "decision.configured_budget.json": "EMIT_LLM_PROMPT"
+  },
+  "validation_status": "lean_observed+gold_verified+string_contract_only_no_lean_adapter_term_check"
+}

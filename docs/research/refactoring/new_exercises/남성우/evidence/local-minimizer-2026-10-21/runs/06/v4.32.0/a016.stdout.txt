@@ -1,0 +1,18 @@
+/Users/sungwoo/lean_project/LeanAgent/docs/research/verifier-guided-agent/experiments/local-minimizer-2026-10-21/runs/06/v4.32.0/a016.lean:173:4: error: Tactic `rfl` failed: The left-hand side
+  ι (timeOrderF (a * (superCommuteF (ofCrAnOpF φ)) (ofCrAnOpF ψ) * ofCrAnListF φs))
+is not definitionally equal to the right-hand side
+  ι ((superCommuteF (ofCrAnOpF φ)) (ofCrAnOpF ψ)) * ι (timeOrderF (a * ofCrAnListF φs))
+
+case mem
+𝓕 : FieldSpecification
+φ ψ : 𝓕.CrAnFieldOp
+hφψ : crAnTimeOrderRel φ ψ
+hψφ : crAnTimeOrderRel ψ φ
+a b : 𝓕.FieldOpFreeAlgebra
+pb : (b : 𝓕.FieldOpFreeAlgebra) → b ∈ Submodule.span ℂ (Set.range ⇑ofCrAnListFBasis) → Prop :=
+  fun b hc =>
+    ι (timeOrderF (a * (superCommuteF (ofCrAnOpF φ)) (ofCrAnOpF ψ) * b)) =
+      ι ((superCommuteF (ofCrAnOpF φ)) (ofCrAnOpF ψ) * timeOrderF (a * b))
+φs : List 𝓕.CrAnFieldOp
+⊢ ι (timeOrderF (a * (superCommuteF (ofCrAnOpF φ)) (ofCrAnOpF ψ) * ofCrAnListF φs)) =
+    ι ((superCommuteF (ofCrAnOpF φ)) (ofCrAnOpF ψ)) * ι (timeOrderF (a * ofCrAnListF φs))

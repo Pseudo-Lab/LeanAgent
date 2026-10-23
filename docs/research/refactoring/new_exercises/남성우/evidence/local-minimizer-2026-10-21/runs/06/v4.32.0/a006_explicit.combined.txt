@@ -1,0 +1,155 @@
+/Users/sungwoo/lean_project/LeanAgent/docs/research/verifier-guided-agent/experiments/local-minimizer-2026-10-21/runs/06/v4.32.0/a006_explicit.lean:234:68: error: unexpected token ':='; expected ']'
+/Users/sungwoo/lean_project/LeanAgent/docs/research/verifier-guided-agent/experiments/local-minimizer-2026-10-21/runs/06/v4.32.0/a006_explicit.lean:224:8: error: Invalid simp theorem: Expected a proposition, but found
+  𝓕.WickAlgebra → Prop
+/Users/sungwoo/lean_project/LeanAgent/docs/research/verifier-guided-agent/experiments/local-minimizer-2026-10-21/runs/06/v4.32.0/a006_explicit.lean:222:72: error: unsolved goals
+𝓕 : FieldSpecification
+φ ψ : 𝓕.CrAnFieldOp
+hφψ : crAnTimeOrderRel φ ψ
+hψφ : crAnTimeOrderRel ψ φ
+a b : 𝓕.FieldOpFreeAlgebra
+pb : (b : 𝓕.FieldOpFreeAlgebra) → b ∈ Submodule.span ℂ (Set.range ⇑ofCrAnListFBasis) → Prop :=
+  fun b hc =>
+    ι (timeOrderF (a * (superCommuteF (ofCrAnOpF φ)) (ofCrAnOpF ψ) * b)) =
+      ι ((superCommuteF (ofCrAnOpF φ)) (ofCrAnOpF ψ) * timeOrderF (a * b))
+φs : List 𝓕.CrAnFieldOp
+pa : (a : 𝓕.FieldOpFreeAlgebra) → a ∈ Submodule.span ℂ (Set.range ⇑ofCrAnListFBasis) → Prop :=
+  fun a hc =>
+    ι (timeOrderF (a * (superCommuteF (ofCrAnOpF φ)) (ofCrAnOpF ψ) * ofCrAnListF φs)) =
+      ι ((superCommuteF (ofCrAnOpF φ)) (ofCrAnOpF ψ) * timeOrderF (a * ofCrAnListF φs))
+φs' : List 𝓕.CrAnFieldOp
+⊢ crAnTimeOrderSign (φs' ++ φ :: ψ :: φs) •
+      (ι (ofCrAnListF (crAnTimeOrderList (φs' ++ φ :: ψ :: φs))) -
+        (exchangeSign (𝓕.crAnStatistics φ)) (𝓕.crAnStatistics ψ) •
+          ι (ofCrAnListF (crAnTimeOrderList (φs' ++ ψ :: φ :: φs)))) =
+    crAnTimeOrderSign (φs' ++ φ :: ψ :: φs) •
+      (ι
+                  (ofCrAnListF
+                    (List.takeWhile (fun c => !decide (crAnTimeOrderRel φ c))
+                      (List.insertionSort crAnTimeOrderRel (φs' ++ φs)))) *
+                ι
+                  (ofCrAnListF
+                    (List.filter (fun c => decide (crAnTimeOrderRel φ c) && decide (crAnTimeOrderRel c φ)) φs')) *
+              ι (ofCrAnListF [φ, ψ]) *
+            ι (ofCrAnListF (List.filter (fun c => decide (crAnTimeOrderRel φ c) && decide (crAnTimeOrderRel c φ)) φs)) *
+          ι
+            (ofCrAnListF
+              (List.filter (fun c => decide (crAnTimeOrderRel φ c) && !decide (crAnTimeOrderRel c φ))
+                (List.insertionSort crAnTimeOrderRel (φs' ++ φs)))) -
+        (exchangeSign (𝓕.crAnStatistics φ)) (𝓕.crAnStatistics ψ) •
+                  ι
+                    (ofCrAnListF
+                      (List.takeWhile (fun c => !decide (crAnTimeOrderRel φ c))
+                        (List.insertionSort crAnTimeOrderRel (φs' ++ φs)))) *
+                ι
+                  (ofCrAnListF
+                    (List.filter (fun c => decide (crAnTimeOrderRel φ c) && decide (crAnTimeOrderRel c φ)) φs')) *
+              ι (ofCrAnListF [ψ, φ]) *
+            ι (ofCrAnListF (List.filter (fun c => decide (crAnTimeOrderRel φ c) && decide (crAnTimeOrderRel c φ)) φs)) *
+          ι
+            (ofCrAnListF
+              (List.filter (fun c => decide (crAnTimeOrderRel φ c) && !decide (crAnTimeOrderRel c φ))
+                (List.insertionSort crAnTimeOrderRel (φs' ++ φs)))))
+/Users/sungwoo/lean_project/LeanAgent/docs/research/verifier-guided-agent/experiments/local-minimizer-2026-10-21/runs/06/v4.32.0/a006_explicit.lean:178:4: error: unsolved goals
+case mem.mem.calc.step
+𝓕 : FieldSpecification
+φ ψ : 𝓕.CrAnFieldOp
+hφψ : crAnTimeOrderRel φ ψ
+hψφ : crAnTimeOrderRel ψ φ
+a b : 𝓕.FieldOpFreeAlgebra
+pb : (b : 𝓕.FieldOpFreeAlgebra) → b ∈ Submodule.span ℂ (Set.range ⇑ofCrAnListFBasis) → Prop :=
+  fun b hc =>
+    ι (timeOrderF (a * (superCommuteF (ofCrAnOpF φ)) (ofCrAnOpF ψ) * b)) =
+      ι ((superCommuteF (ofCrAnOpF φ)) (ofCrAnOpF ψ) * timeOrderF (a * b))
+φs : List 𝓕.CrAnFieldOp
+pa : (a : 𝓕.FieldOpFreeAlgebra) → a ∈ Submodule.span ℂ (Set.range ⇑ofCrAnListFBasis) → Prop :=
+  fun a hc =>
+    ι (timeOrderF (a * (superCommuteF (ofCrAnOpF φ)) (ofCrAnOpF ψ) * ofCrAnListF φs)) =
+      ι ((superCommuteF (ofCrAnOpF φ)) (ofCrAnOpF ψ) * timeOrderF (a * ofCrAnListF φs))
+φs' : List 𝓕.CrAnFieldOp
+⊢ crAnTimeOrderSign (φs' ++ [φ, ψ] ++ φs) •
+      (ι
+                  (ofCrAnListF
+                    (List.takeWhile (fun c => decide ¬crAnTimeOrderRel φ c)
+                      (List.insertionSort crAnTimeOrderRel (φs' ++ φs)))) *
+                ι (ofCrAnListF (List.filter (fun c => decide (crAnTimeOrderRel φ c ∧ crAnTimeOrderRel c φ)) φs')) *
+              ι (ofCrAnListF [φ, ψ]) *
+            ι (ofCrAnListF (List.filter (fun c => decide (crAnTimeOrderRel φ c ∧ crAnTimeOrderRel c φ)) φs)) *
+          ι
+            (ofCrAnListF
+              (List.filter (fun c => decide (crAnTimeOrderRel φ c ∧ ¬crAnTimeOrderRel c φ))
+                (List.insertionSort crAnTimeOrderRel (φs' ++ φs)))) -
+        (exchangeSign (𝓕.crAnStatistics φ)) (𝓕.crAnStatistics ψ) •
+                  ι
+                    (ofCrAnListF
+                      (List.takeWhile (fun c => decide ¬crAnTimeOrderRel φ c)
+                        (List.insertionSort crAnTimeOrderRel (φs' ++ φs)))) *
+                ι (ofCrAnListF (List.filter (fun c => decide (crAnTimeOrderRel φ c ∧ crAnTimeOrderRel c φ)) φs')) *
+              ι (ofCrAnListF [ψ, φ]) *
+            ι (ofCrAnListF (List.filter (fun c => decide (crAnTimeOrderRel φ c ∧ crAnTimeOrderRel c φ)) φs)) *
+          ι
+            (ofCrAnListF
+              (List.filter (fun c => decide (crAnTimeOrderRel φ c ∧ ¬crAnTimeOrderRel c φ))
+                (List.insertionSort crAnTimeOrderRel (φs' ++ φs))))) =
+    ι ((superCommuteF (ofCrAnOpF φ)) (ofCrAnOpF ψ)) * ι (timeOrderF (ofCrAnListF φs' * ofCrAnListF φs))
+/Users/sungwoo/lean_project/LeanAgent/docs/research/verifier-guided-agent/experiments/local-minimizer-2026-10-21/runs/06/v4.32.0/a006_explicit.lean:171:2: error: unsolved goals
+case mem.zero
+𝓕 : FieldSpecification
+φ ψ : 𝓕.CrAnFieldOp
+hφψ : crAnTimeOrderRel φ ψ
+hψφ : crAnTimeOrderRel ψ φ
+a b : 𝓕.FieldOpFreeAlgebra
+pb : (b : 𝓕.FieldOpFreeAlgebra) → b ∈ Submodule.span ℂ (Set.range ⇑ofCrAnListFBasis) → Prop := ⋯
+φs : List 𝓕.CrAnFieldOp
+pa : (a : 𝓕.FieldOpFreeAlgebra) → a ∈ Submodule.span ℂ (Set.range ⇑ofCrAnListFBasis) → Prop := ⋯
+⊢ pa 0 ⋯
+
+case add
+𝓕 : FieldSpecification
+φ ψ : 𝓕.CrAnFieldOp
+hφψ : crAnTimeOrderRel φ ψ
+hψφ : crAnTimeOrderRel ψ φ
+a b : 𝓕.FieldOpFreeAlgebra
+pb : (b : 𝓕.FieldOpFreeAlgebra) → b ∈ Submodule.span ℂ (Set.range ⇑ofCrAnListFBasis) → Prop := ⋯
+φs : List 𝓕.CrAnFieldOp
+pa : (a : 𝓕.FieldOpFreeAlgebra) → a ∈ Submodule.span ℂ (Set.range ⇑ofCrAnListFBasis) → Prop := ⋯
+⊢ ∀ (x y : 𝓕.FieldOpFreeAlgebra) (hx : x ∈ Submodule.span ℂ (Set.range ⇑ofCrAnListFBasis))
+    (hy : y ∈ Submodule.span ℂ (Set.range ⇑ofCrAnListFBasis)), pa x hx → pa y hy → pa (x + y) ⋯
+
+case smul
+𝓕 : FieldSpecification
+φ ψ : 𝓕.CrAnFieldOp
+hφψ : crAnTimeOrderRel φ ψ
+hψφ : crAnTimeOrderRel ψ φ
+a b : 𝓕.FieldOpFreeAlgebra
+pb : (b : 𝓕.FieldOpFreeAlgebra) → b ∈ Submodule.span ℂ (Set.range ⇑ofCrAnListFBasis) → Prop := ⋯
+φs : List 𝓕.CrAnFieldOp
+pa : (a : 𝓕.FieldOpFreeAlgebra) → a ∈ Submodule.span ℂ (Set.range ⇑ofCrAnListFBasis) → Prop := ⋯
+⊢ ∀ (a : ℂ) (x : 𝓕.FieldOpFreeAlgebra) (hx : x ∈ Submodule.span ℂ (Set.range ⇑ofCrAnListFBasis)), pa x hx → pa (a • x) ⋯
+/Users/sungwoo/lean_project/LeanAgent/docs/research/verifier-guided-agent/experiments/local-minimizer-2026-10-21/runs/06/v4.32.0/a006_explicit.lean:165:52: error: unsolved goals
+case zero
+𝓕 : FieldSpecification
+φ ψ : 𝓕.CrAnFieldOp
+hφψ : crAnTimeOrderRel φ ψ
+hψφ : crAnTimeOrderRel ψ φ
+a b : 𝓕.FieldOpFreeAlgebra
+pb : (b : 𝓕.FieldOpFreeAlgebra) → b ∈ Submodule.span ℂ (Set.range ⇑ofCrAnListFBasis) → Prop := ⋯
+⊢ pb 0 ⋯
+
+case add
+𝓕 : FieldSpecification
+φ ψ : 𝓕.CrAnFieldOp
+hφψ : crAnTimeOrderRel φ ψ
+hψφ : crAnTimeOrderRel ψ φ
+a b : 𝓕.FieldOpFreeAlgebra
+pb : (b : 𝓕.FieldOpFreeAlgebra) → b ∈ Submodule.span ℂ (Set.range ⇑ofCrAnListFBasis) → Prop := ⋯
+⊢ ∀ (x y : 𝓕.FieldOpFreeAlgebra) (hx : x ∈ Submodule.span ℂ (Set.range ⇑ofCrAnListFBasis))
+    (hy : y ∈ Submodule.span ℂ (Set.range ⇑ofCrAnListFBasis)), pb x hx → pb y hy → pb (x + y) ⋯
+
+case smul
+𝓕 : FieldSpecification
+φ ψ : 𝓕.CrAnFieldOp
+hφψ : crAnTimeOrderRel φ ψ
+hψφ : crAnTimeOrderRel ψ φ
+a b : 𝓕.FieldOpFreeAlgebra
+pb : (b : 𝓕.FieldOpFreeAlgebra) → b ∈ Submodule.span ℂ (Set.range ⇑ofCrAnListFBasis) → Prop := ⋯
+⊢ ∀ (a : ℂ) (x : 𝓕.FieldOpFreeAlgebra) (hx : x ∈ Submodule.span ℂ (Set.range ⇑ofCrAnListFBasis)), pb x hx → pb (a • x) ⋯

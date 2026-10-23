@@ -1,0 +1,377 @@
+{
+  "id": "R06",
+  "seed_id": "warmup-3:Core.InitsUpdatesComm",
+  "source_kind": "arena_derived",
+  "source_path": "benchmark_data_warmup.jsonl line 3; Strata/Languages/Core/StatementSemanticsProps.lean @ 451e5f047 (git HEAD copy, uncommitted patch excluded)",
+  "decl_full_name": "Core.InitsUpdatesComm",
+  "environment": {
+    "dir": "/Users/sungwoo/lean_project/refactor_arena/strata",
+    "lean_version": "Lean (version 4.26.0, arm64-apple-darwin24.6.0, commit d8204c9fd894f91bbb2cdfec5912ec8196fd8562, Release)",
+    "lake_version": "Lake version 5.0.0-src+d8204c9 (Lean version 4.26.0)",
+    "lean_toolchain": "leanprover/lean4:v4.26.0",
+    "repo_commit": "451e5f047bafa010d178856db76c00029bfa4d7f",
+    "lake_manifest_sha256": "5aab41f14cc55b5049ae81535506b6998bfadd9d983af6130fa92f4a39bd244c",
+    "lakefile_sha256": {
+      "lakefile.toml": "5c0abe83aaa82d837d50cf987102ff3138a15aec988912f06166a39e5ee578ae"
+    },
+    "uncommitted_status": [
+      "M Strata/Transform/CallElimCorrect.lean"
+    ],
+    "uncommitted_diff_sha256": "4f46664d01716151ce17d064218040e096c82504d719e877901e39271b9c8d4c",
+    "packages": {
+      "plausible": "b949552f6ca8e223f424b3e3b33f74185bbf1179"
+    },
+    "has_aesop": false,
+    "environment_hash": "b2c42272ae50e12d1472e380395e82dd422746e97da291bdb2684a96c2ba850d",
+    "project": "strata"
+  },
+  "immutable_context_hash": "ca9a091cf4943c1f90ebd9bb5b46f1cd3ec9cd9e551d18660608c7b909edbd9e",
+  "statement": "theorem InitsUpdatesComm\n  {P : PureExpr} {σ σ' σ'' : SemanticStore P}\n  {ks ks' : List P.Ident} {vs vs' : List P.Expr} :\n  UpdateStates σ ks vs σ' →\n  InitStates σ' ks' vs' σ'' →\n  ∃ σ₁,\n    σ₁ = (updatedStates σ ks' vs') ∧\n    InitStates σ ks' vs' σ₁ ∧\n    UpdateStates σ₁ ks vs σ''",
+  "original_body": "by\n  intros Hup Hinit\n  exists (updatedStates σ ks' vs')\n  have Hk : (isDefined σ' ks) := UpdateStatesDefined Hup\n  have Hlen1 := InitStatesLength Hinit\n  have Hlen2 := UpdateStatesLength Hup\n  induction Hup generalizing σ''\n  case update_none =>\n    simp_all\n    apply And.intro\n    refine updatedStatesInit Hlen1 ?_ ?_\n    exact InitStatesNotDefined Hinit\n    exact InitStatesNodup Hinit\n    simp [InitStatesUpdated Hinit]\n    constructor\n  case update_some σ x v σ₀ xs vs σ₁ Hup Hups ih =>\n    refine ⟨rfl, ?_, ?_⟩\n    . apply updatedStatesInit Hlen1\n      apply UpdateStateNotDefMonotone' ?_ Hup\n      apply UpdateStatesNotDefMonotone' ?_ Hups\n      exact InitStatesNotDefined Hinit\n      exact InitStatesNodup Hinit\n    . apply UpdateStates.update_some (σ':=updatedStates σ₀ ks' vs')\n      . simp [UpdateStateUpdated Hup, updatedStates]\n        rw [← updatedStateComm']\n        . have Hdef := UpdateStateDefined' Hup\n          simp [isDefined, Option.isSome] at Hdef\n          split at Hdef <;> simp_all\n          next val heq =>\n          apply updatedStateUpdate (v':=val)\n          apply InitStatesSomeMonotone heq\n          apply updatedStatesInit\n          . simp_all\n          . apply UpdateStateNotDefMonotone' ?_ Hup\n            apply UpdateStatesNotDefMonotone' ?_ Hups\n            apply InitStatesNotDefined Hinit\n          . exact InitStatesNodup Hinit\n        . rw [List.unzip_zip] <;> simp_all\n          have Hnd := InitStatesNotDefined Hinit\n          simp [isNotDefined, isDefined] at *\n          apply Not.intro\n          intros Hin\n          specialize Hnd _ Hin\n          simp_all\n      . apply (ih Hinit ?_ ?_).2.2\n        . simp [isDefined] at * <;> simp_all\n        . simp_all",
+  "original_body_sha256": "31d6fc114c9a8fba93a46868067c9d92e424180303d2b97ce9bba76c8110cda5",
+  "body_range": {
+    "body_start_char": 24928,
+    "body_end_char": 26630,
+    "body_first_line": 939,
+    "decl_first_line": 931
+  },
+  "candidate_body": "by\n  intros Hup Hinit\n  exists (updatedStates σ ks' vs')\n  have Hk : (isDefined σ' ks) := UpdateStatesDefined Hup\n  have Hlen1 := InitStatesLength Hinit\n  have Hlen2 := UpdateStatesLength Hup\n  induction Hup\n  case update_none =>\n    simp_all\n    apply And.intro\n    refine updatedStatesInit Hlen1 ?_ ?_\n    exact InitStatesNotDefined Hinit\n    exact InitStatesNodup Hinit\n    simp [InitStatesUpdated Hinit]\n    constructor\n  case update_some σ x v σ₀ xs vs σ₁ Hup Hups ih =>\n    refine ⟨rfl, ?_, ?_⟩\n    . apply updatedStatesInit Hlen1\n      apply UpdateStateNotDefMonotone' ?_ Hup\n      apply UpdateStatesNotDefMonotone' ?_ Hups\n      exact InitStatesNotDefined Hinit\n      exact InitStatesNodup Hinit\n    . apply UpdateStates.update_some (σ':=updatedStates σ₀ ks' vs')\n      . simp [UpdateStateUpdated Hup, updatedStates]\n        rw [← updatedStateComm']\n        . have Hdef := UpdateStateDefined' Hup\n          simp [isDefined, Option.isSome] at Hdef\n          split at Hdef <;> simp_all\n          next val heq =>\n          apply updatedStateUpdate (v':=val)\n          apply InitStatesSomeMonotone heq\n          apply updatedStatesInit\n          . simp_all\n          . apply UpdateStateNotDefMonotone' ?_ Hup\n            apply UpdateStatesNotDefMonotone' ?_ Hups\n            apply InitStatesNotDefined Hinit\n          . exact InitStatesNodup Hinit\n        . rw [List.unzip_zip] <;> simp_all\n          have Hnd := InitStatesNotDefined Hinit\n          simp [isNotDefined, isDefined] at *\n          apply Not.intro\n          intros Hin\n          specialize Hnd _ Hin\n          simp_all\n      . apply (ih Hinit ?_ ?_).2.2\n        . simp [isDefined] at * <;> simp_all\n        . simp_all",
+  "candidate_hash": "47bf68aa15ebfce1a27839734f0a3003951fc49d0183c09029db78effe7c237a",
+  "expected_intent": "Shorten the induction by dropping `generalizing σ''`, believing the final store need not vary; the induction hypothesis is then fixed to the outer σ''.",
+  "baseline_check": {
+    "kind": "valid",
+    "exit_code": 0,
+    "axioms": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "n_errors_in_target": 0,
+    "first_error": null,
+    "errors_outside_target": 0,
+    "run": "cases/R06/logs/00_baseline.result.json",
+    "wall_s_local": 9.16
+  },
+  "observed_result": "valid",
+  "candidate_check": {
+    "kind": "valid",
+    "exit_code": 0,
+    "axioms": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "n_errors_in_target": 0,
+    "first_error": null,
+    "errors_outside_target": 0,
+    "run": "cases/R06/logs/01_candidate.result.json",
+    "wall_s_local": 4.64
+  },
+  "diagnostics": [],
+  "pre_error_state": null,
+  "pre_error_state_null_reason": "candidate valid",
+  "inferred_state": null,
+  "localization": {
+    "scope": "body",
+    "method": "no error",
+    "trusted_pre_state": false
+  },
+  "local_attempts": [],
+  "local_result": null,
+  "valid_path_extraction": [
+    {
+      "body_line": 8,
+      "original_line": "    simp_all",
+      "query_line": "    simp_all?",
+      "query_check": {
+        "kind": "valid",
+        "exit_code": 0,
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "n_errors_in_target": 0,
+        "first_error": null,
+        "errors_outside_target": 0,
+        "run": "cases/R06/attempts/extract_008_simp_allQ.result.json",
+        "wall_s_local": 5.38
+      },
+      "raw_tool_output": "Try this:\n  [apply] simp_all only [List.length_nil, true_and]",
+      "suggestion": "simp_all only [List.length_nil, true_and]",
+      "substituted_body": "by\n  intros Hup Hinit\n  exists (updatedStates σ ks' vs')\n  have Hk : (isDefined σ' ks) := UpdateStatesDefined Hup\n  have Hlen1 := InitStatesLength Hinit\n  have Hlen2 := UpdateStatesLength Hup\n  induction Hup\n  case update_none =>\n    simp_all only [List.length_nil, true_and]\n    apply And.intro\n    refine updatedStatesInit Hlen1 ?_ ?_\n    exact InitStatesNotDefined Hinit\n    exact InitStatesNodup Hinit\n    simp [InitStatesUpdated Hinit]\n    constructor\n  case update_some σ x v σ₀ xs vs σ₁ Hup Hups ih =>\n    refine ⟨rfl, ?_, ?_⟩\n    . apply updatedStatesInit Hlen1\n      apply UpdateStateNotDefMonotone' ?_ Hup\n      apply UpdateStatesNotDefMonotone' ?_ Hups\n      exact InitStatesNotDefined Hinit\n      exact InitStatesNodup Hinit\n    . apply UpdateStates.update_some (σ':=updatedStates σ₀ ks' vs')\n      . simp [UpdateStateUpdated Hup, updatedStates]\n        rw [← updatedStateComm']\n        . have Hdef := UpdateStateDefined' Hup\n          simp [isDefined, Option.isSome] at Hdef\n          split at Hdef <;> simp_all\n          next val heq =>\n          apply updatedStateUpdate (v':=val)\n          apply InitStatesSomeMonotone heq\n          apply updatedStatesInit\n          . simp_all\n          . apply UpdateStateNotDefMonotone' ?_ Hup\n            apply UpdateStatesNotDefMonotone' ?_ Hups\n            apply InitStatesNotDefined Hinit\n          . exact InitStatesNodup Hinit\n        . rw [List.unzip_zip] <;> simp_all\n          have Hnd := InitStatesNotDefined Hinit\n          simp [isNotDefined, isDefined] at *\n          apply Not.intro\n          intros Hin\n          specialize Hnd _ Hin\n          simp_all\n      . apply (ih Hinit ?_ ?_).2.2\n        . simp [isDefined] at * <;> simp_all\n        . simp_all",
+      "substituted_check": {
+        "kind": "valid",
+        "exit_code": 0,
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "n_errors_in_target": 0,
+        "first_error": null,
+        "errors_outside_target": 0,
+        "run": "cases/R06/attempts/extract_008_simp_allQ_substituted.result.json",
+        "wall_s_local": 4.14
+      }
+    },
+    {
+      "body_line": 13,
+      "original_line": "    simp [InitStatesUpdated Hinit]",
+      "query_line": "    simp? [InitStatesUpdated Hinit]",
+      "query_check": {
+        "kind": "valid",
+        "exit_code": 0,
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "n_errors_in_target": 0,
+        "first_error": null,
+        "errors_outside_target": 0,
+        "run": "cases/R06/attempts/extract_013_simpQ.result.json",
+        "wall_s_local": 3.58
+      },
+      "raw_tool_output": "Try this:\n  [apply] simp only [InitStatesUpdated Hinit]",
+      "suggestion": "simp only [InitStatesUpdated Hinit]",
+      "substituted_body": "by\n  intros Hup Hinit\n  exists (updatedStates σ ks' vs')\n  have Hk : (isDefined σ' ks) := UpdateStatesDefined Hup\n  have Hlen1 := InitStatesLength Hinit\n  have Hlen2 := UpdateStatesLength Hup\n  induction Hup\n  case update_none =>\n    simp_all\n    apply And.intro\n    refine updatedStatesInit Hlen1 ?_ ?_\n    exact InitStatesNotDefined Hinit\n    exact InitStatesNodup Hinit\n    simp only [InitStatesUpdated Hinit]\n    constructor\n  case update_some σ x v σ₀ xs vs σ₁ Hup Hups ih =>\n    refine ⟨rfl, ?_, ?_⟩\n    . apply updatedStatesInit Hlen1\n      apply UpdateStateNotDefMonotone' ?_ Hup\n      apply UpdateStatesNotDefMonotone' ?_ Hups\n      exact InitStatesNotDefined Hinit\n      exact InitStatesNodup Hinit\n    . apply UpdateStates.update_some (σ':=updatedStates σ₀ ks' vs')\n      . simp [UpdateStateUpdated Hup, updatedStates]\n        rw [← updatedStateComm']\n        . have Hdef := UpdateStateDefined' Hup\n          simp [isDefined, Option.isSome] at Hdef\n          split at Hdef <;> simp_all\n          next val heq =>\n          apply updatedStateUpdate (v':=val)\n          apply InitStatesSomeMonotone heq\n          apply updatedStatesInit\n          . simp_all\n          . apply UpdateStateNotDefMonotone' ?_ Hup\n            apply UpdateStatesNotDefMonotone' ?_ Hups\n            apply InitStatesNotDefined Hinit\n          . exact InitStatesNodup Hinit\n        . rw [List.unzip_zip] <;> simp_all\n          have Hnd := InitStatesNotDefined Hinit\n          simp [isNotDefined, isDefined] at *\n          apply Not.intro\n          intros Hin\n          specialize Hnd _ Hin\n          simp_all\n      . apply (ih Hinit ?_ ?_).2.2\n        . simp [isDefined] at * <;> simp_all\n        . simp_all",
+      "substituted_check": {
+        "kind": "valid",
+        "exit_code": 0,
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "n_errors_in_target": 0,
+        "first_error": null,
+        "errors_outside_target": 0,
+        "run": "cases/R06/attempts/extract_013_simpQ_substituted.result.json",
+        "wall_s_local": 4.13
+      }
+    },
+    {
+      "body_line": 23,
+      "original_line": "      . simp [UpdateStateUpdated Hup, updatedStates]",
+      "query_line": "      . simp? [UpdateStateUpdated Hup, updatedStates]",
+      "query_check": {
+        "kind": "valid",
+        "exit_code": 0,
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "n_errors_in_target": 0,
+        "first_error": null,
+        "errors_outside_target": 0,
+        "run": "cases/R06/attempts/extract_023_simpQ.result.json",
+        "wall_s_local": 3.99
+      },
+      "raw_tool_output": "Try this:\n  [apply] simp only [updatedStates, UpdateStateUpdated Hup]",
+      "suggestion": "simp only [updatedStates, UpdateStateUpdated Hup]",
+      "substituted_body": "by\n  intros Hup Hinit\n  exists (updatedStates σ ks' vs')\n  have Hk : (isDefined σ' ks) := UpdateStatesDefined Hup\n  have Hlen1 := InitStatesLength Hinit\n  have Hlen2 := UpdateStatesLength Hup\n  induction Hup\n  case update_none =>\n    simp_all\n    apply And.intro\n    refine updatedStatesInit Hlen1 ?_ ?_\n    exact InitStatesNotDefined Hinit\n    exact InitStatesNodup Hinit\n    simp [InitStatesUpdated Hinit]\n    constructor\n  case update_some σ x v σ₀ xs vs σ₁ Hup Hups ih =>\n    refine ⟨rfl, ?_, ?_⟩\n    . apply updatedStatesInit Hlen1\n      apply UpdateStateNotDefMonotone' ?_ Hup\n      apply UpdateStatesNotDefMonotone' ?_ Hups\n      exact InitStatesNotDefined Hinit\n      exact InitStatesNodup Hinit\n    . apply UpdateStates.update_some (σ':=updatedStates σ₀ ks' vs')\n      . simp only [updatedStates, UpdateStateUpdated Hup]\n        rw [← updatedStateComm']\n        . have Hdef := UpdateStateDefined' Hup\n          simp [isDefined, Option.isSome] at Hdef\n          split at Hdef <;> simp_all\n          next val heq =>\n          apply updatedStateUpdate (v':=val)\n          apply InitStatesSomeMonotone heq\n          apply updatedStatesInit\n          . simp_all\n          . apply UpdateStateNotDefMonotone' ?_ Hup\n            apply UpdateStatesNotDefMonotone' ?_ Hups\n            apply InitStatesNotDefined Hinit\n          . exact InitStatesNodup Hinit\n        . rw [List.unzip_zip] <;> simp_all\n          have Hnd := InitStatesNotDefined Hinit\n          simp [isNotDefined, isDefined] at *\n          apply Not.intro\n          intros Hin\n          specialize Hnd _ Hin\n          simp_all\n      . apply (ih Hinit ?_ ?_).2.2\n        . simp [isDefined] at * <;> simp_all\n        . simp_all",
+      "substituted_check": {
+        "kind": "valid",
+        "exit_code": 0,
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "n_errors_in_target": 0,
+        "first_error": null,
+        "errors_outside_target": 0,
+        "run": "cases/R06/attempts/extract_023_simpQ_substituted.result.json",
+        "wall_s_local": 5.05
+      }
+    }
+  ],
+  "gold_repair_path": "gold_repair.lean",
+  "gold_strategy": "original restored (no shorter variant without generalizing was found by the author)",
+  "gold_check": {
+    "kind": "valid",
+    "exit_code": 0,
+    "axioms": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "n_errors_in_target": 0,
+    "first_error": null,
+    "errors_outside_target": 0,
+    "run": "cases/R06/logs/03_gold_alt0.result.json",
+    "wall_s_local": 4.89
+  },
+  "gold_attempts": [
+    {
+      "alternative": 0,
+      "edits": [
+        [
+          "induction Hup",
+          "induction Hup generalizing σ''"
+        ]
+      ],
+      "check": {
+        "kind": "valid",
+        "exit_code": 0,
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "n_errors_in_target": 0,
+        "first_error": null,
+        "errors_outside_target": 0,
+        "run": "cases/R06/logs/03_gold_alt0.result.json",
+        "wall_s_local": 4.89
+      }
+    }
+  ],
+  "full_replay_result": {
+    "kind": "valid",
+    "exit_code": 0,
+    "axioms": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "n_errors_in_target": 0,
+    "first_error": null,
+    "errors_outside_target": 0,
+    "run": "cases/R06/logs/03_gold_alt0.result.json",
+    "wall_s_local": 4.89
+  },
+  "full_replay_result_source": "gold_repair",
+  "measurements": {
+    "baseline": {
+      "body_nonwhitespace_chars": {
+        "value": 1209,
+        "kind": "local_estimate",
+        "note": "character count, NOT the official token count"
+      },
+      "official_tokens": {
+        "value": null,
+        "kind": "not_measured",
+        "reason": "official tokenizer not available"
+      },
+      "heartbeats": {
+        "value": 4676,
+        "kind": "local_estimate",
+        "method": "instrumented run: IO.getNumHeartbeats delta /1000 around the declaration with Elab.async=false (same mechanism as Mathlib #count_heartbeats); single run; not the official Arena measurement",
+        "run": "cases/R06/logs/04_measure_baseline.result.json"
+      }
+    },
+    "candidate": {
+      "body_nonwhitespace_chars": {
+        "value": 1194,
+        "kind": "local_estimate",
+        "note": "character count, NOT the official token count"
+      },
+      "official_tokens": {
+        "value": null,
+        "kind": "not_measured",
+        "reason": "official tokenizer not available"
+      },
+      "heartbeats": {
+        "value": 2980,
+        "kind": "local_estimate",
+        "method": "instrumented run: IO.getNumHeartbeats delta /1000 around the declaration with Elab.async=false (same mechanism as Mathlib #count_heartbeats); single run; not the official Arena measurement",
+        "run": "cases/R06/logs/04_measure_candidate.result.json"
+      }
+    },
+    "extracted_0": {
+      "body_nonwhitespace_chars": {
+        "value": 1224,
+        "kind": "local_estimate",
+        "note": "character count, NOT the official token count"
+      },
+      "official_tokens": {
+        "value": null,
+        "kind": "not_measured",
+        "reason": "official tokenizer not available"
+      },
+      "heartbeats": {
+        "value": 2970,
+        "kind": "local_estimate",
+        "method": "instrumented run: IO.getNumHeartbeats delta /1000 around the declaration with Elab.async=false (same mechanism as Mathlib #count_heartbeats); single run; not the official Arena measurement",
+        "run": "cases/R06/logs/04_measure_extracted_0.result.json"
+      }
+    },
+    "extracted_1": {
+      "body_nonwhitespace_chars": {
+        "value": 1198,
+        "kind": "local_estimate",
+        "note": "character count, NOT the official token count"
+      },
+      "official_tokens": {
+        "value": null,
+        "kind": "not_measured",
+        "reason": "official tokenizer not available"
+      },
+      "heartbeats": {
+        "value": 2980,
+        "kind": "local_estimate",
+        "method": "instrumented run: IO.getNumHeartbeats delta /1000 around the declaration with Elab.async=false (same mechanism as Mathlib #count_heartbeats); single run; not the official Arena measurement",
+        "run": "cases/R06/logs/04_measure_extracted_1.result.json"
+      }
+    },
+    "extracted_2": {
+      "body_nonwhitespace_chars": {
+        "value": 1198,
+        "kind": "local_estimate",
+        "note": "character count, NOT the official token count"
+      },
+      "official_tokens": {
+        "value": null,
+        "kind": "not_measured",
+        "reason": "official tokenizer not available"
+      },
+      "heartbeats": {
+        "value": 2980,
+        "kind": "local_estimate",
+        "method": "instrumented run: IO.getNumHeartbeats delta /1000 around the declaration with Elab.async=false (same mechanism as Mathlib #count_heartbeats); single run; not the official Arena measurement",
+        "run": "cases/R06/logs/04_measure_extracted_2.result.json"
+      }
+    },
+    "gold": {
+      "body_nonwhitespace_chars": {
+        "value": 1209,
+        "kind": "local_estimate",
+        "note": "character count, NOT the official token count"
+      },
+      "official_tokens": {
+        "value": null,
+        "kind": "not_measured",
+        "reason": "official tokenizer not available"
+      },
+      "heartbeats": {
+        "value": 4676,
+        "kind": "local_estimate",
+        "method": "instrumented run: IO.getNumHeartbeats delta /1000 around the declaration with Elab.async=false (same mechanism as Mathlib #count_heartbeats); single run; not the official Arena measurement",
+        "run": "cases/R06/logs/04_measure_gold.result.json"
+      }
+    },
+    "robustness": {
+      "listed_versions": [
+        "v4.29.1",
+        "v4.27.0",
+        "v4.26.0"
+      ],
+      "checked_versions": [
+        "v4.26.0"
+      ],
+      "complete": false,
+      "note": ""
+    }
+  },
+  "expected_route": "valid_measure_then_select",
+  "expected_route_reason": "candidate valid; official tokens not measured -> policy MEASURE before any optimization request",
+  "author_prediction_before_run": "failure in update_some where ih is applied to a different store -> escalate (block/body)",
+  "policy_decision": {
+    "decision.json": "MEASURE",
+    "decision.configured_budget.json": null
+  },
+  "validation_status": "lean_observed+gold_verified+string_contract_only_no_lean_adapter_term_check+robustness_incomplete"
+}

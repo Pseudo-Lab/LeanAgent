@@ -1,0 +1,244 @@
+{
+  "problem_id": 1,
+  "name": "CallElimCorrect.substOldPostSubset",
+  "version": "v4.26.0",
+  "commit": "451e5f047bafa010d178856db76c00029bfa4d7f",
+  "source_hash": "1c5e76014548db4a380b5c225f561c726a0db1184dcddfefb7191052e67dd79a",
+  "baseline": {
+    "kind": "valid",
+    "axioms": [
+      "propext",
+      "Quot.sound"
+    ],
+    "body_hash": "c8dbfad735c0468c45f289befb9a73f4ef784fb1ac6fb9c8cd549b8e6309838b",
+    "tokens": 313,
+    "output_path": "/Users/sungwoo/lean_project/LeanAgent/docs/research/verifier-guided-agent/experiments/local-minimizer-2026-10-21/runs/01/v4.26.0/baseline.stdout.txt",
+    "heartbeats_raw": 5174362,
+    "heartbeats": 5174.362,
+    "measurement_kind": "local_o200k_base_and_synchronous_declaration_heartbeats"
+  },
+  "control": {
+    "kind": "valid",
+    "axioms": [
+      "propext",
+      "Quot.sound"
+    ],
+    "body_hash": "97e99733927319b98e163404050697e99c7cb81c4d1c87d15c6a15e3d0e0307c",
+    "tokens": 289,
+    "output_path": "/Users/sungwoo/lean_project/LeanAgent/docs/research/verifier-guided-agent/experiments/local-minimizer-2026-10-21/runs/01/v4.26.0/control.stdout.txt",
+    "heartbeats_raw": 5165795,
+    "heartbeats": 5165.795,
+    "measurement_kind": "local_o200k_base_and_synchronous_declaration_heartbeats"
+  },
+  "attempts": [
+    {
+      "id": 1,
+      "round": 0,
+      "parent_hash": "97e99733927319b98e163404050697e99c7cb81c4d1c87d15c6a15e3d0e0307c",
+      "site": {
+        "kind": "Lean.Parser.Tactic.tacticSeq1Indented",
+        "start": 5,
+        "end": 2287,
+        "depth": 6,
+        "text": "induction post <;> simp [substOld]\n  case fvar =>\n    intros x Hin\n    rename_i m name ty2\n\n    simp_all\n  case op =>\n    intros x Hin\n    rename_i m name ty2\n    simp_all\n  case const =>\n    intros x Hin\n    rename_i m name\n    simp_all\n  case bvar =>\n    intros x Hin\n    rename_i m d\n    simp_all\n  case abs ih =>\n    exact ih\n  case ite cih tih eih =>\n    simp [Imperative.HasVarsPure.getVars, Lambda.LExpr.LExpr.getVars] at *\n    apply List.Subset.app\n    . apply List.Subset.trans\n      apply cih <;> assumption\n      intros x Hin\n      simp_all\n      cases Hin <;> simp_all\n    apply List.Subset.app\n    . apply List.Subset.trans\n      apply tih <;> assumption\n      intros x Hin\n      simp_all\n      cases Hin <;> simp_all\n    . apply List.Subset.trans\n      apply eih <;> assumption\n      intros x Hin\n      simp_all\n  case app ih1 ih2 =>\n    split\n    . split\n      . simp [Imperative.HasVarsPure.getVars, Lambda.LExpr.LExpr.getVars] at *\n        intros x Hin\n        simp_all\n      . simp [Imperative.HasVarsPure.getVars, Lambda.LExpr.LExpr.getVars] at *\n        intros x Hin\n        simp_all\n    . simp [Imperative.HasVarsPure.getVars, Lambda.LExpr.LExpr.getVars] at *\n      apply List.Subset.app\n      . apply List.Subset.trans\n        apply ih1 <;> assumption\n        intros x Hin\n        simp_all\n        cases Hin <;> simp_all\n      . apply List.Subset.trans\n        apply ih2 <;> assumption\n        intros x Hin\n        simp_all\n  case quant trih eih =>\n    simp [Imperative.HasVarsPure.getVars, Lambda.LExpr.LExpr.getVars] at *\n    apply List.Subset.app\n    . apply List.Subset.trans\n      apply trih <;> assumption\n      intros x Hin\n      rename_i m1 k1 ty1 trigger1 e1\n      have assoc := List.append_assoc (Lambda.LExpr.LExpr.getVars trigger1) (Lambda.LExpr.LExpr.getVars e1) [h1]\n      simp_all\n      cases Hin <;> simp_all\n    . apply List.Subset.trans\n      apply eih <;> assumption\n      intros x Hin\n      simp_all\n  case eq ih1 ih2 =>\n    simp [Imperative.HasVarsPure.getVars, Lambda.LExpr.LExpr.getVars] at *\n    apply List.Subset.app\n    . apply List.Subset.trans\n      apply ih1 <;> assumption\n      intros x Hin\n      simp_all\n      cases Hin <;> simp_all\n    . apply List.Subset.trans\n      apply ih2 <;> assumption\n      intros x Hin\n      simp_all"
+      },
+      "operator": "simp?",
+      "query_hash": "83513701cdb5f6c80935ca98454adb1e2ee79129c95bd17b7979102e0bfc2d51",
+      "query_observation": {
+        "kind": "invalid",
+        "axioms": [
+          "propext",
+          "sorryAx",
+          "Quot.sound"
+        ],
+        "body_hash": "83513701cdb5f6c80935ca98454adb1e2ee79129c95bd17b7979102e0bfc2d51",
+        "tokens": 3,
+        "output_path": "/Users/sungwoo/lean_project/LeanAgent/docs/research/verifier-guided-agent/experiments/local-minimizer-2026-10-21/runs/01/v4.26.0/a001.stdout.txt"
+      },
+      "outcome": "no_supported_suggestion"
+    },
+    {
+      "id": 2,
+      "round": 0,
+      "parent_hash": "97e99733927319b98e163404050697e99c7cb81c4d1c87d15c6a15e3d0e0307c",
+      "site": {
+        "kind": "Lean.Parser.Tactic.tacticSeq1Indented",
+        "start": 5,
+        "end": 2287,
+        "depth": 6,
+        "text": "induction post <;> simp [substOld]\n  case fvar =>\n    intros x Hin\n    rename_i m name ty2\n\n    simp_all\n  case op =>\n    intros x Hin\n    rename_i m name ty2\n    simp_all\n  case const =>\n    intros x Hin\n    rename_i m name\n    simp_all\n  case bvar =>\n    intros x Hin\n    rename_i m d\n    simp_all\n  case abs ih =>\n    exact ih\n  case ite cih tih eih =>\n    simp [Imperative.HasVarsPure.getVars, Lambda.LExpr.LExpr.getVars] at *\n    apply List.Subset.app\n    . apply List.Subset.trans\n      apply cih <;> assumption\n      intros x Hin\n      simp_all\n      cases Hin <;> simp_all\n    apply List.Subset.app\n    . apply List.Subset.trans\n      apply tih <;> assumption\n      intros x Hin\n      simp_all\n      cases Hin <;> simp_all\n    . apply List.Subset.trans\n      apply eih <;> assumption\n      intros x Hin\n      simp_all\n  case app ih1 ih2 =>\n    split\n    . split\n      . simp [Imperative.HasVarsPure.getVars, Lambda.LExpr.LExpr.getVars] at *\n        intros x Hin\n        simp_all\n      . simp [Imperative.HasVarsPure.getVars, Lambda.LExpr.LExpr.getVars] at *\n        intros x Hin\n        simp_all\n    . simp [Imperative.HasVarsPure.getVars, Lambda.LExpr.LExpr.getVars] at *\n      apply List.Subset.app\n      . apply List.Subset.trans\n        apply ih1 <;> assumption\n        intros x Hin\n        simp_all\n        cases Hin <;> simp_all\n      . apply List.Subset.trans\n        apply ih2 <;> assumption\n        intros x Hin\n        simp_all\n  case quant trih eih =>\n    simp [Imperative.HasVarsPure.getVars, Lambda.LExpr.LExpr.getVars] at *\n    apply List.Subset.app\n    . apply List.Subset.trans\n      apply trih <;> assumption\n      intros x Hin\n      rename_i m1 k1 ty1 trigger1 e1\n      have assoc := List.append_assoc (Lambda.LExpr.LExpr.getVars trigger1) (Lambda.LExpr.LExpr.getVars e1) [h1]\n      simp_all\n      cases Hin <;> simp_all\n    . apply List.Subset.trans\n      apply eih <;> assumption\n      intros x Hin\n      simp_all\n  case eq ih1 ih2 =>\n    simp [Imperative.HasVarsPure.getVars, Lambda.LExpr.LExpr.getVars] at *\n    apply List.Subset.app\n    . apply List.Subset.trans\n      apply ih1 <;> assumption\n      intros x Hin\n      simp_all\n      cases Hin <;> simp_all\n    . apply List.Subset.trans\n      apply ih2 <;> assumption\n      intros x Hin\n      simp_all"
+      },
+      "operator": "exact?",
+      "query_hash": "704efeeee592c3ee6480336bbb69c4f75dd795846a471cd26e230716ffdaed02",
+      "query_observation": {
+        "kind": "invalid",
+        "axioms": [
+          "propext",
+          "sorryAx",
+          "Quot.sound"
+        ],
+        "body_hash": "704efeeee592c3ee6480336bbb69c4f75dd795846a471cd26e230716ffdaed02",
+        "tokens": 3,
+        "output_path": "/Users/sungwoo/lean_project/LeanAgent/docs/research/verifier-guided-agent/experiments/local-minimizer-2026-10-21/runs/01/v4.26.0/a002.stdout.txt"
+      },
+      "outcome": "no_supported_suggestion"
+    },
+    {
+      "id": 3,
+      "round": 0,
+      "parent_hash": "97e99733927319b98e163404050697e99c7cb81c4d1c87d15c6a15e3d0e0307c",
+      "site": {
+        "kind": "Lean.Parser.Tactic.tacticSeq1Indented",
+        "start": 5,
+        "end": 2287,
+        "depth": 6,
+        "text": "induction post <;> simp [substOld]\n  case fvar =>\n    intros x Hin\n    rename_i m name ty2\n\n    simp_all\n  case op =>\n    intros x Hin\n    rename_i m name ty2\n    simp_all\n  case const =>\n    intros x Hin\n    rename_i m name\n    simp_all\n  case bvar =>\n    intros x Hin\n    rename_i m d\n    simp_all\n  case abs ih =>\n    exact ih\n  case ite cih tih eih =>\n    simp [Imperative.HasVarsPure.getVars, Lambda.LExpr.LExpr.getVars] at *\n    apply List.Subset.app\n    . apply List.Subset.trans\n      apply cih <;> assumption\n      intros x Hin\n      simp_all\n      cases Hin <;> simp_all\n    apply List.Subset.app\n    . apply List.Subset.trans\n      apply tih <;> assumption\n      intros x Hin\n      simp_all\n      cases Hin <;> simp_all\n    . apply List.Subset.trans\n      apply eih <;> assumption\n      intros x Hin\n      simp_all\n  case app ih1 ih2 =>\n    split\n    . split\n      . simp [Imperative.HasVarsPure.getVars, Lambda.LExpr.LExpr.getVars] at *\n        intros x Hin\n        simp_all\n      . simp [Imperative.HasVarsPure.getVars, Lambda.LExpr.LExpr.getVars] at *\n        intros x Hin\n        simp_all\n    . simp [Imperative.HasVarsPure.getVars, Lambda.LExpr.LExpr.getVars] at *\n      apply List.Subset.app\n      . apply List.Subset.trans\n        apply ih1 <;> assumption\n        intros x Hin\n        simp_all\n        cases Hin <;> simp_all\n      . apply List.Subset.trans\n        apply ih2 <;> assumption\n        intros x Hin\n        simp_all\n  case quant trih eih =>\n    simp [Imperative.HasVarsPure.getVars, Lambda.LExpr.LExpr.getVars] at *\n    apply List.Subset.app\n    . apply List.Subset.trans\n      apply trih <;> assumption\n      intros x Hin\n      rename_i m1 k1 ty1 trigger1 e1\n      have assoc := List.append_assoc (Lambda.LExpr.LExpr.getVars trigger1) (Lambda.LExpr.LExpr.getVars e1) [h1]\n      simp_all\n      cases Hin <;> simp_all\n    . apply List.Subset.trans\n      apply eih <;> assumption\n      intros x Hin\n      simp_all\n  case eq ih1 ih2 =>\n    simp [Imperative.HasVarsPure.getVars, Lambda.LExpr.LExpr.getVars] at *\n    apply List.Subset.app\n    . apply List.Subset.trans\n      apply ih1 <;> assumption\n      intros x Hin\n      simp_all\n      cases Hin <;> simp_all\n    . apply List.Subset.trans\n      apply ih2 <;> assumption\n      intros x Hin\n      simp_all"
+      },
+      "operator": "assumption",
+      "query_hash": "ea7946017e7dc613f596a67325b00c2f343e6ffebaad6e57b49260b51187f06c",
+      "query_observation": {
+        "kind": "invalid",
+        "axioms": [
+          "propext",
+          "sorryAx",
+          "Quot.sound"
+        ],
+        "body_hash": "ea7946017e7dc613f596a67325b00c2f343e6ffebaad6e57b49260b51187f06c",
+        "tokens": 2,
+        "output_path": "/Users/sungwoo/lean_project/LeanAgent/docs/research/verifier-guided-agent/experiments/local-minimizer-2026-10-21/runs/01/v4.26.0/a003.stdout.txt"
+      },
+      "outcome": "invalid"
+    },
+    {
+      "id": 4,
+      "round": 0,
+      "parent_hash": "97e99733927319b98e163404050697e99c7cb81c4d1c87d15c6a15e3d0e0307c",
+      "site": {
+        "kind": "Lean.Parser.Tactic.tacticSeq1Indented",
+        "start": 5,
+        "end": 2287,
+        "depth": 6,
+        "text": "induction post <;> simp [substOld]\n  case fvar =>\n    intros x Hin\n    rename_i m name ty2\n\n    simp_all\n  case op =>\n    intros x Hin\n    rename_i m name ty2\n    simp_all\n  case const =>\n    intros x Hin\n    rename_i m name\n    simp_all\n  case bvar =>\n    intros x Hin\n    rename_i m d\n    simp_all\n  case abs ih =>\n    exact ih\n  case ite cih tih eih =>\n    simp [Imperative.HasVarsPure.getVars, Lambda.LExpr.LExpr.getVars] at *\n    apply List.Subset.app\n    . apply List.Subset.trans\n      apply cih <;> assumption\n      intros x Hin\n      simp_all\n      cases Hin <;> simp_all\n    apply List.Subset.app\n    . apply List.Subset.trans\n      apply tih <;> assumption\n      intros x Hin\n      simp_all\n      cases Hin <;> simp_all\n    . apply List.Subset.trans\n      apply eih <;> assumption\n      intros x Hin\n      simp_all\n  case app ih1 ih2 =>\n    split\n    . split\n      . simp [Imperative.HasVarsPure.getVars, Lambda.LExpr.LExpr.getVars] at *\n        intros x Hin\n        simp_all\n      . simp [Imperative.HasVarsPure.getVars, Lambda.LExpr.LExpr.getVars] at *\n        intros x Hin\n        simp_all\n    . simp [Imperative.HasVarsPure.getVars, Lambda.LExpr.LExpr.getVars] at *\n      apply List.Subset.app\n      . apply List.Subset.trans\n        apply ih1 <;> assumption\n        intros x Hin\n        simp_all\n        cases Hin <;> simp_all\n      . apply List.Subset.trans\n        apply ih2 <;> assumption\n        intros x Hin\n        simp_all\n  case quant trih eih =>\n    simp [Imperative.HasVarsPure.getVars, Lambda.LExpr.LExpr.getVars] at *\n    apply List.Subset.app\n    . apply List.Subset.trans\n      apply trih <;> assumption\n      intros x Hin\n      rename_i m1 k1 ty1 trigger1 e1\n      have assoc := List.append_assoc (Lambda.LExpr.LExpr.getVars trigger1) (Lambda.LExpr.LExpr.getVars e1) [h1]\n      simp_all\n      cases Hin <;> simp_all\n    . apply List.Subset.trans\n      apply eih <;> assumption\n      intros x Hin\n      simp_all\n  case eq ih1 ih2 =>\n    simp [Imperative.HasVarsPure.getVars, Lambda.LExpr.LExpr.getVars] at *\n    apply List.Subset.app\n    . apply List.Subset.trans\n      apply ih1 <;> assumption\n      intros x Hin\n      simp_all\n      cases Hin <;> simp_all\n    . apply List.Subset.trans\n      apply ih2 <;> assumption\n      intros x Hin\n      simp_all"
+      },
+      "operator": "rfl",
+      "query_hash": "1f66f63cfdbcd2444e0f4e89907aec65e5445cb49f773bf2c2befba0b4b40f14",
+      "query_observation": {
+        "kind": "invalid",
+        "axioms": [
+          "propext",
+          "sorryAx",
+          "Quot.sound"
+        ],
+        "body_hash": "1f66f63cfdbcd2444e0f4e89907aec65e5445cb49f773bf2c2befba0b4b40f14",
+        "tokens": 2,
+        "output_path": "/Users/sungwoo/lean_project/LeanAgent/docs/research/verifier-guided-agent/experiments/local-minimizer-2026-10-21/runs/01/v4.26.0/a004.stdout.txt"
+      },
+      "outcome": "invalid"
+    },
+    {
+      "id": 5,
+      "round": 0,
+      "parent_hash": "97e99733927319b98e163404050697e99c7cb81c4d1c87d15c6a15e3d0e0307c",
+      "site": {
+        "kind": "Lean.Parser.Tactic.tacticSeq1Indented",
+        "start": 857,
+        "end": 1450,
+        "depth": 10,
+        "text": "split\n    . split\n      . simp [Imperative.HasVarsPure.getVars, Lambda.LExpr.LExpr.getVars] at *\n        intros x Hin\n        simp_all\n      . simp [Imperative.HasVarsPure.getVars, Lambda.LExpr.LExpr.getVars] at *\n        intros x Hin\n        simp_all\n    . simp [Imperative.HasVarsPure.getVars, Lambda.LExpr.LExpr.getVars] at *\n      apply List.Subset.app\n      . apply List.Subset.trans\n        apply ih1 <;> assumption\n        intros x Hin\n        simp_all\n        cases Hin <;> simp_all\n      . apply List.Subset.trans\n        apply ih2 <;> assumption\n        intros x Hin\n        simp_all"
+      },
+      "operator": "simp?",
+      "query_hash": "41ae66e79af510575f3f956163ef169c047658a3c972314fa34543668f06cc7f",
+      "query_observation": {
+        "kind": "invalid",
+        "axioms": [
+          "propext",
+          "sorryAx",
+          "Quot.sound"
+        ],
+        "body_hash": "41ae66e79af510575f3f956163ef169c047658a3c972314fa34543668f06cc7f",
+        "tokens": 225,
+        "output_path": "/Users/sungwoo/lean_project/LeanAgent/docs/research/verifier-guided-agent/experiments/local-minimizer-2026-10-21/runs/01/v4.26.0/a005.stdout.txt"
+      },
+      "outcome": "no_supported_suggestion"
+    },
+    {
+      "id": 6,
+      "round": 0,
+      "parent_hash": "97e99733927319b98e163404050697e99c7cb81c4d1c87d15c6a15e3d0e0307c",
+      "site": {
+        "kind": "Lean.Parser.Tactic.tacticSeq1Indented",
+        "start": 857,
+        "end": 1450,
+        "depth": 10,
+        "text": "split\n    . split\n      . simp [Imperative.HasVarsPure.getVars, Lambda.LExpr.LExpr.getVars] at *\n        intros x Hin\n        simp_all\n      . simp [Imperative.HasVarsPure.getVars, Lambda.LExpr.LExpr.getVars] at *\n        intros x Hin\n        simp_all\n    . simp [Imperative.HasVarsPure.getVars, Lambda.LExpr.LExpr.getVars] at *\n      apply List.Subset.app\n      . apply List.Subset.trans\n        apply ih1 <;> assumption\n        intros x Hin\n        simp_all\n        cases Hin <;> simp_all\n      . apply List.Subset.trans\n        apply ih2 <;> assumption\n        intros x Hin\n        simp_all"
+      },
+      "operator": "exact?",
+      "query_hash": "9ac02519c89fd2c7904c60b1c9946a4c870e9c667f3940d4cc8e046d58fcfe24",
+      "query_observation": {
+        "kind": "invalid",
+        "axioms": [
+          "propext",
+          "sorryAx",
+          "Quot.sound"
+        ],
+        "body_hash": "9ac02519c89fd2c7904c60b1c9946a4c870e9c667f3940d4cc8e046d58fcfe24",
+        "tokens": 225,
+        "output_path": "/Users/sungwoo/lean_project/LeanAgent/docs/research/verifier-guided-agent/experiments/local-minimizer-2026-10-21/runs/01/v4.26.0/a006.stdout.txt"
+      },
+      "outcome": "no_supported_suggestion"
+    },
+    {
+      "id": 7,
+      "round": 0,
+      "parent_hash": "97e99733927319b98e163404050697e99c7cb81c4d1c87d15c6a15e3d0e0307c",
+      "site": {
+        "kind": "Lean.Parser.Tactic.tacticSeq1Indented",
+        "start": 857,
+        "end": 1450,
+        "depth": 10,
+        "text": "split\n    . split\n      . simp [Imperative.HasVarsPure.getVars, Lambda.LExpr.LExpr.getVars] at *\n        intros x Hin\n        simp_all\n      . simp [Imperative.HasVarsPure.getVars, Lambda.LExpr.LExpr.getVars] at *\n        intros x Hin\n        simp_all\n    . simp [Imperative.HasVarsPure.getVars, Lambda.LExpr.LExpr.getVars] at *\n      apply List.Subset.app\n      . apply List.Subset.trans\n        apply ih1 <;> assumption\n        intros x Hin\n        simp_all\n        cases Hin <;> simp_all\n      . apply List.Subset.trans\n        apply ih2 <;> assumption\n        intros x Hin\n        simp_all"
+      },
+      "operator": "assumption",
+      "query_hash": "8560a2530bd49d6b3a833fc203836d651d0bb15bf3191dfb85d932f9f4b6637e",
+      "query_observation": {
+        "kind": "invalid",
+        "axioms": [
+          "propext",
+          "sorryAx",
+          "Quot.sound"
+        ],
+        "body_hash": "8560a2530bd49d6b3a833fc203836d651d0bb15bf3191dfb85d932f9f4b6637e",
+        "tokens": 224,
+        "output_path": "/Users/sungwoo/lean_project/LeanAgent/docs/research/verifier-guided-agent/experiments/local-minimizer-2026-10-21/runs/01/v4.26.0/a007.stdout.txt"
+      },
+      "outcome": "invalid"
+    },
+    {
+      "id": 8,
+      "round": 0,
+      "parent_hash": "97e99733927319b98e163404050697e99c7cb81c4d1c87d15c6a15e3d0e0307c",
+      "site": {
+        "kind": "Lean.Parser.Tactic.tacticSeq1Indented",
+        "start": 857,
+        "end": 1450,
+        "depth": 10,
+        "text": "split\n    . split\n      . simp [Imperative.HasVarsPure.getVars, Lambda.LExpr.LExpr.getVars] at *\n        intros x Hin\n        simp_all\n      . simp [Imperative.HasVarsPure.getVars, Lambda.LExpr.LExpr.getVars] at *\n        intros x Hin\n        simp_all\n    . simp [Imperative.HasVarsPure.getVars, Lambda.LExpr.LExpr.getVars] at *\n      apply List.Subset.app\n      . apply List.Subset.trans\n        apply ih1 <;> assumption\n        intros x Hin\n        simp_all\n        cases Hin <;> simp_all\n      . apply List.Subset.trans\n        apply ih2 <;> assumption\n        intros x Hin\n        simp_all"
+      },
+      "operator": "rfl",
+      "query_hash": "8add5cf8d115dc1d9a193f9a415b9403837f0c9b87cddeca92fe396769bfba29",
+      "query_observation": {
+        "kind": "invalid",
+        "axioms": [
+          "propext",
+          "sorryAx",
+          "Quot.sound"
+        ],
+        "body_hash": "8add5cf8d115dc1d9a193f9a415b9403837f0c9b87cddeca92fe396769bfba29",
+        "tokens": 224,
+        "output_path": "/Users/sungwoo/lean_project/LeanAgent/docs/research/verifier-guided-agent/experiments/local-minimizer-2026-10-21/runs/01/v4.26.0/a008.stdout.txt"
+      },
+      "outcome": "invalid"
+    }
+  ],
+  "pool": []
+}

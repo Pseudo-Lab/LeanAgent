@@ -1,0 +1,57 @@
+{
+  "problem_id": "R04:toy:ValidationMini.r04_inter_union",
+  "status": "valid",
+  "baseline_verified": true,
+  "environment": {
+    "lean_version": "Lean (version 4.35.0-rc4, arm64-apple-darwin24.6.0, commit c29b6dda4f7c20e3eeaa717c4e565663c5cfa364, Release)",
+    "lean_toolchain": "leanprover/lean4:v4.35.0-rc4",
+    "repo_commit": "454cc4cd2f28c71eaa3f37df40ef5616a96b947e",
+    "lake_manifest_sha256": "e9e2f6717972d3fc7266e2e8e02236c289f24a6b8ca824e0799d7ef01ab79a7a"
+  },
+  "environment_hash": "eaa66a54671323fdb00c2ab25c3e52d1a8dd93a4c37fef763b259574ff3920a3",
+  "statement": "theorem r04_inter_union {α : Type*} (s t u : Set α) (x : α) (hx : x ∈ s ∩ (t ∪ u)) :\n    x ∈ (s ∩ t) ∪ (s ∩ u)",
+  "context": "-- [harness] imports/open/namespace lines of the prefix:\nimport Mathlib.Data.Set.Basic\nimport Mathlib.Util.CountHeartbeats\nnamespace ValidationMini\n-- [harness] TRUNCATED: full prefix is 6 lines (sources/toy/R04_inter_union.lean); only the last 25 lines before the declaration follow\nimport Mathlib.Data.Set.Basic\nimport Mathlib.Util.CountHeartbeats\n\nnamespace ValidationMini\n\n",
+  "original_proof": "by\n  obtain ⟨hs, htu⟩ := hx\n  rcases htu with ht | hu\n  · exact Or.inl ⟨hs, ht⟩\n  · exact Or.inr ⟨hs, hu⟩",
+  "candidate_proof": "by\n  aesop",
+  "candidate_hash": "929b04ed07796e023cee7eead60e789dde850261f490454715b7e99bf7d58e3b",
+  "diagnostics": [],
+  "localization": {
+    "scope": "body",
+    "trusted_pre_state": false
+  },
+  "local": {
+    "state": "exhausted",
+    "evidence": [
+      {
+        "body_line": 1,
+        "query_line": "  aesop?",
+        "suggestion": "simp_all only [Set.mem_inter_iff, Set.mem_union, true_and]",
+        "substituted": "valid"
+      }
+    ]
+  },
+  "llm_history": [],
+  "limits": {
+    "repair_requests": 2,
+    "optimization_requests": 1
+  },
+  "budget": {
+    "cap_usd": null,
+    "spent_usd": 0.0,
+    "reserved_usd": 0.0,
+    "next_call_upper_bound_usd": null,
+    "source": "no price table / model selected; spent=0 is observed (no API call made)"
+  },
+  "constraints": [
+    "Body only: statement, binders, imports and surrounding declarations are fixed",
+    "No sorry/admit/new axioms/new declarations/self-reference",
+    "Same body must pass every listed version"
+  ],
+  "source_contract": {
+    "original_source": "import Mathlib.Data.Set.Basic\nimport Mathlib.Util.CountHeartbeats\n\nnamespace ValidationMini\n\ntheorem r04_inter_union {α : Type*} (s t u : Set α) (x : α) (hx : x ∈ s ∩ (t ∪ u)) :\n    x ∈ (s ∩ t) ∪ (s ∩ u) := by\n  obtain ⟨hs, htu⟩ := hx\n  rcases htu with ht | hu\n  · exact Or.inl ⟨hs, ht⟩\n  · exact Or.inr ⟨hs, hu⟩\n\nend ValidationMini\n",
+    "candidate_source": "import Mathlib.Data.Set.Basic\nimport Mathlib.Util.CountHeartbeats\n\nnamespace ValidationMini\n\ntheorem r04_inter_union {α : Type*} (s t u : Set α) (x : α) (hx : x ∈ s ∩ (t ∪ u)) :\n    x ∈ (s ∩ t) ∪ (s ∩ u) := by\n  aesop\n\nend ValidationMini\n",
+    "body_start": 207,
+    "body_end": 312,
+    "offsets": "python character offsets computed by harness string search (not a Lean parser)"
+  }
+}
