@@ -1,0 +1,19 @@
+--- initial.proof.lean
++++ candidate_01.proof.lean
+@@ -6,7 +6,6 @@
+     simp at m
+     simp at name
+     simp at ty2
+-
+     simp_all
+   case op =>
+     intros x Hin
+@@ -26,7 +25,7 @@
+     simp at m
+     simp_all
+   case abs ih =>
+-    exact experiment_missing_lemma
++    simpa [Imperative.HasVarsPure.getVars, Lambda.LExpr.LExpr.getVars] using ih
+   case ite cih tih eih =>
+     simp [Imperative.HasVarsPure.getVars, Lambda.LExpr.LExpr.getVars] at *
+     apply List.Subset.app

@@ -1,0 +1,12 @@
+--- candidate_02.proof.lean
++++ candidate_03.proof.lean
+@@ -54,7 +54,8 @@
+     change (basis_x j₀ : L) + (y_lifted : L) - (y_lifted : L) = 1
+     rw [add_sub_cancel_right]
+     simp only [basis_x, j₀, get_sDomain_basis]
+-    rw [normalizedWᵢ_eval_βᵢ_eq_1 𝔽q β]
++    simpa only [Nat.add_zero] using
++      (normalizedWᵢ_eval_βᵢ_eq_1 𝔽q β (i := ⟨i, by omega⟩))
+   set P_i_plus_1 :=
+     intermediateEvaluationPoly 𝔽q β h_ℓ_add_R_rate (i := ⟨i+1, by omega⟩) new_coeffs
+   set P₀ := evenRefinement 𝔽q β h_ℓ_add_R_rate i coeffs

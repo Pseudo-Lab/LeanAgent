@@ -1,0 +1,20 @@
+--- candidate_01.proof.lean
++++ candidate_02.proof.lean
+@@ -43,6 +43,7 @@
+         simp only [List.append_assoc, decide_not, Bool.decide_and, ofCrAnListF_append,
+           map_smul, map_mul, l1, l2, mul_assoc]
+         rw [crAnTimeOrderSign_swap_eq_time hφψ hψφ]
++        simpa only [List.append_assoc]
+       trans crAnTimeOrderSign (φs' ++ φ :: ψ :: φs) •
+         (ι (ofCrAnListF l1) * ι [ofCrAnOpF φ, ofCrAnOpF ψ]ₛF * ι (ofCrAnListF l2))
+       · calc
+@@ -75,8 +76,7 @@
+         repeat rw [mul_assoc]
+         rw [← map_mul, ← ofCrAnListF_append]
+         have h := insertionSort_of_takeWhile_filter 𝓕.crAnTimeOrderRel φ φs' φs
+-        simp [l1, l2, decide_not, Bool.decide_and, List.append_assoc,
+-          List.cons_append] at h ⊢
++        simp [l1, l2, decide_not, Bool.decide_and, List.append_assoc] at h ⊢
+         rw [← h, ← crAnTimeOrderList]
+         by_cases hq : (𝓕 |>ₛ φ) ≠ (𝓕 |>ₛ ψ)
+         · simp [ι_superCommuteF_of_diff_statistic hq]

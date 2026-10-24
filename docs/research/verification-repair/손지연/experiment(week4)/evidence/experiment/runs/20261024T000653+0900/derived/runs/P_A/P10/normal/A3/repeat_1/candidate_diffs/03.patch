@@ -1,0 +1,49 @@
+--- candidate_02.proof.lean
++++ candidate_03.proof.lean
+@@ -13,7 +13,7 @@
+     have hS : S.Nonempty := Set.image_nonempty.mpr Set.univ_nonempty
+     obtain ⟨g, _, hg⟩ := (Set.mem_image _ _ _).mp (Nat.sInf_mem hS)
+     exact ⟨g, g.property, hg.symm⟩
+-  have h_dist_le : (hammingDist f g' : ℕ∞) ≤ d_fw * 2 ^ steps := by
++  have h_dist_le : (hammingDist f g' : ℕ∞) ≤ ((d_fw * 2 ^ steps : ℕ) : ℕ∞) := by
+     set ΔH := Finset.filter (fun x => f x ≠ g' x) Finset.univ
+     set Y_bad := fiberwiseDisagreementSet 𝔽q β i steps h_i_add_steps f g'
+     letI : Fintype Y_bad := Fintype.ofFinite Y_bad
+@@ -21,7 +21,7 @@
+       iteratedQuotientMap 𝔽q β h_ℓ_add_R_rate i steps h_i_add_steps x
+     let idx (x : sDomain 𝔽q β h_ℓ_add_R_rate ⟨i, by omega⟩) :=
+       pointToIterateQuotientIndex (i := ⟨i, by omega⟩) (steps := steps)
+-        (h_i_add_steps := h_i_add_steps) x
++        (h_i_add_steps := h_i_add_steps) (x := x)
+     let B := ↥ΔH
+     let encode (x : B) : Y_bad × Fin (2 ^ steps) :=
+       (⟨q x, by
+@@ -66,12 +66,12 @@
+     rw [show hammingDist f g' = ΔH.card by simp only [hammingDist, ΔH],
+       ← h_g'_min_card]
+     exact hnat
+-  have h_bridge : d_H ≤ d_fw * 2 ^ steps := by
+-    apply le_trans (b := hammingDist f g')
+-    · simp only [distFromCode, SetLike.mem_coe, hammingDist, ne_eq, d_H]
++  have h_bridge : d_H ≤ ((d_fw * 2 ^ steps : ℕ) : ℕ∞) := by
++    have h_to_g : d_H ≤ (hammingDist f g' : ℕ∞) := by
++      simp only [distFromCode, SetLike.mem_coe, hammingDist, ne_eq, d_H]
+       apply sInf_le
+       exact ⟨g', h_g'_mem, le_rfl⟩
+-    · exact h_dist_le
++    exact h_to_g.trans h_dist_le
+   have h_fw_nat : 2 * d_fw < d_i_plus_steps :=
+     WithTop.coe_lt_coe.1 h_fw_dist_lt
+   have h_fw_bound : 2 * d_fw ≤ d_i_plus_steps - 1 := by omega
+@@ -90,9 +90,9 @@
+     omega
+   change 2 * d_H < (d_i : ℕ∞)
+   calc
+-    2 * d_H ≤ 2 * (d_fw * 2 ^ steps) := mul_le_mul_left' h_bridge 2
++    2 * d_H ≤ 2 * ((d_fw * 2 ^ steps : ℕ) : ℕ∞) := mul_le_mul_left' h_bridge 2
+     _ = (((2 * d_fw) * 2 ^ steps : ℕ) : ℕ∞) := by
+-      simp only [ENat.coe_mul]
++      simp only [ENat.coe_mul, cast_ofNat, cast_pow]
+       rw [mul_assoc]
+     _ ≤ (((d_i_plus_steps - 1) * 2 ^ steps : ℕ) : ℕ∞) :=
+       ENat.coe_le_coe.mpr (Nat.mul_le_mul_right _ h_fw_bound)

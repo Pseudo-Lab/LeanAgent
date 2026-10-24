@@ -1,0 +1,23 @@
+--- candidate_02.proof.lean
++++ candidate_03.proof.lean
+@@ -9,12 +9,9 @@
+     simp [Hndef k hk'] at hd
+   refine ⟨_, rfl, updatedStatesInit HlenI
+     (UpdateStatesNotDefMonotone' Hndef Hup) (InitStatesNodup Hinit), ?_⟩
+-  have Hcomm :
+-      updatedStates (updatedStates σ ks' vs') ks vs =
+-      updatedStates (updatedStates σ ks vs) ks' vs' := by
+-    unfold updatedStates
+-    apply updatedStatesComm
+-    simpa [List.unzip_zip, HlenI, HlenU] using Hdisj
+-  rw [InitStatesUpdated Hinit, UpdateStatesUpdated Hup, ← Hcomm]
+-  exact updatedStatesUpdate HlenU
+-    (updatedStatesDefMonotone (UpdateStatesDefined' Hup))
+\ No newline at end of file
++  rw [InitStatesUpdated Hinit, UpdateStatesUpdated Hup]
++  unfold updatedStates
++  rw [← updatedStatesComm]
++  · exact updatedStatesUpdate HlenU
++      (updatedStatesDefMonotone (UpdateStatesDefined' Hup))
++  · simpa [List.unzip_zip, HlenI, HlenU] using Hdisj
+\ No newline at end of file

@@ -1,0 +1,24 @@
+--- candidate_01.proof.lean
++++ candidate_02.proof.lean
+@@ -8,9 +8,9 @@
+   conv_lhs =>
+     enter [2, s]
+     rw [time_deriv_electricField_of_isExtrema hA J hJ h]
+-  fun_trans
++  simp (disch := fun_prop)
+   simp_rw [time_deriv_magneticFieldMatrix A (hA.of_le (right_eq_inf.mp rfl))]
+-  fun_trans
++  simp (disch := fun_prop)
+   simp only [Finset.sum_sub_distrib]
+   conv_lhs =>
+     enter [1, 2, j, 2]
+@@ -18,7 +18,7 @@
+       (electricField_space_contDiff _ (hA.of_le (right_eq_inf.mp rfl)) t j)]
+   rw [← Space.deriv_fun_sum]
+   rw [hGauss]
+-  fun_trans
++  simp (disch := fun_prop)
+   simp only [FreeSpace.c_sq]
+   field_simp
+   ring
+\ No newline at end of file

@@ -1,0 +1,11 @@
+--- candidate_01.proof.lean
++++ candidate_02.proof.lean
+@@ -1,7 +1,7 @@
+ by
+   have hA2 : ContDiff ℝ 2 A := hA.of_le (right_eq_inf.mp rfl)
+   have hEs : ∀ j, ContDiff ℝ 2 (fun y => A.electricField 𝓕.c t y j) :=
+-    fun j => electricField_apply_contDiff_space (i := j) hA2 t
++    fun j => electricField_apply_contDiff_space (i := j) (hA.of_le (by simp)) t
+   have hEd : ∀ j k, Differentiable ℝ (∂[k] (fun y => A.electricField 𝓕.c t y j)) :=
+     fun j k => Space.deriv_differentiable (hEs j) k
+   have hBt : ∀ j, Differentiable ℝ

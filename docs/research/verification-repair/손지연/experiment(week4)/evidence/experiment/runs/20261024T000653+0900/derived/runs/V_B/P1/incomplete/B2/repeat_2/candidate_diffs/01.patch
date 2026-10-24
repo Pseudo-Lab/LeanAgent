@@ -1,0 +1,37 @@
+--- initial.proof.lean
++++ candidate_01.proof.lean
+@@ -1,2 +1,31 @@
+ by
+-  skip
+\ No newline at end of file
++  intro x Hin
++  induction post <;>
++    simp [OldExpressions.substOld,
++      Imperative.HasVarsPure.getVars,
++      Lambda.LExpr.LExpr.getVars] at * <;> try simp_all
++  case app fn e fn_ih e_ih =>
++    split at Hin
++    · split at Hin <;>
++        simp_all [Imperative.HasVarsPure.getVars,
++          Lambda.LExpr.LExpr.getVars]
++    · simp [Imperative.HasVarsPure.getVars,
++        Lambda.LExpr.LExpr.getVars] at Hin
++      cases Hin <;> simp_all
++      cases fn_ih <;> simp_all
++      cases e_ih <;> simp_all
++  case quant k ty tr_ih e_ih =>
++    cases Hin <;> simp_all
++    cases tr_ih <;> simp_all
++    cases e_ih <;> simp_all
++  case ite c t e c_ih t_ih e_ih =>
++    cases Hin with
++    | inl Hin => cases c_ih <;> simp_all
++    | inr Hin =>
++      cases Hin with
++      | inl Hin => cases t_ih <;> simp_all
++      | inr Hin => cases e_ih <;> simp_all
++  case eq e1 e2 e1_ih e2_ih =>
++    cases Hin <;> simp_all
++    cases e1_ih <;> simp_all
++    cases e2_ih <;> simp_all
+\ No newline at end of file

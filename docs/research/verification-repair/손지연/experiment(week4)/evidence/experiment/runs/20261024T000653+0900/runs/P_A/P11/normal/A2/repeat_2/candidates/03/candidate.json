@@ -1,0 +1,1193 @@
+{
+  "call": 3,
+  "origin": "generated",
+  "body": "by\n  simp only\n  intro y\n  set fiberMap := qMap_total_fiber 𝔽q β (i := ⟨i, by omega⟩) (steps := 1)\n    (h_i_add_steps := by simp only; omega) (y := y)\n  set x₀ := fiberMap 0\n  set x₁ := fiberMap 1\n  set P_i := intermediateEvaluationPoly 𝔽q β h_ℓ_add_R_rate (i := ⟨i, by omega⟩) coeffs\n  set new_coeffs := fun j : Fin (2 ^ (ℓ - (i + 1))) =>\n    (1 - r_chal) * coeffs ⟨j.val * 2, by\n      rw [← Nat.add_zero (j.val * 2)]\n      apply mul_two_add_bit_lt_two_pow (c := ℓ - i) (a := j)\n        (b := ℓ - (↑i + 1)) (i := 0) <;> omega\n    ⟩ + r_chal * coeffs ⟨j.val * 2 + 1, by\n      apply mul_two_add_bit_lt_two_pow (c := ℓ - i) (a := j)\n        (b := ℓ - (↑i + 1)) (i := 1) <;> omega\n    ⟩\n  have h_eval_qMap_x₀ :\n      (AdditiveNTT.qMap 𝔽q β ⟨i, by omega⟩).eval x₀.val = y := by\n    have h := iteratedQuotientMap_k_eq_1_is_qMap 𝔽q β h_ℓ_add_R_rate i (by omega) x₀\n    simp only [Subtype.eq_iff] at h\n    rw [h.symm]\n    have h_res := is_fiber_iff_generates_quotient_point 𝔽q β i (steps := 1) (by omega)\n      (x := x₀) (y := y).mpr (by\n        rw [pointToIterateQuotientIndex_qMap_total_fiber_eq_self])\n    rw [h_res]\n  have h_eval_qMap_x₁ :\n      (AdditiveNTT.qMap 𝔽q β ⟨i, by omega⟩).eval x₁.val = y := by\n    have h := iteratedQuotientMap_k_eq_1_is_qMap 𝔽q β h_ℓ_add_R_rate i (by omega) x₁\n    simp only [Subtype.eq_iff] at h\n    rw [h.symm]\n    have h_res := is_fiber_iff_generates_quotient_point 𝔽q β i (steps := 1) (by omega)\n      (x := x₁) (y := y).mpr (by\n        rw [pointToIterateQuotientIndex_qMap_total_fiber_eq_self])\n    rw [h_res]\n  have hx₀ := qMap_total_fiber_basis_sum_repr 𝔽q β i (steps := 1)\n    (h_i_add_steps := by omega) y 0\n  have hx₁ := qMap_total_fiber_basis_sum_repr 𝔽q β i (steps := 1)\n    (h_i_add_steps := by omega) y 1\n  simp only [Fin.isValue] at hx₀ hx₁\n  have h_fiber_diff : x₁.val - x₀.val = 1 := by\n    simp only [Fin.isValue, x₁, x₀, fiberMap]\n    rw [hx₁, hx₀]\n    simp only [Fin.isValue, AddSubmonoidClass.coe_finset_sum, SetLike.val_smul]\n    have h_index : ℓ + 𝓡 - i = ℓ + 𝓡 - (i.val + 1) + 1 := by omega\n    rw! (castMode := .all) [h_index]\n    rw [Fin.sum_univ_succ, Fin.sum_univ_succ]\n    simp only [fiber_coeff, eqRec_eq_cast, lt_one_iff, reducePow, Fin.isValue,\n      Fin.coe_ofNat_eq_mod, mod_succ, dite_smul, ite_smul, zero_smul, one_smul, zero_mod]\n    have h_cast_0 :\n        (cast (Eq.symm h_index ▸ rfl :\n          Fin (ℓ + 𝓡 - (↑i + 1) + 1) = Fin (ℓ + 𝓡 - ↑i)) 0).val = 0 := by\n      rw [← Fin.cast_eq_cast (h := by omega)]\n      rw [Fin.cast_val_eq_val (h_eq := by omega)]\n      simp only [Fin.coe_ofNat_eq_mod, mod_succ_eq_iff_lt, succ_eq_add_one,\n        lt_add_iff_pos_left]\n      omega\n    have h_cast_1 :\n        (cast (Eq.symm h_index ▸ rfl :\n          Fin (ℓ + 𝓡 - (↑i + 1) + 1) = Fin (ℓ + 𝓡 - ↑i)) 1).val = 1 := by\n      rw [← Fin.cast_eq_cast (h := by omega)]\n      rw [Fin.cast_val_eq_val (h_eq := by omega)]\n      simp only [Fin.coe_ofNat_eq_mod, mod_succ_eq_iff_lt, succ_eq_add_one,\n        lt_add_iff_pos_left, tsub_pos_iff_lt]\n      omega\n    simp only [h_cast_0, ↓reduceDIte]\n    have h_getBit_0_of_0 : Nat.getBit (k := 0) (n := 0) = 0 := by\n      simp only [getBit, shiftRight_zero, and_one_is_mod, zero_mod]\n    have h_getBit_0_of_1 : Nat.getBit (k := 0) (n := 1) = 1 := by\n      simp only [getBit, shiftRight_zero, Nat.and_self]\n    simp only [h_getBit_0_of_1, one_ne_zero, ↓reduceIte, h_getBit_0_of_0, zero_add]\n    rw! (castMode := .all) [← h_index]\n    rw [cast_eq]\n    simp only [get_sDomain_basis, Fin.coe_ofNat_eq_mod, zero_mod, add_zero, cast_eq]\n    rw [normalizedWᵢ_eval_βᵢ_eq_1 𝔽q β]\n    ring_nf\n    conv_rhs => rw [← add_zero (a := 1)]\n    rw [add_sub_assoc]\n    congr 1\n    rw [sub_eq_zero]\n    apply Finset.sum_congr (h := by rfl)\n    simp only [mem_univ, congr_eqRec, Fin.val_succ, Nat.add_eq_zero, one_ne_zero,\n      and_false, ↓reduceDIte, add_tsub_cancel_right, Fin.eta, imp_self, implies_true]\n  set P_i_plus_1 :=\n    intermediateEvaluationPoly 𝔽q β h_ℓ_add_R_rate (i := ⟨i + 1, by omega⟩) new_coeffs\n  set P₀ := evenRefinement 𝔽q β h_ℓ_add_R_rate i coeffs\n  set P₁ := oddRefinement 𝔽q β h_ℓ_add_R_rate i coeffs\n  have h_P_i_eval :=\n    evaluation_poly_split_identity 𝔽q β h_ℓ_add_R_rate ⟨i, by omega⟩ coeffs\n  have h_equation_39_x₀ :\n      P_i.eval x₀.val = P₀.eval y.val + x₀.val * P₁.eval y.val := by\n    simp only [h_P_i_eval, Fin.eta, Polynomial.eval_add, eval_comp,\n      h_eval_qMap_x₀, Polynomial.eval_mul, Polynomial.eval_X, P_i, P₀, P₁]\n  have h_equation_39_x₁ :\n      P_i.eval x₁.val = P₀.eval y.val + x₁.val * P₁.eval y.val := by\n    simp only [h_P_i_eval, Fin.eta, Polynomial.eval_add, eval_comp,\n      h_eval_qMap_x₁, Polynomial.eval_mul, Polynomial.eval_X, P_i, P₀, P₁]\n  set f_i := fun x : (sDomain 𝔽q β h_ℓ_add_R_rate) ⟨i, by omega⟩ =>\n    P_i.eval (x.val : L)\n  set f_i_plus_1 := fold (i := ⟨i, by omega⟩) (h_i := by omega)\n    (f := f_i) (r_chal := r_chal)\n  have h_fold_def : f_i_plus_1 y =\n      f_i x₀ * ((1 - r_chal) * x₁.val - r_chal) +\n      f_i x₁ * (r_chal - (1 - r_chal) * x₀.val) := rfl\n  calc\n    f_i_plus_1 y =\n        f_i x₀ * ((1 - r_chal) * x₁.val - r_chal) +\n          f_i x₁ * (r_chal - (1 - r_chal) * x₀.val) := h_fold_def\n    _ = P_i.eval x₀.val * ((1 - r_chal) * x₁.val - r_chal) +\n          P_i.eval x₁.val * (r_chal - (1 - r_chal) * x₀.val) := by\n        simp only [f_i]\n    _ = (P₀.eval y.val + x₀.val * P₁.eval y.val) *\n          ((1 - r_chal) * x₁.val - r_chal) +\n        (P₀.eval y.val + x₁.val * P₁.eval y.val) *\n          (r_chal - (1 - r_chal) * x₀.val) := by\n        rw [h_equation_39_x₀, h_equation_39_x₁]\n    _ = P₀.eval y.val *\n          ((1 - r_chal) * x₁.val - r_chal + r_chal -\n            (1 - r_chal) * x₀.val) +\n        P₁.eval y.val *\n          (x₀.val * ((1 - r_chal) * x₁.val - r_chal) +\n            x₁.val * (r_chal - (1 - r_chal) * x₀.val)) := by ring\n    _ = P₀.eval y.val * ((1 - r_chal) * (x₁.val - x₀.val)) +\n        P₁.eval y.val * ((x₁.val - x₀.val) * r_chal) := by ring\n    _ = P₀.eval y.val * (1 - r_chal) + P₁.eval y.val * r_chal := by\n        rw [h_fiber_diff]\n        ring\n    _ = P_i_plus_1.eval y.val := by\n      simp only [P_i_plus_1, P₀, P₁, new_coeffs, evenRefinement, oddRefinement,\n        intermediateEvaluationPoly]\n      conv_lhs =>\n        enter [1]\n        rw [mul_comm, ← Polynomial.eval_C_mul]\n      conv_lhs =>\n        enter [2]\n        rw [mul_comm, ← Polynomial.eval_C_mul]\n      rw [← Polynomial.eval_add]\n      congr\n      simp_rw [mul_sum, ← Finset.sum_add_distrib]\n      apply Finset.sum_congr rfl\n      intro j hj\n      have hj' : j.val < 2 ^ (ℓ - (↑i + 1)) := by\n        simpa only [Nat.sub_sub] using j.isLt\n      have h_exp : ℓ - (↑i + 1) < ℓ - ↑i := by omega\n      conv_lhs =>\n        enter [1]\n        rw [mul_comm (a := Polynomial.C (coeffs ⟨j.val * 2, by\n          rw [← Nat.add_zero (j.val * 2)]\n          apply mul_two_add_bit_lt_two_pow (c := ℓ - i) (a := j)\n            (b := ℓ - (↑i + 1)) (i := 0)\n          · exact hj'\n          · exact h_exp\n        ⟩)), ← mul_assoc, mul_comm (a := Polynomial.C (1 - r_chal))]\n        rw [mul_assoc]\n      conv_lhs =>\n        enter [2]\n        rw [mul_comm (a := Polynomial.C (coeffs ⟨j.val * 2 + 1, by\n          apply mul_two_add_bit_lt_two_pow (c := ℓ - i) (a := j)\n            (b := ℓ - (↑i + 1)) (i := 1)\n          · exact hj'\n          · exact h_exp\n        ⟩)), ← mul_assoc, mul_comm (a := Polynomial.C r_chal)]\n        rw [mul_assoc]\n      conv_rhs => rw [mul_comm]\n      rw [← mul_add]\n      congr\n      simp only [← Polynomial.C_mul, ← Polynomial.C_add]",
+  "proof_sha256": "8fd47e93b06561d3b8414a05635e0a9d34a283b0dedcd48b2e0ecf6f0770d03f",
+  "full_source_sha256": "98b73e1bf6c90bf870214de6ff3fee454c0240c177e226f126f5360271708f0b",
+  "eligible": true,
+  "verification": {
+    "task_id": "P11",
+    "attempt": "candidate_03",
+    "candidate_hash": "98b73e1bf6c90bf870214de6ff3fee454c0240c177e226f126f5360271708f0b",
+    "environment_id": "0c6971d601fccc37e69d84ddfa1ac63a41527ba5fa2d7e4f87c63547c308939a",
+    "check_kind": "candidate",
+    "status": "candidate_pass",
+    "process_exit_code": 0,
+    "diagnostics": [
+      {
+        "severity": "warning",
+        "position": {
+          "column": 84,
+          "line": 234
+        },
+        "end_position": {
+          "column": 96,
+          "line": 234
+        },
+        "message": "`not_lt_zero'` has been deprecated: Use `_root_.not_lt_zero` instead",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "`not_lt_zero'` has been deprecated: Use `_root_.not_lt_zero` instead",
+          "endPos": {
+            "column": 96,
+            "line": 234
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/P_A/P11/normal/A2/repeat_2/validation/lean/008_candidate_03/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "Lean.Linter.deprecatedAttr",
+          "pos": {
+            "column": 84,
+            "line": 234
+          },
+          "severity": "warning"
+        },
+        "source_line": "    simp only [qMap_total_fiber, ↓reduceDIte, Nat.add_zero, eq_mp_eq_cast, cast_eq, not_lt_zero',",
+        "start_offset": 10734,
+        "start_byte_offset": 11464,
+        "end_offset": 10746,
+        "end_byte_offset": 11476,
+        "source_text": "not_lt_zero'"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 48,
+          "line": 326
+        },
+        "end_position": {
+          "column": 60,
+          "line": 326
+        },
+        "message": "`not_lt_zero'` has been deprecated: Use `_root_.not_lt_zero` instead",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "`not_lt_zero'` has been deprecated: Use `_root_.not_lt_zero` instead",
+          "endPos": {
+            "column": 60,
+            "line": 326
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/P_A/P11/normal/A2/repeat_2/validation/lean/008_candidate_03/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "Lean.Linter.deprecatedAttr",
+          "pos": {
+            "column": 48,
+            "line": 326
+          },
+          "severity": "warning"
+        },
+        "source_line": "  simp only [fiber_coeff, add_lt_iff_neg_right, not_lt_zero', ↓reduceDIte, add_tsub_cancel_right,",
+        "start_offset": 15860,
+        "start_byte_offset": 16861,
+        "end_offset": 15872,
+        "end_byte_offset": 16873,
+        "source_text": "not_lt_zero'"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 4,
+          "line": 648
+        },
+        "end_position": {
+          "column": 14,
+          "line": 648
+        },
+        "message": "declaration uses `sorry`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "declaration uses `sorry`",
+          "endPos": {
+            "column": 14,
+            "line": 648
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/P_A/P11/normal/A2/repeat_2/validation/lean/008_candidate_03/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "hasSorry",
+          "pos": {
+            "column": 4,
+            "line": 648
+          },
+          "severity": "warning"
+        },
+        "source_line": "def foldMatrix (i : Fin r) (steps : Fin (ℓ + 1)) (h_i_add_steps : i.val + steps < ℓ + 𝓡)",
+        "start_offset": 33101,
+        "start_byte_offset": 35080,
+        "end_offset": 33111,
+        "end_byte_offset": 35090,
+        "source_text": "foldMatrix"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 6,
+          "line": 684
+        },
+        "end_position": {
+          "column": 32,
+          "line": 684
+        },
+        "message": "declaration uses `sorry`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "declaration uses `sorry`",
+          "endPos": {
+            "column": 32,
+            "line": 684
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/P_A/P11/normal/A2/repeat_2/validation/lean/008_candidate_03/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "hasSorry",
+          "pos": {
+            "column": 6,
+            "line": 684
+          },
+          "severity": "warning"
+        },
+        "source_line": "lemma iterated_fold_transitivity",
+        "start_offset": 34780,
+        "start_byte_offset": 36881,
+        "end_offset": 34806,
+        "end_byte_offset": 36907,
+        "source_text": "iterated_fold_transitivity"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 8,
+          "line": 798
+        },
+        "end_position": {
+          "column": 36,
+          "line": 798
+        },
+        "message": "declaration uses `sorry`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "declaration uses `sorry`",
+          "endPos": {
+            "column": 36,
+            "line": 798
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/P_A/P11/normal/A2/repeat_2/validation/lean/008_candidate_03/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "hasSorry",
+          "pos": {
+            "column": 8,
+            "line": 798
+          },
+          "severity": "warning"
+        },
+        "source_line": "theorem iterated_fold_eq_matrix_form (i : Fin ℓ) (steps : ℕ) (h_i_add_steps : i + steps ≤ ℓ)",
+        "start_offset": 40551,
+        "start_byte_offset": 42971,
+        "end_offset": 40579,
+        "end_byte_offset": 42999,
+        "source_text": "iterated_fold_eq_matrix_form"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 15,
+          "line": 858
+        },
+        "end_position": {
+          "column": 29,
+          "line": 858
+        },
+        "message": "`Subtype.eq_iff` has been deprecated: Use `Subtype.ext_iff` instead\n\nNote: The updated constant has a different type:\n  ∀ {α : Sort u} {p : α → Prop} {a1 a2 : { x // p x }}, a1 = a2 ↔ ↑a1 = ↑a2\ninstead of\n  ∀ {α : Sort u_1} {p : α → Prop} {a1 a2 : { x // p x }}, a1 = a2 ↔ ↑a1 = ↑a2",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "`Subtype.eq_iff` has been deprecated: Use `Subtype.ext_iff` instead\n\nNote: The updated constant has a different type:\n  ∀ {α : Sort u} {p : α → Prop} {a1 a2 : { x // p x }}, a1 = a2 ↔ ↑a1 = ↑a2\ninstead of\n  ∀ {α : Sort u_1} {p : α → Prop} {a1 a2 : { x // p x }}, a1 = a2 ↔ ↑a1 = ↑a2",
+          "endPos": {
+            "column": 29,
+            "line": 858
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/P_A/P11/normal/A2/repeat_2/validation/lean/008_candidate_03/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "Lean.Linter.deprecatedAttr",
+          "pos": {
+            "column": 15,
+            "line": 858
+          },
+          "severity": "warning"
+        },
+        "source_line": "    simp only [Subtype.eq_iff] at h",
+        "start_offset": 43569,
+        "start_byte_offset": 46267,
+        "end_offset": 43583,
+        "end_byte_offset": 46281,
+        "source_text": "Subtype.eq_iff"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 15,
+          "line": 867
+        },
+        "end_position": {
+          "column": 29,
+          "line": 867
+        },
+        "message": "`Subtype.eq_iff` has been deprecated: Use `Subtype.ext_iff` instead\n\nNote: The updated constant has a different type:\n  ∀ {α : Sort u} {p : α → Prop} {a1 a2 : { x // p x }}, a1 = a2 ↔ ↑a1 = ↑a2\ninstead of\n  ∀ {α : Sort u_1} {p : α → Prop} {a1 a2 : { x // p x }}, a1 = a2 ↔ ↑a1 = ↑a2",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "`Subtype.eq_iff` has been deprecated: Use `Subtype.ext_iff` instead\n\nNote: The updated constant has a different type:\n  ∀ {α : Sort u} {p : α → Prop} {a1 a2 : { x // p x }}, a1 = a2 ↔ ↑a1 = ↑a2\ninstead of\n  ∀ {α : Sort u_1} {p : α → Prop} {a1 a2 : { x // p x }}, a1 = a2 ↔ ↑a1 = ↑a2",
+          "endPos": {
+            "column": 29,
+            "line": 867
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/P_A/P11/normal/A2/repeat_2/validation/lean/008_candidate_03/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "Lean.Linter.deprecatedAttr",
+          "pos": {
+            "column": 15,
+            "line": 867
+          },
+          "severity": "warning"
+        },
+        "source_line": "    simp only [Subtype.eq_iff] at h",
+        "start_offset": 43998,
+        "start_byte_offset": 46722,
+        "end_offset": 44012,
+        "end_byte_offset": 46736,
+        "source_text": "Subtype.eq_iff"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 28,
+          "line": 881
+        },
+        "end_position": {
+          "column": 60,
+          "line": 881
+        },
+        "message": "`AddSubmonoidClass.coe_finset_sum` has been deprecated: Use `AddSubmonoidClass.coe_finsetSum` instead",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "`AddSubmonoidClass.coe_finset_sum` has been deprecated: Use `AddSubmonoidClass.coe_finsetSum` instead",
+          "endPos": {
+            "column": 60,
+            "line": 881
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/P_A/P11/normal/A2/repeat_2/validation/lean/008_candidate_03/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "Lean.Linter.deprecatedAttr",
+          "pos": {
+            "column": 28,
+            "line": 881
+          },
+          "severity": "warning"
+        },
+        "source_line": "    simp only [Fin.isValue, AddSubmonoidClass.coe_finset_sum, SetLike.val_smul]",
+        "start_offset": 44618,
+        "start_byte_offset": 47376,
+        "end_offset": 44650,
+        "end_byte_offset": 47408,
+        "source_text": "AddSubmonoidClass.coe_finset_sum"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 52,
+          "line": 919
+        },
+        "end_position": {
+          "column": 67,
+          "line": 919
+        },
+        "message": "`Nat.add_eq_zero` has been deprecated: Use `Nat.add_eq_zero_iff` instead",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "`Nat.add_eq_zero` has been deprecated: Use `Nat.add_eq_zero_iff` instead",
+          "endPos": {
+            "column": 67,
+            "line": 919
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/P_A/P11/normal/A2/repeat_2/validation/lean/008_candidate_03/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "Lean.Linter.deprecatedAttr",
+          "pos": {
+            "column": 52,
+            "line": 919
+          },
+          "severity": "warning"
+        },
+        "source_line": "    simp only [mem_univ, congr_eqRec, Fin.val_succ, Nat.add_eq_zero, one_ne_zero,",
+        "start_offset": 46459,
+        "start_byte_offset": 49280,
+        "end_offset": 46474,
+        "end_byte_offset": 49295,
+        "source_text": "Nat.add_eq_zero"
+      },
+      {
+        "severity": "information",
+        "position": {
+          "column": 0,
+          "line": 1093
+        },
+        "end_position": {
+          "column": 6,
+          "line": 1093
+        },
+        "message": "hammingClose 𝔽q β : (i : Fin (ℓ + 1)) → OracleFunction 𝔽q β i → Prop",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "hammingClose 𝔽q β : (i : Fin (ℓ + 1)) → OracleFunction 𝔽q β i → Prop",
+          "endPos": {
+            "column": 6,
+            "line": 1093
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/P_A/P11/normal/A2/repeat_2/validation/lean/008_candidate_03/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 0,
+            "line": 1093
+          },
+          "severity": "information"
+        },
+        "source_line": "#check hammingClose 𝔽q β (h_ℓ_add_R_rate := h_ℓ_add_R_rate)",
+        "start_offset": 54744,
+        "start_byte_offset": 58105,
+        "end_offset": 54750,
+        "end_byte_offset": 58111,
+        "source_text": "#check"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 60,
+          "line": 1407
+        },
+        "end_position": {
+          "column": 69,
+          "line": 1407
+        },
+        "message": "This simp argument is unused:\n  ofNat_pos\n\nHint: Omit it from the simp argument list.\n  simp only [sum_const, Set.toFinset_card, smul_eq_mul, o̵f̵N̵a̵t̵_̵p̵o̵s̵,̵ ̵pow_pos, _root_.mul_le_mul_right,\n  ̲  ̲ ̲ ̲ ̲ ̲ ̲ ̲ge_iff_le]\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "This simp argument is unused:\n  ofNat_pos\n\nHint: Omit it from the simp argument list.\n  simp only [sum_const, Set.toFinset_card, smul_eq_mul, o̵f̵N̵a̵t̵_̵p̵o̵s̵,̵ ̵pow_pos, _root_.mul_le_mul_right,\n  ̲  ̲ ̲ ̲ ̲ ̲ ̲ ̲ge_iff_le]\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+          "endPos": {
+            "column": 69,
+            "line": 1407
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/P_A/P11/normal/A2/repeat_2/validation/lean/008_candidate_03/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unusedSimpArgs",
+          "pos": {
+            "column": 60,
+            "line": 1407
+          },
+          "severity": "warning"
+        },
+        "source_line": "      simp only [sum_const, Set.toFinset_card, smul_eq_mul, ofNat_pos, pow_pos,",
+        "start_offset": 72078,
+        "start_byte_offset": 76359,
+        "end_offset": 72087,
+        "end_byte_offset": 76368,
+        "source_text": "ofNat_pos"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 71,
+          "line": 1407
+        },
+        "end_position": {
+          "column": 78,
+          "line": 1407
+        },
+        "message": "This simp argument is unused:\n  pow_pos\n\nHint: Omit it from the simp argument list.\n  simp only [sum_const, Set.toFinset_card, smul_eq_mul, ofNat_pos, p̵o̵w̵_̵p̵o̵s̵,̵_root_.mul_le_mul_right,\n          ge_iff_le]\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "This simp argument is unused:\n  pow_pos\n\nHint: Omit it from the simp argument list.\n  simp only [sum_const, Set.toFinset_card, smul_eq_mul, ofNat_pos, p̵o̵w̵_̵p̵o̵s̵,̵_root_.mul_le_mul_right,\n          ge_iff_le]\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+          "endPos": {
+            "column": 78,
+            "line": 1407
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/P_A/P11/normal/A2/repeat_2/validation/lean/008_candidate_03/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unusedSimpArgs",
+          "pos": {
+            "column": 71,
+            "line": 1407
+          },
+          "severity": "warning"
+        },
+        "source_line": "      simp only [sum_const, Set.toFinset_card, smul_eq_mul, ofNat_pos, pow_pos,",
+        "start_offset": 72089,
+        "start_byte_offset": 76370,
+        "end_offset": 72096,
+        "end_byte_offset": 76377,
+        "source_text": "pow_pos"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 8,
+          "line": 1408
+        },
+        "end_position": {
+          "column": 31,
+          "line": 1408
+        },
+        "message": "This simp argument is unused:\n  _root_.mul_le_mul_right\n\nHint: Omit it from the simp argument list.\n  simp only [sum_const, Set.toFinset_card, smul_eq_mul, ofNat_pos, pow_pos, _̵r̵o̵o̵t̵_̵.̵m̵u̵l̵_̵l̵e̵_̵m̵u̵l̵_̵r̵i̵g̵h̵t̵,̵ ̵ge_iff_le]\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "This simp argument is unused:\n  _root_.mul_le_mul_right\n\nHint: Omit it from the simp argument list.\n  simp only [sum_const, Set.toFinset_card, smul_eq_mul, ofNat_pos, pow_pos, _̵r̵o̵o̵t̵_̵.̵m̵u̵l̵_̵l̵e̵_̵m̵u̵l̵_̵r̵i̵g̵h̵t̵,̵ ̵ge_iff_le]\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+          "endPos": {
+            "column": 31,
+            "line": 1408
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/P_A/P11/normal/A2/repeat_2/validation/lean/008_candidate_03/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unusedSimpArgs",
+          "pos": {
+            "column": 8,
+            "line": 1408
+          },
+          "severity": "warning"
+        },
+        "source_line": "        _root_.mul_le_mul_right, ge_iff_le]",
+        "start_offset": 72106,
+        "start_byte_offset": 76387,
+        "end_offset": 72129,
+        "end_byte_offset": 76410,
+        "source_text": "_root_.mul_le_mul_right"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 4,
+          "line": 1313
+        },
+        "end_position": {
+          "column": 29,
+          "line": 1313
+        },
+        "message": "'unfold d_fw at h_sInf_mem' tactic does nothing\n\nNote: This linter can be disabled with `set_option linter.unusedTactic false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "'unfold d_fw at h_sInf_mem' tactic does nothing\n\nNote: This linter can be disabled with `set_option linter.unusedTactic false`",
+          "endPos": {
+            "column": 29,
+            "line": 1313
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/P_A/P11/normal/A2/repeat_2/validation/lean/008_candidate_03/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unusedTactic",
+          "pos": {
+            "column": 4,
+            "line": 1313
+          },
+          "severity": "warning"
+        },
+        "source_line": "    unfold d_fw at h_sInf_mem",
+        "start_offset": 66448,
+        "start_byte_offset": 70492,
+        "end_offset": 66473,
+        "end_byte_offset": 70517,
+        "source_text": "unfold d_fw at h_sInf_mem"
+      },
+      {
+        "severity": "information",
+        "position": {
+          "column": 0,
+          "line": 1592
+        },
+        "end_position": {
+          "column": 6,
+          "line": 1592
+        },
+        "message": "Binius.BinaryBasefold.fold_advances_evaluation_poly {r : ℕ} [NeZero r] {L : Type} [Field L] [Fintype L] [DecidableEq L]\n  (𝔽q : Type) [Field 𝔽q] [Fintype 𝔽q] [DecidableEq 𝔽q] [h_Fq_char_prime : Fact (Nat.Prime (ringChar 𝔽q))]\n  [hF₂ : Fact (Fintype.card 𝔽q = 2)] [Algebra 𝔽q L] (β : Fin r → L) [hβ_lin_indep : Fact (LinearIndependent 𝔽q β)]\n  [h_β₀_eq_1 : Fact (β 0 = 1)] {ℓ 𝓡 : ℕ} [NeZero 𝓡] {h_ℓ_add_R_rate : ℓ + 𝓡 < r} (i : Fin ℓ)\n  (h_i_succ_lt : ↑i + 1 < ℓ + 𝓡) (coeffs : Fin (2 ^ (ℓ - ↑i)) → L) (r_chal : L) :\n  have P_i := AdditiveNTT.intermediateEvaluationPoly 𝔽q β h_ℓ_add_R_rate ⟨↑i, ⋯⟩ coeffs;\n  have f_i := fun x => Polynomial.eval (↑x) P_i;\n  have f_i_plus_1 := Binius.BinaryBasefold.fold 𝔽q β ⟨↑i, ⋯⟩ h_i_succ_lt f_i r_chal;\n  have new_coeffs := fun j => (1 - r_chal) * coeffs ⟨↑j * 2, ⋯⟩ + r_chal * coeffs ⟨↑j * 2 + 1, ⋯⟩;\n  have P_i_plus_1 := AdditiveNTT.intermediateEvaluationPoly 𝔽q β h_ℓ_add_R_rate ⟨↑i + 1, ⋯⟩ new_coeffs;\n  ∀ (y : ↥(AdditiveNTT.sDomain 𝔽q β h_ℓ_add_R_rate ⟨↑i + 1, ⋯⟩)), f_i_plus_1 y = Polynomial.eval (↑y) P_i_plus_1",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "Binius.BinaryBasefold.fold_advances_evaluation_poly {r : ℕ} [NeZero r] {L : Type} [Field L] [Fintype L] [DecidableEq L]\n  (𝔽q : Type) [Field 𝔽q] [Fintype 𝔽q] [DecidableEq 𝔽q] [h_Fq_char_prime : Fact (Nat.Prime (ringChar 𝔽q))]\n  [hF₂ : Fact (Fintype.card 𝔽q = 2)] [Algebra 𝔽q L] (β : Fin r → L) [hβ_lin_indep : Fact (LinearIndependent 𝔽q β)]\n  [h_β₀_eq_1 : Fact (β 0 = 1)] {ℓ 𝓡 : ℕ} [NeZero 𝓡] {h_ℓ_add_R_rate : ℓ + 𝓡 < r} (i : Fin ℓ)\n  (h_i_succ_lt : ↑i + 1 < ℓ + 𝓡) (coeffs : Fin (2 ^ (ℓ - ↑i)) → L) (r_chal : L) :\n  have P_i := AdditiveNTT.intermediateEvaluationPoly 𝔽q β h_ℓ_add_R_rate ⟨↑i, ⋯⟩ coeffs;\n  have f_i := fun x => Polynomial.eval (↑x) P_i;\n  have f_i_plus_1 := Binius.BinaryBasefold.fold 𝔽q β ⟨↑i, ⋯⟩ h_i_succ_lt f_i r_chal;\n  have new_coeffs := fun j => (1 - r_chal) * coeffs ⟨↑j * 2, ⋯⟩ + r_chal * coeffs ⟨↑j * 2 + 1, ⋯⟩;\n  have P_i_plus_1 := AdditiveNTT.intermediateEvaluationPoly 𝔽q β h_ℓ_add_R_rate ⟨↑i + 1, ⋯⟩ new_coeffs;\n  ∀ (y : ↥(AdditiveNTT.sDomain 𝔽q β h_ℓ_add_R_rate ⟨↑i + 1, ⋯⟩)), f_i_plus_1 y = Polynomial.eval (↑y) P_i_plus_1",
+          "endPos": {
+            "column": 6,
+            "line": 1592
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/P_A/P11/normal/A2/repeat_2/validation/lean/008_candidate_03/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 0,
+            "line": 1592
+          },
+          "severity": "information"
+        }
+      },
+      {
+        "severity": "information",
+        "position": {
+          "column": 0,
+          "line": 1593
+        },
+        "end_position": {
+          "column": 6,
+          "line": 1593
+        },
+        "message": "'Binius.BinaryBasefold.fold_advances_evaluation_poly' depends on axioms: [propext, Classical.choice, Quot.sound]",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "'Binius.BinaryBasefold.fold_advances_evaluation_poly' depends on axioms: [propext, Classical.choice, Quot.sound]",
+          "endPos": {
+            "column": 6,
+            "line": 1593
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/P_A/P11/normal/A2/repeat_2/validation/lean/008_candidate_03/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 0,
+            "line": 1593
+          },
+          "severity": "information"
+        }
+      }
+    ],
+    "goals": null,
+    "local_context": null,
+    "sorries": [],
+    "backend_proof_status": null,
+    "statement_check": "fixed_context_preserved",
+    "axioms": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext"
+    ],
+    "metrics": {
+      "proof_tokens": 1605,
+      "raw_heartbeats": 41059646,
+      "heartbeats": 41059
+    },
+    "elapsed_ms": 19746,
+    "raw_log_path": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/P_A/P11/normal/A2/repeat_2/validation/lean/008_candidate_03/stdout.log",
+    "detail": null,
+    "failure_kind": null
+  },
+  "measurement": {
+    "proof_tokens": 1605,
+    "raw_heartbeats": 41059646,
+    "token_reduction_pct": 16.05648535564853,
+    "heartbeat_reduction_pct": 11.869559814061626,
+    "search_score": 13.963022584855079
+  },
+  "facts": {
+    "diagnostics": [
+      {
+        "severity": "warning",
+        "position": {
+          "column": 84,
+          "line": 234
+        },
+        "end_position": {
+          "column": 96,
+          "line": 234
+        },
+        "message": "`not_lt_zero'` has been deprecated: Use `_root_.not_lt_zero` instead",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "`not_lt_zero'` has been deprecated: Use `_root_.not_lt_zero` instead",
+          "endPos": {
+            "column": 96,
+            "line": 234
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "Lean.Linter.deprecatedAttr",
+          "pos": {
+            "column": 84,
+            "line": 234
+          },
+          "severity": "warning"
+        },
+        "source_line": "    simp only [qMap_total_fiber, ↓reduceDIte, Nat.add_zero, eq_mp_eq_cast, cast_eq, not_lt_zero',",
+        "start_offset": 10734,
+        "start_byte_offset": 11464,
+        "end_offset": 10746,
+        "end_byte_offset": 11476,
+        "source_text": "not_lt_zero'"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 48,
+          "line": 326
+        },
+        "end_position": {
+          "column": 60,
+          "line": 326
+        },
+        "message": "`not_lt_zero'` has been deprecated: Use `_root_.not_lt_zero` instead",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "`not_lt_zero'` has been deprecated: Use `_root_.not_lt_zero` instead",
+          "endPos": {
+            "column": 60,
+            "line": 326
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "Lean.Linter.deprecatedAttr",
+          "pos": {
+            "column": 48,
+            "line": 326
+          },
+          "severity": "warning"
+        },
+        "source_line": "  simp only [fiber_coeff, add_lt_iff_neg_right, not_lt_zero', ↓reduceDIte, add_tsub_cancel_right,",
+        "start_offset": 15860,
+        "start_byte_offset": 16861,
+        "end_offset": 15872,
+        "end_byte_offset": 16873,
+        "source_text": "not_lt_zero'"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 4,
+          "line": 648
+        },
+        "end_position": {
+          "column": 14,
+          "line": 648
+        },
+        "message": "declaration uses `sorry`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "declaration uses `sorry`",
+          "endPos": {
+            "column": 14,
+            "line": 648
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "hasSorry",
+          "pos": {
+            "column": 4,
+            "line": 648
+          },
+          "severity": "warning"
+        },
+        "source_line": "def foldMatrix (i : Fin r) (steps : Fin (ℓ + 1)) (h_i_add_steps : i.val + steps < ℓ + 𝓡)",
+        "start_offset": 33101,
+        "start_byte_offset": 35080,
+        "end_offset": 33111,
+        "end_byte_offset": 35090,
+        "source_text": "foldMatrix"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 6,
+          "line": 684
+        },
+        "end_position": {
+          "column": 32,
+          "line": 684
+        },
+        "message": "declaration uses `sorry`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "declaration uses `sorry`",
+          "endPos": {
+            "column": 32,
+            "line": 684
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "hasSorry",
+          "pos": {
+            "column": 6,
+            "line": 684
+          },
+          "severity": "warning"
+        },
+        "source_line": "lemma iterated_fold_transitivity",
+        "start_offset": 34780,
+        "start_byte_offset": 36881,
+        "end_offset": 34806,
+        "end_byte_offset": 36907,
+        "source_text": "iterated_fold_transitivity"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 8,
+          "line": 798
+        },
+        "end_position": {
+          "column": 36,
+          "line": 798
+        },
+        "message": "declaration uses `sorry`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "declaration uses `sorry`",
+          "endPos": {
+            "column": 36,
+            "line": 798
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "hasSorry",
+          "pos": {
+            "column": 8,
+            "line": 798
+          },
+          "severity": "warning"
+        },
+        "source_line": "theorem iterated_fold_eq_matrix_form (i : Fin ℓ) (steps : ℕ) (h_i_add_steps : i + steps ≤ ℓ)",
+        "start_offset": 40551,
+        "start_byte_offset": 42971,
+        "end_offset": 40579,
+        "end_byte_offset": 42999,
+        "source_text": "iterated_fold_eq_matrix_form"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 15,
+          "line": 858
+        },
+        "end_position": {
+          "column": 29,
+          "line": 858
+        },
+        "message": "`Subtype.eq_iff` has been deprecated: Use `Subtype.ext_iff` instead\n\nNote: The updated constant has a different type:\n  ∀ {α : Sort u} {p : α → Prop} {a1 a2 : { x // p x }}, a1 = a2 ↔ ↑a1 = ↑a2\ninstead of\n  ∀ {α : Sort u_1} {p : α → Prop} {a1 a2 : { x // p x }}, a1 = a2 ↔ ↑a1 = ↑a2",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "`Subtype.eq_iff` has been deprecated: Use `Subtype.ext_iff` instead\n\nNote: The updated constant has a different type:\n  ∀ {α : Sort u} {p : α → Prop} {a1 a2 : { x // p x }}, a1 = a2 ↔ ↑a1 = ↑a2\ninstead of\n  ∀ {α : Sort u_1} {p : α → Prop} {a1 a2 : { x // p x }}, a1 = a2 ↔ ↑a1 = ↑a2",
+          "endPos": {
+            "column": 29,
+            "line": 858
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "Lean.Linter.deprecatedAttr",
+          "pos": {
+            "column": 15,
+            "line": 858
+          },
+          "severity": "warning"
+        },
+        "source_line": "    simp only [Subtype.eq_iff] at h",
+        "start_offset": 43569,
+        "start_byte_offset": 46267,
+        "end_offset": 43583,
+        "end_byte_offset": 46281,
+        "source_text": "Subtype.eq_iff"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 15,
+          "line": 867
+        },
+        "end_position": {
+          "column": 29,
+          "line": 867
+        },
+        "message": "`Subtype.eq_iff` has been deprecated: Use `Subtype.ext_iff` instead\n\nNote: The updated constant has a different type:\n  ∀ {α : Sort u} {p : α → Prop} {a1 a2 : { x // p x }}, a1 = a2 ↔ ↑a1 = ↑a2\ninstead of\n  ∀ {α : Sort u_1} {p : α → Prop} {a1 a2 : { x // p x }}, a1 = a2 ↔ ↑a1 = ↑a2",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "`Subtype.eq_iff` has been deprecated: Use `Subtype.ext_iff` instead\n\nNote: The updated constant has a different type:\n  ∀ {α : Sort u} {p : α → Prop} {a1 a2 : { x // p x }}, a1 = a2 ↔ ↑a1 = ↑a2\ninstead of\n  ∀ {α : Sort u_1} {p : α → Prop} {a1 a2 : { x // p x }}, a1 = a2 ↔ ↑a1 = ↑a2",
+          "endPos": {
+            "column": 29,
+            "line": 867
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "Lean.Linter.deprecatedAttr",
+          "pos": {
+            "column": 15,
+            "line": 867
+          },
+          "severity": "warning"
+        },
+        "source_line": "    simp only [Subtype.eq_iff] at h",
+        "start_offset": 43998,
+        "start_byte_offset": 46722,
+        "end_offset": 44012,
+        "end_byte_offset": 46736,
+        "source_text": "Subtype.eq_iff"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 28,
+          "line": 881
+        },
+        "end_position": {
+          "column": 60,
+          "line": 881
+        },
+        "message": "`AddSubmonoidClass.coe_finset_sum` has been deprecated: Use `AddSubmonoidClass.coe_finsetSum` instead",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "`AddSubmonoidClass.coe_finset_sum` has been deprecated: Use `AddSubmonoidClass.coe_finsetSum` instead",
+          "endPos": {
+            "column": 60,
+            "line": 881
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "Lean.Linter.deprecatedAttr",
+          "pos": {
+            "column": 28,
+            "line": 881
+          },
+          "severity": "warning"
+        },
+        "source_line": "    simp only [Fin.isValue, AddSubmonoidClass.coe_finset_sum, SetLike.val_smul]",
+        "start_offset": 44618,
+        "start_byte_offset": 47376,
+        "end_offset": 44650,
+        "end_byte_offset": 47408,
+        "source_text": "AddSubmonoidClass.coe_finset_sum"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 52,
+          "line": 919
+        },
+        "end_position": {
+          "column": 67,
+          "line": 919
+        },
+        "message": "`Nat.add_eq_zero` has been deprecated: Use `Nat.add_eq_zero_iff` instead",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "`Nat.add_eq_zero` has been deprecated: Use `Nat.add_eq_zero_iff` instead",
+          "endPos": {
+            "column": 67,
+            "line": 919
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "Lean.Linter.deprecatedAttr",
+          "pos": {
+            "column": 52,
+            "line": 919
+          },
+          "severity": "warning"
+        },
+        "source_line": "    simp only [mem_univ, congr_eqRec, Fin.val_succ, Nat.add_eq_zero, one_ne_zero,",
+        "start_offset": 46459,
+        "start_byte_offset": 49280,
+        "end_offset": 46474,
+        "end_byte_offset": 49295,
+        "source_text": "Nat.add_eq_zero"
+      },
+      {
+        "severity": "information",
+        "position": {
+          "column": 0,
+          "line": 1093
+        },
+        "end_position": {
+          "column": 6,
+          "line": 1093
+        },
+        "message": "hammingClose 𝔽q β : (i : Fin (ℓ + 1)) → OracleFunction 𝔽q β i → Prop",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "hammingClose 𝔽q β : (i : Fin (ℓ + 1)) → OracleFunction 𝔽q β i → Prop",
+          "endPos": {
+            "column": 6,
+            "line": 1093
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 0,
+            "line": 1093
+          },
+          "severity": "information"
+        },
+        "source_line": "#check hammingClose 𝔽q β (h_ℓ_add_R_rate := h_ℓ_add_R_rate)",
+        "start_offset": 54744,
+        "start_byte_offset": 58105,
+        "end_offset": 54750,
+        "end_byte_offset": 58111,
+        "source_text": "#check"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 60,
+          "line": 1407
+        },
+        "end_position": {
+          "column": 69,
+          "line": 1407
+        },
+        "message": "This simp argument is unused:\n  ofNat_pos\n\nHint: Omit it from the simp argument list.\n  simp only [sum_const, Set.toFinset_card, smul_eq_mul, o̵f̵N̵a̵t̵_̵p̵o̵s̵,̵ ̵pow_pos, _root_.mul_le_mul_right,\n  ̲  ̲ ̲ ̲ ̲ ̲ ̲ ̲ge_iff_le]\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "This simp argument is unused:\n  ofNat_pos\n\nHint: Omit it from the simp argument list.\n  simp only [sum_const, Set.toFinset_card, smul_eq_mul, o̵f̵N̵a̵t̵_̵p̵o̵s̵,̵ ̵pow_pos, _root_.mul_le_mul_right,\n  ̲  ̲ ̲ ̲ ̲ ̲ ̲ ̲ge_iff_le]\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+          "endPos": {
+            "column": 69,
+            "line": 1407
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unusedSimpArgs",
+          "pos": {
+            "column": 60,
+            "line": 1407
+          },
+          "severity": "warning"
+        },
+        "source_line": "      simp only [sum_const, Set.toFinset_card, smul_eq_mul, ofNat_pos, pow_pos,",
+        "start_offset": 72078,
+        "start_byte_offset": 76359,
+        "end_offset": 72087,
+        "end_byte_offset": 76368,
+        "source_text": "ofNat_pos"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 71,
+          "line": 1407
+        },
+        "end_position": {
+          "column": 78,
+          "line": 1407
+        },
+        "message": "This simp argument is unused:\n  pow_pos\n\nHint: Omit it from the simp argument list.\n  simp only [sum_const, Set.toFinset_card, smul_eq_mul, ofNat_pos, p̵o̵w̵_̵p̵o̵s̵,̵_root_.mul_le_mul_right,\n          ge_iff_le]\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "This simp argument is unused:\n  pow_pos\n\nHint: Omit it from the simp argument list.\n  simp only [sum_const, Set.toFinset_card, smul_eq_mul, ofNat_pos, p̵o̵w̵_̵p̵o̵s̵,̵_root_.mul_le_mul_right,\n          ge_iff_le]\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+          "endPos": {
+            "column": 78,
+            "line": 1407
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unusedSimpArgs",
+          "pos": {
+            "column": 71,
+            "line": 1407
+          },
+          "severity": "warning"
+        },
+        "source_line": "      simp only [sum_const, Set.toFinset_card, smul_eq_mul, ofNat_pos, pow_pos,",
+        "start_offset": 72089,
+        "start_byte_offset": 76370,
+        "end_offset": 72096,
+        "end_byte_offset": 76377,
+        "source_text": "pow_pos"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 8,
+          "line": 1408
+        },
+        "end_position": {
+          "column": 31,
+          "line": 1408
+        },
+        "message": "This simp argument is unused:\n  _root_.mul_le_mul_right\n\nHint: Omit it from the simp argument list.\n  simp only [sum_const, Set.toFinset_card, smul_eq_mul, ofNat_pos, pow_pos, _̵r̵o̵o̵t̵_̵.̵m̵u̵l̵_̵l̵e̵_̵m̵u̵l̵_̵r̵i̵g̵h̵t̵,̵ ̵ge_iff_le]\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "This simp argument is unused:\n  _root_.mul_le_mul_right\n\nHint: Omit it from the simp argument list.\n  simp only [sum_const, Set.toFinset_card, smul_eq_mul, ofNat_pos, pow_pos, _̵r̵o̵o̵t̵_̵.̵m̵u̵l̵_̵l̵e̵_̵m̵u̵l̵_̵r̵i̵g̵h̵t̵,̵ ̵ge_iff_le]\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+          "endPos": {
+            "column": 31,
+            "line": 1408
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unusedSimpArgs",
+          "pos": {
+            "column": 8,
+            "line": 1408
+          },
+          "severity": "warning"
+        },
+        "source_line": "        _root_.mul_le_mul_right, ge_iff_le]",
+        "start_offset": 72106,
+        "start_byte_offset": 76387,
+        "end_offset": 72129,
+        "end_byte_offset": 76410,
+        "source_text": "_root_.mul_le_mul_right"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 4,
+          "line": 1313
+        },
+        "end_position": {
+          "column": 29,
+          "line": 1313
+        },
+        "message": "'unfold d_fw at h_sInf_mem' tactic does nothing\n\nNote: This linter can be disabled with `set_option linter.unusedTactic false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "'unfold d_fw at h_sInf_mem' tactic does nothing\n\nNote: This linter can be disabled with `set_option linter.unusedTactic false`",
+          "endPos": {
+            "column": 29,
+            "line": 1313
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unusedTactic",
+          "pos": {
+            "column": 4,
+            "line": 1313
+          },
+          "severity": "warning"
+        },
+        "source_line": "    unfold d_fw at h_sInf_mem",
+        "start_offset": 66448,
+        "start_byte_offset": 70492,
+        "end_offset": 66473,
+        "end_byte_offset": 70517,
+        "source_text": "unfold d_fw at h_sInf_mem"
+      },
+      {
+        "severity": "information",
+        "position": {
+          "column": 0,
+          "line": 1592
+        },
+        "end_position": {
+          "column": 6,
+          "line": 1592
+        },
+        "message": "Binius.BinaryBasefold.fold_advances_evaluation_poly {r : ℕ} [NeZero r] {L : Type} [Field L] [Fintype L] [DecidableEq L]\n  (𝔽q : Type) [Field 𝔽q] [Fintype 𝔽q] [DecidableEq 𝔽q] [h_Fq_char_prime : Fact (Nat.Prime (ringChar 𝔽q))]\n  [hF₂ : Fact (Fintype.card 𝔽q = 2)] [Algebra 𝔽q L] (β : Fin r → L) [hβ_lin_indep : Fact (LinearIndependent 𝔽q β)]\n  [h_β₀_eq_1 : Fact (β 0 = 1)] {ℓ 𝓡 : ℕ} [NeZero 𝓡] {h_ℓ_add_R_rate : ℓ + 𝓡 < r} (i : Fin ℓ)\n  (h_i_succ_lt : ↑i + 1 < ℓ + 𝓡) (coeffs : Fin (2 ^ (ℓ - ↑i)) → L) (r_chal : L) :\n  have P_i := AdditiveNTT.intermediateEvaluationPoly 𝔽q β h_ℓ_add_R_rate ⟨↑i, ⋯⟩ coeffs;\n  have f_i := fun x => Polynomial.eval (↑x) P_i;\n  have f_i_plus_1 := Binius.BinaryBasefold.fold 𝔽q β ⟨↑i, ⋯⟩ h_i_succ_lt f_i r_chal;\n  have new_coeffs := fun j => (1 - r_chal) * coeffs ⟨↑j * 2, ⋯⟩ + r_chal * coeffs ⟨↑j * 2 + 1, ⋯⟩;\n  have P_i_plus_1 := AdditiveNTT.intermediateEvaluationPoly 𝔽q β h_ℓ_add_R_rate ⟨↑i + 1, ⋯⟩ new_coeffs;\n  ∀ (y : ↥(AdditiveNTT.sDomain 𝔽q β h_ℓ_add_R_rate ⟨↑i + 1, ⋯⟩)), f_i_plus_1 y = Polynomial.eval (↑y) P_i_plus_1",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "Binius.BinaryBasefold.fold_advances_evaluation_poly {r : ℕ} [NeZero r] {L : Type} [Field L] [Fintype L] [DecidableEq L]\n  (𝔽q : Type) [Field 𝔽q] [Fintype 𝔽q] [DecidableEq 𝔽q] [h_Fq_char_prime : Fact (Nat.Prime (ringChar 𝔽q))]\n  [hF₂ : Fact (Fintype.card 𝔽q = 2)] [Algebra 𝔽q L] (β : Fin r → L) [hβ_lin_indep : Fact (LinearIndependent 𝔽q β)]\n  [h_β₀_eq_1 : Fact (β 0 = 1)] {ℓ 𝓡 : ℕ} [NeZero 𝓡] {h_ℓ_add_R_rate : ℓ + 𝓡 < r} (i : Fin ℓ)\n  (h_i_succ_lt : ↑i + 1 < ℓ + 𝓡) (coeffs : Fin (2 ^ (ℓ - ↑i)) → L) (r_chal : L) :\n  have P_i := AdditiveNTT.intermediateEvaluationPoly 𝔽q β h_ℓ_add_R_rate ⟨↑i, ⋯⟩ coeffs;\n  have f_i := fun x => Polynomial.eval (↑x) P_i;\n  have f_i_plus_1 := Binius.BinaryBasefold.fold 𝔽q β ⟨↑i, ⋯⟩ h_i_succ_lt f_i r_chal;\n  have new_coeffs := fun j => (1 - r_chal) * coeffs ⟨↑j * 2, ⋯⟩ + r_chal * coeffs ⟨↑j * 2 + 1, ⋯⟩;\n  have P_i_plus_1 := AdditiveNTT.intermediateEvaluationPoly 𝔽q β h_ℓ_add_R_rate ⟨↑i + 1, ⋯⟩ new_coeffs;\n  ∀ (y : ↥(AdditiveNTT.sDomain 𝔽q β h_ℓ_add_R_rate ⟨↑i + 1, ⋯⟩)), f_i_plus_1 y = Polynomial.eval (↑y) P_i_plus_1",
+          "endPos": {
+            "column": 6,
+            "line": 1592
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 0,
+            "line": 1592
+          },
+          "severity": "information"
+        }
+      },
+      {
+        "severity": "information",
+        "position": {
+          "column": 0,
+          "line": 1593
+        },
+        "end_position": {
+          "column": 6,
+          "line": 1593
+        },
+        "message": "'Binius.BinaryBasefold.fold_advances_evaluation_poly' depends on axioms: [propext, Classical.choice, Quot.sound]",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "'Binius.BinaryBasefold.fold_advances_evaluation_poly' depends on axioms: [propext, Classical.choice, Quot.sound]",
+          "endPos": {
+            "column": 6,
+            "line": 1593
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 0,
+            "line": 1593
+          },
+          "severity": "information"
+        }
+      }
+    ],
+    "goals": null,
+    "local_context": null,
+    "sorries": [],
+    "axioms": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext"
+    ],
+    "detail": null,
+    "raw_lean_output": "{\"caption\":\"\",\"data\":\"`not_lt_zero'` has been deprecated: Use `_root_.not_lt_zero` instead\",\"endPos\":{\"column\":96,\"line\":234},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"Lean.Linter.deprecatedAttr\",\"pos\":{\"column\":84,\"line\":234},\"severity\":\"warning\"}\n{\"caption\":\"\",\"data\":\"`not_lt_zero'` has been deprecated: Use `_root_.not_lt_zero` instead\",\"endPos\":{\"column\":60,\"line\":326},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"Lean.Linter.deprecatedAttr\",\"pos\":{\"column\":48,\"line\":326},\"severity\":\"warning\"}\n{\"caption\":\"\",\"data\":\"declaration uses `sorry`\",\"endPos\":{\"column\":14,\"line\":648},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"hasSorry\",\"pos\":{\"column\":4,\"line\":648},\"severity\":\"warning\"}\n{\"caption\":\"\",\"data\":\"declaration uses `sorry`\",\"endPos\":{\"column\":32,\"line\":684},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"hasSorry\",\"pos\":{\"column\":6,\"line\":684},\"severity\":\"warning\"}\n{\"caption\":\"\",\"data\":\"declaration uses `sorry`\",\"endPos\":{\"column\":36,\"line\":798},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"hasSorry\",\"pos\":{\"column\":8,\"line\":798},\"severity\":\"warning\"}\n{\"caption\":\"\",\"data\":\"`Subtype.eq_iff` has been deprecated: Use `Subtype.ext_iff` instead\\n\\nNote: The updated constant has a different type:\\n  ∀ {α : Sort u} {p : α → Prop} {a1 a2 : { x // p x }}, a1 = a2 ↔ ↑a1 = ↑a2\\ninstead of\\n  ∀ {α : Sort u_1} {p : α → Prop} {a1 a2 : { x // p x }}, a1 = a2 ↔ ↑a1 = ↑a2\",\"endPos\":{\"column\":29,\"line\":858},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"Lean.Linter.deprecatedAttr\",\"pos\":{\"column\":15,\"line\":858},\"severity\":\"warning\"}\n{\"caption\":\"\",\"data\":\"`Subtype.eq_iff` has been deprecated: Use `Subtype.ext_iff` instead\\n\\nNote: The updated constant has a different type:\\n  ∀ {α : Sort u} {p : α → Prop} {a1 a2 : { x // p x }}, a1 = a2 ↔ ↑a1 = ↑a2\\ninstead of\\n  ∀ {α : Sort u_1} {p : α → Prop} {a1 a2 : { x // p x }}, a1 = a2 ↔ ↑a1 = ↑a2\",\"endPos\":{\"column\":29,\"line\":867},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"Lean.Linter.deprecatedAttr\",\"pos\":{\"column\":15,\"line\":867},\"severity\":\"warning\"}\n{\"caption\":\"\",\"data\":\"`AddSubmonoidClass.coe_finset_sum` has been deprecated: Use `AddSubmonoidClass.coe_finsetSum` instead\",\"endPos\":{\"column\":60,\"line\":881},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"Lean.Linter.deprecatedAttr\",\"pos\":{\"column\":28,\"line\":881},\"severity\":\"warning\"}\n{\"caption\":\"\",\"data\":\"`Nat.add_eq_zero` has been deprecated: Use `Nat.add_eq_zero_iff` instead\",\"endPos\":{\"column\":67,\"line\":919},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"Lean.Linter.deprecatedAttr\",\"pos\":{\"column\":52,\"line\":919},\"severity\":\"warning\"}\n{\"caption\":\"\",\"data\":\"hammingClose 𝔽q β : (i : Fin (ℓ + 1)) → OracleFunction 𝔽q β i → Prop\",\"endPos\":{\"column\":6,\"line\":1093},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"[anonymous]\",\"pos\":{\"column\":0,\"line\":1093},\"severity\":\"information\"}\n{\"caption\":\"\",\"data\":\"This simp argument is unused:\\n  ofNat_pos\\n\\nHint: Omit it from the simp argument list.\\n  simp only [sum_const, Set.toFinset_card, smul_eq_mul, o̵f̵N̵a̵t̵_̵p̵o̵s̵,̵ ̵pow_pos, _root_.mul_le_mul_right,\\n  ̲  ̲ ̲ ̲ ̲ ̲ ̲ ̲ge_iff_le]\\n\\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`\",\"endPos\":{\"column\":69,\"line\":1407},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"linter.unusedSimpArgs\",\"pos\":{\"column\":60,\"line\":1407},\"severity\":\"warning\"}\n{\"caption\":\"\",\"data\":\"This simp argument is unused:\\n  pow_pos\\n\\nHint: Omit it from the simp argument list.\\n  simp only [sum_const, Set.toFinset_card, smul_eq_mul, ofNat_pos, p̵o̵w̵_̵p̵o̵s̵,̵_root_.mul_le_mul_right,\\n          ge_iff_le]\\n\\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`\",\"endPos\":{\"column\":78,\"line\":1407},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"linter.unusedSimpArgs\",\"pos\":{\"column\":71,\"line\":1407},\"severity\":\"warning\"}\n{\"caption\":\"\",\"data\":\"This simp argument is unused:\\n  _root_.mul_le_mul_right\\n\\nHint: Omit it from the simp argument list.\\n  simp only [sum_const, Set.toFinset_card, smul_eq_mul, ofNat_pos, pow_pos, _̵r̵o̵o̵t̵_̵.̵m̵u̵l̵_̵l̵e̵_̵m̵u̵l̵_̵r̵i̵g̵h̵t̵,̵ ̵ge_iff_le]\\n\\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`\",\"endPos\":{\"column\":31,\"line\":1408},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"linter.unusedSimpArgs\",\"pos\":{\"column\":8,\"line\":1408},\"severity\":\"warning\"}\n{\"caption\":\"\",\"data\":\"'unfold d_fw at h_sInf_mem' tactic does nothing\\n\\nNote: This linter can be disabled with `set_option linter.unusedTactic false`\",\"endPos\":{\"column\":29,\"line\":1313},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"linter.unusedTactic\",\"pos\":{\"column\":4,\"line\":1313},\"severity\":\"warning\"}\n{\"caption\":\"\",\"data\":\"Binius.BinaryBasefold.fold_advances_evaluation_poly {r : ℕ} [NeZero r] {L : Type} [Field L] [Fintype L] [DecidableEq L]\\n  (𝔽q : Type) [Field 𝔽q] [Fintype 𝔽q] [DecidableEq 𝔽q] [h_Fq_char_prime : Fact (Nat.Prime (ringChar 𝔽q))]\\n  [hF₂ : Fact (Fintype.card 𝔽q = 2)] [Algebra 𝔽q L] (β : Fin r → L) [hβ_lin_indep : Fact (LinearIndependent 𝔽q β)]\\n  [h_β₀_eq_1 : Fact (β 0 = 1)] {ℓ 𝓡 : ℕ} [NeZero 𝓡] {h_ℓ_add_R_rate : ℓ + 𝓡 < r} (i : Fin ℓ)\\n  (h_i_succ_lt : ↑i + 1 < ℓ + 𝓡) (coeffs : Fin (2 ^ (ℓ - ↑i)) → L) (r_chal : L) :\\n  have P_i := AdditiveNTT.intermediateEvaluationPoly 𝔽q β h_ℓ_add_R_rate ⟨↑i, ⋯⟩ coeffs;\\n  have f_i := fun x => Polynomial.eval (↑x) P_i;\\n  have f_i_plus_1 := Binius.BinaryBasefold.fold 𝔽q β ⟨↑i, ⋯⟩ h_i_succ_lt f_i r_chal;\\n  have new_coeffs := fun j => (1 - r_chal) * coeffs ⟨↑j * 2, ⋯⟩ + r_chal * coeffs ⟨↑j * 2 + 1, ⋯⟩;\\n  have P_i_plus_1 := AdditiveNTT.intermediateEvaluationPoly 𝔽q β h_ℓ_add_R_rate ⟨↑i + 1, ⋯⟩ new_coeffs;\\n  ∀ (y : ↥(AdditiveNTT.sDomain 𝔽q β h_ℓ_add_R_rate ⟨↑i + 1, ⋯⟩)), f_i_plus_1 y = Polynomial.eval (↑y) P_i_plus_1\",\"endPos\":{\"column\":6,\"line\":1592},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"[anonymous]\",\"pos\":{\"column\":0,\"line\":1592},\"severity\":\"information\"}\n{\"caption\":\"\",\"data\":\"'Binius.BinaryBasefold.fold_advances_evaluation_poly' depends on axioms: [propext, Classical.choice, Quot.sound]\",\"endPos\":{\"column\":6,\"line\":1593},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"[anonymous]\",\"pos\":{\"column\":0,\"line\":1593},\"severity\":\"information\"}\n"
+  },
+  "diagnosis": "The two failures come from supplying `hj'` to the exponent-gap premise of `mul_two_add_bit_lt_two_pow`. Prove that shared arithmetic premise once with `omega`, then pass `hj'` and the exponent bound in the lemma's actual argument order.",
+  "duplicate_cache": false,
+  "available_at": 1792773383.350409,
+  "cumulative_calls": 3,
+  "cumulative_tokens": 185497,
+  "api_spend_usd": null
+}

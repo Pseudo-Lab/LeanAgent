@@ -1,0 +1,34 @@
+--- initial.proof.lean
++++ candidate_01.proof.lean
+@@ -3,7 +3,7 @@
+     Prop := ι 𝓣ᶠ(a * [ofCrAnOpF φ, ofCrAnOpF ψ]ₛF * b) =
+     ι ([ofCrAnOpF φ, ofCrAnOpF ψ]ₛF * 𝓣ᶠ(a * b))
+   change pb b (Basis.mem_span _ b)
+-  exact experiment_missing_lemma
++  apply Submodule.span_induction
+   · rintro x ⟨φs, rfl⟩
+     simp only [ofListBasis_eq_ofList, map_mul, pb]
+     let pa (a : 𝓕.FieldOpFreeAlgebra) (hc : a ∈ Submodule.span ℂ (Set.range ofCrAnListFBasis)) :
+@@ -14,7 +14,6 @@
+     · rintro x ⟨φs', rfl⟩
+       simp only [ofListBasis_eq_ofList, map_mul, pa]
+       calc _
+-        /- Split the commutator. -/
+         _ = crAnTimeOrderSign (φs' ++ φ :: ψ :: φs) •
+           ι (ofCrAnListF (crAnTimeOrderList (φs' ++ φ :: ψ :: φs))) -
+             crAnTimeOrderSign (φs' ++ ψ :: φ :: φs) •
+@@ -27,14 +26,12 @@
+             rw [timeOrderF_ofCrAnListF, timeOrderF_ofCrAnListF]
+           simp only [map_smul, sub_right_inj]
+           module
+-        /- Simplify the signs. -/
+         _ = crAnTimeOrderSign (φs' ++ φ :: ψ :: φs) •
+           (ι (ofCrAnListF (crAnTimeOrderList (φs' ++ φ :: ψ :: φs))) -
+           𝓢(𝓕.crAnStatistics φ, 𝓕.crAnStatistics ψ) •
+             ι (ofCrAnListF (crAnTimeOrderList (φs' ++ ψ :: φ :: φs)))) := by
+           rw [crAnTimeOrderSign_swap_eq_time hφψ hψφ]
+           module
+-        /- Splitting the time-ordered lists. -/
+         _ = crAnTimeOrderSign (φs' ++ [φ, ψ] ++ φs) •
+           (ι (ofCrAnListF (List.takeWhile (fun c => ¬crAnTimeOrderRel φ c)
+                 (List.insertionSort crAnTimeOrderRel (φs' ++ φs)))) *

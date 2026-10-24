@@ -1,0 +1,19 @@
+--- candidate_01.proof.lean
++++ candidate_02.proof.lean
+@@ -13,6 +13,7 @@
+             by_cases hji : j = i
+             · subst j
+               simp
++              ring
+             · simp [hji]
+       _ = (∑ j : Fin 9, a j * (10 : ℤ) ^ j.1) +
+           (b i - a i) * (10 : ℤ) ^ i.1 := by
+@@ -66,7 +67,7 @@
+     exact dvd_sub hboth hde_sum
+   have hc0 : IsCoprime (7 : ℤ) (10 : ℤ) := by
+     norm_num
+-  have hc : IsCoprime (7 : ℤ) ((10 : ℤ) ^ i.1) := hc0.pow_right i.1
++  have hc : IsCoprime (7 : ℤ) ((10 : ℤ) ^ i.1) := hc0.pow_right
+   have hx : 7 ∣ f i - d i := hc.dvd_of_dvd_mul_right hprod
+   rcases hx with ⟨k, hk⟩
+   refine ⟨-k, ?_⟩

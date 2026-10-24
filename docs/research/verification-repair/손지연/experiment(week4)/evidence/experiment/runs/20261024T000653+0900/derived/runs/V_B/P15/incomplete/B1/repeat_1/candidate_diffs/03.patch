@@ -1,0 +1,30 @@
+--- candidate_02.proof.lean
++++ candidate_03.proof.lean
+@@ -72,17 +72,16 @@
+     convert ht using 1 <;> ring
+   have hcoprime :
+       ∃ u v : ℤ, u * 10 ^ i.1 + v * 7 = 1 := by
+-    fin_cases i <;>
+-      first
+-      | exact ⟨1, 0, by norm_num⟩
+-      | exact ⟨5, -7, by norm_num⟩
+-      | exact ⟨4, -57, by norm_num⟩
+-      | exact ⟨6, -857, by norm_num⟩
+-      | exact ⟨2, -2857, by norm_num⟩
+-      | exact ⟨3, -42857, by norm_num⟩
+-      | exact ⟨1, -142857, by norm_num⟩
+-      | exact ⟨5, -7142857, by norm_num⟩
+-      | exact ⟨4, -57142857, by norm_num⟩
++    fin_cases i
++    · exact ⟨1, 0, by norm_num⟩
++    · exact ⟨5, -7, by norm_num⟩
++    · exact ⟨4, -57, by norm_num⟩
++    · exact ⟨6, -857, by norm_num⟩
++    · exact ⟨2, -2857, by norm_num⟩
++    · exact ⟨3, -42857, by norm_num⟩
++    · exact ⟨1, -142857, by norm_num⟩
++    · exact ⟨5, -7142857, by norm_num⟩
++    · exact ⟨4, -57142857, by norm_num⟩
+   have cancel (x c : ℤ)
+       (hc : ∃ u v : ℤ, u * c + v * 7 = 1)
+       (hx : 7 ∣ x * c) : 7 ∣ x := by

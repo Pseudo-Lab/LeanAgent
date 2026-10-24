@@ -1,0 +1,50 @@
+--- candidate_01.proof.lean
++++ candidate_02.proof.lean
+@@ -1,6 +1,6 @@
+ by
+   generalize eq : [] = Γ at der
+-  have der' : Typing Γ t τ := der
++  have der' := der
+   induction der <;> subst eq
+   case var => grind
+   case app t₁ _ _ t₂ l r il ir =>
+@@ -22,14 +22,12 @@
+     rcases ih rfl der with v | ⟨t₁', h⟩
+     · exact ⟨t₂ ^ᵗᵗ t₁, by grind⟩
+     · exact ⟨t₁'.let' t₂, by grind⟩
+-  case inl der _ ih =>
++  case inl der _ ih | inr der _ ih =>
+     rcases ih rfl der with v | ⟨t', h⟩
+     · grind
+-    · exact .inr ⟨.inl t', by grind⟩
+-  case inr der _ ih =>
+-    rcases ih rfl der with v | ⟨t', h⟩
+-    · grind
+-    · exact .inr ⟨.inr t', by grind⟩
++    · first
++      | exact .inr ⟨.inl t', by grind⟩
++      | exact .inr ⟨.inr t', by grind⟩
+   case case t₁ _ _ t₂ _ t₃ _ der _ _ ih _ _ =>
+     right
+     rcases ih rfl der with v | ⟨t₁', h⟩
+@@ -38,15 +36,8 @@
+       · exact ⟨t₃ ^ᵗᵗ u, by grind⟩
+     · exact ⟨t₁'.case t₂ t₃, by grind⟩
+   case sub => grind
+-  case abs _ _ _ L _ _ =>
++  case abs _ _ _ L _ _ | tabs L _ _ =>
+     left
+     constructor
+-    apply LC.abs L
+-    · grind only [→ wf, cases Term.LC]
+-    · grind only [→ wf]
+-  case tabs L _ _ =>
+-    left
+-    constructor
+-    apply LC.tabs L
+-    · grind only [→ wf, cases Term.LC]
+-    · grind only [→ wf]
+\ No newline at end of file
++    first | apply LC.abs L | apply LC.tabs L
++    all_goals grind only [→ wf, cases Term.LC]
+\ No newline at end of file

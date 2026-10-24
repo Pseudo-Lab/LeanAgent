@@ -1,0 +1,21 @@
+--- candidate_01.proof.lean
++++ candidate_02.proof.lean
+@@ -11,7 +11,8 @@
+         apply Finset.sum_congr rfl
+         intro j _
+         by_cases hj : j = k
+-        · simp [hj] <;> ring
++        · simp [hj]
++          ring
+         · simp [hj]
+       _ = (∑ j : Fin 9, a j * (10 : ℤ) ^ (j : ℕ)) +
+           (b k - a k) * (10 : ℤ) ^ (k : ℕ) := by
+@@ -40,7 +41,7 @@
+           9 * digits_to_num a +
+             ∑ k : Fin 9, (b k - a k) * (10 : ℤ) ^ (k : ℕ) := by
+       rw [Finset.sum_add_distrib]
+-      simp <;> ring
++      simp
+     rw [heq] at hs
+     have ht : 7 ∣ 8 * digits_to_num a + digits_to_num b := by
+       rw [hdiff a b]

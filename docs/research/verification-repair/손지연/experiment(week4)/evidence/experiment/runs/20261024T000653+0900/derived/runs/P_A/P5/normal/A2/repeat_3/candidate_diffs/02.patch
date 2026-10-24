@@ -1,0 +1,29 @@
+--- candidate_01.proof.lean
++++ candidate_02.proof.lean
+@@ -45,8 +45,6 @@
+         (∑ j, ∂[j] (fun x => ∂ₜ (A.magneticFieldMatrix 𝓕.c · x (j, i)) t) x) -
+       1 / 𝓕.ε₀ * ∂ₜ (J.currentDensity 𝓕.c · x i) t := by
+       congr
+-      simp only [Finset.sum_apply]
+-      congr
+       funext k
+       rw [Space.time_deriv_comm_space_deriv]
+       exact magneticFieldMatrix_contDiff _ (hA.of_le (right_eq_inf.mp rfl)) (k, i)
+@@ -54,8 +52,6 @@
+         (∑ j, ∂[j] (fun x => ∂[j] (A.electricField 𝓕.c t · i) x -
+           ∂[i] (A.electricField 𝓕.c t · j) x) x) -
+       1 / 𝓕.ε₀ * ∂ₜ (J.currentDensity 𝓕.c · x i) t := by
+-      congr
+-      simp only [Finset.sum_apply]
+       congr
+       funext k
+       congr
+@@ -65,8 +61,6 @@
+         (∂[j] (fun x => ∂[j] (A.electricField 𝓕.c t · i) x) x -
+          ∂[j] (fun x => ∂[i] (A.electricField 𝓕.c t · j) x) x) -
+       1 / 𝓕.ε₀ * ∂ₜ (J.currentDensity 𝓕.c · x i) t := by
+-      congr
+-      simp only [Finset.sum_apply]
+       congr
+       funext j
+       rw [Space.deriv_eq_fderiv_basis]

@@ -1,0 +1,355 @@
+{
+  "problem": 6,
+  "environment": "physlib-v4.32.0",
+  "proof_sha256": "90255c1f2acd99081bffd9f75d3ea8b61eedb39e41ef5ad093e1ee37c038ce42",
+  "original_check_kind": "candidate",
+  "fields": {
+    "status": true,
+    "proof_sha256": true,
+    "axioms": true,
+    "diagnostics_exact": false,
+    "diagnostic_messages": true,
+    "proof_tokens": true,
+    "raw_heartbeats": true,
+    "environment_id": true
+  },
+  "semantic_match": true,
+  "all_fields_match": false,
+  "old": {
+    "task_id": "P6",
+    "attempt": "candidate_02",
+    "candidate_hash": "4975c6627014497cfe061a08178c7f238e81160031eb68ecb559994d9748b1ef",
+    "environment_id": "a8ea488063a518912258eeebed8ac874bee2baabe51aabe25a8cdf4ef5d1e6eb",
+    "check_kind": "candidate",
+    "status": "proof_error",
+    "process_exit_code": 1,
+    "diagnostics": [
+      {
+        "severity": "error",
+        "position": {
+          "column": 8,
+          "line": 210
+        },
+        "end_position": {
+          "column": 38,
+          "line": 210
+        },
+        "message": "Tactic `assumption` failed\n\n𝓕 : FieldSpecification\nφ ψ : 𝓕.CrAnFieldOp\nhφψ : crAnTimeOrderRel φ ψ\nhψφ : crAnTimeOrderRel ψ φ\na b : 𝓕.FieldOpFreeAlgebra\npb : (b : 𝓕.FieldOpFreeAlgebra) → b ∈ Submodule.span ℂ (Set.range ⇑ofCrAnListFBasis) → Prop :=\n  fun b hc =>\n    ι (timeOrderF (a * (superCommuteF (ofCrAnOpF φ)) (ofCrAnOpF ψ) * b)) =\n      ι ((superCommuteF (ofCrAnOpF φ)) (ofCrAnOpF ψ) * timeOrderF (a * b))\nφs : List 𝓕.CrAnFieldOp\npa : (a : 𝓕.FieldOpFreeAlgebra) → a ∈ Submodule.span ℂ (Set.range ⇑ofCrAnListFBasis) → Prop :=\n  fun a hc =>\n    ι (timeOrderF (a * (superCommuteF (ofCrAnOpF φ)) (ofCrAnOpF ψ) * ofCrAnListF φs)) =\n      ι ((superCommuteF (ofCrAnOpF φ)) (ofCrAnOpF ψ) * timeOrderF (a * ofCrAnListF φs))\nφs' : List 𝓕.CrAnFieldOp\nl1 : List 𝓕.CrAnFieldOp :=\n  List.takeWhile (fun c => decide ¬crAnTimeOrderRel φ c) (List.insertionSort crAnTimeOrderRel (φs' ++ φs)) ++\n    List.filter (fun c => decide (crAnTimeOrderRel φ c ∧ crAnTimeOrderRel c φ)) φs'\nl2 : List 𝓕.CrAnFieldOp :=\n  List.filter (fun c => decide (crAnTimeOrderRel φ c ∧ crAnTimeOrderRel c φ)) φs ++\n    List.filter (fun c => decide (crAnTimeOrderRel φ c ∧ ¬crAnTimeOrderRel c φ))\n      (List.insertionSort crAnTimeOrderRel (φs' ++ φs))\nh12 :\n  ι (timeOrderF (ofCrAnListF (φs' ++ φ :: ψ :: φs))) =\n    crAnTimeOrderSign (φs' ++ φ :: ψ :: φs) • (ι (ofCrAnListF l1) * ι (ofCrAnListF [φ, ψ]) * ι (ofCrAnListF l2))\nh :\n  List.insertionSort crAnTimeOrderRel (φs' ++ [ψ, φ] ++ φs) =\n    List.takeWhile (fun c => decide ¬crAnTimeOrderRel φ c) (List.insertionSort crAnTimeOrderRel (φs' ++ φs)) ++\n            List.filter (fun c => decide (crAnTimeOrderRel φ c ∧ crAnTimeOrderRel c φ)) φs' ++\n          [ψ, φ] ++\n        List.filter (fun c => decide (crAnTimeOrderRel φ c ∧ crAnTimeOrderRel c φ)) φs ++\n      List.filter (fun c => decide (crAnTimeOrderRel φ c ∧ ¬crAnTimeOrderRel c φ))\n        (List.insertionSort crAnTimeOrderRel (φs' ++ φs))\n⊢ crAnTimeOrderSign (φs' ++ ([ψ, φ] ++ φs)) •\n      (ι\n          (ofCrAnListF\n            (List.takeWhile (fun c => !decide (crAnTimeOrderRel φ c))\n              (List.insertionSort crAnTimeOrderRel (φs' ++ φs)))) *\n        (ι (ofCrAnListF (List.filter (fun c => decide (crAnTimeOrderRel φ c) && decide (crAnTimeOrderRel c φ)) φs')) *\n          (ι (ofCrAnListF [ψ, φ]) *\n            (ι\n                (ofCrAnListF\n                  (List.filter (fun c => decide (crAnTimeOrderRel φ c) && decide (crAnTimeOrderRel c φ)) φs)) *\n              ι\n                (ofCrAnListF\n                  (List.filter (fun c => decide (crAnTimeOrderRel φ c) && !decide (crAnTimeOrderRel c φ))\n                    (List.insertionSort crAnTimeOrderRel (φs' ++ φs)))))))) =\n    crAnTimeOrderSign (φs' ++ ψ :: φ :: φs) •\n      (ι\n          (ofCrAnListF\n            (List.takeWhile (fun c => !decide (crAnTimeOrderRel φ c))\n              (List.insertionSort crAnTimeOrderRel (φs' ++ φs)))) *\n        (ι (ofCrAnListF (List.filter (fun c => decide (crAnTimeOrderRel φ c) && decide (crAnTimeOrderRel c φ)) φs')) *\n          (ι (ofCrAnListF [ψ, φ]) *\n            (ι\n                (ofCrAnListF\n                  (List.filter (fun c => decide (crAnTimeOrderRel φ c) && decide (crAnTimeOrderRel c φ)) φs)) *\n              ι\n                (ofCrAnListF\n                  (List.filter (fun c => decide (crAnTimeOrderRel φ c) && !decide (crAnTimeOrderRel c φ))\n                    (List.insertionSort crAnTimeOrderRel (φs' ++ φs))))))))",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "Tactic `assumption` failed\n\n𝓕 : FieldSpecification\nφ ψ : 𝓕.CrAnFieldOp\nhφψ : crAnTimeOrderRel φ ψ\nhψφ : crAnTimeOrderRel ψ φ\na b : 𝓕.FieldOpFreeAlgebra\npb : (b : 𝓕.FieldOpFreeAlgebra) → b ∈ Submodule.span ℂ (Set.range ⇑ofCrAnListFBasis) → Prop :=\n  fun b hc =>\n    ι (timeOrderF (a * (superCommuteF (ofCrAnOpF φ)) (ofCrAnOpF ψ) * b)) =\n      ι ((superCommuteF (ofCrAnOpF φ)) (ofCrAnOpF ψ) * timeOrderF (a * b))\nφs : List 𝓕.CrAnFieldOp\npa : (a : 𝓕.FieldOpFreeAlgebra) → a ∈ Submodule.span ℂ (Set.range ⇑ofCrAnListFBasis) → Prop :=\n  fun a hc =>\n    ι (timeOrderF (a * (superCommuteF (ofCrAnOpF φ)) (ofCrAnOpF ψ) * ofCrAnListF φs)) =\n      ι ((superCommuteF (ofCrAnOpF φ)) (ofCrAnOpF ψ) * timeOrderF (a * ofCrAnListF φs))\nφs' : List 𝓕.CrAnFieldOp\nl1 : List 𝓕.CrAnFieldOp :=\n  List.takeWhile (fun c => decide ¬crAnTimeOrderRel φ c) (List.insertionSort crAnTimeOrderRel (φs' ++ φs)) ++\n    List.filter (fun c => decide (crAnTimeOrderRel φ c ∧ crAnTimeOrderRel c φ)) φs'\nl2 : List 𝓕.CrAnFieldOp :=\n  List.filter (fun c => decide (crAnTimeOrderRel φ c ∧ crAnTimeOrderRel c φ)) φs ++\n    List.filter (fun c => decide (crAnTimeOrderRel φ c ∧ ¬crAnTimeOrderRel c φ))\n      (List.insertionSort crAnTimeOrderRel (φs' ++ φs))\nh12 :\n  ι (timeOrderF (ofCrAnListF (φs' ++ φ :: ψ :: φs))) =\n    crAnTimeOrderSign (φs' ++ φ :: ψ :: φs) • (ι (ofCrAnListF l1) * ι (ofCrAnListF [φ, ψ]) * ι (ofCrAnListF l2))\nh :\n  List.insertionSort crAnTimeOrderRel (φs' ++ [ψ, φ] ++ φs) =\n    List.takeWhile (fun c => decide ¬crAnTimeOrderRel φ c) (List.insertionSort crAnTimeOrderRel (φs' ++ φs)) ++\n            List.filter (fun c => decide (crAnTimeOrderRel φ c ∧ crAnTimeOrderRel c φ)) φs' ++\n          [ψ, φ] ++\n        List.filter (fun c => decide (crAnTimeOrderRel φ c ∧ crAnTimeOrderRel c φ)) φs ++\n      List.filter (fun c => decide (crAnTimeOrderRel φ c ∧ ¬crAnTimeOrderRel c φ))\n        (List.insertionSort crAnTimeOrderRel (φs' ++ φs))\n⊢ crAnTimeOrderSign (φs' ++ ([ψ, φ] ++ φs)) •\n      (ι\n          (ofCrAnListF\n            (List.takeWhile (fun c => !decide (crAnTimeOrderRel φ c))\n              (List.insertionSort crAnTimeOrderRel (φs' ++ φs)))) *\n        (ι (ofCrAnListF (List.filter (fun c => decide (crAnTimeOrderRel φ c) && decide (crAnTimeOrderRel c φ)) φs')) *\n          (ι (ofCrAnListF [ψ, φ]) *\n            (ι\n                (ofCrAnListF\n                  (List.filter (fun c => decide (crAnTimeOrderRel φ c) && decide (crAnTimeOrderRel c φ)) φs)) *\n              ι\n                (ofCrAnListF\n                  (List.filter (fun c => decide (crAnTimeOrderRel φ c) && !decide (crAnTimeOrderRel c φ))\n                    (List.insertionSort crAnTimeOrderRel (φs' ++ φs)))))))) =\n    crAnTimeOrderSign (φs' ++ ψ :: φ :: φs) •\n      (ι\n          (ofCrAnListF\n            (List.takeWhile (fun c => !decide (crAnTimeOrderRel φ c))\n              (List.insertionSort crAnTimeOrderRel (φs' ++ φs)))) *\n        (ι (ofCrAnListF (List.filter (fun c => decide (crAnTimeOrderRel φ c) && decide (crAnTimeOrderRel c φ)) φs')) *\n          (ι (ofCrAnListF [ψ, φ]) *\n            (ι\n                (ofCrAnListF\n                  (List.filter (fun c => decide (crAnTimeOrderRel φ c) && decide (crAnTimeOrderRel c φ)) φs)) *\n              ι\n                (ofCrAnListF\n                  (List.filter (fun c => decide (crAnTimeOrderRel φ c) && !decide (crAnTimeOrderRel c φ))\n                    (List.insertionSort crAnTimeOrderRel (φs' ++ φs))))))))",
+          "endPos": {
+            "column": 38,
+            "line": 210
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/P_A/P6/normal/A3/repeat_1/validation/lean/005_candidate_02/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 8,
+            "line": 210
+          },
+          "severity": "error"
+        },
+        "source_line": "        simpa only [List.append_assoc]",
+        "start_offset": 10396,
+        "start_byte_offset": 11159,
+        "end_offset": 10426,
+        "end_byte_offset": 11189,
+        "source_text": "simpa only [List.append_assoc]",
+        "failed_tactic": "simpa only [List.append_assoc]",
+        "tactic_range": {
+          "position": {
+            "line": 210,
+            "column": 8
+          },
+          "end_position": {
+            "line": 210,
+            "column": 38
+          },
+          "start_offset": 10396,
+          "end_offset": 10426
+        },
+        "goals": [
+          "crAnTimeOrderSign (φs' ++ ([ψ, φ] ++ φs)) •\n      (ι\n          (ofCrAnListF\n            (List.takeWhile (fun c => !decide (crAnTimeOrderRel φ c))\n              (List.insertionSort crAnTimeOrderRel (φs' ++ φs)))) *\n        (ι (ofCrAnListF (List.filter (fun c => decide (crAnTimeOrderRel φ c) && decide (crAnTimeOrderRel c φ)) φs')) *\n          (ι (ofCrAnListF [ψ, φ]) *\n            (ι\n                (ofCrAnListF\n                  (List.filter (fun c => decide (crAnTimeOrderRel φ c) && decide (crAnTimeOrderRel c φ)) φs)) *\n              ι\n                (ofCrAnListF\n                  (List.filter (fun c => decide (crAnTimeOrderRel φ c) && !decide (crAnTimeOrderRel c φ))\n                    (List.insertionSort crAnTimeOrderRel (φs' ++ φs)))))))) =\n    crAnTimeOrderSign (φs' ++ ψ :: φ :: φs) •\n      (ι\n          (ofCrAnListF\n            (List.takeWhile (fun c => !decide (crAnTimeOrderRel φ c))\n              (List.insertionSort crAnTimeOrderRel (φs' ++ φs)))) *\n        (ι (ofCrAnListF (List.filter (fun c => decide (crAnTimeOrderRel φ c) && decide (crAnTimeOrderRel c φ)) φs')) *\n          (ι (ofCrAnListF [ψ, φ]) *\n            (ι\n                (ofCrAnListF\n                  (List.filter (fun c => decide (crAnTimeOrderRel φ c) && decide (crAnTimeOrderRel c φ)) φs)) *\n              ι\n                (ofCrAnListF\n                  (List.filter (fun c => decide (crAnTimeOrderRel φ c) && !decide (crAnTimeOrderRel c φ))\n                    (List.insertionSort crAnTimeOrderRel (φs' ++ φs))))))))"
+        ],
+        "local_context": [
+          "𝓕 : FieldSpecification\nφ ψ : 𝓕.CrAnFieldOp\nhφψ : crAnTimeOrderRel φ ψ\nhψφ : crAnTimeOrderRel ψ φ\na b : 𝓕.FieldOpFreeAlgebra\npb : (b : 𝓕.FieldOpFreeAlgebra) → b ∈ Submodule.span ℂ (Set.range ⇑ofCrAnListFBasis) → Prop :=\n  fun b hc =>\n    ι (timeOrderF (a * (superCommuteF (ofCrAnOpF φ)) (ofCrAnOpF ψ) * b)) =\n      ι ((superCommuteF (ofCrAnOpF φ)) (ofCrAnOpF ψ) * timeOrderF (a * b))\nφs : List 𝓕.CrAnFieldOp\npa : (a : 𝓕.FieldOpFreeAlgebra) → a ∈ Submodule.span ℂ (Set.range ⇑ofCrAnListFBasis) → Prop :=\n  fun a hc =>\n    ι (timeOrderF (a * (superCommuteF (ofCrAnOpF φ)) (ofCrAnOpF ψ) * ofCrAnListF φs)) =\n      ι ((superCommuteF (ofCrAnOpF φ)) (ofCrAnOpF ψ) * timeOrderF (a * ofCrAnListF φs))\nφs' : List 𝓕.CrAnFieldOp\nl1 : List 𝓕.CrAnFieldOp :=\n  List.takeWhile (fun c => decide ¬crAnTimeOrderRel φ c) (List.insertionSort crAnTimeOrderRel (φs' ++ φs)) ++\n    List.filter (fun c => decide (crAnTimeOrderRel φ c ∧ crAnTimeOrderRel c φ)) φs'\nl2 : List 𝓕.CrAnFieldOp :=\n  List.filter (fun c => decide (crAnTimeOrderRel φ c ∧ crAnTimeOrderRel c φ)) φs ++\n    List.filter (fun c => decide (crAnTimeOrderRel φ c ∧ ¬crAnTimeOrderRel c φ))\n      (List.insertionSort crAnTimeOrderRel (φs' ++ φs))\nh12 :\n  ι (timeOrderF (ofCrAnListF (φs' ++ φ :: ψ :: φs))) =\n    crAnTimeOrderSign (φs' ++ φ :: ψ :: φs) • (ι (ofCrAnListF l1) * ι (ofCrAnListF [φ, ψ]) * ι (ofCrAnListF l2))\nh :\n  List.insertionSort crAnTimeOrderRel (φs' ++ [ψ, φ] ++ φs) =\n    List.takeWhile (fun c => decide ¬crAnTimeOrderRel φ c) (List.insertionSort crAnTimeOrderRel (φs' ++ φs)) ++\n            List.filter (fun c => decide (crAnTimeOrderRel φ c ∧ crAnTimeOrderRel c φ)) φs' ++\n          [ψ, φ] ++\n        List.filter (fun c => decide (crAnTimeOrderRel φ c ∧ crAnTimeOrderRel c φ)) φs ++\n      List.filter (fun c => decide (crAnTimeOrderRel φ c ∧ ¬crAnTimeOrderRel c φ))\n        (List.insertionSort crAnTimeOrderRel (φs' ++ φs))"
+        ],
+        "proof_state_source": "lean_infotree_before_tactic",
+        "proof_state_raw": {
+          "depth": 27,
+          "end": 18320,
+          "goals_after": [
+            "𝓕 : FieldSpecification\nφ ψ : 𝓕.CrAnFieldOp\nhφψ : crAnTimeOrderRel φ ψ\nhψφ : crAnTimeOrderRel ψ φ\na b : 𝓕.FieldOpFreeAlgebra\npb : (b : 𝓕.FieldOpFreeAlgebra) → b ∈ Submodule.span ℂ (Set.range ⇑ofCrAnListFBasis) → Prop :=\n  fun b hc =>\n    ι (timeOrderF (a * (superCommuteF (ofCrAnOpF φ)) (ofCrAnOpF ψ) * b)) =\n      ι ((superCommuteF (ofCrAnOpF φ)) (ofCrAnOpF ψ) * timeOrderF (a * b))\nφs : List 𝓕.CrAnFieldOp\npa : (a : 𝓕.FieldOpFreeAlgebra) → a ∈ Submodule.span ℂ (Set.range ⇑ofCrAnListFBasis) → Prop :=\n  fun a hc =>\n    ι (timeOrderF (a * (superCommuteF (ofCrAnOpF φ)) (ofCrAnOpF ψ) * ofCrAnListF φs)) =\n      ι ((superCommuteF (ofCrAnOpF φ)) (ofCrAnOpF ψ) * timeOrderF (a * ofCrAnListF φs))\nφs' : List 𝓕.CrAnFieldOp\nl1 : List 𝓕.CrAnFieldOp :=\n  List.takeWhile (fun c => decide ¬crAnTimeOrderRel φ c) (List.insertionSort crAnTimeOrderRel (φs' ++ φs)) ++\n    List.filter (fun c => decide (crAnTimeOrderRel φ c ∧ crAnTimeOrderRel c φ)) φs'\nl2 : List 𝓕.CrAnFieldOp :=\n  List.filter (fun c => decide (crAnTimeOrderRel φ c ∧ crAnTimeOrderRel c φ)) φs ++\n    List.filter (fun c => decide (crAnTimeOrderRel φ c ∧ ¬crAnTimeOrderRel c φ))\n      (List.insertionSort crAnTimeOrderRel (φs' ++ φs))\nh12 :\n  ι (timeOrderF (ofCrAnListF (φs' ++ φ :: ψ :: φs))) =\n    crAnTimeOrderSign (φs' ++ φ :: ψ :: φs) • (ι (ofCrAnListF l1) * ι (ofCrAnListF [φ, ψ]) * ι (ofCrAnListF l2))\nh :\n  List.insertionSort crAnTimeOrderRel (φs' ++ [ψ, φ] ++ φs) =\n    List.takeWhile (fun c => decide ¬crAnTimeOrderRel φ c) (List.insertionSort crAnTimeOrderRel (φs' ++ φs)) ++\n            List.filter (fun c => decide (crAnTimeOrderRel φ c ∧ crAnTimeOrderRel c φ)) φs' ++\n          [ψ, φ] ++\n        List.filter (fun c => decide (crAnTimeOrderRel φ c ∧ crAnTimeOrderRel c φ)) φs ++\n      List.filter (fun c => decide (crAnTimeOrderRel φ c ∧ ¬crAnTimeOrderRel c φ))\n        (List.insertionSort crAnTimeOrderRel (φs' ++ φs))\n⊢ crAnTimeOrderSign (φs' ++ ([ψ, φ] ++ φs)) •\n      (ι\n          (ofCrAnListF\n            (List.takeWhile (fun c => !decide (crAnTimeOrderRel φ c))\n              (List.insertionSort crAnTimeOrderRel (φs' ++ φs)))) *\n        (ι (ofCrAnListF (List.filter (fun c => decide (crAnTimeOrderRel φ c) && decide (crAnTimeOrderRel c φ)) φs')) *\n          (ι (ofCrAnListF [ψ, φ]) *\n            (ι\n                (ofCrAnListF\n                  (List.filter (fun c => decide (crAnTimeOrderRel φ c) && decide (crAnTimeOrderRel c φ)) φs)) *\n              ι\n                (ofCrAnListF\n                  (List.filter (fun c => decide (crAnTimeOrderRel φ c) && !decide (crAnTimeOrderRel c φ))\n                    (List.insertionSort crAnTimeOrderRel (φs' ++ φs)))))))) =\n    crAnTimeOrderSign (φs' ++ ψ :: φ :: φs) •\n      (ι\n          (ofCrAnListF\n            (List.takeWhile (fun c => !decide (crAnTimeOrderRel φ c))\n              (List.insertionSort crAnTimeOrderRel (φs' ++ φs)))) *\n        (ι (ofCrAnListF (List.filter (fun c => decide (crAnTimeOrderRel φ c) && decide (crAnTimeOrderRel c φ)) φs')) *\n          (ι (ofCrAnListF [ψ, φ]) *\n            (ι\n                (ofCrAnListF\n                  (List.filter (fun c => decide (crAnTimeOrderRel φ c) && decide (crAnTimeOrderRel c φ)) φs)) *\n              ι\n                (ofCrAnListF\n                  (List.filter (fun c => decide (crAnTimeOrderRel φ c) && !decide (crAnTimeOrderRel c φ))\n                    (List.insertionSort crAnTimeOrderRel (φs' ++ φs))))))))"
+          ],
+          "goals_before": [
+            "𝓕 : FieldSpecification\nφ ψ : 𝓕.CrAnFieldOp\nhφψ : crAnTimeOrderRel φ ψ\nhψφ : crAnTimeOrderRel ψ φ\na b : 𝓕.FieldOpFreeAlgebra\npb : (b : 𝓕.FieldOpFreeAlgebra) → b ∈ Submodule.span ℂ (Set.range ⇑ofCrAnListFBasis) → Prop :=\n  fun b hc =>\n    ι (timeOrderF (a * (superCommuteF (ofCrAnOpF φ)) (ofCrAnOpF ψ) * b)) =\n      ι ((superCommuteF (ofCrAnOpF φ)) (ofCrAnOpF ψ) * timeOrderF (a * b))\nφs : List 𝓕.CrAnFieldOp\npa : (a : 𝓕.FieldOpFreeAlgebra) → a ∈ Submodule.span ℂ (Set.range ⇑ofCrAnListFBasis) → Prop :=\n  fun a hc =>\n    ι (timeOrderF (a * (superCommuteF (ofCrAnOpF φ)) (ofCrAnOpF ψ) * ofCrAnListF φs)) =\n      ι ((superCommuteF (ofCrAnOpF φ)) (ofCrAnOpF ψ) * timeOrderF (a * ofCrAnListF φs))\nφs' : List 𝓕.CrAnFieldOp\nl1 : List 𝓕.CrAnFieldOp :=\n  List.takeWhile (fun c => decide ¬crAnTimeOrderRel φ c) (List.insertionSort crAnTimeOrderRel (φs' ++ φs)) ++\n    List.filter (fun c => decide (crAnTimeOrderRel φ c ∧ crAnTimeOrderRel c φ)) φs'\nl2 : List 𝓕.CrAnFieldOp :=\n  List.filter (fun c => decide (crAnTimeOrderRel φ c ∧ crAnTimeOrderRel c φ)) φs ++\n    List.filter (fun c => decide (crAnTimeOrderRel φ c ∧ ¬crAnTimeOrderRel c φ))\n      (List.insertionSort crAnTimeOrderRel (φs' ++ φs))\nh12 :\n  ι (timeOrderF (ofCrAnListF (φs' ++ φ :: ψ :: φs))) =\n    crAnTimeOrderSign (φs' ++ φ :: ψ :: φs) • (ι (ofCrAnListF l1) * ι (ofCrAnListF [φ, ψ]) * ι (ofCrAnListF l2))\nh :\n  List.insertionSort crAnTimeOrderRel (φs' ++ [ψ, φ] ++ φs) =\n    List.takeWhile (fun c => decide ¬crAnTimeOrderRel φ c) (List.insertionSort crAnTimeOrderRel (φs' ++ φs)) ++\n            List.filter (fun c => decide (crAnTimeOrderRel φ c ∧ crAnTimeOrderRel c φ)) φs' ++\n          [ψ, φ] ++\n        List.filter (fun c => decide (crAnTimeOrderRel φ c ∧ crAnTimeOrderRel c φ)) φs ++\n      List.filter (fun c => decide (crAnTimeOrderRel φ c ∧ ¬crAnTimeOrderRel c φ))\n        (List.insertionSort crAnTimeOrderRel (φs' ++ φs))\n⊢ crAnTimeOrderSign (φs' ++ ([ψ, φ] ++ φs)) •\n      (ι\n          (ofCrAnListF\n            (List.takeWhile (fun c => !decide (crAnTimeOrderRel φ c))\n              (List.insertionSort crAnTimeOrderRel (φs' ++ φs)))) *\n        (ι (ofCrAnListF (List.filter (fun c => decide (crAnTimeOrderRel φ c) && decide (crAnTimeOrderRel c φ)) φs')) *\n          (ι (ofCrAnListF [ψ, φ]) *\n            (ι\n                (ofCrAnListF\n                  (List.filter (fun c => decide (crAnTimeOrderRel φ c) && decide (crAnTimeOrderRel c φ)) φs)) *\n              ι\n                (ofCrAnListF\n                  (List.filter (fun c => decide (crAnTimeOrderRel φ c) && !decide (crAnTimeOrderRel c φ))\n                    (List.insertionSort crAnTimeOrderRel (φs' ++ φs)))))))) =\n    crAnTimeOrderSign (φs' ++ ψ :: φ :: φs) •\n      (ι\n          (ofCrAnListF\n            (List.takeWhile (fun c => !decide (crAnTimeOrderRel φ c))\n              (List.insertionSort crAnTimeOrderRel (φs' ++ φs)))) *\n        (ι (ofCrAnListF (List.filter (fun c => decide (crAnTimeOrderRel φ c) && decide (crAnTimeOrderRel c φ)) φs')) *\n          (ι (ofCrAnListF [ψ, φ]) *\n            (ι\n                (ofCrAnListF\n                  (List.filter (fun c => decide (crAnTimeOrderRel φ c) && decide (crAnTimeOrderRel c φ)) φs)) *\n              ι\n                (ofCrAnListF\n                  (List.filter (fun c => decide (crAnTimeOrderRel φ c) && !decide (crAnTimeOrderRel c φ))\n                    (List.insertionSort crAnTimeOrderRel (φs' ++ φs))))))))"
+          ],
+          "kind": "tactic",
+          "start": 18290
+        }
+      },
+      {
+        "severity": "information",
+        "position": {
+          "column": 0,
+          "line": 450
+        },
+        "end_position": {
+          "column": 6,
+          "line": 450
+        },
+        "message": "FieldSpecification.WickAlgebra.ι_timeOrderF_superCommuteF_eq_time {𝓕 : FieldSpecification} {φ ψ : 𝓕.CrAnFieldOp}\n  (hφψ : FieldSpecification.crAnTimeOrderRel φ ψ) (hψφ : FieldSpecification.crAnTimeOrderRel ψ φ)\n  (a b : 𝓕.FieldOpFreeAlgebra) :\n  FieldSpecification.WickAlgebra.ι\n      (FieldSpecification.FieldOpFreeAlgebra.timeOrderF\n        (a *\n            (FieldSpecification.FieldOpFreeAlgebra.superCommuteF (FieldSpecification.FieldOpFreeAlgebra.ofCrAnOpF φ))\n              (FieldSpecification.FieldOpFreeAlgebra.ofCrAnOpF ψ) *\n          b)) =\n    FieldSpecification.WickAlgebra.ι\n      ((FieldSpecification.FieldOpFreeAlgebra.superCommuteF (FieldSpecification.FieldOpFreeAlgebra.ofCrAnOpF φ))\n          (FieldSpecification.FieldOpFreeAlgebra.ofCrAnOpF ψ) *\n        FieldSpecification.FieldOpFreeAlgebra.timeOrderF (a * b))",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "FieldSpecification.WickAlgebra.ι_timeOrderF_superCommuteF_eq_time {𝓕 : FieldSpecification} {φ ψ : 𝓕.CrAnFieldOp}\n  (hφψ : FieldSpecification.crAnTimeOrderRel φ ψ) (hψφ : FieldSpecification.crAnTimeOrderRel ψ φ)\n  (a b : 𝓕.FieldOpFreeAlgebra) :\n  FieldSpecification.WickAlgebra.ι\n      (FieldSpecification.FieldOpFreeAlgebra.timeOrderF\n        (a *\n            (FieldSpecification.FieldOpFreeAlgebra.superCommuteF (FieldSpecification.FieldOpFreeAlgebra.ofCrAnOpF φ))\n              (FieldSpecification.FieldOpFreeAlgebra.ofCrAnOpF ψ) *\n          b)) =\n    FieldSpecification.WickAlgebra.ι\n      ((FieldSpecification.FieldOpFreeAlgebra.superCommuteF (FieldSpecification.FieldOpFreeAlgebra.ofCrAnOpF φ))\n          (FieldSpecification.FieldOpFreeAlgebra.ofCrAnOpF ψ) *\n        FieldSpecification.FieldOpFreeAlgebra.timeOrderF (a * b))",
+          "endPos": {
+            "column": 6,
+            "line": 450
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/P_A/P6/normal/A3/repeat_1/validation/lean/005_candidate_02/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 0,
+            "line": 450
+          },
+          "severity": "information"
+        }
+      },
+      {
+        "severity": "information",
+        "position": {
+          "column": 0,
+          "line": 451
+        },
+        "end_position": {
+          "column": 6,
+          "line": 451
+        },
+        "message": "'FieldSpecification.WickAlgebra.ι_timeOrderF_superCommuteF_eq_time' depends on axioms: [propext,\n sorryAx,\n Classical.choice,\n Quot.sound]",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "'FieldSpecification.WickAlgebra.ι_timeOrderF_superCommuteF_eq_time' depends on axioms: [propext,\n sorryAx,\n Classical.choice,\n Quot.sound]",
+          "endPos": {
+            "column": 6,
+            "line": 451
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/P_A/P6/normal/A3/repeat_1/validation/lean/005_candidate_02/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 0,
+            "line": 451
+          },
+          "severity": "information"
+        }
+      }
+    ],
+    "goals": [
+      "crAnTimeOrderSign (φs' ++ ([ψ, φ] ++ φs)) •\n      (ι\n          (ofCrAnListF\n            (List.takeWhile (fun c => !decide (crAnTimeOrderRel φ c))\n              (List.insertionSort crAnTimeOrderRel (φs' ++ φs)))) *\n        (ι (ofCrAnListF (List.filter (fun c => decide (crAnTimeOrderRel φ c) && decide (crAnTimeOrderRel c φ)) φs')) *\n          (ι (ofCrAnListF [ψ, φ]) *\n            (ι\n                (ofCrAnListF\n                  (List.filter (fun c => decide (crAnTimeOrderRel φ c) && decide (crAnTimeOrderRel c φ)) φs)) *\n              ι\n                (ofCrAnListF\n                  (List.filter (fun c => decide (crAnTimeOrderRel φ c) && !decide (crAnTimeOrderRel c φ))\n                    (List.insertionSort crAnTimeOrderRel (φs' ++ φs)))))))) =\n    crAnTimeOrderSign (φs' ++ ψ :: φ :: φs) •\n      (ι\n          (ofCrAnListF\n            (List.takeWhile (fun c => !decide (crAnTimeOrderRel φ c))\n              (List.insertionSort crAnTimeOrderRel (φs' ++ φs)))) *\n        (ι (ofCrAnListF (List.filter (fun c => decide (crAnTimeOrderRel φ c) && decide (crAnTimeOrderRel c φ)) φs')) *\n          (ι (ofCrAnListF [ψ, φ]) *\n            (ι\n                (ofCrAnListF\n                  (List.filter (fun c => decide (crAnTimeOrderRel φ c) && decide (crAnTimeOrderRel c φ)) φs)) *\n              ι\n                (ofCrAnListF\n                  (List.filter (fun c => decide (crAnTimeOrderRel φ c) && !decide (crAnTimeOrderRel c φ))\n                    (List.insertionSort crAnTimeOrderRel (φs' ++ φs))))))))"
+    ],
+    "local_context": [
+      "𝓕 : FieldSpecification\nφ ψ : 𝓕.CrAnFieldOp\nhφψ : crAnTimeOrderRel φ ψ\nhψφ : crAnTimeOrderRel ψ φ\na b : 𝓕.FieldOpFreeAlgebra\npb : (b : 𝓕.FieldOpFreeAlgebra) → b ∈ Submodule.span ℂ (Set.range ⇑ofCrAnListFBasis) → Prop :=\n  fun b hc =>\n    ι (timeOrderF (a * (superCommuteF (ofCrAnOpF φ)) (ofCrAnOpF ψ) * b)) =\n      ι ((superCommuteF (ofCrAnOpF φ)) (ofCrAnOpF ψ) * timeOrderF (a * b))\nφs : List 𝓕.CrAnFieldOp\npa : (a : 𝓕.FieldOpFreeAlgebra) → a ∈ Submodule.span ℂ (Set.range ⇑ofCrAnListFBasis) → Prop :=\n  fun a hc =>\n    ι (timeOrderF (a * (superCommuteF (ofCrAnOpF φ)) (ofCrAnOpF ψ) * ofCrAnListF φs)) =\n      ι ((superCommuteF (ofCrAnOpF φ)) (ofCrAnOpF ψ) * timeOrderF (a * ofCrAnListF φs))\nφs' : List 𝓕.CrAnFieldOp\nl1 : List 𝓕.CrAnFieldOp :=\n  List.takeWhile (fun c => decide ¬crAnTimeOrderRel φ c) (List.insertionSort crAnTimeOrderRel (φs' ++ φs)) ++\n    List.filter (fun c => decide (crAnTimeOrderRel φ c ∧ crAnTimeOrderRel c φ)) φs'\nl2 : List 𝓕.CrAnFieldOp :=\n  List.filter (fun c => decide (crAnTimeOrderRel φ c ∧ crAnTimeOrderRel c φ)) φs ++\n    List.filter (fun c => decide (crAnTimeOrderRel φ c ∧ ¬crAnTimeOrderRel c φ))\n      (List.insertionSort crAnTimeOrderRel (φs' ++ φs))\nh12 :\n  ι (timeOrderF (ofCrAnListF (φs' ++ φ :: ψ :: φs))) =\n    crAnTimeOrderSign (φs' ++ φ :: ψ :: φs) • (ι (ofCrAnListF l1) * ι (ofCrAnListF [φ, ψ]) * ι (ofCrAnListF l2))\nh :\n  List.insertionSort crAnTimeOrderRel (φs' ++ [ψ, φ] ++ φs) =\n    List.takeWhile (fun c => decide ¬crAnTimeOrderRel φ c) (List.insertionSort crAnTimeOrderRel (φs' ++ φs)) ++\n            List.filter (fun c => decide (crAnTimeOrderRel φ c ∧ crAnTimeOrderRel c φ)) φs' ++\n          [ψ, φ] ++\n        List.filter (fun c => decide (crAnTimeOrderRel φ c ∧ crAnTimeOrderRel c φ)) φs ++\n      List.filter (fun c => decide (crAnTimeOrderRel φ c ∧ ¬crAnTimeOrderRel c φ))\n        (List.insertionSort crAnTimeOrderRel (φs' ++ φs))"
+    ],
+    "sorries": [
+      {
+        "kind": "transitive_dependency",
+        "axiom": "sorryAx",
+        "position": null,
+        "end_position": null
+      }
+    ],
+    "backend_proof_status": null,
+    "statement_check": "fixed_context_preserved",
+    "axioms": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext",
+      "sorryAx"
+    ],
+    "metrics": {
+      "proof_tokens": 932
+    },
+    "elapsed_ms": 10293,
+    "raw_log_path": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/P_A/P6/normal/A3/repeat_1/validation/lean/005_candidate_02/stdout.log",
+    "detail": null,
+    "failure_kind": "proof_error"
+  },
+  "actual": {
+    "task_id": "P6",
+    "attempt": "saved_candidate",
+    "candidate_hash": "4975c6627014497cfe061a08178c7f238e81160031eb68ecb559994d9748b1ef",
+    "environment_id": "a8ea488063a518912258eeebed8ac874bee2baabe51aabe25a8cdf4ef5d1e6eb",
+    "check_kind": "candidate",
+    "status": "proof_error",
+    "process_exit_code": 1,
+    "diagnostics": [
+      {
+        "severity": "error",
+        "position": {
+          "column": 8,
+          "line": 210
+        },
+        "end_position": {
+          "column": 38,
+          "line": 210
+        },
+        "message": "Tactic `assumption` failed\n\n𝓕 : FieldSpecification\nφ ψ : 𝓕.CrAnFieldOp\nhφψ : crAnTimeOrderRel φ ψ\nhψφ : crAnTimeOrderRel ψ φ\na b : 𝓕.FieldOpFreeAlgebra\npb : (b : 𝓕.FieldOpFreeAlgebra) → b ∈ Submodule.span ℂ (Set.range ⇑ofCrAnListFBasis) → Prop :=\n  fun b hc =>\n    ι (timeOrderF (a * (superCommuteF (ofCrAnOpF φ)) (ofCrAnOpF ψ) * b)) =\n      ι ((superCommuteF (ofCrAnOpF φ)) (ofCrAnOpF ψ) * timeOrderF (a * b))\nφs : List 𝓕.CrAnFieldOp\npa : (a : 𝓕.FieldOpFreeAlgebra) → a ∈ Submodule.span ℂ (Set.range ⇑ofCrAnListFBasis) → Prop :=\n  fun a hc =>\n    ι (timeOrderF (a * (superCommuteF (ofCrAnOpF φ)) (ofCrAnOpF ψ) * ofCrAnListF φs)) =\n      ι ((superCommuteF (ofCrAnOpF φ)) (ofCrAnOpF ψ) * timeOrderF (a * ofCrAnListF φs))\nφs' : List 𝓕.CrAnFieldOp\nl1 : List 𝓕.CrAnFieldOp :=\n  List.takeWhile (fun c => decide ¬crAnTimeOrderRel φ c) (List.insertionSort crAnTimeOrderRel (φs' ++ φs)) ++\n    List.filter (fun c => decide (crAnTimeOrderRel φ c ∧ crAnTimeOrderRel c φ)) φs'\nl2 : List 𝓕.CrAnFieldOp :=\n  List.filter (fun c => decide (crAnTimeOrderRel φ c ∧ crAnTimeOrderRel c φ)) φs ++\n    List.filter (fun c => decide (crAnTimeOrderRel φ c ∧ ¬crAnTimeOrderRel c φ))\n      (List.insertionSort crAnTimeOrderRel (φs' ++ φs))\nh12 :\n  ι (timeOrderF (ofCrAnListF (φs' ++ φ :: ψ :: φs))) =\n    crAnTimeOrderSign (φs' ++ φ :: ψ :: φs) • (ι (ofCrAnListF l1) * ι (ofCrAnListF [φ, ψ]) * ι (ofCrAnListF l2))\nh :\n  List.insertionSort crAnTimeOrderRel (φs' ++ [ψ, φ] ++ φs) =\n    List.takeWhile (fun c => decide ¬crAnTimeOrderRel φ c) (List.insertionSort crAnTimeOrderRel (φs' ++ φs)) ++\n            List.filter (fun c => decide (crAnTimeOrderRel φ c ∧ crAnTimeOrderRel c φ)) φs' ++\n          [ψ, φ] ++\n        List.filter (fun c => decide (crAnTimeOrderRel φ c ∧ crAnTimeOrderRel c φ)) φs ++\n      List.filter (fun c => decide (crAnTimeOrderRel φ c ∧ ¬crAnTimeOrderRel c φ))\n        (List.insertionSort crAnTimeOrderRel (φs' ++ φs))\n⊢ crAnTimeOrderSign (φs' ++ ([ψ, φ] ++ φs)) •\n      (ι\n          (ofCrAnListF\n            (List.takeWhile (fun c => !decide (crAnTimeOrderRel φ c))\n              (List.insertionSort crAnTimeOrderRel (φs' ++ φs)))) *\n        (ι (ofCrAnListF (List.filter (fun c => decide (crAnTimeOrderRel φ c) && decide (crAnTimeOrderRel c φ)) φs')) *\n          (ι (ofCrAnListF [ψ, φ]) *\n            (ι\n                (ofCrAnListF\n                  (List.filter (fun c => decide (crAnTimeOrderRel φ c) && decide (crAnTimeOrderRel c φ)) φs)) *\n              ι\n                (ofCrAnListF\n                  (List.filter (fun c => decide (crAnTimeOrderRel φ c) && !decide (crAnTimeOrderRel c φ))\n                    (List.insertionSort crAnTimeOrderRel (φs' ++ φs)))))))) =\n    crAnTimeOrderSign (φs' ++ ψ :: φ :: φs) •\n      (ι\n          (ofCrAnListF\n            (List.takeWhile (fun c => !decide (crAnTimeOrderRel φ c))\n              (List.insertionSort crAnTimeOrderRel (φs' ++ φs)))) *\n        (ι (ofCrAnListF (List.filter (fun c => decide (crAnTimeOrderRel φ c) && decide (crAnTimeOrderRel c φ)) φs')) *\n          (ι (ofCrAnListF [ψ, φ]) *\n            (ι\n                (ofCrAnListF\n                  (List.filter (fun c => decide (crAnTimeOrderRel φ c) && decide (crAnTimeOrderRel c φ)) φs)) *\n              ι\n                (ofCrAnListF\n                  (List.filter (fun c => decide (crAnTimeOrderRel φ c) && !decide (crAnTimeOrderRel c φ))\n                    (List.insertionSort crAnTimeOrderRel (φs' ++ φs))))))))",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "Tactic `assumption` failed\n\n𝓕 : FieldSpecification\nφ ψ : 𝓕.CrAnFieldOp\nhφψ : crAnTimeOrderRel φ ψ\nhψφ : crAnTimeOrderRel ψ φ\na b : 𝓕.FieldOpFreeAlgebra\npb : (b : 𝓕.FieldOpFreeAlgebra) → b ∈ Submodule.span ℂ (Set.range ⇑ofCrAnListFBasis) → Prop :=\n  fun b hc =>\n    ι (timeOrderF (a * (superCommuteF (ofCrAnOpF φ)) (ofCrAnOpF ψ) * b)) =\n      ι ((superCommuteF (ofCrAnOpF φ)) (ofCrAnOpF ψ) * timeOrderF (a * b))\nφs : List 𝓕.CrAnFieldOp\npa : (a : 𝓕.FieldOpFreeAlgebra) → a ∈ Submodule.span ℂ (Set.range ⇑ofCrAnListFBasis) → Prop :=\n  fun a hc =>\n    ι (timeOrderF (a * (superCommuteF (ofCrAnOpF φ)) (ofCrAnOpF ψ) * ofCrAnListF φs)) =\n      ι ((superCommuteF (ofCrAnOpF φ)) (ofCrAnOpF ψ) * timeOrderF (a * ofCrAnListF φs))\nφs' : List 𝓕.CrAnFieldOp\nl1 : List 𝓕.CrAnFieldOp :=\n  List.takeWhile (fun c => decide ¬crAnTimeOrderRel φ c) (List.insertionSort crAnTimeOrderRel (φs' ++ φs)) ++\n    List.filter (fun c => decide (crAnTimeOrderRel φ c ∧ crAnTimeOrderRel c φ)) φs'\nl2 : List 𝓕.CrAnFieldOp :=\n  List.filter (fun c => decide (crAnTimeOrderRel φ c ∧ crAnTimeOrderRel c φ)) φs ++\n    List.filter (fun c => decide (crAnTimeOrderRel φ c ∧ ¬crAnTimeOrderRel c φ))\n      (List.insertionSort crAnTimeOrderRel (φs' ++ φs))\nh12 :\n  ι (timeOrderF (ofCrAnListF (φs' ++ φ :: ψ :: φs))) =\n    crAnTimeOrderSign (φs' ++ φ :: ψ :: φs) • (ι (ofCrAnListF l1) * ι (ofCrAnListF [φ, ψ]) * ι (ofCrAnListF l2))\nh :\n  List.insertionSort crAnTimeOrderRel (φs' ++ [ψ, φ] ++ φs) =\n    List.takeWhile (fun c => decide ¬crAnTimeOrderRel φ c) (List.insertionSort crAnTimeOrderRel (φs' ++ φs)) ++\n            List.filter (fun c => decide (crAnTimeOrderRel φ c ∧ crAnTimeOrderRel c φ)) φs' ++\n          [ψ, φ] ++\n        List.filter (fun c => decide (crAnTimeOrderRel φ c ∧ crAnTimeOrderRel c φ)) φs ++\n      List.filter (fun c => decide (crAnTimeOrderRel φ c ∧ ¬crAnTimeOrderRel c φ))\n        (List.insertionSort crAnTimeOrderRel (φs' ++ φs))\n⊢ crAnTimeOrderSign (φs' ++ ([ψ, φ] ++ φs)) •\n      (ι\n          (ofCrAnListF\n            (List.takeWhile (fun c => !decide (crAnTimeOrderRel φ c))\n              (List.insertionSort crAnTimeOrderRel (φs' ++ φs)))) *\n        (ι (ofCrAnListF (List.filter (fun c => decide (crAnTimeOrderRel φ c) && decide (crAnTimeOrderRel c φ)) φs')) *\n          (ι (ofCrAnListF [ψ, φ]) *\n            (ι\n                (ofCrAnListF\n                  (List.filter (fun c => decide (crAnTimeOrderRel φ c) && decide (crAnTimeOrderRel c φ)) φs)) *\n              ι\n                (ofCrAnListF\n                  (List.filter (fun c => decide (crAnTimeOrderRel φ c) && !decide (crAnTimeOrderRel c φ))\n                    (List.insertionSort crAnTimeOrderRel (φs' ++ φs)))))))) =\n    crAnTimeOrderSign (φs' ++ ψ :: φ :: φs) •\n      (ι\n          (ofCrAnListF\n            (List.takeWhile (fun c => !decide (crAnTimeOrderRel φ c))\n              (List.insertionSort crAnTimeOrderRel (φs' ++ φs)))) *\n        (ι (ofCrAnListF (List.filter (fun c => decide (crAnTimeOrderRel φ c) && decide (crAnTimeOrderRel c φ)) φs')) *\n          (ι (ofCrAnListF [ψ, φ]) *\n            (ι\n                (ofCrAnListF\n                  (List.filter (fun c => decide (crAnTimeOrderRel φ c) && decide (crAnTimeOrderRel c φ)) φs)) *\n              ι\n                (ofCrAnListF\n                  (List.filter (fun c => decide (crAnTimeOrderRel φ c) && !decide (crAnTimeOrderRel c φ))\n                    (List.insertionSort crAnTimeOrderRel (φs' ++ φs))))))))",
+          "endPos": {
+            "column": 38,
+            "line": 210
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/revalidation/P6/90255c1f2acd99081bffd9f75d3ea8b61eedb39e41ef5ad093e1ee37c038ce42-candidate/physlib-v4.32.0/fresh/lean/002_saved_candidate/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 8,
+            "line": 210
+          },
+          "severity": "error"
+        },
+        "source_line": "        simpa only [List.append_assoc]",
+        "start_offset": 10396,
+        "start_byte_offset": 11159,
+        "end_offset": 10426,
+        "end_byte_offset": 11189,
+        "source_text": "simpa only [List.append_assoc]",
+        "failed_tactic": "simpa only [List.append_assoc]",
+        "tactic_range": {
+          "position": {
+            "line": 210,
+            "column": 8
+          },
+          "end_position": {
+            "line": 210,
+            "column": 38
+          },
+          "start_offset": 10396,
+          "end_offset": 10426
+        },
+        "goals": [
+          "crAnTimeOrderSign (φs' ++ ([ψ, φ] ++ φs)) •\n      (ι\n          (ofCrAnListF\n            (List.takeWhile (fun c => !decide (crAnTimeOrderRel φ c))\n              (List.insertionSort crAnTimeOrderRel (φs' ++ φs)))) *\n        (ι (ofCrAnListF (List.filter (fun c => decide (crAnTimeOrderRel φ c) && decide (crAnTimeOrderRel c φ)) φs')) *\n          (ι (ofCrAnListF [ψ, φ]) *\n            (ι\n                (ofCrAnListF\n                  (List.filter (fun c => decide (crAnTimeOrderRel φ c) && decide (crAnTimeOrderRel c φ)) φs)) *\n              ι\n                (ofCrAnListF\n                  (List.filter (fun c => decide (crAnTimeOrderRel φ c) && !decide (crAnTimeOrderRel c φ))\n                    (List.insertionSort crAnTimeOrderRel (φs' ++ φs)))))))) =\n    crAnTimeOrderSign (φs' ++ ψ :: φ :: φs) •\n      (ι\n          (ofCrAnListF\n            (List.takeWhile (fun c => !decide (crAnTimeOrderRel φ c))\n              (List.insertionSort crAnTimeOrderRel (φs' ++ φs)))) *\n        (ι (ofCrAnListF (List.filter (fun c => decide (crAnTimeOrderRel φ c) && decide (crAnTimeOrderRel c φ)) φs')) *\n          (ι (ofCrAnListF [ψ, φ]) *\n            (ι\n                (ofCrAnListF\n                  (List.filter (fun c => decide (crAnTimeOrderRel φ c) && decide (crAnTimeOrderRel c φ)) φs)) *\n              ι\n                (ofCrAnListF\n                  (List.filter (fun c => decide (crAnTimeOrderRel φ c) && !decide (crAnTimeOrderRel c φ))\n                    (List.insertionSort crAnTimeOrderRel (φs' ++ φs))))))))"
+        ],
+        "local_context": [
+          "𝓕 : FieldSpecification\nφ ψ : 𝓕.CrAnFieldOp\nhφψ : crAnTimeOrderRel φ ψ\nhψφ : crAnTimeOrderRel ψ φ\na b : 𝓕.FieldOpFreeAlgebra\npb : (b : 𝓕.FieldOpFreeAlgebra) → b ∈ Submodule.span ℂ (Set.range ⇑ofCrAnListFBasis) → Prop :=\n  fun b hc =>\n    ι (timeOrderF (a * (superCommuteF (ofCrAnOpF φ)) (ofCrAnOpF ψ) * b)) =\n      ι ((superCommuteF (ofCrAnOpF φ)) (ofCrAnOpF ψ) * timeOrderF (a * b))\nφs : List 𝓕.CrAnFieldOp\npa : (a : 𝓕.FieldOpFreeAlgebra) → a ∈ Submodule.span ℂ (Set.range ⇑ofCrAnListFBasis) → Prop :=\n  fun a hc =>\n    ι (timeOrderF (a * (superCommuteF (ofCrAnOpF φ)) (ofCrAnOpF ψ) * ofCrAnListF φs)) =\n      ι ((superCommuteF (ofCrAnOpF φ)) (ofCrAnOpF ψ) * timeOrderF (a * ofCrAnListF φs))\nφs' : List 𝓕.CrAnFieldOp\nl1 : List 𝓕.CrAnFieldOp :=\n  List.takeWhile (fun c => decide ¬crAnTimeOrderRel φ c) (List.insertionSort crAnTimeOrderRel (φs' ++ φs)) ++\n    List.filter (fun c => decide (crAnTimeOrderRel φ c ∧ crAnTimeOrderRel c φ)) φs'\nl2 : List 𝓕.CrAnFieldOp :=\n  List.filter (fun c => decide (crAnTimeOrderRel φ c ∧ crAnTimeOrderRel c φ)) φs ++\n    List.filter (fun c => decide (crAnTimeOrderRel φ c ∧ ¬crAnTimeOrderRel c φ))\n      (List.insertionSort crAnTimeOrderRel (φs' ++ φs))\nh12 :\n  ι (timeOrderF (ofCrAnListF (φs' ++ φ :: ψ :: φs))) =\n    crAnTimeOrderSign (φs' ++ φ :: ψ :: φs) • (ι (ofCrAnListF l1) * ι (ofCrAnListF [φ, ψ]) * ι (ofCrAnListF l2))\nh :\n  List.insertionSort crAnTimeOrderRel (φs' ++ [ψ, φ] ++ φs) =\n    List.takeWhile (fun c => decide ¬crAnTimeOrderRel φ c) (List.insertionSort crAnTimeOrderRel (φs' ++ φs)) ++\n            List.filter (fun c => decide (crAnTimeOrderRel φ c ∧ crAnTimeOrderRel c φ)) φs' ++\n          [ψ, φ] ++\n        List.filter (fun c => decide (crAnTimeOrderRel φ c ∧ crAnTimeOrderRel c φ)) φs ++\n      List.filter (fun c => decide (crAnTimeOrderRel φ c ∧ ¬crAnTimeOrderRel c φ))\n        (List.insertionSort crAnTimeOrderRel (φs' ++ φs))"
+        ],
+        "proof_state_source": "lean_infotree_before_tactic",
+        "proof_state_raw": {
+          "depth": 27,
+          "end": 18320,
+          "goals_after": [
+            "𝓕 : FieldSpecification\nφ ψ : 𝓕.CrAnFieldOp\nhφψ : crAnTimeOrderRel φ ψ\nhψφ : crAnTimeOrderRel ψ φ\na b : 𝓕.FieldOpFreeAlgebra\npb : (b : 𝓕.FieldOpFreeAlgebra) → b ∈ Submodule.span ℂ (Set.range ⇑ofCrAnListFBasis) → Prop :=\n  fun b hc =>\n    ι (timeOrderF (a * (superCommuteF (ofCrAnOpF φ)) (ofCrAnOpF ψ) * b)) =\n      ι ((superCommuteF (ofCrAnOpF φ)) (ofCrAnOpF ψ) * timeOrderF (a * b))\nφs : List 𝓕.CrAnFieldOp\npa : (a : 𝓕.FieldOpFreeAlgebra) → a ∈ Submodule.span ℂ (Set.range ⇑ofCrAnListFBasis) → Prop :=\n  fun a hc =>\n    ι (timeOrderF (a * (superCommuteF (ofCrAnOpF φ)) (ofCrAnOpF ψ) * ofCrAnListF φs)) =\n      ι ((superCommuteF (ofCrAnOpF φ)) (ofCrAnOpF ψ) * timeOrderF (a * ofCrAnListF φs))\nφs' : List 𝓕.CrAnFieldOp\nl1 : List 𝓕.CrAnFieldOp :=\n  List.takeWhile (fun c => decide ¬crAnTimeOrderRel φ c) (List.insertionSort crAnTimeOrderRel (φs' ++ φs)) ++\n    List.filter (fun c => decide (crAnTimeOrderRel φ c ∧ crAnTimeOrderRel c φ)) φs'\nl2 : List 𝓕.CrAnFieldOp :=\n  List.filter (fun c => decide (crAnTimeOrderRel φ c ∧ crAnTimeOrderRel c φ)) φs ++\n    List.filter (fun c => decide (crAnTimeOrderRel φ c ∧ ¬crAnTimeOrderRel c φ))\n      (List.insertionSort crAnTimeOrderRel (φs' ++ φs))\nh12 :\n  ι (timeOrderF (ofCrAnListF (φs' ++ φ :: ψ :: φs))) =\n    crAnTimeOrderSign (φs' ++ φ :: ψ :: φs) • (ι (ofCrAnListF l1) * ι (ofCrAnListF [φ, ψ]) * ι (ofCrAnListF l2))\nh :\n  List.insertionSort crAnTimeOrderRel (φs' ++ [ψ, φ] ++ φs) =\n    List.takeWhile (fun c => decide ¬crAnTimeOrderRel φ c) (List.insertionSort crAnTimeOrderRel (φs' ++ φs)) ++\n            List.filter (fun c => decide (crAnTimeOrderRel φ c ∧ crAnTimeOrderRel c φ)) φs' ++\n          [ψ, φ] ++\n        List.filter (fun c => decide (crAnTimeOrderRel φ c ∧ crAnTimeOrderRel c φ)) φs ++\n      List.filter (fun c => decide (crAnTimeOrderRel φ c ∧ ¬crAnTimeOrderRel c φ))\n        (List.insertionSort crAnTimeOrderRel (φs' ++ φs))\n⊢ crAnTimeOrderSign (φs' ++ ([ψ, φ] ++ φs)) •\n      (ι\n          (ofCrAnListF\n            (List.takeWhile (fun c => !decide (crAnTimeOrderRel φ c))\n              (List.insertionSort crAnTimeOrderRel (φs' ++ φs)))) *\n        (ι (ofCrAnListF (List.filter (fun c => decide (crAnTimeOrderRel φ c) && decide (crAnTimeOrderRel c φ)) φs')) *\n          (ι (ofCrAnListF [ψ, φ]) *\n            (ι\n                (ofCrAnListF\n                  (List.filter (fun c => decide (crAnTimeOrderRel φ c) && decide (crAnTimeOrderRel c φ)) φs)) *\n              ι\n                (ofCrAnListF\n                  (List.filter (fun c => decide (crAnTimeOrderRel φ c) && !decide (crAnTimeOrderRel c φ))\n                    (List.insertionSort crAnTimeOrderRel (φs' ++ φs)))))))) =\n    crAnTimeOrderSign (φs' ++ ψ :: φ :: φs) •\n      (ι\n          (ofCrAnListF\n            (List.takeWhile (fun c => !decide (crAnTimeOrderRel φ c))\n              (List.insertionSort crAnTimeOrderRel (φs' ++ φs)))) *\n        (ι (ofCrAnListF (List.filter (fun c => decide (crAnTimeOrderRel φ c) && decide (crAnTimeOrderRel c φ)) φs')) *\n          (ι (ofCrAnListF [ψ, φ]) *\n            (ι\n                (ofCrAnListF\n                  (List.filter (fun c => decide (crAnTimeOrderRel φ c) && decide (crAnTimeOrderRel c φ)) φs)) *\n              ι\n                (ofCrAnListF\n                  (List.filter (fun c => decide (crAnTimeOrderRel φ c) && !decide (crAnTimeOrderRel c φ))\n                    (List.insertionSort crAnTimeOrderRel (φs' ++ φs))))))))"
+          ],
+          "goals_before": [
+            "𝓕 : FieldSpecification\nφ ψ : 𝓕.CrAnFieldOp\nhφψ : crAnTimeOrderRel φ ψ\nhψφ : crAnTimeOrderRel ψ φ\na b : 𝓕.FieldOpFreeAlgebra\npb : (b : 𝓕.FieldOpFreeAlgebra) → b ∈ Submodule.span ℂ (Set.range ⇑ofCrAnListFBasis) → Prop :=\n  fun b hc =>\n    ι (timeOrderF (a * (superCommuteF (ofCrAnOpF φ)) (ofCrAnOpF ψ) * b)) =\n      ι ((superCommuteF (ofCrAnOpF φ)) (ofCrAnOpF ψ) * timeOrderF (a * b))\nφs : List 𝓕.CrAnFieldOp\npa : (a : 𝓕.FieldOpFreeAlgebra) → a ∈ Submodule.span ℂ (Set.range ⇑ofCrAnListFBasis) → Prop :=\n  fun a hc =>\n    ι (timeOrderF (a * (superCommuteF (ofCrAnOpF φ)) (ofCrAnOpF ψ) * ofCrAnListF φs)) =\n      ι ((superCommuteF (ofCrAnOpF φ)) (ofCrAnOpF ψ) * timeOrderF (a * ofCrAnListF φs))\nφs' : List 𝓕.CrAnFieldOp\nl1 : List 𝓕.CrAnFieldOp :=\n  List.takeWhile (fun c => decide ¬crAnTimeOrderRel φ c) (List.insertionSort crAnTimeOrderRel (φs' ++ φs)) ++\n    List.filter (fun c => decide (crAnTimeOrderRel φ c ∧ crAnTimeOrderRel c φ)) φs'\nl2 : List 𝓕.CrAnFieldOp :=\n  List.filter (fun c => decide (crAnTimeOrderRel φ c ∧ crAnTimeOrderRel c φ)) φs ++\n    List.filter (fun c => decide (crAnTimeOrderRel φ c ∧ ¬crAnTimeOrderRel c φ))\n      (List.insertionSort crAnTimeOrderRel (φs' ++ φs))\nh12 :\n  ι (timeOrderF (ofCrAnListF (φs' ++ φ :: ψ :: φs))) =\n    crAnTimeOrderSign (φs' ++ φ :: ψ :: φs) • (ι (ofCrAnListF l1) * ι (ofCrAnListF [φ, ψ]) * ι (ofCrAnListF l2))\nh :\n  List.insertionSort crAnTimeOrderRel (φs' ++ [ψ, φ] ++ φs) =\n    List.takeWhile (fun c => decide ¬crAnTimeOrderRel φ c) (List.insertionSort crAnTimeOrderRel (φs' ++ φs)) ++\n            List.filter (fun c => decide (crAnTimeOrderRel φ c ∧ crAnTimeOrderRel c φ)) φs' ++\n          [ψ, φ] ++\n        List.filter (fun c => decide (crAnTimeOrderRel φ c ∧ crAnTimeOrderRel c φ)) φs ++\n      List.filter (fun c => decide (crAnTimeOrderRel φ c ∧ ¬crAnTimeOrderRel c φ))\n        (List.insertionSort crAnTimeOrderRel (φs' ++ φs))\n⊢ crAnTimeOrderSign (φs' ++ ([ψ, φ] ++ φs)) •\n      (ι\n          (ofCrAnListF\n            (List.takeWhile (fun c => !decide (crAnTimeOrderRel φ c))\n              (List.insertionSort crAnTimeOrderRel (φs' ++ φs)))) *\n        (ι (ofCrAnListF (List.filter (fun c => decide (crAnTimeOrderRel φ c) && decide (crAnTimeOrderRel c φ)) φs')) *\n          (ι (ofCrAnListF [ψ, φ]) *\n            (ι\n                (ofCrAnListF\n                  (List.filter (fun c => decide (crAnTimeOrderRel φ c) && decide (crAnTimeOrderRel c φ)) φs)) *\n              ι\n                (ofCrAnListF\n                  (List.filter (fun c => decide (crAnTimeOrderRel φ c) && !decide (crAnTimeOrderRel c φ))\n                    (List.insertionSort crAnTimeOrderRel (φs' ++ φs)))))))) =\n    crAnTimeOrderSign (φs' ++ ψ :: φ :: φs) •\n      (ι\n          (ofCrAnListF\n            (List.takeWhile (fun c => !decide (crAnTimeOrderRel φ c))\n              (List.insertionSort crAnTimeOrderRel (φs' ++ φs)))) *\n        (ι (ofCrAnListF (List.filter (fun c => decide (crAnTimeOrderRel φ c) && decide (crAnTimeOrderRel c φ)) φs')) *\n          (ι (ofCrAnListF [ψ, φ]) *\n            (ι\n                (ofCrAnListF\n                  (List.filter (fun c => decide (crAnTimeOrderRel φ c) && decide (crAnTimeOrderRel c φ)) φs)) *\n              ι\n                (ofCrAnListF\n                  (List.filter (fun c => decide (crAnTimeOrderRel φ c) && !decide (crAnTimeOrderRel c φ))\n                    (List.insertionSort crAnTimeOrderRel (φs' ++ φs))))))))"
+          ],
+          "kind": "tactic",
+          "start": 18290
+        }
+      },
+      {
+        "severity": "information",
+        "position": {
+          "column": 0,
+          "line": 450
+        },
+        "end_position": {
+          "column": 6,
+          "line": 450
+        },
+        "message": "FieldSpecification.WickAlgebra.ι_timeOrderF_superCommuteF_eq_time {𝓕 : FieldSpecification} {φ ψ : 𝓕.CrAnFieldOp}\n  (hφψ : FieldSpecification.crAnTimeOrderRel φ ψ) (hψφ : FieldSpecification.crAnTimeOrderRel ψ φ)\n  (a b : 𝓕.FieldOpFreeAlgebra) :\n  FieldSpecification.WickAlgebra.ι\n      (FieldSpecification.FieldOpFreeAlgebra.timeOrderF\n        (a *\n            (FieldSpecification.FieldOpFreeAlgebra.superCommuteF (FieldSpecification.FieldOpFreeAlgebra.ofCrAnOpF φ))\n              (FieldSpecification.FieldOpFreeAlgebra.ofCrAnOpF ψ) *\n          b)) =\n    FieldSpecification.WickAlgebra.ι\n      ((FieldSpecification.FieldOpFreeAlgebra.superCommuteF (FieldSpecification.FieldOpFreeAlgebra.ofCrAnOpF φ))\n          (FieldSpecification.FieldOpFreeAlgebra.ofCrAnOpF ψ) *\n        FieldSpecification.FieldOpFreeAlgebra.timeOrderF (a * b))",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "FieldSpecification.WickAlgebra.ι_timeOrderF_superCommuteF_eq_time {𝓕 : FieldSpecification} {φ ψ : 𝓕.CrAnFieldOp}\n  (hφψ : FieldSpecification.crAnTimeOrderRel φ ψ) (hψφ : FieldSpecification.crAnTimeOrderRel ψ φ)\n  (a b : 𝓕.FieldOpFreeAlgebra) :\n  FieldSpecification.WickAlgebra.ι\n      (FieldSpecification.FieldOpFreeAlgebra.timeOrderF\n        (a *\n            (FieldSpecification.FieldOpFreeAlgebra.superCommuteF (FieldSpecification.FieldOpFreeAlgebra.ofCrAnOpF φ))\n              (FieldSpecification.FieldOpFreeAlgebra.ofCrAnOpF ψ) *\n          b)) =\n    FieldSpecification.WickAlgebra.ι\n      ((FieldSpecification.FieldOpFreeAlgebra.superCommuteF (FieldSpecification.FieldOpFreeAlgebra.ofCrAnOpF φ))\n          (FieldSpecification.FieldOpFreeAlgebra.ofCrAnOpF ψ) *\n        FieldSpecification.FieldOpFreeAlgebra.timeOrderF (a * b))",
+          "endPos": {
+            "column": 6,
+            "line": 450
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/revalidation/P6/90255c1f2acd99081bffd9f75d3ea8b61eedb39e41ef5ad093e1ee37c038ce42-candidate/physlib-v4.32.0/fresh/lean/002_saved_candidate/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 0,
+            "line": 450
+          },
+          "severity": "information"
+        }
+      },
+      {
+        "severity": "information",
+        "position": {
+          "column": 0,
+          "line": 451
+        },
+        "end_position": {
+          "column": 6,
+          "line": 451
+        },
+        "message": "'FieldSpecification.WickAlgebra.ι_timeOrderF_superCommuteF_eq_time' depends on axioms: [propext,\n sorryAx,\n Classical.choice,\n Quot.sound]",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "'FieldSpecification.WickAlgebra.ι_timeOrderF_superCommuteF_eq_time' depends on axioms: [propext,\n sorryAx,\n Classical.choice,\n Quot.sound]",
+          "endPos": {
+            "column": 6,
+            "line": 451
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/revalidation/P6/90255c1f2acd99081bffd9f75d3ea8b61eedb39e41ef5ad093e1ee37c038ce42-candidate/physlib-v4.32.0/fresh/lean/002_saved_candidate/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 0,
+            "line": 451
+          },
+          "severity": "information"
+        }
+      }
+    ],
+    "goals": [
+      "crAnTimeOrderSign (φs' ++ ([ψ, φ] ++ φs)) •\n      (ι\n          (ofCrAnListF\n            (List.takeWhile (fun c => !decide (crAnTimeOrderRel φ c))\n              (List.insertionSort crAnTimeOrderRel (φs' ++ φs)))) *\n        (ι (ofCrAnListF (List.filter (fun c => decide (crAnTimeOrderRel φ c) && decide (crAnTimeOrderRel c φ)) φs')) *\n          (ι (ofCrAnListF [ψ, φ]) *\n            (ι\n                (ofCrAnListF\n                  (List.filter (fun c => decide (crAnTimeOrderRel φ c) && decide (crAnTimeOrderRel c φ)) φs)) *\n              ι\n                (ofCrAnListF\n                  (List.filter (fun c => decide (crAnTimeOrderRel φ c) && !decide (crAnTimeOrderRel c φ))\n                    (List.insertionSort crAnTimeOrderRel (φs' ++ φs)))))))) =\n    crAnTimeOrderSign (φs' ++ ψ :: φ :: φs) •\n      (ι\n          (ofCrAnListF\n            (List.takeWhile (fun c => !decide (crAnTimeOrderRel φ c))\n              (List.insertionSort crAnTimeOrderRel (φs' ++ φs)))) *\n        (ι (ofCrAnListF (List.filter (fun c => decide (crAnTimeOrderRel φ c) && decide (crAnTimeOrderRel c φ)) φs')) *\n          (ι (ofCrAnListF [ψ, φ]) *\n            (ι\n                (ofCrAnListF\n                  (List.filter (fun c => decide (crAnTimeOrderRel φ c) && decide (crAnTimeOrderRel c φ)) φs)) *\n              ι\n                (ofCrAnListF\n                  (List.filter (fun c => decide (crAnTimeOrderRel φ c) && !decide (crAnTimeOrderRel c φ))\n                    (List.insertionSort crAnTimeOrderRel (φs' ++ φs))))))))"
+    ],
+    "local_context": [
+      "𝓕 : FieldSpecification\nφ ψ : 𝓕.CrAnFieldOp\nhφψ : crAnTimeOrderRel φ ψ\nhψφ : crAnTimeOrderRel ψ φ\na b : 𝓕.FieldOpFreeAlgebra\npb : (b : 𝓕.FieldOpFreeAlgebra) → b ∈ Submodule.span ℂ (Set.range ⇑ofCrAnListFBasis) → Prop :=\n  fun b hc =>\n    ι (timeOrderF (a * (superCommuteF (ofCrAnOpF φ)) (ofCrAnOpF ψ) * b)) =\n      ι ((superCommuteF (ofCrAnOpF φ)) (ofCrAnOpF ψ) * timeOrderF (a * b))\nφs : List 𝓕.CrAnFieldOp\npa : (a : 𝓕.FieldOpFreeAlgebra) → a ∈ Submodule.span ℂ (Set.range ⇑ofCrAnListFBasis) → Prop :=\n  fun a hc =>\n    ι (timeOrderF (a * (superCommuteF (ofCrAnOpF φ)) (ofCrAnOpF ψ) * ofCrAnListF φs)) =\n      ι ((superCommuteF (ofCrAnOpF φ)) (ofCrAnOpF ψ) * timeOrderF (a * ofCrAnListF φs))\nφs' : List 𝓕.CrAnFieldOp\nl1 : List 𝓕.CrAnFieldOp :=\n  List.takeWhile (fun c => decide ¬crAnTimeOrderRel φ c) (List.insertionSort crAnTimeOrderRel (φs' ++ φs)) ++\n    List.filter (fun c => decide (crAnTimeOrderRel φ c ∧ crAnTimeOrderRel c φ)) φs'\nl2 : List 𝓕.CrAnFieldOp :=\n  List.filter (fun c => decide (crAnTimeOrderRel φ c ∧ crAnTimeOrderRel c φ)) φs ++\n    List.filter (fun c => decide (crAnTimeOrderRel φ c ∧ ¬crAnTimeOrderRel c φ))\n      (List.insertionSort crAnTimeOrderRel (φs' ++ φs))\nh12 :\n  ι (timeOrderF (ofCrAnListF (φs' ++ φ :: ψ :: φs))) =\n    crAnTimeOrderSign (φs' ++ φ :: ψ :: φs) • (ι (ofCrAnListF l1) * ι (ofCrAnListF [φ, ψ]) * ι (ofCrAnListF l2))\nh :\n  List.insertionSort crAnTimeOrderRel (φs' ++ [ψ, φ] ++ φs) =\n    List.takeWhile (fun c => decide ¬crAnTimeOrderRel φ c) (List.insertionSort crAnTimeOrderRel (φs' ++ φs)) ++\n            List.filter (fun c => decide (crAnTimeOrderRel φ c ∧ crAnTimeOrderRel c φ)) φs' ++\n          [ψ, φ] ++\n        List.filter (fun c => decide (crAnTimeOrderRel φ c ∧ crAnTimeOrderRel c φ)) φs ++\n      List.filter (fun c => decide (crAnTimeOrderRel φ c ∧ ¬crAnTimeOrderRel c φ))\n        (List.insertionSort crAnTimeOrderRel (φs' ++ φs))"
+    ],
+    "sorries": [
+      {
+        "kind": "transitive_dependency",
+        "axiom": "sorryAx",
+        "position": null,
+        "end_position": null
+      }
+    ],
+    "backend_proof_status": null,
+    "statement_check": "fixed_context_preserved",
+    "axioms": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext",
+      "sorryAx"
+    ],
+    "metrics": {
+      "proof_tokens": 932
+    },
+    "elapsed_ms": 7107,
+    "raw_log_path": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/revalidation/P6/90255c1f2acd99081bffd9f75d3ea8b61eedb39e41ef5ad093e1ee37c038ce42-candidate/physlib-v4.32.0/fresh/lean/002_saved_candidate/stdout.log",
+    "detail": null,
+    "failure_kind": "proof_error"
+  },
+  "new_model_calls": 0
+}

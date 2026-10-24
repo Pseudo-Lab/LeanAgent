@@ -1,0 +1,16 @@
+--- candidate_01.proof.lean
++++ candidate_02.proof.lean
+@@ -4,4 +4,10 @@
+     simp_all [OldExpressions.extractOldExprVars,
+       Imperative.HasVarsPure.getVars,
+       Lambda.LExpr.LExpr.getVars] <;>
+-    grind
+\ No newline at end of file
++    try grind
++  case app fn e m Hnfn Hne Hwf ihfn ihe =>
++    cases fn <;> cases e <;>
++      simp_all [OldExpressions.extractOldExprVars,
++        Imperative.HasVarsPure.getVars,
++        Lambda.LExpr.LExpr.getVars] <;>
++      grind
+\ No newline at end of file

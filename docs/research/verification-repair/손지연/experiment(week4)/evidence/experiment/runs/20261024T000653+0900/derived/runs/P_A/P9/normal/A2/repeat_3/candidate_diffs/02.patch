@@ -1,0 +1,14 @@
+--- candidate_01.proof.lean
++++ candidate_02.proof.lean
+@@ -6,5 +6,7 @@
+   | choice h =>
+     obtain ⟨R, hpq, hR⟩ := h
+     constructor <;> intro s' ht <;> cases ht <;>
+-      grind [IsBisimulation, ChoiceBisim]
+-  | bisim h => grind [IsBisimulation, ChoiceBisim]
+\ No newline at end of file
++      grind [IsBisimulation, IsBisimulation.le_bisimilarity,
++        HomBisimilarity.refl, ChoiceBisim]
++  | bisim h =>
++    grind [IsBisimulation, IsBisimulation.le_bisimilarity, ChoiceBisim]
+\ No newline at end of file

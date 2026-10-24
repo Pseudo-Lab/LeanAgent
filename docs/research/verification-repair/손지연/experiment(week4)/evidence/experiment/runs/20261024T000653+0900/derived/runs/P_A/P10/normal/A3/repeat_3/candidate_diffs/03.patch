@@ -1,0 +1,39 @@
+--- candidate_02.proof.lean
++++ candidate_03.proof.lean
+@@ -19,9 +19,8 @@
+     have hm : sInf S ∈ S := Nat.sInf_mem (Set.image_nonempty.mpr Set.univ_nonempty)
+     rcases hm with ⟨g, _, h⟩
+     exact ⟨g, g.property, h.symm⟩
+-  have hfg : (hammingDist f g : ℕ∞) ≤ d_fw * 2 ^ steps := by
+-    change (hammingDist f g : ℕ∞) ≤ ↑d_fw * ↑(2 ^ steps)
+-    rw [← ENat.coe_mul, ENat.coe_le_coe, hmin]
++  have hfg_nat : hammingDist f g ≤ d_fw * 2 ^ steps := by
++    rw [hmin]
+     set Δ := Finset.filter (fun x => f x ≠ g x) Finset.univ
+     set Y := fiberwiseDisagreementSet 𝔽q β i steps h_i_add_steps f g
+     let Q := iteratedQuotientMap 𝔽q β h_ℓ_add_R_rate (i := i)
+@@ -43,11 +42,11 @@
+       have hK : K x = K x' := by
+         simpa only [e] using congrArg Prod.snd h
+       apply Subtype.ext
+-      have hx : F (Q x) (K x) = x := by
+-        exact (is_fiber_iff_generates_quotient_point 𝔽q β i steps h_i_add_steps
++      have hx : F (Q x) (K x) = x :=
++        (is_fiber_iff_generates_quotient_point 𝔽q β i steps h_i_add_steps
+           (x := x) (y := Q x)).mp rfl
+-      have hx' : F (Q x') (K x') = x' := by
+-        exact (is_fiber_iff_generates_quotient_point 𝔽q β i steps h_i_add_steps
++      have hx' : F (Q x') (K x') = x' :=
++        (is_fiber_iff_generates_quotient_point 𝔽q β i steps h_i_add_steps
+           (x := x') (y := Q x')).mp rfl
+       rw [← hx, ← hx', hQ, hK]
+     change Δ.card ≤ Y.ncard * 2 ^ steps
+@@ -56,6 +55,8 @@
+       _ ≤ Fintype.card ({y // y ∈ Y.toFinset} × Fin (2 ^ steps)) :=
+         Fintype.card_le_of_injective e he
+       _ = Y.ncard * 2 ^ steps := by simp
++  have hfg : (hammingDist f g : ℕ∞) ≤ d_fw * 2 ^ steps := by
++    simpa using (ENat.coe_le_coe.mpr hfg_nat)
+   have hbridge : d_H ≤ d_fw * 2 ^ steps := by
+     apply le_trans (b := (hammingDist f g : ℕ∞))
+     · simp only [distFromCode, SetLike.mem_coe, hammingDist, ne_eq, d_H]

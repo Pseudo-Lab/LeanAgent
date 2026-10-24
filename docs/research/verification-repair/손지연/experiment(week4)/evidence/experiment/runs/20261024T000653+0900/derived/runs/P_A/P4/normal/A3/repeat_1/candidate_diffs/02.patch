@@ -1,0 +1,11 @@
+--- candidate_01.proof.lean
++++ candidate_02.proof.lean
+@@ -1,7 +1,7 @@
+ by
+   have h : (fun x => ⟪f x, f x⟫_ℝ) =ᵐ[μ] 0 :=
+     (MeasureTheory.integral_eq_zero_iff_of_nonneg
+-      (fun x => real_inner_self_nonneg' (f x))
++      (fun _ => real_inner_self_nonneg')
+       (IsTestFunction.inner hf hf).integrable).mp (hg f hf)
+   have h' : (fun x => ⟪f x, f x⟫_ℝ) = 0 :=
+     (Continuous.ae_eq_iff_eq

@@ -1,0 +1,21 @@
+--- candidate_01.proof.lean
++++ candidate_02.proof.lean
+@@ -51,7 +51,7 @@
+           subst x'
+           exact ⟨y', .red_I y', hy⟩
+       | @red_K u v =>
+-          obtain ⟨u', hu, hx'⟩ := Ka_irreducible u x' hx
++          obtain ⟨u', hu, hx'⟩ := Ka_irreducible a₂ x' hx
+           subst x'
+           exact ⟨u', .red_K u' y', hu⟩
+       | @red_S u v w =>
+@@ -62,6 +62,6 @@
+               .red_S u' v' y',
+               .par (.par hu hy) (.par hv hy)⟩
+       | @par u u' v v' hu hv =>
+-          obtain ⟨p, hxp, hup⟩ := ihx u' hu
+-          obtain ⟨q, hyq, hvq⟩ := ihy v' hv
++          obtain ⟨p, hxp, hup⟩ := ihx hu
++          obtain ⟨q, hyq, hvq⟩ := ihy hv
+           exact ⟨p ⬝ q, .par hxp hyq, .par hup hvq⟩
+\ No newline at end of file

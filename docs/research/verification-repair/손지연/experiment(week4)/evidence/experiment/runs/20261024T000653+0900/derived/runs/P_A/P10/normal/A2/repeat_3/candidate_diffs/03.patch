@@ -1,0 +1,65 @@
+--- candidate_02.proof.lean
++++ candidate_03.proof.lean
+@@ -6,15 +6,12 @@
+   let d_H := Code.distFromCode f C_i
+   let d_i := BBF_CodeDistance ℓ 𝓡 ⟨i, by omega⟩
+   let d_i_plus_steps := BBF_CodeDistance ℓ 𝓡 ⟨i.val + steps, by omega⟩
+-
+   have h_d_i_gt_0 : d_i > 0 := by
+     simp [d_i, BBF_CodeDistance]
+-
+   have h_C_i_nonempty : Nonempty C_i := by
+     simp only [nonempty_subtype, C_i]
+     exact Submodule.nonempty
+       (BBF_Code 𝔽q β (h_ℓ_add_R_rate := h_ℓ_add_R_rate) ⟨i.val, by omega⟩)
+-
+   obtain ⟨g', h_g'_mem, h_g'_min_card⟩ : ∃ g' ∈ C_i, d_fw =
+       (fiberwiseDisagreementSet 𝔽q β i steps h_i_add_steps f g').ncard := by
+     let S := (fun (g : C_i) =>
+@@ -24,7 +21,6 @@
+     rw [Set.mem_image] at h_sInf_mem
+     rcases h_sInf_mem with ⟨g_subtype, _, h_eq⟩
+     exact ⟨g_subtype.val, g_subtype.property, h_eq.symm⟩
+-
+   have h_dist_le_fw_dist_times_fiber_size :
+       (hammingDist f g' : ℕ∞) ≤ d_fw * 2 ^ steps := by
+     change (Δ₀(f, g') : ℕ∞) ≤ ↑d_fw * ((2 ^ steps : ℕ) : ℕ∞)
+@@ -93,17 +89,14 @@
+         (hy_ne := hy_ne)
+       simp only [Function.onFun, coe_univ]
+       exact h_disjoint
+-
+   have h_dist_bridge : d_H ≤ d_fw * 2 ^ steps := by
+     apply le_trans (a := d_H) (c := d_fw * 2 ^ steps) (b := hammingDist f g')
+     · simp only [distFromCode, SetLike.mem_coe, hammingDist, ne_eq, d_H]
+       apply sInf_le
+       use g'
+     · exact h_dist_le_fw_dist_times_fiber_size
+-
+   have h_fw_bound : 2 * d_fw ≤ d_i_plus_steps - 1 :=
+     Nat.le_of_lt_succ (WithTop.coe_lt_coe.1 h_fw_dist_lt)
+-
+   have h_algebraic_identity :
+       (d_i_plus_steps - 1) * 2 ^ steps = d_i - 1 := by
+     dsimp [d_i, d_i_plus_steps, BBF_CodeDistance]
+@@ -115,12 +108,10 @@
+       rw [Nat.sub_add_eq_sub_sub_rev (h1 := by omega) (h2 := by omega),
+         Nat.add_sub_cancel (n := i) (m := steps)]
+     rw [h1, h2]
+-
+   have h_dH_ne_top : d_H ≠ ⊤ := by
+     simp only [ne_eq, d_H]
+     rw [Code.distFromCode_eq_top_iff_empty f C_i]
+     exact Set.nonempty_iff_ne_empty'.mp h_C_i_nonempty
+-
+   let d_H_nat := ENat.toNat d_H
+   have h_dH_eq : d_H = d_H_nat := (ENat.coe_toNat h_dH_ne_top).symm
+   have h_final_inequality : 2 * d_H_nat ≤ d_i - 1 := by
+@@ -132,7 +123,6 @@
+       _ = (2 * d_fw) * 2 ^ steps := by rw [mul_assoc]
+       _ ≤ (d_i_plus_steps - 1) * 2 ^ steps := by gcongr
+       _ = d_i - 1 := h_algebraic_identity
+-
+   simp only [d_H, d_H_nat] at h_dH_eq
+   rw [h_dH_eq]
+   change ((2 : ℕ) : ℕ∞) * ↑Δ₀(f, C_i).toNat <

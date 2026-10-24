@@ -1,0 +1,19 @@
+--- candidate_01.proof.lean
++++ candidate_02.proof.lean
+@@ -1,4 +1,5 @@
+ by
++  classical
+   simp only
+   intro y
+   have h₀ := qMap_total_fiber_one_level_eq 𝔽q β
+@@ -8,5 +9,8 @@
+   simp only at h₀ h₁
+   simp only [fold]
+   rw [h₀, h₁]
+-  simp [Fin2ToF2, intermediateEvaluationPoly, h_β₀_eq_1.out,
++  have hsub : ℓ - i.val = (ℓ - (i.val + 1)) + 1 := by
++    omega
++  simp [Fin2ToF2, intermediateEvaluationPoly, intermediateNovelBasisX,
++    hsub, pow_succ, Fin.sum_univ_mul, h_β₀_eq_1.out,
+     Submodule.coe_add, Submodule.coe_smul] <;> ring
+\ No newline at end of file

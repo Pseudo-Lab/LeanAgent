@@ -1,0 +1,14 @@
+--- initial.proof.lean
++++ candidate_01.proof.lean
+@@ -1,2 +1,8 @@
+ by
+-  skip
+\ No newline at end of file
++  intro Hnorm
++  induction Hnorm <;>
++    simp_all [extractOldExprVars,
++      Imperative.HasVarsPure.getVars,
++      Lambda.LExpr.LExpr.getVars,
++      List.Subset] <;>
++    grind
+\ No newline at end of file

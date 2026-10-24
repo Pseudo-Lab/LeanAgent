@@ -1,0 +1,81 @@
+--- candidate_01.proof.lean
++++ candidate_02.proof.lean
+@@ -9,53 +9,51 @@
+           exact ⟨_, .refl _, .red_I _⟩
+       | red_I =>
+           exact ⟨_, .refl _, .refl _⟩
+-      | par i' a' hi ha =>
+-          have hi' : i' = I := I_irreducible i' hi
+-          subst i'
+-          exact ⟨a', ha, .red_I a'⟩
++      | par hi ha =>
++          rw [I_irreducible _ hi]
++          exact ⟨_, ha, .red_I _⟩
+   | red_K _ =>
+       cases hac with
+       | refl =>
+           exact ⟨_, .refl _, .red_K _ _⟩
+       | red_K =>
+           exact ⟨_, .refl _, .refl _⟩
+-      | par k' b' hk hb =>
+-          obtain ⟨x, hx, hk'⟩ := Ka_irreducible _ k' hk
+-          subst k'
+-          exact ⟨x, hx, .red_K x b'⟩
++      | par hk hb =>
++          obtain ⟨x, hx, hk'⟩ := Ka_irreducible _ _ hk
++          rw [hk']
++          exact ⟨x, hx, .red_K x _⟩
+   | red_S _ _ _ =>
+       cases hac with
+       | refl =>
+           exact ⟨_, .refl _, .red_S _ _ _⟩
+       | red_S =>
+           exact ⟨_, .refl _, .refl _⟩
+-      | par s' c' hs hc =>
+-          obtain ⟨x, y, hx, hy, hs'⟩ := Sab_irreducible _ _ s' hs
+-          subst s'
++      | par hs hc =>
++          obtain ⟨x, y, hx, hy, hs'⟩ := Sab_irreducible _ _ _ hs
++          rw [hs']
+           exact
+-            ⟨x ⬝ c' ⬝ (y ⬝ c'),
++            ⟨x ⬝ _ ⬝ (y ⬝ _),
+               .par (.par hx hc) (.par hy hc),
+-              .red_S x y c'⟩
+-  | par a a' b b' ha hb iha ihb =>
++              .red_S x y _⟩
++  | par ha hb iha ihb =>
+       cases hac with
+       | refl =>
+-          exact ⟨a' ⬝ b', .refl _, .par ha hb⟩
++          exact ⟨_, .refl _, .par ha hb⟩
+       | red_I =>
+-          have ha' : a' = I := I_irreducible a' ha
+-          subst a'
+-          exact ⟨b', .red_I b', hb⟩
++          rw [I_irreducible _ ha]
++          exact ⟨_, .red_I _, hb⟩
+       | red_K =>
+-          obtain ⟨x, hx, ha'⟩ := Ka_irreducible _ a' ha
+-          subst a'
+-          exact ⟨x, .red_K x b', hx⟩
++          obtain ⟨x, hx, ha'⟩ := Ka_irreducible _ _ ha
++          rw [ha']
++          exact ⟨x, .red_K x _, hx⟩
+       | red_S _ _ =>
+-          obtain ⟨x, y, hx, hy, ha'⟩ := Sab_irreducible _ _ a' ha
+-          subst a'
++          obtain ⟨x, y, hx, hy, ha'⟩ := Sab_irreducible _ _ _ ha
++          rw [ha']
+           exact
+-            ⟨x ⬝ b' ⬝ (y ⬝ b'),
+-              .red_S x y b',
++            ⟨x ⬝ _ ⬝ (y ⬝ _),
++              .red_S x y _,
+               .par (.par hx hb) (.par hy hb)⟩
+-      | par c' d' hc hd =>
++      | par hc hd =>
+           obtain ⟨x, hx₁, hx₂⟩ := iha hc
+           obtain ⟨y, hy₁, hy₂⟩ := ihb hd
+           exact ⟨x ⬝ y, .par hx₁ hy₁, .par hx₂ hy₂⟩
+\ No newline at end of file

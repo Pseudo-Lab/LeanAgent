@@ -1,0 +1,13 @@
+--- candidate_01.proof.lean
++++ candidate_02.proof.lean
+@@ -63,4 +63,7 @@
+         exact_mod_cast hreal
+   refine ⟨i, j - i, by omega, ?_⟩
+   intro n hn
+-  convert (hseq (n - i)).symm using 1 <;> omega
+\ No newline at end of file
++  have ha : i + (n - i) = n := by omega
++  have hb : j + (n - i) = n + (j - i) := by omega
++  rw [← ha, ← hb]
++  exact (hseq (n - i)).symm
+\ No newline at end of file

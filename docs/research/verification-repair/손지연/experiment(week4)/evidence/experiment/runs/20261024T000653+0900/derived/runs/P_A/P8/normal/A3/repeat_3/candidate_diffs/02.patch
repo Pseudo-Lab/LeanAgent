@@ -1,0 +1,52 @@
+--- candidate_01.proof.lean
++++ candidate_02.proof.lean
+@@ -10,38 +10,34 @@
+       let ⟨b₃, hb⟩ := parallelReduction_diamond hb' hb''
+       exact ⟨a₃ ⬝ b₃, .par ha.1 hb.1, .par ha.2 hb.2⟩
+     case red_I =>
+-      rw [I_irreducible a' ha']
++      obtain rfl := I_irreducible a' ha'
+       exact ⟨b', .red_I _, hb'⟩
+     case red_K =>
+-      let ⟨a₂', h⟩ := Ka_irreducible a₂ a' ha'
+-      rw [h.2]
+-      exact ⟨a₂', .red_K _ _, h.1⟩
++      obtain ⟨a₂', h, rfl⟩ := Ka_irreducible a₂ a' ha'
++      exact ⟨a₂', .red_K _ _, h⟩
+     case red_S a c =>
+-      let ⟨a'', c', h⟩ := Sab_irreducible a c a' ha'
+-      rw [h.2.2]
++      obtain ⟨a'', c', ha, hc, rfl⟩ := Sab_irreducible a c a' ha'
+       exact ⟨a'' ⬝ b' ⬝ (c' ⬝ b'), .red_S ..,
+-        .par (.par h.1 hb') (.par h.2.1 hb')⟩
++        .par (.par ha hb') (.par hc hb')⟩
+   case red_I =>
+     cases h₂
+     case refl => exact ⟨a₁, .refl _, .red_I _⟩
+     case par c a₁' hc ha =>
+-      rw [I_irreducible c hc]
++      obtain rfl := I_irreducible c hc
+       exact ⟨a₁', ha, .red_I _⟩
+     case red_I => exact ⟨a₁, .refl _, .refl _⟩
+   case red_K c =>
+     cases h₂
+     case refl => exact ⟨a₁, .refl _, .red_K _ _⟩
+     case par a' c' ha hc =>
+-      let ⟨a₁', h⟩ := Ka_irreducible a₁ a' ha
+-      rw [h.2]
+-      exact ⟨a₁', h.1, .red_K _ _⟩
++      obtain ⟨a₁', h, rfl⟩ := Ka_irreducible a₁ a' ha
++      exact ⟨a₁', h, .red_K _ _⟩
+     case red_K => exact ⟨a₁, .refl _, .refl _⟩
+   case red_S a b c =>
+     cases h₂
+     case refl => exact ⟨a ⬝ c ⬝ (b ⬝ c), .refl _, .red_S ..⟩
+     case par d c' hd hc =>
+-      let ⟨a', b', h⟩ := Sab_irreducible a b d hd
+-      rw [h.2.2]
++      obtain ⟨a', b', ha, hb, rfl⟩ := Sab_irreducible a b d hd
+       exact ⟨a' ⬝ c' ⬝ (b' ⬝ c'),
+-        .par (.par h.1 hc) (.par h.2.1 hc), .red_S ..⟩
++        .par (.par ha hc) (.par hb hc), .red_S ..⟩
+     case red_S => exact ⟨a ⬝ c ⬝ (b ⬝ c), .refl _, .refl _⟩
+\ No newline at end of file

@@ -1,0 +1,41 @@
+--- candidate_02.proof.lean
++++ candidate_03.proof.lean
+@@ -1,10 +1,29 @@
+ by
+   intro h
+   use @ChoiceBisim _ _ defs, ChoiceBisim.choice h
+-  intro s1 s2 hr μ
+-  cases hr
+-  case choice h =>
+-    constructor <;> intro s htr <;> cases htr <;>
+-      grind [IsBisimulation, ChoiceBisim, HomBisimilarity.refl]
+-  case bisim h =>
+-    grind [IsBisimulation, ChoiceBisim]
+\ No newline at end of file
++  intro s₁ s₂ hs μ
++  constructor
++  · intro s₁' ht
++    cases hs with
++    | choice h =>
++      cases ht with
++      | choiceL ht =>
++        obtain ⟨s₂', ht, h'⟩ := h.follow_fst ht
++        exact ⟨s₂', Tr.choiceL ht, ChoiceBisim.bisim h'⟩
++      | choiceR ht =>
++        exact ⟨s₁', Tr.choiceR ht, ChoiceBisim.bisim (HomBisimilarity.refl _)⟩
++    | bisim h =>
++      obtain ⟨s₂', ht, h'⟩ := h.follow_fst ht
++      exact ⟨s₂', ht, ChoiceBisim.bisim h'⟩
++  · intro s₂' ht
++    cases hs with
++    | choice h =>
++      cases ht with
++      | choiceL ht =>
++        obtain ⟨s₁', ht, h'⟩ := h.follow_snd ht
++        exact ⟨s₁', Tr.choiceL ht, ChoiceBisim.bisim h'⟩
++      | choiceR ht =>
++        exact ⟨s₂', Tr.choiceR ht, ChoiceBisim.bisim (HomBisimilarity.refl _)⟩
++    | bisim h =>
++      obtain ⟨s₁', ht, h'⟩ := h.follow_snd ht
++      exact ⟨s₁', ht, ChoiceBisim.bisim h'⟩
+\ No newline at end of file

@@ -1,0 +1,73 @@
+--- initial.proof.lean
++++ candidate_01.proof.lean
+@@ -1,2 +1,67 @@
+ by
+-  skip
+\ No newline at end of file
++  intro a a₁ a₂ h₁ h₂
++  revert a₂
++  induction h₁ with
++  | @refl x =>
++      intro a₂ h₂
++      exact ⟨a₂, h₂, .refl a₂⟩
++  | @red_I x =>
++      intro a₂ h₂
++      cases h₂ with
++      | refl =>
++          exact ⟨x, .refl x, .red_I x⟩
++      | red_I =>
++          exact ⟨x, .refl x, .refl x⟩
++      | @par l l' r r' hl hr =>
++          have hl' : l' = I := I_irreducible l' hl
++          subst l'
++          exact ⟨r', hr, .red_I r'⟩
++  | @red_K x y =>
++      intro a₂ h₂
++      cases h₂ with
++      | refl =>
++          exact ⟨x, .refl x, .red_K x y⟩
++      | red_K =>
++          exact ⟨x, .refl x, .refl x⟩
++      | @par l l' r r' hl hr =>
++          obtain ⟨x', hx, hl'⟩ := Ka_irreducible x l' hl
++          subst l'
++          exact ⟨x', hx, .red_K x' r'⟩
++  | @red_S x y z =>
++      intro a₂ h₂
++      cases h₂ with
++      | refl =>
++          exact ⟨x ⬝ z ⬝ (y ⬝ z), .refl _, .red_S x y z⟩
++      | red_S =>
++          exact ⟨x ⬝ z ⬝ (y ⬝ z), .refl _, .refl _⟩
++      | @par l l' r r' hl hr =>
++          obtain ⟨x', y', hx, hy, hl'⟩ := Sab_irreducible x y l' hl
++          subst l'
++          exact
++            ⟨x' ⬝ r' ⬝ (y' ⬝ r'),
++              .par (.par hx hr) (.par hy hr),
++              .red_S x' y' r'⟩
++  | @par x x' y y' hx hy ihx ihy =>
++      intro a₂ h₂
++      cases h₂ with
++      | refl =>
++          exact ⟨x' ⬝ y', .refl _, .par hx hy⟩
++      | @red_I z =>
++          have hx' : x' = I := I_irreducible x' hx
++          subst x'
++          exact ⟨y', .red_I y', hy⟩
++      | @red_K u v =>
++          obtain ⟨u', hu, hx'⟩ := Ka_irreducible u x' hx
++          subst x'
++          exact ⟨u', .red_K u' y', hu⟩
++      | @red_S u v w =>
++          obtain ⟨u', v', hu, hv, hx'⟩ := Sab_irreducible u v x' hx
++          subst x'
++          exact
++            ⟨u' ⬝ y' ⬝ (v' ⬝ y'),
++              .red_S u' v' y',
++              .par (.par hu hy) (.par hv hy)⟩
++      | @par u u' v v' hu hv =>
++          obtain ⟨p, hxp, hup⟩ := ihx u' hu
++          obtain ⟨q, hyq, hvq⟩ := ihy v' hv
++          exact ⟨p ⬝ q, .par hxp hyq, .par hup hvq⟩
+\ No newline at end of file

@@ -2,7 +2,8 @@
 
 대회 문제의 명제 해석, 참조 증명 분석, 개선 시도, 검증 결과와 발표자료를 세트별로 모읍니다.
 
-- [Warm-up 15문제](warmup/README.md): Week 2 담당자별 자료.
+- [Warm-up 15문제](warmup/README.md): 담당자별 문제 자료와 후속 실험 안내.
+- [손지연 Week 4 · 검증·수리 구현과 P1–P15 통합 실험](<../verification-repair/손지연/experiment(week4)/README.md>): 정상 proof 리팩터링, 성공 판정·손상 proof 복구, 선택 정책과 재현성 비교.
 - [Arena 개발·실험·운영 가이드(HTML)](arena-guide.html): 에이전트 개발 개요, 문제별 환경 고정 가안·2문제·4환경 파일럿 검증, 대시보드 사용·데이터 갱신·배포, 6개 데이터 출처·후보군 분석, 서브에이전트 effort 비교·재현성 실험. 구현 코드는 별도 `LeanAgent-LeanRefactorArena` 리포에서 관리합니다.
 - [수집 코퍼스](corpus/README.md): 출처별 수집 범위·증명 통계와 후속 실험 표본 분석.
 - [폴더·파일명 지침](../../STRUCTURE.md).
@@ -26,3 +27,5 @@
 | 박성호 | 5·10 보고서에 방법·논문 적용과 참고문헌이 포함됨. 별도 논문 조사 발표파일은 현재 없음 | [Warm-up](warmup/박성호/README.md) |
 
 혼합된 슬라이드의 본문은 분할하지 않았습니다. 각 발표의 흐름을 유지하며 한 원본을 공유합니다.
+
+손지연의 후속 검증·수리 자료는 [별도 연구 폴더](../verification-repair/손지연/README.md)에 보관합니다. Week 3 설계·초기 검증과 Week 4 구현·15문제 실험을 구분하며, Week 2의 P7·P12 풀이·ATP 발표는 기존 위치를 유지합니다.

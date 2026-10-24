@@ -1,0 +1,24 @@
+--- candidate_01.proof.lean
++++ candidate_02.proof.lean
+@@ -5,7 +5,7 @@
+     rintro x ⟨n, rfl⟩
+     exact hbounds n
+   let R := {x : ℤ // x ∈ Set.range u}
+-  letI : Finite R := hrange.toFinite
++  letI : Finite R := hrange
+   let s : ℕ → (Fin 4 → R) := fun n i =>
+     ⟨u (n + (i : ℕ)), ⟨n + (i : ℕ), rfl⟩⟩
+   have hstep (a b : ℕ) (hab : s a = s b) : s (a + 1) = s (b + 1) := by
+@@ -52,7 +52,10 @@
+     have hv : u (p + (n - p)) = u (q + (n - p)) := by
+       simpa [s] using
+         congrArg Subtype.val (congrFun (hall (n - p)) (0 : Fin 4))
+-    convert hv.symm using 1 <;> omega
++    have hleft : p + (n - p) = n := by omega
++    have hright : q + (n - p) = n + (q - p) := by omega
++    rw [hleft, hright] at hv
++    exact hv.symm
+   rcases lt_or_gt_of_ne hpq with hpq | hqp
+   · exact hmain p q hpq hs
+   · exact hmain q p hqp hs.symm
+\ No newline at end of file

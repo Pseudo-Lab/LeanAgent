@@ -1,0 +1,19 @@
+--- candidate_03.proof.lean
++++ candidate_04.proof.lean
+@@ -7,7 +7,15 @@
+     intro t x
+     rw [(hMaxwell t x).1]
+     simp [div_eq_mul_inv, mul_comm]
+-  simp_rw [time_deriv_electricField_of_isExtrema hA J hJ h]
++  have hTimeDerivApply (s : Time) :
++      ∂ₜ (A.electricField 𝓕.c · x i) s =
++        (∂ₜ (A.electricField 𝓕.c · x) s) i := by
++    simp only [Time.deriv]
++    simp (disch := fun_prop)
++  conv_lhs =>
++    enter [2, s]
++    rw [hTimeDerivApply]
++    rw [time_deriv_electricField_of_isExtrema hA J hJ h]
+   simp only [Time.deriv, Space.deriv]
+   simp (disch := fun_prop)
+     [fderiv_fun_sub, fderiv_const_mul, fderiv_fun_sum,

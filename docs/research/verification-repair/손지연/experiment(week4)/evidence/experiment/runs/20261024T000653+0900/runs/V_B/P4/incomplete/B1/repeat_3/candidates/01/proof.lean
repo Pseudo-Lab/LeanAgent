@@ -1,0 +1,51 @@
+by
+  apply funext
+  intro x₀
+  simp only [Pi.zero_apply]
+  by_contra hx₀
+  have hx₀pos : 0 < ⟪f x₀, f x₀⟫_ℝ := by
+    have hx₀ne : ⟪f x₀, f x₀⟫_ℝ ≠ 0 := by
+      intro h
+      apply hx₀
+      simpa using h
+    exact lt_of_le_of_ne (real_inner_self_nonneg' (f x₀)) (Ne.symm hx₀ne)
+  have hopen : IsOpen {y : Y | 0 < ⟪f y, f x₀⟫_ℝ} := by
+    apply isOpen_lt continuous_const
+    fun_prop
+  obtain ⟨ε, hε, hεsub⟩ :=
+    (Metric.isOpen_iff.mp hopen) x₀ (by simpa using hx₀pos)
+  let b : ContDiffBump x₀ :=
+    (ContDiffBump.ofInnerProductSpace x₀).rescale
+      (rIn := ε / 2) (rOut := ε) (half_pos hε) (half_lt_self hε)
+  let g : Y → V := fun y => b y • f x₀
+  have hg' : IsTestFunction g := by
+    constructor
+    · dsimp [g]
+      fun_prop
+    · dsimp [g]
+      exact b.hasCompactSupport.smul_right _
+  have hzero := hg g hg'
+  rw [MeasureTheory.integral_eq_zero_iff_of_nonneg] at hzero
+  · rw [Continuous.ae_eq_iff_eq] at hzero
+    · apply hx₀
+      have hx := congrFun hzero x₀
+      have hb : b x₀ = 1 := by
+        apply b.one_of_mem_closedBall
+        simp [b]
+      simpa [g, hb] using hx
+    · fun_prop
+    · fun_prop
+  · intro y
+    by_cases hy : b y = 0
+    · simp [g, hy]
+    · have hyb : y ∈ Function.support b := hy
+      rw [b.support_eq] at hyb
+      have hyball : y ∈ Metric.ball x₀ ε := by
+        simpa [b] using hyb
+      rw [show ⟪f y, g y⟫_ℝ = b y * ⟪f y, f x₀⟫_ℝ by simp [g]]
+      exact mul_nonneg (b.nonneg y) (le_of_lt (hεsub hyball))
+  · have hcont : Continuous (fun y => ⟪f y, g y⟫_ℝ) := by
+      fun_prop
+    apply hcont.integrable_of_hasCompactSupport
+    simpa [g, mul_comm] using
+      b.hasCompactSupport.mul_right (fun y => ⟪f y, f x₀⟫_ℝ)

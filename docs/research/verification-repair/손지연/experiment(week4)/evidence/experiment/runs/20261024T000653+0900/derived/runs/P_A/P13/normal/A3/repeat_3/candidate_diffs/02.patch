@@ -1,0 +1,50 @@
+--- candidate_01.proof.lean
++++ candidate_02.proof.lean
+@@ -7,7 +7,7 @@
+     refine Set.Finite.subset
+       (Set.finite_mem_finset (Finset.Icc (B, B, B, B) (T, T, T, T))) ?_
+     rintro _ ⟨n, rfl⟩
+-    simp only [f, Set.mem_Icc, Prod.le_def]
++    simp only [f, Finset.mem_Icc, Prod.le_def]
+     exact ⟨
+       ⟨(hB n).1, (hB (n + 1)).1, (hB (n + 2)).1, (hB (n + 3)).1⟩,
+       ⟨(hB n).2, (hB (n + 1)).2, (hB (n + 2)).2, (hB (n + 3)).2⟩⟩
+@@ -31,20 +31,25 @@
+     induction m using Nat.strong_induction_on with
+     | h m ih =>
+         rcases lt_or_ge m 4 with hm | hm
+-        · interval_cases m <;> simp_all
+-        · have p1 : u (i + m - 1) = u (j + m - 1) := by
+-            convert ih (m - 1) (by omega) using 1 <;> omega
+-          have p2 : u (i + m - 2) = u (j + m - 2) := by
+-            convert ih (m - 2) (by omega) using 1 <;> omega
+-          have p3 : u (i + m - 3) = u (j + m - 3) := by
+-            convert ih (m - 3) (by omega) using 1 <;> omega
+-          have p4 : u (i + m - 4) = u (j + m - 4) := by
+-            convert ih (m - 4) (by omega) using 1 <;> omega
++        · interval_cases m
++          · simpa using h0
++          · simpa using h1
++          · simpa using h2
++          · simpa using h3
++        · have p (k : ℕ) (hk : 1 ≤ k ∧ k ≤ 4) :
++              u (i + m - k) = u (j + m - k) := by
++            rw [show i + m - k = i + (m - k) by omega,
++                show j + m - k = j + (m - k) by omega]
++            exact ih (m - k) (by omega)
+           have hi := (hu (i + m) (by omega)).1
+           have hj := (hu (j + m) (by omega)).1
+           have hr : (u (i + m) : ℝ) = u (j + m) := by
+-            rw [hi, hj, p1, p2, p3, p4]
++            rw [hi, hj, p 1 (by omega), p 2 (by omega),
++              p 3 (by omega), p 4 (by omega)]
+           exact_mod_cast hr
+   refine ⟨i, j - i, by omega, ?_⟩
+   intro n hn
+-  convert (hs (n - i)).symm using 1 <;> omega
+\ No newline at end of file
++  calc
++    u (n + (j - i)) = u (j + (n - i)) := by congr 1 <;> omega
++    _ = u (i + (n - i)) := (hs (n - i)).symm
++    _ = u n := by congr 1 <;> omega
+\ No newline at end of file

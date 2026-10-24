@@ -1,0 +1,14 @@
+by
+  dsimp only
+  intro y
+  have h₀ := qMap_total_fiber_one_level_eq
+    (h_ℓ_add_R_rate := h_ℓ_add_R_rate) 𝔽q β i (by omega) y (0 : Fin 2)
+  have h₁ := qMap_total_fiber_one_level_eq
+    (h_ℓ_add_R_rate := h_ℓ_add_R_rate) 𝔽q β i (by omega) y (1 : Fin 2)
+  have h_sub : ℓ - i.val = (ℓ - (i.val + 1)) + 1 := by omega
+  dsimp only at h₀ h₁
+  simp [Fin2ToF2] at h₀ h₁
+  simp_all [fold, intermediateEvaluationPoly, intermediateNovelBasisX, h_sub,
+    pow_succ, Fin.sum_univ_mul, Fin.sum_univ_two, Fin.prod_univ_succ,
+    Polynomial.eval_sum, Polynomial.eval_prod] <;>
+    ring_nf

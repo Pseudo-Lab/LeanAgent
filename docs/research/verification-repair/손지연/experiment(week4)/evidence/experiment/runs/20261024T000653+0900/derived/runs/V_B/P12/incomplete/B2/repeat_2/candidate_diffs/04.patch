@@ -1,0 +1,114 @@
+--- candidate_03.proof.lean
++++ candidate_04.proof.lean
+@@ -1,5 +1,43 @@
+ by
+   classical
++  have prob_snoc (n : ℕ) (P : (Fin (n + 1) → F) → Prop) :
++      Pr_{ let r_last ← $ᵖ F;
++           let r_init ← $ᵖ (Fin n → F) }[
++        P (Fin.snoc r_init r_last)] =
++      Pr_{ let r ← $ᵖ (Fin (n + 1) → F) }[P r] := by
++    rw [Pr_multi_let_equiv_single_let]
++    rw [do_two_uniform_sampling_eq_uniform_prod]
++    rw [prob_uniform_eq_card_filter_div_card]
++    rw [prob_uniform_eq_card_filter_div_card]
++    congr 1
++    · refine Finset.card_bij
++        (fun p _ => Fin.snoc p.2 p.1) ?_ ?_ ?_
++      · intro p hp
++        simpa only [Finset.mem_filter, Finset.mem_univ, true_and] using hp
++      · intro p₁ hp₁ p₂ hp₂ h
++        apply Prod.ext
++        · have hlast := congrFun h (Fin.last n)
++          simpa using hlast
++        · funext i
++          have hinit := congrFun h i.castSucc
++          simpa using hinit
++      · intro r hr
++        refine ⟨(r (Fin.last n), fun i => r i.castSucc), ?_, ?_⟩
++        · simpa only [Finset.mem_filter, Finset.mem_univ, true_and]
++          using hr
++        · funext i
++          refine Fin.lastCases ?_ (fun j => ?_) i <;> simp
++    · simp [Fintype.card_fun, pow_succ']
++  have multilinearCombine_snoc
++      (n : ℕ) (u : WordStack A (Fin (2 ^ (n + 1))) ι)
++      (r_init : Fin n → F) (r_last : F) :
++      multilinearCombine u (Fin.snoc r_init r_last) =
++        multilinearCombine
++          (affineLineEvaluation
++            (splitHalfRowWiseInterleavedWords (ϑ := n) u).1
++            (splitHalfRowWiseInterleavedWords (ϑ := n) u).2 r_last)
++          r_init := by
++    rfl
+   intro ϑ
+   induction ϑ with
+   | zero =>
+@@ -14,10 +52,11 @@
+             Pr_{ let r ← $ᵖ F }[
+               Δ₀(affineLineEvaluation (F := F) (u 0) (u 1) r, MC) ≤ e]
+               > (ε : ℝ≥0) / (Fintype.card F : ℝ≥0) := by
+-          convert hu using 1 <;>
+-            simp [multilinearCombine, affineLineEvaluation,
+-              Pr_multi_let_equiv_single_let,
+-              do_two_uniform_sampling_eq_uniform_prod]
++          have hprob_eq := prob_snoc 0
++            (fun r : Fin 1 → F => Δ₀(multilinearCombine u r, MC) ≤ e)
++          rw [← hprob_eq] at hu
++          simpa [multilinearCombine_snoc, affineLineEvaluation,
++            splitHalfRowWiseInterleavedWords] using hu
+         have hbase := hC_proximityGapAffineLines (u 0) (u 1) hprob
+         have hu_pair : finMapTwoWords (u 0) (u 1) = u := by
+           funext i
+@@ -39,12 +78,11 @@
+                 (MC := MC) (u := u) (e := e) r_last r_init]
+               > (((Nat.cast (R := ℝ≥0) (ϑ + 1)) * ε : ℝ≥0) /
+                   (Fintype.card F : ℝ≥0)) := by
+-          convert hu using 1 <;>
+-            simp [multilinearCombine_affineComb_split_last_close,
+-              splitHalfRowWiseInterleavedWords, multilinearCombine,
+-              Pr_multi_let_equiv_single_let,
+-              do_two_uniform_sampling_eq_uniform_prod,
+-              Nat.succ_eq_add_one]
++          have hprob_eq := prob_snoc ϑ
++            (fun r : Fin (ϑ + 1) → F => Δ₀(multilinearCombine u r, MC) ≤ e)
++          rw [← hprob_eq] at hu
++          simpa only [multilinearCombine_affineComb_split_last_close,
++            multilinearCombine_snoc] using hu
+         have hR_raw :=
+           prob_R_star_gt_threshold (MC := MC) (ε := ε)
+             (ϑ := ϑ) u e hu_split
+@@ -69,17 +107,21 @@
+           have hr_close := correlatedAgreement_of_mem_R_star_tensor
+             (MC := MC) (e := e) (ε := ε) (ϑ_pred := ϑ) ihϑ u
+             ⟨r, hr_mem⟩
+-          convert hr_close using 1 <;>
+-            simp [jointProximityNat, U₀, U₁,
+-              splitHalfRowWiseInterleavedWords, affineLineEvaluation,
+-              Interleavable.interleave, interleave_wordStack_eq]
++          rw [jointProximityNat] at hr_close
++          have hinterleave :
++              affineLineEvaluation (F := F) (⋈| U₀) (⋈| U₁) r =
++                ⋈| (affineLineEvaluation (F := F) U₀ U₁ r) := by
++            ext j k
++            rfl
++          rw [hinterleave]
++          simpa only [U₀, U₁] using hr_close
+         have hpow : 2 ^ ϑ ≥ 1 := Nat.one_le_pow ϑ 2 (by omega)
+         have hpair :=
+           (h_interleaved_gaps (2 ^ ϑ) hpow)
+             (⋈| U₀) (⋈| U₁) hline
+-        convert hpair using 1 <;>
+-          simp [U₀, U₁, jointProximityNat₂, jointProximityNat,
+-            splitHalfRowWiseInterleavedWords, finMapTwoWords,
+-            Interleavable.interleave, interleave_wordStack_eq,
+-            CodeInterleavable.interleaveCode,
+-            ModuleCode.moduleInterleavedCode, Nat.succ_eq_add_one]
+\ No newline at end of file
++        unfold jointProximityNat₂ at hpair
++        rw [jointProximityNat] at hpair ⊢
++        simpa [U₀, U₁, splitHalfRowWiseInterleavedWords,
++          Interleavable.interleave, CodeInterleavable.interleaveCode,
++          ModuleCode.moduleInterleavedCode, Matrix.transpose_transpose,
++          Matrix.transpose_apply, Nat.succ_eq_add_one] using hpair
+\ No newline at end of file

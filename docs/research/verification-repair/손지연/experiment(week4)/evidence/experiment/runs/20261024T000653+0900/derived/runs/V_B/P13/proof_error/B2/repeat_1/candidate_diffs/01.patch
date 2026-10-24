@@ -1,0 +1,54 @@
+--- initial.proof.lean
++++ candidate_01.proof.lean
+@@ -1,10 +1,8 @@
+-by 
++by
+   have h_main : ∃ (i j : ℕ), i < j ∧ (u i = u j ∧ u (i + 1) = u (j + 1) ∧ u (i + 2) = u (j + 2) ∧ u (i + 3) = u (j + 3)) := by
+     obtain ⟨B, T, hB⟩ := boundedu
+     have h₁ : ∃ (i j : ℕ), i < j ∧ (u i = u j ∧ u (i + 1) = u (j + 1) ∧ u (i + 2) = u (j + 2) ∧ u (i + 3) = u (j + 3)) := by
+-      
+       classical
+-      
+       let f : ℕ → (ℤ × ℤ × ℤ × ℤ) := fun n => (u n, u (n + 1), u (n + 2), u (n + 3))
+       have h₂ : Set.Finite (Set.range f) := by
+         have h₃ : Set.range f ⊆ Set.Icc (B, B, B, B) (T, T, T, T) := by
+@@ -21,15 +19,9 @@
+           (try constructor) <;>
+           (try simp_all [f]) <;>
+           (try nlinarith)
+-        
+         have h₄ : Set.Finite (Set.Icc (B, B, B, B) (T, T, T, T)) := by
+-          exact experiment_missing_lemma
+-          intro x hx
+-          simp_all [Set.mem_Icc]
+-          <;>
+-          (try aesop)
++          exact Set.finite_Icc (B, B, B, B) (T, T, T, T)
+         exact Set.Finite.subset h₄ h₃
+-      
+       have h₃ : ∃ (i j : ℕ), i < j ∧ f i = f j := by
+         by_contra! h₄
+         have h₅ : Function.Injective f := by
+@@ -46,7 +38,6 @@
+               simp_all
+         have h₆ : Set.Infinite (Set.range f) := Set.infinite_range_of_injective h₅
+         exact Set.not_infinite.mpr h₂ h₆
+-      
+       obtain ⟨i, j, h₄, h₅⟩ := h₃
+       refine' ⟨i, j, h₄, _⟩
+       simp [f] at h₅ ⊢
+@@ -55,7 +46,6 @@
+       (try omega) <;>
+       (try aesop)
+     exact h₁
+-  
+   have h_periodic : ∃ N c : ℕ, c > 0 ∧ ∀ n ≥ N, u (n + c) = u n := by
+     obtain ⟨i, j, hij, h_eq⟩ := h_main
+     have h₁ : ∀ m : ℕ, u (i + m) = u (j + m) := by
+@@ -178,5 +168,4 @@
+           linarith
+         exact h₄
+     exact h₂
+-  
+   exact h_periodic
+\ No newline at end of file

@@ -1,0 +1,473 @@
+{
+  "call": 3,
+  "origin": "generated",
+  "body": "by\n  intros Hup Hinit\n  have Hlen := UpdateStatesLength Hup\n  have Hlen' := InitStatesLength Hinit\n  have Hdisj : ks'.Disjoint ks := by\n    intro k hk' hk\n    have Hnone := (InitStatesNotDefined Hinit) k hk'\n    have Hsome := (UpdateStatesDefined Hup) k hk\n    simp [Hnone, Option.isSome] at Hsome\n  refine ⟨updatedStates σ ks' vs', rfl, ?_, ?_⟩\n  · apply updatedStatesInit Hlen'\n    · exact UpdateStatesNotDefMonotone' (InitStatesNotDefined Hinit) Hup\n    · exact InitStatesNodup Hinit\n  · have Hcomm :\n        updatedStates (updatedStates σ ks' vs') ks vs =\n          updatedStates (updatedStates σ ks vs) ks' vs' := by\n      unfold updatedStates\n      apply updatedStatesComm\n      rw [List.unzip_zip, List.unzip_zip] <;> simp_all\n    have Hup' :\n        UpdateStates (updatedStates σ ks' vs') ks vs\n          (updatedStates (updatedStates σ ks' vs') ks vs) :=\n      updatedStatesUpdate Hlen\n        (updatedStatesDefMonotone (UpdateStatesDefined' Hup))\n    rw [Hcomm, ← UpdateStatesUpdated Hup, ← InitStatesUpdated Hinit] at Hup'\n    exact Hup'",
+  "proof_sha256": "d7ce0bb42080b3cb086130dad27f2cdf373a04dba6710aeba5d588abec15ebd0",
+  "full_source_sha256": "c150414a7f739624e144f1840b977691a5063230e9819f5973aa25f4fe09a3e6",
+  "eligible": true,
+  "verification": {
+    "task_id": "P3",
+    "attempt": "candidate_03",
+    "candidate_hash": "c150414a7f739624e144f1840b977691a5063230e9819f5973aa25f4fe09a3e6",
+    "environment_id": "78838691b7ea5b4fe226207f8c51008d414262a54febefbcea237fd4aa2d6cfa",
+    "check_kind": "candidate",
+    "status": "candidate_pass",
+    "process_exit_code": 0,
+    "diagnostics": [
+      {
+        "severity": "warning",
+        "position": {
+          "column": 8,
+          "line": 1999
+        },
+        "end_position": {
+          "column": 35,
+          "line": 1999
+        },
+        "message": "declaration uses 'sorry'",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "declaration uses 'sorry'",
+          "endPos": {
+            "column": 35,
+            "line": 1999
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/P_A/P3/normal/A1/repeat_1/validation/lean/008_candidate_03/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "hasSorry",
+          "pos": {
+            "column": 8,
+            "line": 1999
+          },
+          "severity": "warning"
+        },
+        "source_line": "theorem EvalCallBodyRefinesContract :",
+        "start_offset": 53044,
+        "start_byte_offset": 54653,
+        "end_offset": 53071,
+        "end_byte_offset": 54680,
+        "source_text": "EvalCallBodyRefinesContract"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 8,
+          "line": 2010
+        },
+        "end_position": {
+          "column": 34,
+          "line": 2010
+        },
+        "message": "declaration uses 'sorry'",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "declaration uses 'sorry'",
+          "endPos": {
+            "column": 34,
+            "line": 2010
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/P_A/P3/normal/A1/repeat_1/validation/lean/008_candidate_03/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "hasSorry",
+          "pos": {
+            "column": 8,
+            "line": 2010
+          },
+          "severity": "warning"
+        },
+        "source_line": "theorem EvalCommandRefinesContract :",
+        "start_offset": 53481,
+        "start_byte_offset": 55116,
+        "end_offset": 53507,
+        "end_byte_offset": 55142,
+        "source_text": "EvalCommandRefinesContract"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 8,
+          "line": 2024
+        },
+        "end_position": {
+          "column": 32,
+          "line": 2024
+        },
+        "message": "declaration uses 'sorry'",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "declaration uses 'sorry'",
+          "endPos": {
+            "column": 32,
+            "line": 2024
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/P_A/P3/normal/A1/repeat_1/validation/lean/008_candidate_03/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "hasSorry",
+          "pos": {
+            "column": 8,
+            "line": 2024
+          },
+          "severity": "warning"
+        },
+        "source_line": "theorem EvalBlockRefinesContract :",
+        "start_offset": 53972,
+        "start_byte_offset": 55617,
+        "end_offset": 53996,
+        "end_byte_offset": 55641,
+        "source_text": "EvalBlockRefinesContract"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 8,
+          "line": 2069
+        },
+        "end_position": {
+          "column": 31,
+          "line": 2069
+        },
+        "message": "declaration uses 'sorry'",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "declaration uses 'sorry'",
+          "endPos": {
+            "column": 31,
+            "line": 2069
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/P_A/P3/normal/A1/repeat_1/validation/lean/008_candidate_03/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "hasSorry",
+          "pos": {
+            "column": 8,
+            "line": 2069
+          },
+          "severity": "warning"
+        },
+        "source_line": "theorem EvalExpressionIsDefined :",
+        "start_offset": 55481,
+        "start_byte_offset": 57146,
+        "end_offset": 55504,
+        "end_byte_offset": 57169,
+        "source_text": "EvalExpressionIsDefined"
+      },
+      {
+        "severity": "information",
+        "position": {
+          "column": 0,
+          "line": 2089
+        },
+        "end_position": {
+          "column": 6,
+          "line": 2089
+        },
+        "message": "Core.InitsUpdatesComm {P : PureExpr} {σ σ' σ'' : SemanticStore P} {ks ks' : List P.Ident} {vs vs' : List P.Expr} :\n  UpdateStates σ ks vs σ' →\n    InitStates σ' ks' vs' σ'' → ∃ σ₁, σ₁ = updatedStates σ ks' vs' ∧ InitStates σ ks' vs' σ₁ ∧ UpdateStates σ₁ ks vs σ''",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "Core.InitsUpdatesComm {P : PureExpr} {σ σ' σ'' : SemanticStore P} {ks ks' : List P.Ident} {vs vs' : List P.Expr} :\n  UpdateStates σ ks vs σ' →\n    InitStates σ' ks' vs' σ'' → ∃ σ₁, σ₁ = updatedStates σ ks' vs' ∧ InitStates σ ks' vs' σ₁ ∧ UpdateStates σ₁ ks vs σ''",
+          "endPos": {
+            "column": 6,
+            "line": 2089
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/P_A/P3/normal/A1/repeat_1/validation/lean/008_candidate_03/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 0,
+            "line": 2089
+          },
+          "severity": "information"
+        }
+      },
+      {
+        "severity": "information",
+        "position": {
+          "column": 0,
+          "line": 2090
+        },
+        "end_position": {
+          "column": 6,
+          "line": 2090
+        },
+        "message": "'Core.InitsUpdatesComm' depends on axioms: [propext, Classical.choice, Quot.sound]",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "'Core.InitsUpdatesComm' depends on axioms: [propext, Classical.choice, Quot.sound]",
+          "endPos": {
+            "column": 6,
+            "line": 2090
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/P_A/P3/normal/A1/repeat_1/validation/lean/008_candidate_03/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 0,
+            "line": 2090
+          },
+          "severity": "information"
+        }
+      }
+    ],
+    "goals": null,
+    "local_context": null,
+    "sorries": [],
+    "backend_proof_status": null,
+    "statement_check": "fixed_context_preserved",
+    "axioms": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext"
+    ],
+    "metrics": {
+      "proof_tokens": 168,
+      "raw_heartbeats": 285185,
+      "heartbeats": 285
+    },
+    "elapsed_ms": 4348,
+    "raw_log_path": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/P_A/P3/normal/A1/repeat_1/validation/lean/008_candidate_03/stdout.log",
+    "detail": null,
+    "failure_kind": null
+  },
+  "measurement": {
+    "proof_tokens": 168,
+    "raw_heartbeats": 285185,
+    "token_reduction_pct": 28.510638297872337,
+    "heartbeat_reduction_pct": 93.9014219501336,
+    "search_score": 61.206030124002964
+  },
+  "facts": {
+    "diagnostics": [
+      {
+        "severity": "warning",
+        "position": {
+          "column": 8,
+          "line": 1999
+        },
+        "end_position": {
+          "column": 35,
+          "line": 1999
+        },
+        "message": "declaration uses 'sorry'",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "declaration uses 'sorry'",
+          "endPos": {
+            "column": 35,
+            "line": 1999
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "hasSorry",
+          "pos": {
+            "column": 8,
+            "line": 1999
+          },
+          "severity": "warning"
+        },
+        "source_line": "theorem EvalCallBodyRefinesContract :",
+        "start_offset": 53044,
+        "start_byte_offset": 54653,
+        "end_offset": 53071,
+        "end_byte_offset": 54680,
+        "source_text": "EvalCallBodyRefinesContract"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 8,
+          "line": 2010
+        },
+        "end_position": {
+          "column": 34,
+          "line": 2010
+        },
+        "message": "declaration uses 'sorry'",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "declaration uses 'sorry'",
+          "endPos": {
+            "column": 34,
+            "line": 2010
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "hasSorry",
+          "pos": {
+            "column": 8,
+            "line": 2010
+          },
+          "severity": "warning"
+        },
+        "source_line": "theorem EvalCommandRefinesContract :",
+        "start_offset": 53481,
+        "start_byte_offset": 55116,
+        "end_offset": 53507,
+        "end_byte_offset": 55142,
+        "source_text": "EvalCommandRefinesContract"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 8,
+          "line": 2024
+        },
+        "end_position": {
+          "column": 32,
+          "line": 2024
+        },
+        "message": "declaration uses 'sorry'",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "declaration uses 'sorry'",
+          "endPos": {
+            "column": 32,
+            "line": 2024
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "hasSorry",
+          "pos": {
+            "column": 8,
+            "line": 2024
+          },
+          "severity": "warning"
+        },
+        "source_line": "theorem EvalBlockRefinesContract :",
+        "start_offset": 53972,
+        "start_byte_offset": 55617,
+        "end_offset": 53996,
+        "end_byte_offset": 55641,
+        "source_text": "EvalBlockRefinesContract"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 8,
+          "line": 2069
+        },
+        "end_position": {
+          "column": 31,
+          "line": 2069
+        },
+        "message": "declaration uses 'sorry'",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "declaration uses 'sorry'",
+          "endPos": {
+            "column": 31,
+            "line": 2069
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "hasSorry",
+          "pos": {
+            "column": 8,
+            "line": 2069
+          },
+          "severity": "warning"
+        },
+        "source_line": "theorem EvalExpressionIsDefined :",
+        "start_offset": 55481,
+        "start_byte_offset": 57146,
+        "end_offset": 55504,
+        "end_byte_offset": 57169,
+        "source_text": "EvalExpressionIsDefined"
+      },
+      {
+        "severity": "information",
+        "position": {
+          "column": 0,
+          "line": 2089
+        },
+        "end_position": {
+          "column": 6,
+          "line": 2089
+        },
+        "message": "Core.InitsUpdatesComm {P : PureExpr} {σ σ' σ'' : SemanticStore P} {ks ks' : List P.Ident} {vs vs' : List P.Expr} :\n  UpdateStates σ ks vs σ' →\n    InitStates σ' ks' vs' σ'' → ∃ σ₁, σ₁ = updatedStates σ ks' vs' ∧ InitStates σ ks' vs' σ₁ ∧ UpdateStates σ₁ ks vs σ''",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "Core.InitsUpdatesComm {P : PureExpr} {σ σ' σ'' : SemanticStore P} {ks ks' : List P.Ident} {vs vs' : List P.Expr} :\n  UpdateStates σ ks vs σ' →\n    InitStates σ' ks' vs' σ'' → ∃ σ₁, σ₁ = updatedStates σ ks' vs' ∧ InitStates σ ks' vs' σ₁ ∧ UpdateStates σ₁ ks vs σ''",
+          "endPos": {
+            "column": 6,
+            "line": 2089
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 0,
+            "line": 2089
+          },
+          "severity": "information"
+        }
+      },
+      {
+        "severity": "information",
+        "position": {
+          "column": 0,
+          "line": 2090
+        },
+        "end_position": {
+          "column": 6,
+          "line": 2090
+        },
+        "message": "'Core.InitsUpdatesComm' depends on axioms: [propext, Classical.choice, Quot.sound]",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "'Core.InitsUpdatesComm' depends on axioms: [propext, Classical.choice, Quot.sound]",
+          "endPos": {
+            "column": 6,
+            "line": 2090
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 0,
+            "line": 2090
+          },
+          "severity": "information"
+        }
+      }
+    ],
+    "goals": null,
+    "local_context": null,
+    "sorries": [],
+    "axioms": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext"
+    ],
+    "detail": null,
+    "raw_lean_output": "{\"caption\":\"\",\"data\":\"declaration uses 'sorry'\",\"endPos\":{\"column\":35,\"line\":1999},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"hasSorry\",\"pos\":{\"column\":8,\"line\":1999},\"severity\":\"warning\"}\n{\"caption\":\"\",\"data\":\"declaration uses 'sorry'\",\"endPos\":{\"column\":34,\"line\":2010},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"hasSorry\",\"pos\":{\"column\":8,\"line\":2010},\"severity\":\"warning\"}\n{\"caption\":\"\",\"data\":\"declaration uses 'sorry'\",\"endPos\":{\"column\":32,\"line\":2024},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"hasSorry\",\"pos\":{\"column\":8,\"line\":2024},\"severity\":\"warning\"}\n{\"caption\":\"\",\"data\":\"declaration uses 'sorry'\",\"endPos\":{\"column\":31,\"line\":2069},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"hasSorry\",\"pos\":{\"column\":8,\"line\":2069},\"severity\":\"warning\"}\n{\"caption\":\"\",\"data\":\"Core.InitsUpdatesComm {P : PureExpr} {σ σ' σ'' : SemanticStore P} {ks ks' : List P.Ident} {vs vs' : List P.Expr} :\\n  UpdateStates σ ks vs σ' →\\n    InitStates σ' ks' vs' σ'' → ∃ σ₁, σ₁ = updatedStates σ ks' vs' ∧ InitStates σ ks' vs' σ₁ ∧ UpdateStates σ₁ ks vs σ''\",\"endPos\":{\"column\":6,\"line\":2089},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"[anonymous]\",\"pos\":{\"column\":0,\"line\":2089},\"severity\":\"information\"}\n{\"caption\":\"\",\"data\":\"'Core.InitsUpdatesComm' depends on axioms: [propext, Classical.choice, Quot.sound]\",\"endPos\":{\"column\":6,\"line\":2090},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"[anonymous]\",\"pos\":{\"column\":0,\"line\":2090},\"severity\":\"information\"}\n"
+  },
+  "diagnosis": "The original proof performs a costly structural induction over UpdateStates. Both relations already have canonical updatedStates characterizations, so the proof can construct the reordered initialization directly, establish disjointness from definedness versus non-definedness, commute the two canonical updates, and reuse updatedStatesUpdate.",
+  "duplicate_cache": false,
+  "available_at": 1792769342.9075682,
+  "cumulative_calls": 3,
+  "cumulative_tokens": 102038,
+  "api_spend_usd": null
+}

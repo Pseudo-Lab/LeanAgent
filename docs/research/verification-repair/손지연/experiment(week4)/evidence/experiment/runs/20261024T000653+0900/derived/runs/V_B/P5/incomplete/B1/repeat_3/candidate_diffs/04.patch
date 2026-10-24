@@ -1,0 +1,23 @@
+--- candidate_03.proof.lean
++++ candidate_04.proof.lean
+@@ -8,7 +8,7 @@
+               ∑ j, ∂[j] (A.magneticFieldMatrix 𝓕.c s · (j, i)) x -
+             (1 / 𝓕.ε₀) * J.currentDensity 𝓕.c s x i := by
+     funext s
+-    simpa (disch := fun_prop) [Time.deriv] using
++    simpa (disch := fun_prop) [Time.deriv, fderiv_apply] using
+       time_deriv_electricField_of_isExtrema hA J hJ h s x i
+   have hamp' := congrArg (fun f : Time → ℝ => ∂ₜ f t) hamp
+   have hgauss :
+@@ -18,9 +18,9 @@
+     simpa [Space.div] using (hmax t y).1
+   have hgauss' := congrArg (fun f : Space d → ℝ => ∂[i] f x) hgauss
+   simp (disch := fun_prop)
+-      [Time.deriv, Space.deriv_eq_fderiv_basis,
++      [Time.deriv, Space.deriv_eq_fderiv_basis, fderiv_apply,
+         fderiv_fun_sub, fderiv_const_mul, fderiv_fun_sum,
+-        time_deriv_space_deriv_commute,
++        space_deriv_time_deriv_commute,
+         time_deriv_magneticFieldMatrix A (hA.of_le (ENat.LEInfty.out)),
+         Space.deriv_commute, Finset.sum_sub_distrib] at hamp' hgauss'
+   linear_combination (norm := field_simp [FreeSpace.c_sq]) hamp' -

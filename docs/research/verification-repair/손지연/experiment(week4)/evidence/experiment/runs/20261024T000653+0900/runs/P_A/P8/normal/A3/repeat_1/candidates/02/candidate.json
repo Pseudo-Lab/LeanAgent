@@ -1,0 +1,177 @@
+{
+  "call": 2,
+  "origin": "generated",
+  "body": "by\n  intro a a₁ a₂ h₁ h₂\n  cases h₁\n  case refl => exact ⟨_, h₂, .refl _⟩\n  case par a a' b b' ha' hb' =>\n    cases h₂\n    case refl => exact ⟨_, .refl _, .par ha' hb'⟩\n    case par a'' b'' ha'' hb'' =>\n      let ⟨a₃, ha⟩ := parallelReduction_diamond ha' ha''\n      let ⟨b₃, hb⟩ := parallelReduction_diamond hb' hb''\n      exact ⟨_, .par ha.1 hb.1, .par ha.2 hb.2⟩\n    case red_I =>\n      rw [I_irreducible a' ha']\n      exact ⟨_, .red_I b', hb'⟩\n    case red_K =>\n      let ⟨a₂', h⟩ := Ka_irreducible a₂ a' ha'\n      rw [h.2]\n      exact ⟨_, .red_K a₂' b', h.1⟩\n    case red_S a c =>\n      let ⟨a'', c', h⟩ := Sab_irreducible a c a' ha'\n      rw [h.2.2]\n      exact ⟨_, .red_S .., .par (.par h.1 hb') (.par h.2.1 hb')⟩\n  case red_I =>\n    cases h₂\n    case refl => exact ⟨_, .refl _, .red_I _⟩\n    case par c a₁' hc ha =>\n      rw [I_irreducible c hc]\n      exact ⟨_, ha, .red_I _⟩\n    case red_I => exact ⟨_, .refl _, .refl _⟩\n  case red_K c =>\n    cases h₂\n    case refl => exact ⟨_, .refl _, .red_K _ c⟩\n    case par a' c' ha hc =>\n      let ⟨a₁', h⟩ := Ka_irreducible a₁ a' ha\n      rw [h.2]\n      exact ⟨_, h.1, .red_K a₁' c'⟩\n    case red_K => exact ⟨_, .refl _, .refl _⟩\n  case red_S a b c =>\n    cases h₂\n    case refl => exact ⟨_, .refl _, .red_S ..⟩\n    case par d c' hd hc =>\n      let ⟨a', b', h⟩ := Sab_irreducible a b d hd\n      rw [h.2.2]\n      exact ⟨_, .par (.par h.1 hc) (.par h.2.1 hc), .red_S ..⟩\n    case red_S => exact ⟨_, .refl _, .refl _⟩",
+  "proof_sha256": "004e129bb16bd2bf317a055d10de4dc2a3114187be0491bc6a67b3305cd07557",
+  "full_source_sha256": "b433edaccd7e19ae48884cbf17fcf6e04ee3eb295564c00739819dfca644df3b",
+  "eligible": true,
+  "verification": {
+    "task_id": "P8",
+    "attempt": "candidate_02",
+    "candidate_hash": "b433edaccd7e19ae48884cbf17fcf6e04ee3eb295564c00739819dfca644df3b",
+    "environment_id": "539810be844b4918624a39f96635209e5268d60962b8f167956106aaa6dbee0f",
+    "check_kind": "candidate",
+    "status": "candidate_pass",
+    "process_exit_code": 0,
+    "diagnostics": [
+      {
+        "severity": "information",
+        "position": {
+          "column": 0,
+          "line": 208
+        },
+        "end_position": {
+          "column": 6,
+          "line": 208
+        },
+        "message": "Cslib.SKI.parallelReduction_diamond : Relation.Diamond Cslib.SKI.ParallelReduction",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "Cslib.SKI.parallelReduction_diamond : Relation.Diamond Cslib.SKI.ParallelReduction",
+          "endPos": {
+            "column": 6,
+            "line": 208
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/P_A/P8/normal/A3/repeat_1/validation/lean/005_candidate_02/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 0,
+            "line": 208
+          },
+          "severity": "information"
+        }
+      },
+      {
+        "severity": "information",
+        "position": {
+          "column": 0,
+          "line": 209
+        },
+        "end_position": {
+          "column": 6,
+          "line": 209
+        },
+        "message": "'Cslib.SKI.parallelReduction_diamond' does not depend on any axioms",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "'Cslib.SKI.parallelReduction_diamond' does not depend on any axioms",
+          "endPos": {
+            "column": 6,
+            "line": 209
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/P_A/P8/normal/A3/repeat_1/validation/lean/005_candidate_02/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 0,
+            "line": 209
+          },
+          "severity": "information"
+        }
+      }
+    ],
+    "goals": null,
+    "local_context": null,
+    "sorries": [],
+    "backend_proof_status": null,
+    "statement_check": "fixed_context_preserved",
+    "axioms": [],
+    "metrics": {
+      "proof_tokens": 426,
+      "raw_heartbeats": 868187,
+      "heartbeats": 868
+    },
+    "elapsed_ms": 2674,
+    "raw_log_path": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/P_A/P8/normal/A3/repeat_1/validation/lean/005_candidate_02/stdout.log",
+    "detail": null,
+    "failure_kind": null
+  },
+  "measurement": {
+    "proof_tokens": 426,
+    "raw_heartbeats": 868187,
+    "token_reduction_pct": 6.167400881057272,
+    "heartbeat_reduction_pct": 40.495684810202924,
+    "search_score": 23.331542845630096
+  },
+  "facts": {
+    "diagnostics": [
+      {
+        "severity": "information",
+        "position": {
+          "column": 0,
+          "line": 208
+        },
+        "end_position": {
+          "column": 6,
+          "line": 208
+        },
+        "message": "Cslib.SKI.parallelReduction_diamond : Relation.Diamond Cslib.SKI.ParallelReduction",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "Cslib.SKI.parallelReduction_diamond : Relation.Diamond Cslib.SKI.ParallelReduction",
+          "endPos": {
+            "column": 6,
+            "line": 208
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 0,
+            "line": 208
+          },
+          "severity": "information"
+        }
+      },
+      {
+        "severity": "information",
+        "position": {
+          "column": 0,
+          "line": 209
+        },
+        "end_position": {
+          "column": 6,
+          "line": 209
+        },
+        "message": "'Cslib.SKI.parallelReduction_diamond' does not depend on any axioms",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "'Cslib.SKI.parallelReduction_diamond' does not depend on any axioms",
+          "endPos": {
+            "column": 6,
+            "line": 209
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 0,
+            "line": 209
+          },
+          "severity": "information"
+        }
+      }
+    ],
+    "goals": null,
+    "local_context": null,
+    "sorries": [],
+    "axioms": [],
+    "detail": null,
+    "raw_lean_output": "{\"caption\":\"\",\"data\":\"Cslib.SKI.parallelReduction_diamond : Relation.Diamond Cslib.SKI.ParallelReduction\",\"endPos\":{\"column\":6,\"line\":208},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"[anonymous]\",\"pos\":{\"column\":0,\"line\":208},\"severity\":\"information\"}\n{\"caption\":\"\",\"data\":\"'Cslib.SKI.parallelReduction_diamond' does not depend on any axioms\",\"endPos\":{\"column\":6,\"line\":209},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"[anonymous]\",\"pos\":{\"column\":0,\"line\":209},\"severity\":\"information\"}\n"
+  },
+  "diagnosis": "The proof is already valid and axiom-free. Its explicit case analysis is heartbeat-efficient, but it redundantly spells out each common reduct even though Lean can infer it from the two reduction witnesses. Replacing those terms with placeholders reduces proof syntax without reintroducing expensive automation.",
+  "duplicate_cache": false,
+  "available_at": 1792769868.123899,
+  "cumulative_calls": 2,
+  "cumulative_tokens": 30919,
+  "api_spend_usd": null
+}

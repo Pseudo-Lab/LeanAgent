@@ -1,0 +1,185 @@
+{
+  "call": 1,
+  "origin": "generated",
+  "body": "by\n  generalize eq : [] = Γ at der\n  have der' : Typing Γ t τ := der\n  induction der <;> subst eq\n  case var => grind\n  case app t₁ _ _ t₂ l r il ir =>\n    right\n    rcases il rfl l with vl | ⟨t₁', h₁⟩\n    · rcases ir rfl r with vr | ⟨t₂', h₂⟩\n      · obtain ⟨_, u, hu⟩ := l.canonical_form_abs vl\n        exact ⟨u ^ᵗᵗ t₂, by grind⟩\n      · exact ⟨t₁.app t₂', by grind⟩\n    · exact ⟨t₁'.app t₂, by grind⟩\n  case tapp σ' der _ ih =>\n    right\n    rcases ih rfl der with v | ⟨t', h⟩\n    · obtain ⟨_, u, hu⟩ := der.canonical_form_tabs v\n      exact ⟨u ^ᵗᵞ σ', by grind⟩\n    · exact ⟨.tapp t' σ', by grind⟩\n  case let' t₁ _ t₂ _ _ der _ ih _ =>\n    right\n    rcases ih rfl der with v | ⟨t₁', h⟩\n    · exact ⟨t₂ ^ᵗᵗ t₁, by grind⟩\n    · exact ⟨t₁'.let' t₂, by grind⟩\n  case inl der _ ih =>\n    rcases ih rfl der with v | ⟨t', h⟩\n    · grind\n    · exact .inr ⟨.inl t', by grind⟩\n  case inr der _ ih =>\n    rcases ih rfl der with v | ⟨t', h⟩\n    · grind\n    · exact .inr ⟨.inr t', by grind⟩\n  case case t₁ _ _ t₂ _ t₃ _ der _ _ ih _ _ =>\n    right\n    rcases ih rfl der with v | ⟨t₁', h⟩\n    · obtain ⟨u, h | h⟩ := der.canonical_form_sum v\n      · exact ⟨t₂ ^ᵗᵗ u, by grind⟩\n      · exact ⟨t₃ ^ᵗᵗ u, by grind⟩\n    · exact ⟨t₁'.case t₂ t₃, by grind⟩\n  case sub => grind\n  case abs _ _ _ L _ _ =>\n    left\n    constructor\n    apply LC.abs L\n    · grind only [→ wf, cases Term.LC]\n    · grind only [→ wf]\n  case tabs L _ _ =>\n    left\n    constructor\n    apply LC.tabs L\n    · grind only [→ wf, cases Term.LC]\n    · grind only [→ wf]",
+  "proof_sha256": "6fc47df9b0efe8e5652a6ffec17a7e03d2c63888d41c06e21e8c62801c14aa8a",
+  "full_source_sha256": "d2392987de0e063d872ceb57af3c458d4e33d691de243c17be14c096031068fe",
+  "eligible": true,
+  "verification": {
+    "task_id": "P7",
+    "attempt": "candidate_01",
+    "candidate_hash": "d2392987de0e063d872ceb57af3c458d4e33d691de243c17be14c096031068fe",
+    "environment_id": "539810be844b4918624a39f96635209e5268d60962b8f167956106aaa6dbee0f",
+    "check_kind": "candidate",
+    "status": "candidate_pass",
+    "process_exit_code": 0,
+    "diagnostics": [
+      {
+        "severity": "information",
+        "position": {
+          "column": 0,
+          "line": 133
+        },
+        "end_position": {
+          "column": 6,
+          "line": 133
+        },
+        "message": "Cslib.LambdaCalculus.LocallyNameless.Fsub.Typing.progress.{u_1} {Var : Type u_1} [Cslib.HasFresh Var] [DecidableEq Var]\n  {t : Cslib.LambdaCalculus.LocallyNameless.Fsub.Term Var} {τ : Cslib.LambdaCalculus.LocallyNameless.Fsub.Ty Var}\n  (der : Cslib.LambdaCalculus.LocallyNameless.Fsub.Typing [] t τ) : t.Value ∨ ∃ t', t.Red t'",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "Cslib.LambdaCalculus.LocallyNameless.Fsub.Typing.progress.{u_1} {Var : Type u_1} [Cslib.HasFresh Var] [DecidableEq Var]\n  {t : Cslib.LambdaCalculus.LocallyNameless.Fsub.Term Var} {τ : Cslib.LambdaCalculus.LocallyNameless.Fsub.Ty Var}\n  (der : Cslib.LambdaCalculus.LocallyNameless.Fsub.Typing [] t τ) : t.Value ∨ ∃ t', t.Red t'",
+          "endPos": {
+            "column": 6,
+            "line": 133
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/P_A/P7/normal/A3/repeat_1/validation/lean/002_candidate_01/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 0,
+            "line": 133
+          },
+          "severity": "information"
+        }
+      },
+      {
+        "severity": "information",
+        "position": {
+          "column": 0,
+          "line": 134
+        },
+        "end_position": {
+          "column": 6,
+          "line": 134
+        },
+        "message": "'Cslib.LambdaCalculus.LocallyNameless.Fsub.Typing.progress' depends on axioms: [propext, Classical.choice, Quot.sound]",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "'Cslib.LambdaCalculus.LocallyNameless.Fsub.Typing.progress' depends on axioms: [propext, Classical.choice, Quot.sound]",
+          "endPos": {
+            "column": 6,
+            "line": 134
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/P_A/P7/normal/A3/repeat_1/validation/lean/002_candidate_01/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 0,
+            "line": 134
+          },
+          "severity": "information"
+        }
+      }
+    ],
+    "goals": null,
+    "local_context": null,
+    "sorries": [],
+    "backend_proof_status": null,
+    "statement_check": "fixed_context_preserved",
+    "axioms": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext"
+    ],
+    "metrics": {
+      "proof_tokens": 398,
+      "raw_heartbeats": 20587075,
+      "heartbeats": 20587
+    },
+    "elapsed_ms": 8732,
+    "raw_log_path": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/P_A/P7/normal/A3/repeat_1/validation/lean/002_candidate_01/stdout.log",
+    "detail": null,
+    "failure_kind": null
+  },
+  "measurement": {
+    "proof_tokens": 398,
+    "raw_heartbeats": 20587075,
+    "token_reduction_pct": 1.9704433497536922,
+    "heartbeat_reduction_pct": 65.64634726235074,
+    "search_score": 33.80839530605222
+  },
+  "facts": {
+    "diagnostics": [
+      {
+        "severity": "information",
+        "position": {
+          "column": 0,
+          "line": 133
+        },
+        "end_position": {
+          "column": 6,
+          "line": 133
+        },
+        "message": "Cslib.LambdaCalculus.LocallyNameless.Fsub.Typing.progress.{u_1} {Var : Type u_1} [Cslib.HasFresh Var] [DecidableEq Var]\n  {t : Cslib.LambdaCalculus.LocallyNameless.Fsub.Term Var} {τ : Cslib.LambdaCalculus.LocallyNameless.Fsub.Ty Var}\n  (der : Cslib.LambdaCalculus.LocallyNameless.Fsub.Typing [] t τ) : t.Value ∨ ∃ t', t.Red t'",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "Cslib.LambdaCalculus.LocallyNameless.Fsub.Typing.progress.{u_1} {Var : Type u_1} [Cslib.HasFresh Var] [DecidableEq Var]\n  {t : Cslib.LambdaCalculus.LocallyNameless.Fsub.Term Var} {τ : Cslib.LambdaCalculus.LocallyNameless.Fsub.Ty Var}\n  (der : Cslib.LambdaCalculus.LocallyNameless.Fsub.Typing [] t τ) : t.Value ∨ ∃ t', t.Red t'",
+          "endPos": {
+            "column": 6,
+            "line": 133
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 0,
+            "line": 133
+          },
+          "severity": "information"
+        }
+      },
+      {
+        "severity": "information",
+        "position": {
+          "column": 0,
+          "line": 134
+        },
+        "end_position": {
+          "column": 6,
+          "line": 134
+        },
+        "message": "'Cslib.LambdaCalculus.LocallyNameless.Fsub.Typing.progress' depends on axioms: [propext, Classical.choice, Quot.sound]",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "'Cslib.LambdaCalculus.LocallyNameless.Fsub.Typing.progress' depends on axioms: [propext, Classical.choice, Quot.sound]",
+          "endPos": {
+            "column": 6,
+            "line": 134
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 0,
+            "line": 134
+          },
+          "severity": "information"
+        }
+      }
+    ],
+    "goals": null,
+    "local_context": null,
+    "sorries": [],
+    "axioms": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext"
+    ],
+    "detail": null,
+    "raw_lean_output": "{\"caption\":\"\",\"data\":\"Cslib.LambdaCalculus.LocallyNameless.Fsub.Typing.progress.{u_1} {Var : Type u_1} [Cslib.HasFresh Var] [DecidableEq Var]\\n  {t : Cslib.LambdaCalculus.LocallyNameless.Fsub.Term Var} {τ : Cslib.LambdaCalculus.LocallyNameless.Fsub.Ty Var}\\n  (der : Cslib.LambdaCalculus.LocallyNameless.Fsub.Typing [] t τ) : t.Value ∨ ∃ t', t.Red t'\",\"endPos\":{\"column\":6,\"line\":133},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"[anonymous]\",\"pos\":{\"column\":0,\"line\":133},\"severity\":\"information\"}\n{\"caption\":\"\",\"data\":\"'Cslib.LambdaCalculus.LocallyNameless.Fsub.Typing.progress' depends on axioms: [propext, Classical.choice, Quot.sound]\",\"endPos\":{\"column\":6,\"line\":134},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"[anonymous]\",\"pos\":{\"column\":0,\"line\":134},\"severity\":\"information\"}\n"
+  },
+  "diagnosis": "The existing proof is valid, but repeated `cases`/`obtain`/`exists` bookkeeping inflates its syntax and leaves `grind` to discover witnesses. Using `rcases` and explicit existential witnesses preserves the induction structure while reducing proof tokens and narrowing several elaboration searches.",
+  "duplicate_cache": false,
+  "available_at": 1792769836.3774872,
+  "cumulative_calls": 1,
+  "cumulative_tokens": 16802,
+  "api_spend_usd": null
+}
