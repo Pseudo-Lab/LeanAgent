@@ -1,0 +1,43 @@
+--- initial.proof.lean
++++ candidate_01.proof.lean
+@@ -1,2 +1,37 @@
+ by
+-  skip
+\ No newline at end of file
++  intro h
++  exists @ChoiceBisim _ _ defs
++  constructor
++  · exact ChoiceBisim.choice h
++  intro s1 s2 hr μ
++  cases hr
++  case choice p q r hbisim =>
++    constructor
++    · intro s1' htr
++      cases htr
++      case choiceL htr =>
++        obtain ⟨q', htr', hbisim'⟩ := hbisim.follow_fst htr
++        exists q'
++        constructor
++        · exact Tr.choiceL htr'
++        · exact ChoiceBisim.bisim hbisim'
++      case choiceR htr =>
++        exists s1'
++        constructor
++        · exact Tr.choiceR htr
++        · exact ChoiceBisim.bisim (by grind [HomBisimilarity.refl])
++    · intro s2' htr
++      cases htr
++      case choiceL htr =>
++        obtain ⟨p', htr', hbisim'⟩ := hbisim.follow_snd htr
++        exists p'
++        constructor
++        · exact Tr.choiceL htr'
++        · exact ChoiceBisim.bisim hbisim'
++      case choiceR htr =>
++        exists s2'
++        constructor
++        · exact Tr.choiceR htr
++        · exact ChoiceBisim.bisim (by grind [HomBisimilarity.refl])
++  case bisim h =>
++    grind [IsBisimulation, ChoiceBisim]
+\ No newline at end of file

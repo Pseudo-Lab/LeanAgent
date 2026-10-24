@@ -1,0 +1,32 @@
+--- candidate_02.proof.lean
++++ candidate_03.proof.lean
+@@ -22,21 +22,16 @@
+       (hA.of_le (right_eq_inf.mp rfl)) _),
+       time_deriv_electricField_of_isExtrema hA J hJ h]
+   calc
+-    _ = 1 / (𝓕.μ₀ * 𝓕.ε₀) * ∂ₜ (fun s => ∑ j, ∂[j] (B s · (j, i)) x) t -
+-        1 / 𝓕.ε₀ * ∂ₜ (K · x i) t := by
+-      rw [Time.deriv_eq, fderiv_fun_sub]
+-      simp only [one_div, mul_inv_rev, FunLike.coe_sub, Pi.sub_apply]
+-      rw [fderiv_const_mul (Differentiable.fun_sum fun j _ => hBt j).differentiableAt,
+-        fderiv_const_mul hJt.differentiableAt]
+-      simp [Time.deriv_eq]
+-      · exact ((Differentiable.fun_sum fun j _ => hBt j).const_mul _).differentiableAt
+-      · exact hJt.differentiableAt.const_mul _
+     _ = 1 / (𝓕.μ₀ * 𝓕.ε₀) * (∑ j, ∂ₜ (fun s => ∂[j] (B s · (j, i)) x) t) -
+         1 / 𝓕.ε₀ * ∂ₜ (K · x i) t := by
+-      congr
+-      rw [Time.deriv_eq, fderiv_fun_sum fun j _ => (hBt j).differentiableAt]
+-      simp only [FunLike.coe_sum, Finset.sum_apply]
+-      rfl
++      rw [Time.deriv_eq,
++        fderiv_fun_sub
++          ((Differentiable.fun_sum fun j _ => hBt j).const_mul _).differentiableAt
++          (hJt.const_mul _).differentiableAt,
++        fderiv_const_mul (Differentiable.fun_sum fun j _ => hBt j).differentiableAt,
++        fderiv_const_mul hJt.differentiableAt,
++        fderiv_fun_sum fun j _ => (hBt j).differentiableAt]
++      simp [Time.deriv_eq]
+     _ = 1 / (𝓕.μ₀ * 𝓕.ε₀) * (∑ j, ∂[j] (fun y => ∂ₜ (B · y (j, i)) t) x) -
+         1 / 𝓕.ε₀ * ∂ₜ (K · x i) t := by
+       congr

@@ -1,0 +1,13 @@
+--- candidate_02.proof.lean
++++ candidate_03.proof.lean
+@@ -66,6 +66,6 @@
+   refine ⟨i, j - i, by omega, ?_⟩
+   intro n hn
+   calc
+-    u (n + (j - i)) = u (j + (n - i)) := by congr 1 <;> omega
++    u (n + (j - i)) = u (j + (n - i)) := congrArg u (by omega)
+     _ = u (i + (n - i)) := (hall (n - i)).symm
+-    _ = u n := by congr 1 <;> omega
+\ No newline at end of file
++    _ = u n := congrArg u (by omega)
+\ No newline at end of file

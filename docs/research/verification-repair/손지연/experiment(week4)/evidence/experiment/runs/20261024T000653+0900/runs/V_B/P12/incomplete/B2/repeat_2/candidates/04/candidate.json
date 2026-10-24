@@ -1,0 +1,1399 @@
+{
+  "call": 4,
+  "origin": "generated",
+  "body": "by\n  classical\n  have prob_snoc (n : ℕ) (P : (Fin (n + 1) → F) → Prop) :\n      Pr_{ let r_last ← $ᵖ F;\n           let r_init ← $ᵖ (Fin n → F) }[\n        P (Fin.snoc r_init r_last)] =\n      Pr_{ let r ← $ᵖ (Fin (n + 1) → F) }[P r] := by\n    rw [Pr_multi_let_equiv_single_let]\n    rw [do_two_uniform_sampling_eq_uniform_prod]\n    rw [prob_uniform_eq_card_filter_div_card]\n    rw [prob_uniform_eq_card_filter_div_card]\n    congr 1\n    · refine Finset.card_bij\n        (fun p _ => Fin.snoc p.2 p.1) ?_ ?_ ?_\n      · intro p hp\n        simpa only [Finset.mem_filter, Finset.mem_univ, true_and] using hp\n      · intro p₁ hp₁ p₂ hp₂ h\n        apply Prod.ext\n        · have hlast := congrFun h (Fin.last n)\n          simpa using hlast\n        · funext i\n          have hinit := congrFun h i.castSucc\n          simpa using hinit\n      · intro r hr\n        refine ⟨(r (Fin.last n), fun i => r i.castSucc), ?_, ?_⟩\n        · simpa only [Finset.mem_filter, Finset.mem_univ, true_and]\n          using hr\n        · funext i\n          refine Fin.lastCases ?_ (fun j => ?_) i <;> simp\n    · simp [Fintype.card_fun, pow_succ']\n  have multilinearCombine_snoc\n      (n : ℕ) (u : WordStack A (Fin (2 ^ (n + 1))) ι)\n      (r_init : Fin n → F) (r_last : F) :\n      multilinearCombine u (Fin.snoc r_init r_last) =\n        multilinearCombine\n          (affineLineEvaluation\n            (splitHalfRowWiseInterleavedWords (ϑ := n) u).1\n            (splitHalfRowWiseInterleavedWords (ϑ := n) u).2 r_last)\n          r_init := by\n    rfl\n  intro ϑ\n  induction ϑ with\n  | zero =>\n      intro hϑ\n      omega\n  | succ ϑ ih =>\n      intro _\n      by_cases hϑ_zero : ϑ = 0\n      · subst ϑ\n        intro u hu\n        have hprob :\n            Pr_{ let r ← $ᵖ F }[\n              Δ₀(affineLineEvaluation (F := F) (u 0) (u 1) r, MC) ≤ e]\n              > (ε : ℝ≥0) / (Fintype.card F : ℝ≥0) := by\n          have hprob_eq := prob_snoc 0\n            (fun r : Fin 1 → F => Δ₀(multilinearCombine u r, MC) ≤ e)\n          rw [← hprob_eq] at hu\n          simpa [multilinearCombine_snoc, affineLineEvaluation,\n            splitHalfRowWiseInterleavedWords] using hu\n        have hbase := hC_proximityGapAffineLines (u 0) (u 1) hprob\n        have hu_pair : finMapTwoWords (u 0) (u 1) = u := by\n          funext i\n          fin_cases i <;> rfl\n        simpa [jointProximityNat₂, hu_pair] using hbase\n      · have hϑ_pos : ϑ > 0 := by\n          omega\n        have ihϑ : δ_ε_multilinearCorrelatedAgreement_Nat\n            (F := F) (A := A) (ι := ι) (C := MC)\n            (ϑ := ϑ) (e := e) (ε := ε) := ih hϑ_pos\n        intro u hu\n        let U₀ := (splitHalfRowWiseInterleavedWords (ϑ := ϑ) u).1\n        let U₁ := (splitHalfRowWiseInterleavedWords (ϑ := ϑ) u).2\n        let R := R_star_tensor MC (m := ϑ) (e := e) (ε := ε) U₀ U₁\n        have hu_split :\n            Pr_{ let r_last ← $ᵖ F;\n                 let r_init ← $ᵖ (Fin ϑ → F) }[\n              multilinearCombine_affineComb_split_last_close\n                (MC := MC) (u := u) (e := e) r_last r_init]\n              > (((Nat.cast (R := ℝ≥0) (ϑ + 1)) * ε : ℝ≥0) /\n                  (Fintype.card F : ℝ≥0)) := by\n          have hprob_eq := prob_snoc ϑ\n            (fun r : Fin (ϑ + 1) → F => Δ₀(multilinearCombine u r, MC) ≤ e)\n          rw [← hprob_eq] at hu\n          simpa only [multilinearCombine_affineComb_split_last_close,\n            multilinearCombine_snoc] using hu\n        have hR_raw :=\n          prob_R_star_gt_threshold (MC := MC) (ε := ε)\n            (ϑ := ϑ) u e hu_split\n        have hR :\n            Pr_{ let r ← $ᵖ F }[r ∈ R]\n              > (ε : ENNReal) / (Fintype.card F : ENNReal) := by\n          simpa only [U₀, U₁, R] using hR_raw\n        have hline :\n            Pr_{ let r ← $ᵖ F }[\n              Δ₀(affineLineEvaluation (F := F) (⋈| U₀) (⋈| U₁) r,\n                MC ^⋈ (Fin (2 ^ ϑ))) ≤ e]\n              > (ε : ℝ≥0) / (Fintype.card F : ℝ≥0) := by\n          refine lt_of_lt_of_le hR ?_\n          apply Pr_le_Pr_of_implies\n          intro r hr\n          have hr_mem :\n              r ∈ R_star_tensor MC (m := ϑ) (e := e) (ε := ε)\n                (splitHalfRowWiseInterleavedWords (ϑ := ϑ) u).1\n                (splitHalfRowWiseInterleavedWords (ϑ := ϑ) u).2 := by\n            change r ∈ R\n            exact hr\n          have hr_close := correlatedAgreement_of_mem_R_star_tensor\n            (MC := MC) (e := e) (ε := ε) (ϑ_pred := ϑ) ihϑ u\n            ⟨r, hr_mem⟩\n          rw [jointProximityNat] at hr_close\n          have hinterleave :\n              affineLineEvaluation (F := F) (⋈| U₀) (⋈| U₁) r =\n                ⋈| (affineLineEvaluation (F := F) U₀ U₁ r) := by\n            ext j k\n            rfl\n          rw [hinterleave]\n          simpa only [U₀, U₁] using hr_close\n        have hpow : 2 ^ ϑ ≥ 1 := Nat.one_le_pow ϑ 2 (by omega)\n        have hpair :=\n          (h_interleaved_gaps (2 ^ ϑ) hpow)\n            (⋈| U₀) (⋈| U₁) hline\n        unfold jointProximityNat₂ at hpair\n        rw [jointProximityNat] at hpair ⊢\n        simpa [U₀, U₁, splitHalfRowWiseInterleavedWords,\n          Interleavable.interleave, CodeInterleavable.interleaveCode,\n          ModuleCode.moduleInterleavedCode, Matrix.transpose_transpose,\n          Matrix.transpose_apply, Nat.succ_eq_add_one] using hpair",
+  "proof_sha256": "957773b649194b63d810ad663e01ad0567e1e174fbf26abe96ec5be01c27c736",
+  "full_source_sha256": "4bcba2ade8504207a5af56c970af91f6a6485703984e9f1e3fdb9f3d5270f7e8",
+  "eligible": false,
+  "verification": {
+    "task_id": "P12",
+    "attempt": "candidate_04",
+    "candidate_hash": "4bcba2ade8504207a5af56c970af91f6a6485703984e9f1e3fdb9f3d5270f7e8",
+    "environment_id": "0c6971d601fccc37e69d84ddfa1ac63a41527ba5fa2d7e4f87c63547c308939a",
+    "check_kind": "candidate",
+    "status": "proof_error",
+    "process_exit_code": 1,
+    "diagnostics": [
+      {
+        "severity": "error",
+        "position": {
+          "column": 29,
+          "line": 1227
+        },
+        "end_position": {
+          "column": 32,
+          "line": 1227
+        },
+        "message": "Invalid projection: Type of\n  p\nis not known; cannot resolve projection `2`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "Invalid projection: Type of\n  p\nis not known; cannot resolve projection `2`",
+          "endPos": {
+            "column": 32,
+            "line": 1227
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P12/incomplete/B2/repeat_2/validation/lean/009_candidate_04/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 29,
+            "line": 1227
+          },
+          "severity": "error"
+        },
+        "source_line": "        (fun p _ => Fin.snoc p.2 p.1) ?_ ?_ ?_",
+        "start_offset": 63810,
+        "start_byte_offset": 67878,
+        "end_offset": 63813,
+        "end_byte_offset": 67881,
+        "source_text": "p.2",
+        "failed_tactic": "refine Finset.card_bij\n        (fun p _ => Fin.snoc p.2 p.1) ?_ ?_ ?_",
+        "tactic_range": {
+          "position": {
+            "line": 1226,
+            "column": 6
+          },
+          "end_position": {
+            "line": 1227,
+            "column": 46
+          },
+          "start_offset": 63758,
+          "end_offset": 63827
+        },
+        "goals": [
+          "↑↑(#{r | P (Fin.snoc r.2 r.1)}) = ↑↑(#(filter P univ))"
+        ],
+        "local_context": [
+          "case e_a\nι : Type l\ninst✝⁷ : Fintype ι\ninst✝⁶ : Nonempty ι\ninst✝⁵ : DecidableEq ι\nF : Type\ninst✝⁴ : CommRing F\ninst✝³ : Fintype F\nA : Type\ninst✝² : DecidableEq A\ninst✝¹ : AddCommGroup A\ninst✝ : Module F A\nMC : ModuleCode ι F A\ne ε : ℕ\nhC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε\nh_interleaved_gaps : ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε\nn : ℕ\nP : (Fin (n + 1) → F) → Prop"
+        ],
+        "proof_state_source": "lean_infotree_before_tactic",
+        "proof_state_raw": {
+          "depth": 27,
+          "end": 75026,
+          "goals_after": [
+            "case e_a\nι : Type l\ninst✝⁷ : Fintype ι\ninst✝⁶ : Nonempty ι\ninst✝⁵ : DecidableEq ι\nF : Type\ninst✝⁴ : CommRing F\ninst✝³ : Fintype F\nA : Type\ninst✝² : DecidableEq A\ninst✝¹ : AddCommGroup A\ninst✝ : Module F A\nMC : ModuleCode ι F A\ne ε : ℕ\nhC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε\nh_interleaved_gaps : ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε\nn : ℕ\nP : (Fin (n + 1) → F) → Prop\n⊢ ↑↑(#{r | P (Fin.snoc r.2 r.1)}) = ↑↑(#(filter P univ))"
+          ],
+          "goals_before": [
+            "case e_a\nι : Type l\ninst✝⁷ : Fintype ι\ninst✝⁶ : Nonempty ι\ninst✝⁵ : DecidableEq ι\nF : Type\ninst✝⁴ : CommRing F\ninst✝³ : Fintype F\nA : Type\ninst✝² : DecidableEq A\ninst✝¹ : AddCommGroup A\ninst✝ : Module F A\nMC : ModuleCode ι F A\ne ε : ℕ\nhC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε\nh_interleaved_gaps : ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε\nn : ℕ\nP : (Fin (n + 1) → F) → Prop\n⊢ ↑↑(#{r | P (Fin.snoc r.2 r.1)}) = ↑↑(#(filter P univ))"
+          ],
+          "kind": "tactic",
+          "start": 74957
+        }
+      },
+      {
+        "severity": "error",
+        "position": {
+          "column": 33,
+          "line": 1227
+        },
+        "end_position": {
+          "column": 36,
+          "line": 1227
+        },
+        "message": "Invalid projection: Type of\n  p\nis not known; cannot resolve projection `1`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "Invalid projection: Type of\n  p\nis not known; cannot resolve projection `1`",
+          "endPos": {
+            "column": 36,
+            "line": 1227
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P12/incomplete/B2/repeat_2/validation/lean/009_candidate_04/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 33,
+            "line": 1227
+          },
+          "severity": "error"
+        },
+        "source_line": "        (fun p _ => Fin.snoc p.2 p.1) ?_ ?_ ?_",
+        "start_offset": 63814,
+        "start_byte_offset": 67882,
+        "end_offset": 63817,
+        "end_byte_offset": 67885,
+        "source_text": "p.1",
+        "failed_tactic": "refine Finset.card_bij\n        (fun p _ => Fin.snoc p.2 p.1) ?_ ?_ ?_",
+        "tactic_range": {
+          "position": {
+            "line": 1226,
+            "column": 6
+          },
+          "end_position": {
+            "line": 1227,
+            "column": 46
+          },
+          "start_offset": 63758,
+          "end_offset": 63827
+        },
+        "goals": [
+          "↑↑(#{r | P (Fin.snoc r.2 r.1)}) = ↑↑(#(filter P univ))"
+        ],
+        "local_context": [
+          "case e_a\nι : Type l\ninst✝⁷ : Fintype ι\ninst✝⁶ : Nonempty ι\ninst✝⁵ : DecidableEq ι\nF : Type\ninst✝⁴ : CommRing F\ninst✝³ : Fintype F\nA : Type\ninst✝² : DecidableEq A\ninst✝¹ : AddCommGroup A\ninst✝ : Module F A\nMC : ModuleCode ι F A\ne ε : ℕ\nhC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε\nh_interleaved_gaps : ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε\nn : ℕ\nP : (Fin (n + 1) → F) → Prop"
+        ],
+        "proof_state_source": "lean_infotree_before_tactic",
+        "proof_state_raw": {
+          "depth": 27,
+          "end": 75026,
+          "goals_after": [
+            "case e_a\nι : Type l\ninst✝⁷ : Fintype ι\ninst✝⁶ : Nonempty ι\ninst✝⁵ : DecidableEq ι\nF : Type\ninst✝⁴ : CommRing F\ninst✝³ : Fintype F\nA : Type\ninst✝² : DecidableEq A\ninst✝¹ : AddCommGroup A\ninst✝ : Module F A\nMC : ModuleCode ι F A\ne ε : ℕ\nhC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε\nh_interleaved_gaps : ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε\nn : ℕ\nP : (Fin (n + 1) → F) → Prop\n⊢ ↑↑(#{r | P (Fin.snoc r.2 r.1)}) = ↑↑(#(filter P univ))"
+          ],
+          "goals_before": [
+            "case e_a\nι : Type l\ninst✝⁷ : Fintype ι\ninst✝⁶ : Nonempty ι\ninst✝⁵ : DecidableEq ι\nF : Type\ninst✝⁴ : CommRing F\ninst✝³ : Fintype F\nA : Type\ninst✝² : DecidableEq A\ninst✝¹ : AddCommGroup A\ninst✝ : Module F A\nMC : ModuleCode ι F A\ne ε : ℕ\nhC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε\nh_interleaved_gaps : ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε\nn : ℕ\nP : (Fin (n + 1) → F) → Prop\n⊢ ↑↑(#{r | P (Fin.snoc r.2 r.1)}) = ↑↑(#(filter P univ))"
+          ],
+          "kind": "tactic",
+          "start": 74957
+        }
+      },
+      {
+        "severity": "error",
+        "position": {
+          "column": 6,
+          "line": 1226
+        },
+        "end_position": {
+          "column": 46,
+          "line": 1227
+        },
+        "message": "Type mismatch\n  card_bij (fun p x => Fin.snoc ?m.161 ?m.162) ?m.165 ?m.166 ?m.167\nhas type\n  #?m.153 = #?m.154\nbut is expected to have type\n  ↑↑(#{r | P (Fin.snoc r.2 r.1)}) = ↑↑(#(filter P univ))",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "Type mismatch\n  card_bij (fun p x => Fin.snoc ?m.161 ?m.162) ?m.165 ?m.166 ?m.167\nhas type\n  #?m.153 = #?m.154\nbut is expected to have type\n  ↑↑(#{r | P (Fin.snoc r.2 r.1)}) = ↑↑(#(filter P univ))",
+          "endPos": {
+            "column": 46,
+            "line": 1227
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P12/incomplete/B2/repeat_2/validation/lean/009_candidate_04/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 6,
+            "line": 1226
+          },
+          "severity": "error"
+        },
+        "source_line": "    · refine Finset.card_bij",
+        "start_offset": 63758,
+        "start_byte_offset": 67826,
+        "end_offset": 63827,
+        "end_byte_offset": 67895,
+        "source_text": "refine Finset.card_bij\n        (fun p _ => Fin.snoc p.2 p.1) ?_ ?_ ?_",
+        "expected_actual_types": {
+          "actual": "#?m.153 = #?m.154",
+          "expected": "↑↑(#{r | P (Fin.snoc r.2 r.1)}) = ↑↑(#(filter P univ))"
+        },
+        "failed_tactic": "refine Finset.card_bij\n        (fun p _ => Fin.snoc p.2 p.1) ?_ ?_ ?_",
+        "tactic_range": {
+          "position": {
+            "line": 1226,
+            "column": 6
+          },
+          "end_position": {
+            "line": 1227,
+            "column": 46
+          },
+          "start_offset": 63758,
+          "end_offset": 63827
+        },
+        "goals": [
+          "↑↑(#{r | P (Fin.snoc r.2 r.1)}) = ↑↑(#(filter P univ))"
+        ],
+        "local_context": [
+          "case e_a\nι : Type l\ninst✝⁷ : Fintype ι\ninst✝⁶ : Nonempty ι\ninst✝⁵ : DecidableEq ι\nF : Type\ninst✝⁴ : CommRing F\ninst✝³ : Fintype F\nA : Type\ninst✝² : DecidableEq A\ninst✝¹ : AddCommGroup A\ninst✝ : Module F A\nMC : ModuleCode ι F A\ne ε : ℕ\nhC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε\nh_interleaved_gaps : ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε\nn : ℕ\nP : (Fin (n + 1) → F) → Prop"
+        ],
+        "proof_state_source": "lean_infotree_before_tactic",
+        "proof_state_raw": {
+          "depth": 27,
+          "end": 75026,
+          "goals_after": [
+            "case e_a\nι : Type l\ninst✝⁷ : Fintype ι\ninst✝⁶ : Nonempty ι\ninst✝⁵ : DecidableEq ι\nF : Type\ninst✝⁴ : CommRing F\ninst✝³ : Fintype F\nA : Type\ninst✝² : DecidableEq A\ninst✝¹ : AddCommGroup A\ninst✝ : Module F A\nMC : ModuleCode ι F A\ne ε : ℕ\nhC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε\nh_interleaved_gaps : ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε\nn : ℕ\nP : (Fin (n + 1) → F) → Prop\n⊢ ↑↑(#{r | P (Fin.snoc r.2 r.1)}) = ↑↑(#(filter P univ))"
+          ],
+          "goals_before": [
+            "case e_a\nι : Type l\ninst✝⁷ : Fintype ι\ninst✝⁶ : Nonempty ι\ninst✝⁵ : DecidableEq ι\nF : Type\ninst✝⁴ : CommRing F\ninst✝³ : Fintype F\nA : Type\ninst✝² : DecidableEq A\ninst✝¹ : AddCommGroup A\ninst✝ : Module F A\nMC : ModuleCode ι F A\ne ε : ℕ\nhC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε\nh_interleaved_gaps : ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε\nn : ℕ\nP : (Fin (n + 1) → F) → Prop\n⊢ ↑↑(#{r | P (Fin.snoc r.2 r.1)}) = ↑↑(#(filter P univ))"
+          ],
+          "kind": "tactic",
+          "start": 74957
+        }
+      },
+      {
+        "severity": "error",
+        "position": {
+          "column": 4,
+          "line": 1253
+        },
+        "end_position": {
+          "column": 7,
+          "line": 1253
+        },
+        "message": "Tactic `rfl` failed: The left-hand side\n  multilinearCombine u (Fin.snoc r_init r_last)\nis not definitionally equal to the right-hand side\n  multilinearCombine\n    (affineLineEvaluation (splitHalfRowWiseInterleavedWords u).1 (splitHalfRowWiseInterleavedWords u).2 r_last) r_init\n\nι : Type l\ninst✝⁷ : Fintype ι\ninst✝⁶ : Nonempty ι\ninst✝⁵ : DecidableEq ι\nF : Type\ninst✝⁴ : CommRing F\ninst✝³ : Fintype F\nA : Type\ninst✝² : DecidableEq A\ninst✝¹ : AddCommGroup A\ninst✝ : Module F A\nMC : ModuleCode ι F A\ne ε : ℕ\nhC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε\nh_interleaved_gaps : ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε\nprob_snoc :\n  ∀ (n : ℕ) (P : (Fin (n + 1) → F) → Prop),\n    (do\n          let r_last ← $ᵖ F\n          let r_init ← $ᵖ (Fin n → F)\n          pure (P (Fin.snoc r_init r_last)))\n        True =\n      (do\n          let r ← $ᵖ (Fin (n + 1) → F)\n          pure (P r))\n        True\nn : ℕ\nu : WordStack A (Fin (2 ^ (n + 1))) ι\nr_init : Fin n → F\nr_last : F\n⊢ multilinearCombine u (Fin.snoc r_init r_last) =\n    multilinearCombine\n      (affineLineEvaluation (splitHalfRowWiseInterleavedWords u).1 (splitHalfRowWiseInterleavedWords u).2 r_last) r_init",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "Tactic `rfl` failed: The left-hand side\n  multilinearCombine u (Fin.snoc r_init r_last)\nis not definitionally equal to the right-hand side\n  multilinearCombine\n    (affineLineEvaluation (splitHalfRowWiseInterleavedWords u).1 (splitHalfRowWiseInterleavedWords u).2 r_last) r_init\n\nι : Type l\ninst✝⁷ : Fintype ι\ninst✝⁶ : Nonempty ι\ninst✝⁵ : DecidableEq ι\nF : Type\ninst✝⁴ : CommRing F\ninst✝³ : Fintype F\nA : Type\ninst✝² : DecidableEq A\ninst✝¹ : AddCommGroup A\ninst✝ : Module F A\nMC : ModuleCode ι F A\ne ε : ℕ\nhC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε\nh_interleaved_gaps : ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε\nprob_snoc :\n  ∀ (n : ℕ) (P : (Fin (n + 1) → F) → Prop),\n    (do\n          let r_last ← $ᵖ F\n          let r_init ← $ᵖ (Fin n → F)\n          pure (P (Fin.snoc r_init r_last)))\n        True =\n      (do\n          let r ← $ᵖ (Fin (n + 1) → F)\n          pure (P r))\n        True\nn : ℕ\nu : WordStack A (Fin (2 ^ (n + 1))) ι\nr_init : Fin n → F\nr_last : F\n⊢ multilinearCombine u (Fin.snoc r_init r_last) =\n    multilinearCombine\n      (affineLineEvaluation (splitHalfRowWiseInterleavedWords u).1 (splitHalfRowWiseInterleavedWords u).2 r_last) r_init",
+          "endPos": {
+            "column": 7,
+            "line": 1253
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P12/incomplete/B2/repeat_2/validation/lean/009_candidate_04/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 4,
+            "line": 1253
+          },
+          "severity": "error"
+        },
+        "source_line": "    rfl",
+        "start_offset": 64829,
+        "start_byte_offset": 68924,
+        "end_offset": 64832,
+        "end_byte_offset": 68927,
+        "source_text": "rfl",
+        "failed_tactic": "rfl",
+        "tactic_range": {
+          "position": {
+            "line": 1253,
+            "column": 4
+          },
+          "end_position": {
+            "line": 1253,
+            "column": 7
+          },
+          "start_offset": 64829,
+          "end_offset": 64832
+        },
+        "goals": [
+          "multilinearCombine u (Fin.snoc r_init r_last) =\n    multilinearCombine\n      (affineLineEvaluation (splitHalfRowWiseInterleavedWords u).1 (splitHalfRowWiseInterleavedWords u).2 r_last) r_init"
+        ],
+        "local_context": [
+          "ι : Type l\ninst✝⁷ : Fintype ι\ninst✝⁶ : Nonempty ι\ninst✝⁵ : DecidableEq ι\nF : Type\ninst✝⁴ : CommRing F\ninst✝³ : Fintype F\nA : Type\ninst✝² : DecidableEq A\ninst✝¹ : AddCommGroup A\ninst✝ : Module F A\nMC : ModuleCode ι F A\ne ε : ℕ\nhC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε\nh_interleaved_gaps : ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε\nprob_snoc :\n  ∀ (n : ℕ) (P : (Fin (n + 1) → F) → Prop),\n    (do\n          let r_last ← $ᵖ F\n          let r_init ← $ᵖ (Fin n → F)\n          pure (P (Fin.snoc r_init r_last)))\n        True =\n      (do\n          let r ← $ᵖ (Fin (n + 1) → F)\n          pure (P r))\n        True\nn : ℕ\nu : WordStack A (Fin (2 ^ (n + 1))) ι\nr_init : Fin n → F\nr_last : F"
+        ],
+        "proof_state_source": "lean_infotree_before_tactic",
+        "proof_state_raw": {
+          "depth": 25,
+          "end": 76058,
+          "goals_after": [
+            "ι : Type l\ninst✝⁷ : Fintype ι\ninst✝⁶ : Nonempty ι\ninst✝⁵ : DecidableEq ι\nF : Type\ninst✝⁴ : CommRing F\ninst✝³ : Fintype F\nA : Type\ninst✝² : DecidableEq A\ninst✝¹ : AddCommGroup A\ninst✝ : Module F A\nMC : ModuleCode ι F A\ne ε : ℕ\nhC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε\nh_interleaved_gaps : ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε\nprob_snoc :\n  ∀ (n : ℕ) (P : (Fin (n + 1) → F) → Prop),\n    (do\n          let r_last ← $ᵖ F\n          let r_init ← $ᵖ (Fin n → F)\n          pure (P (Fin.snoc r_init r_last)))\n        True =\n      (do\n          let r ← $ᵖ (Fin (n + 1) → F)\n          pure (P r))\n        True\nn : ℕ\nu : WordStack A (Fin (2 ^ (n + 1))) ι\nr_init : Fin n → F\nr_last : F\n⊢ multilinearCombine u (Fin.snoc r_init r_last) =\n    multilinearCombine\n      (affineLineEvaluation (splitHalfRowWiseInterleavedWords u).1 (splitHalfRowWiseInterleavedWords u).2 r_last) r_init"
+          ],
+          "goals_before": [
+            "ι : Type l\ninst✝⁷ : Fintype ι\ninst✝⁶ : Nonempty ι\ninst✝⁵ : DecidableEq ι\nF : Type\ninst✝⁴ : CommRing F\ninst✝³ : Fintype F\nA : Type\ninst✝² : DecidableEq A\ninst✝¹ : AddCommGroup A\ninst✝ : Module F A\nMC : ModuleCode ι F A\ne ε : ℕ\nhC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε\nh_interleaved_gaps : ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε\nprob_snoc :\n  ∀ (n : ℕ) (P : (Fin (n + 1) → F) → Prop),\n    (do\n          let r_last ← $ᵖ F\n          let r_init ← $ᵖ (Fin n → F)\n          pure (P (Fin.snoc r_init r_last)))\n        True =\n      (do\n          let r ← $ᵖ (Fin (n + 1) → F)\n          pure (P r))\n        True\nn : ℕ\nu : WordStack A (Fin (2 ^ (n + 1))) ι\nr_init : Fin n → F\nr_last : F\n⊢ multilinearCombine u (Fin.snoc r_init r_last) =\n    multilinearCombine\n      (affineLineEvaluation (splitHalfRowWiseInterleavedWords u).1 (splitHalfRowWiseInterleavedWords u).2 r_last) r_init"
+          ],
+          "kind": "tactic",
+          "start": 76055
+        }
+      },
+      {
+        "severity": "error",
+        "position": {
+          "column": 10,
+          "line": 1271
+        },
+        "end_position": {
+          "column": 54,
+          "line": 1272
+        },
+        "message": "Type mismatch: After simplification, term\n  hu\n has type\n  ↑ε / ↑(Fintype.card F) <\n    (do\n        let r_last ← $ᵖ F\n        (fun a =>\n              Δ₀(multilinearCombine (((1 - r_last) • fun rowIdx => u 0) + r_last • fun rowIdx => u 1) a, ↑MC) ≤ ↑e) <$>\n            $ᵖ (Fin 0 → F))\n      True\nbut is expected to have type\n  ↑ε / ↑(Fintype.card F) < ((fun a => Δ₀((1 - a) • u 0 + a • u 1, ↑MC) ≤ ↑e) <$> $ᵖ F) True",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "Type mismatch: After simplification, term\n  hu\n has type\n  ↑ε / ↑(Fintype.card F) <\n    (do\n        let r_last ← $ᵖ F\n        (fun a =>\n              Δ₀(multilinearCombine (((1 - r_last) • fun rowIdx => u 0) + r_last • fun rowIdx => u 1) a, ↑MC) ≤ ↑e) <$>\n            $ᵖ (Fin 0 → F))\n      True\nbut is expected to have type\n  ↑ε / ↑(Fintype.card F) < ((fun a => Δ₀((1 - a) • u 0 + a • u 1, ↑MC) ≤ ↑e) <$> $ᵖ F) True",
+          "endPos": {
+            "column": 54,
+            "line": 1272
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P12/incomplete/B2/repeat_2/validation/lean/009_candidate_04/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 10,
+            "line": 1271
+          },
+          "severity": "error"
+        },
+        "source_line": "          simpa [multilinearCombine_snoc, affineLineEvaluation,",
+        "start_offset": 65331,
+        "start_byte_offset": 69461,
+        "end_offset": 65439,
+        "end_byte_offset": 69569,
+        "source_text": "simpa [multilinearCombine_snoc, affineLineEvaluation,\n            splitHalfRowWiseInterleavedWords] using hu",
+        "expected_actual_types": {
+          "actual": "↑ε / ↑(Fintype.card F) <\n    (do\n        let r_last ← $ᵖ F\n        (fun a =>\n              Δ₀(multilinearCombine (((1 - r_last) • fun rowIdx => u 0) + r_last • fun rowIdx => u 1) a, ↑MC) ≤ ↑e) <$>\n            $ᵖ (Fin 0 → F))\n      True",
+          "expected": "↑ε / ↑(Fintype.card F) < ((fun a => Δ₀((1 - a) • u 0 + a • u 1, ↑MC) ≤ ↑e) <$> $ᵖ F) True"
+        },
+        "failed_tactic": "simpa [multilinearCombine_snoc, affineLineEvaluation,\n            splitHalfRowWiseInterleavedWords] using",
+        "tactic_range": {
+          "position": {
+            "line": 1271,
+            "column": 10
+          },
+          "end_position": {
+            "line": 1272,
+            "column": 51
+          },
+          "start_offset": 65331,
+          "end_offset": 65436
+        },
+        "goals": [
+          "(do\n        let r ← $ᵖ F\n        pure (Δ₀(affineLineEvaluation (u 0) (u 1) r, ↑MC) ≤ ↑e))\n      True >\n    ↑↑ε / ↑↑(Fintype.card F)"
+        ],
+        "local_context": [
+          "ι : Type l\ninst✝⁷ : Fintype ι\ninst✝⁶ : Nonempty ι\ninst✝⁵ : DecidableEq ι\nF : Type\ninst✝⁴ : CommRing F\ninst✝³ : Fintype F\nA : Type\ninst✝² : DecidableEq A\ninst✝¹ : AddCommGroup A\ninst✝ : Module F A\nMC : ModuleCode ι F A\ne ε : ℕ\nhC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε\nh_interleaved_gaps : ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε\nprob_snoc :\n  ∀ (n : ℕ) (P : (Fin (n + 1) → F) → Prop),\n    (do\n          let r_last ← $ᵖ F\n          let r_init ← $ᵖ (Fin n → F)\n          pure (P (Fin.snoc r_init r_last)))\n        True =\n      (do\n          let r ← $ᵖ (Fin (n + 1) → F)\n          pure (P r))\n        True\nmultilinearCombine_snoc :\n  ∀ (n : ℕ) (u : WordStack A (Fin (2 ^ (n + 1))) ι) (r_init : Fin n → F) (r_last : F),\n    multilinearCombine u (Fin.snoc r_init r_last) =\n      multilinearCombine\n        (affineLineEvaluation (splitHalfRowWiseInterleavedWords u).1 (splitHalfRowWiseInterleavedWords u).2 r_last)\n        r_init\nih : 0 > 0 → δ_ε_multilinearCorrelatedAgreement_Nat (↑MC) 0 e ε\nhϑ_gt_0✝ : 0 + 1 > 0\nu : WordStack A (Fin (2 ^ (0 + 1))) ι\nhu :\n  (do\n        let r_last ← $ᵖ F\n        let r_init ← $ᵖ (Fin 0 → F)\n        pure (Δ₀(multilinearCombine u (Fin.snoc r_init r_last), ↑MC) ≤ ↑e))\n      True >\n    ↑↑(0 + 1) * ↑ε / ↑↑(Fintype.card F)\nhprob_eq :\n  (do\n        let r_last ← $ᵖ F\n        let r_init ← $ᵖ (Fin 0 → F)\n        pure (Δ₀(multilinearCombine u (Fin.snoc r_init r_last), ↑MC) ≤ ↑e))\n      True =\n    (do\n        let r ← $ᵖ (Fin (0 + 1) → F)\n        pure (Δ₀(multilinearCombine u r, ↑MC) ≤ ↑e))\n      True"
+        ],
+        "proof_state_source": "lean_infotree_before_tactic",
+        "proof_state_raw": {
+          "depth": 33,
+          "end": 76697,
+          "goals_after": [
+            "ι : Type l\ninst✝⁷ : Fintype ι\ninst✝⁶ : Nonempty ι\ninst✝⁵ : DecidableEq ι\nF : Type\ninst✝⁴ : CommRing F\ninst✝³ : Fintype F\nA : Type\ninst✝² : DecidableEq A\ninst✝¹ : AddCommGroup A\ninst✝ : Module F A\nMC : ModuleCode ι F A\ne ε : ℕ\nhC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε\nh_interleaved_gaps : ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε\nprob_snoc :\n  ∀ (n : ℕ) (P : (Fin (n + 1) → F) → Prop),\n    (do\n          let r_last ← $ᵖ F\n          let r_init ← $ᵖ (Fin n → F)\n          pure (P (Fin.snoc r_init r_last)))\n        True =\n      (do\n          let r ← $ᵖ (Fin (n + 1) → F)\n          pure (P r))\n        True\nmultilinearCombine_snoc :\n  ∀ (n : ℕ) (u : WordStack A (Fin (2 ^ (n + 1))) ι) (r_init : Fin n → F) (r_last : F),\n    multilinearCombine u (Fin.snoc r_init r_last) =\n      multilinearCombine\n        (affineLineEvaluation (splitHalfRowWiseInterleavedWords u).1 (splitHalfRowWiseInterleavedWords u).2 r_last)\n        r_init\nih : 0 > 0 → δ_ε_multilinearCorrelatedAgreement_Nat (↑MC) 0 e ε\nhϑ_gt_0✝ : 0 + 1 > 0\nu : WordStack A (Fin (2 ^ (0 + 1))) ι\nhu :\n  (do\n        let r_last ← $ᵖ F\n        let r_init ← $ᵖ (Fin 0 → F)\n        pure (Δ₀(multilinearCombine u (Fin.snoc r_init r_last), ↑MC) ≤ ↑e))\n      True >\n    ↑↑(0 + 1) * ↑ε / ↑↑(Fintype.card F)\nhprob_eq :\n  (do\n        let r_last ← $ᵖ F\n        let r_init ← $ᵖ (Fin 0 → F)\n        pure (Δ₀(multilinearCombine u (Fin.snoc r_init r_last), ↑MC) ≤ ↑e))\n      True =\n    (do\n        let r ← $ᵖ (Fin (0 + 1) → F)\n        pure (Δ₀(multilinearCombine u r, ↑MC) ≤ ↑e))\n      True\n⊢ ↑ε / ↑(Fintype.card F) < ((fun a => Δ₀((1 - a) • u 0 + a • u 1, ↑MC) ≤ ↑e) <$> $ᵖ F) True"
+          ],
+          "goals_before": [
+            "ι : Type l\ninst✝⁷ : Fintype ι\ninst✝⁶ : Nonempty ι\ninst✝⁵ : DecidableEq ι\nF : Type\ninst✝⁴ : CommRing F\ninst✝³ : Fintype F\nA : Type\ninst✝² : DecidableEq A\ninst✝¹ : AddCommGroup A\ninst✝ : Module F A\nMC : ModuleCode ι F A\ne ε : ℕ\nhC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε\nh_interleaved_gaps : ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε\nprob_snoc :\n  ∀ (n : ℕ) (P : (Fin (n + 1) → F) → Prop),\n    (do\n          let r_last ← $ᵖ F\n          let r_init ← $ᵖ (Fin n → F)\n          pure (P (Fin.snoc r_init r_last)))\n        True =\n      (do\n          let r ← $ᵖ (Fin (n + 1) → F)\n          pure (P r))\n        True\nmultilinearCombine_snoc :\n  ∀ (n : ℕ) (u : WordStack A (Fin (2 ^ (n + 1))) ι) (r_init : Fin n → F) (r_last : F),\n    multilinearCombine u (Fin.snoc r_init r_last) =\n      multilinearCombine\n        (affineLineEvaluation (splitHalfRowWiseInterleavedWords u).1 (splitHalfRowWiseInterleavedWords u).2 r_last)\n        r_init\nih : 0 > 0 → δ_ε_multilinearCorrelatedAgreement_Nat (↑MC) 0 e ε\nhϑ_gt_0✝ : 0 + 1 > 0\nu : WordStack A (Fin (2 ^ (0 + 1))) ι\nhu :\n  (do\n        let r_last ← $ᵖ F\n        let r_init ← $ᵖ (Fin 0 → F)\n        pure (Δ₀(multilinearCombine u (Fin.snoc r_init r_last), ↑MC) ≤ ↑e))\n      True >\n    ↑↑(0 + 1) * ↑ε / ↑↑(Fintype.card F)\nhprob_eq :\n  (do\n        let r_last ← $ᵖ F\n        let r_init ← $ᵖ (Fin 0 → F)\n        pure (Δ₀(multilinearCombine u (Fin.snoc r_init r_last), ↑MC) ≤ ↑e))\n      True =\n    (do\n        let r ← $ᵖ (Fin (0 + 1) → F)\n        pure (Δ₀(multilinearCombine u r, ↑MC) ≤ ↑e))\n      True\n⊢ (do\n        let r ← $ᵖ F\n        pure (Δ₀(affineLineEvaluation (u 0) (u 1) r, ↑MC) ≤ ↑e))\n      True >\n    ↑↑ε / ↑↑(Fintype.card F)"
+          ],
+          "kind": "tactic",
+          "start": 76592
+        }
+      },
+      {
+        "severity": "error",
+        "position": {
+          "column": 10,
+          "line": 1297
+        },
+        "end_position": {
+          "column": 45,
+          "line": 1298
+        },
+        "message": "Type mismatch: After simplification, term\n  hu\n has type\n  @GT.gt ENNReal ENNReal.instPartialOrder.toLT\n    ((do\n        let r_last ← $ᵖ F\n        let r_init ← $ᵖ (Fin ϑ → F)\n        pure\n            (Δ₀(multilinearCombine\n                  (affineLineEvaluation (splitHalfRowWiseInterleavedWords u).1 (splitHalfRowWiseInterleavedWords u).2\n                    r_last)\n                  r_init,\n                ↑MC) ≤\n              ↑e))\n      True)\n    (↑↑(ϑ + 1) * ↑ε / ↑↑(Fintype.card F))\nbut is expected to have type\n  @GT.gt ENNReal ENNReal.instPartialOrder.toLT\n    ((do\n        let r_last ← $ᵖ F\n        let r_init ← $ᵖ (Fin ϑ → F)\n        pure\n            (Δ₀(multilinearCombine\n                  (affineLineEvaluation (splitHalfRowWiseInterleavedWords u).1 (splitHalfRowWiseInterleavedWords u).2\n                    r_last)\n                  r_init,\n                ↑MC) ≤\n              ↑e))\n      True)\n    (↑(↑(ϑ + 1) * ↑ε) / ↑↑(Fintype.card F))",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "Type mismatch: After simplification, term\n  hu\n has type\n  @GT.gt ENNReal ENNReal.instPartialOrder.toLT\n    ((do\n        let r_last ← $ᵖ F\n        let r_init ← $ᵖ (Fin ϑ → F)\n        pure\n            (Δ₀(multilinearCombine\n                  (affineLineEvaluation (splitHalfRowWiseInterleavedWords u).1 (splitHalfRowWiseInterleavedWords u).2\n                    r_last)\n                  r_init,\n                ↑MC) ≤\n              ↑e))\n      True)\n    (↑↑(ϑ + 1) * ↑ε / ↑↑(Fintype.card F))\nbut is expected to have type\n  @GT.gt ENNReal ENNReal.instPartialOrder.toLT\n    ((do\n        let r_last ← $ᵖ F\n        let r_init ← $ᵖ (Fin ϑ → F)\n        pure\n            (Δ₀(multilinearCombine\n                  (affineLineEvaluation (splitHalfRowWiseInterleavedWords u).1 (splitHalfRowWiseInterleavedWords u).2\n                    r_last)\n                  r_init,\n                ↑MC) ≤\n              ↑e))\n      True)\n    (↑(↑(ϑ + 1) * ↑ε) / ↑↑(Fintype.card F))",
+          "endPos": {
+            "column": 45,
+            "line": 1298
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P12/incomplete/B2/repeat_2/validation/lean/009_candidate_04/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 10,
+            "line": 1297
+          },
+          "severity": "error"
+        },
+        "source_line": "          simpa only [multilinearCombine_affineComb_split_last_close,",
+        "start_offset": 66594,
+        "start_byte_offset": 70790,
+        "end_offset": 66699,
+        "end_byte_offset": 70895,
+        "source_text": "simpa only [multilinearCombine_affineComb_split_last_close,\n            multilinearCombine_snoc] using hu",
+        "expected_actual_types": {
+          "actual": "@GT.gt ENNReal ENNReal.instPartialOrder.toLT\n    ((do\n        let r_last ← $ᵖ F\n        let r_init ← $ᵖ (Fin ϑ → F)\n        pure\n            (Δ₀(multilinearCombine\n                  (affineLineEvaluation (splitHalfRowWiseInterleavedWords u).1 (splitHalfRowWiseInterleavedWords u).2\n                    r_last)\n                  r_init,\n                ↑MC) ≤\n              ↑e))\n      True)\n    (↑↑(ϑ + 1) * ↑ε / ↑↑(Fintype.card F))",
+          "expected": "@GT.gt ENNReal ENNReal.instPartialOrder.toLT\n    ((do\n        let r_last ← $ᵖ F\n        let r_init ← $ᵖ (Fin ϑ → F)\n        pure\n            (Δ₀(multilinearCombine\n                  (affineLineEvaluation (splitHalfRowWiseInterleavedWords u).1 (splitHalfRowWiseInterleavedWords u).2\n                    r_last)\n                  r_init,\n                ↑MC) ≤\n              ↑e))\n      True)\n    (↑(↑(ϑ + 1) * ↑ε) / ↑↑(Fintype.card F))"
+        },
+        "failed_tactic": "simpa only [multilinearCombine_affineComb_split_last_close,\n            multilinearCombine_snoc] using",
+        "tactic_range": {
+          "position": {
+            "line": 1297,
+            "column": 10
+          },
+          "end_position": {
+            "line": 1298,
+            "column": 42
+          },
+          "start_offset": 66594,
+          "end_offset": 66696
+        },
+        "goals": [
+          "(do\n        let r_last ← $ᵖ F\n        let r_init ← $ᵖ (Fin ϑ → F)\n        pure (multilinearCombine_affineComb_split_last_close MC u e r_last r_init))\n      True >\n    ↑(↑(ϑ + 1) * ↑ε) / ↑↑(Fintype.card F)"
+        ],
+        "local_context": [
+          "ι : Type l\ninst✝⁷ : Fintype ι\ninst✝⁶ : Nonempty ι\ninst✝⁵ : DecidableEq ι\nF : Type\ninst✝⁴ : CommRing F\ninst✝³ : Fintype F\nA : Type\ninst✝² : DecidableEq A\ninst✝¹ : AddCommGroup A\ninst✝ : Module F A\nMC : ModuleCode ι F A\ne ε : ℕ\nhC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε\nh_interleaved_gaps : ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε\nprob_snoc :\n  ∀ (n : ℕ) (P : (Fin (n + 1) → F) → Prop),\n    (do\n          let r_last ← $ᵖ F\n          let r_init ← $ᵖ (Fin n → F)\n          pure (P (Fin.snoc r_init r_last)))\n        True =\n      (do\n          let r ← $ᵖ (Fin (n + 1) → F)\n          pure (P r))\n        True\nmultilinearCombine_snoc :\n  ∀ (n : ℕ) (u : WordStack A (Fin (2 ^ (n + 1))) ι) (r_init : Fin n → F) (r_last : F),\n    multilinearCombine u (Fin.snoc r_init r_last) =\n      multilinearCombine\n        (affineLineEvaluation (splitHalfRowWiseInterleavedWords u).1 (splitHalfRowWiseInterleavedWords u).2 r_last)\n        r_init\nϑ : ℕ\nih : ϑ > 0 → δ_ε_multilinearCorrelatedAgreement_Nat (↑MC) ϑ e ε\nhϑ_gt_0✝ : ϑ + 1 > 0\nhϑ_zero : ¬ϑ = 0\nhϑ_pos : ϑ > 0\nihϑ : δ_ε_multilinearCorrelatedAgreement_Nat (↑MC) ϑ e ε\nu : WordStack A (Fin (2 ^ (ϑ + 1))) ι\nhu :\n  (do\n        let r_last ← $ᵖ F\n        let r_init ← $ᵖ (Fin ϑ → F)\n        pure (Δ₀(multilinearCombine u (Fin.snoc r_init r_last), ↑MC) ≤ ↑e))\n      True >\n    ↑↑(ϑ + 1) * ↑ε / ↑↑(Fintype.card F)\nU₀ : WordStack A (Fin (2 ^ ϑ)) ι := (splitHalfRowWiseInterleavedWords u).1\nU₁ : WordStack A (Fin (2 ^ ϑ)) ι := (splitHalfRowWiseInterleavedWords u).2\nR : Finset F := R_star_tensor MC U₀ U₁\nhprob_eq :\n  (do\n        let r_last ← $ᵖ F\n        let r_init ← $ᵖ (Fin ϑ → F)\n        pure (Δ₀(multilinearCombine u (Fin.snoc r_init r_last), ↑MC) ≤ ↑e))\n      True =\n    (do\n        let r ← $ᵖ (Fin (ϑ + 1) → F)\n        pure (Δ₀(multilinearCombine u r, ↑MC) ≤ ↑e))\n      True"
+        ],
+        "proof_state_source": "lean_infotree_before_tactic",
+        "proof_state_raw": {
+          "depth": 33,
+          "end": 78023,
+          "goals_after": [
+            "ι : Type l\ninst✝⁷ : Fintype ι\ninst✝⁶ : Nonempty ι\ninst✝⁵ : DecidableEq ι\nF : Type\ninst✝⁴ : CommRing F\ninst✝³ : Fintype F\nA : Type\ninst✝² : DecidableEq A\ninst✝¹ : AddCommGroup A\ninst✝ : Module F A\nMC : ModuleCode ι F A\ne ε : ℕ\nhC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε\nh_interleaved_gaps : ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε\nprob_snoc :\n  ∀ (n : ℕ) (P : (Fin (n + 1) → F) → Prop),\n    (do\n          let r_last ← $ᵖ F\n          let r_init ← $ᵖ (Fin n → F)\n          pure (P (Fin.snoc r_init r_last)))\n        True =\n      (do\n          let r ← $ᵖ (Fin (n + 1) → F)\n          pure (P r))\n        True\nmultilinearCombine_snoc :\n  ∀ (n : ℕ) (u : WordStack A (Fin (2 ^ (n + 1))) ι) (r_init : Fin n → F) (r_last : F),\n    multilinearCombine u (Fin.snoc r_init r_last) =\n      multilinearCombine\n        (affineLineEvaluation (splitHalfRowWiseInterleavedWords u).1 (splitHalfRowWiseInterleavedWords u).2 r_last)\n        r_init\nϑ : ℕ\nih : ϑ > 0 → δ_ε_multilinearCorrelatedAgreement_Nat (↑MC) ϑ e ε\nhϑ_gt_0✝ : ϑ + 1 > 0\nhϑ_zero : ¬ϑ = 0\nhϑ_pos : ϑ > 0\nihϑ : δ_ε_multilinearCorrelatedAgreement_Nat (↑MC) ϑ e ε\nu : WordStack A (Fin (2 ^ (ϑ + 1))) ι\nhu :\n  (do\n        let r_last ← $ᵖ F\n        let r_init ← $ᵖ (Fin ϑ → F)\n        pure (Δ₀(multilinearCombine u (Fin.snoc r_init r_last), ↑MC) ≤ ↑e))\n      True >\n    ↑↑(ϑ + 1) * ↑ε / ↑↑(Fintype.card F)\nU₀ : WordStack A (Fin (2 ^ ϑ)) ι := (splitHalfRowWiseInterleavedWords u).1\nU₁ : WordStack A (Fin (2 ^ ϑ)) ι := (splitHalfRowWiseInterleavedWords u).2\nR : Finset F := R_star_tensor MC U₀ U₁\nhprob_eq :\n  (do\n        let r_last ← $ᵖ F\n        let r_init ← $ᵖ (Fin ϑ → F)\n        pure (Δ₀(multilinearCombine u (Fin.snoc r_init r_last), ↑MC) ≤ ↑e))\n      True =\n    (do\n        let r ← $ᵖ (Fin (ϑ + 1) → F)\n        pure (Δ₀(multilinearCombine u r, ↑MC) ≤ ↑e))\n      True\n⊢ (do\n        let r_last ← $ᵖ F\n        let r_init ← $ᵖ (Fin ϑ → F)\n        pure\n            (Δ₀(multilinearCombine\n                  (affineLineEvaluation (splitHalfRowWiseInterleavedWords u).1 (splitHalfRowWiseInterleavedWords u).2\n                    r_last)\n                  r_init,\n                ↑MC) ≤\n              ↑e))\n      True >\n    ↑(↑(ϑ + 1) * ↑ε) / ↑↑(Fintype.card F)"
+          ],
+          "goals_before": [
+            "ι : Type l\ninst✝⁷ : Fintype ι\ninst✝⁶ : Nonempty ι\ninst✝⁵ : DecidableEq ι\nF : Type\ninst✝⁴ : CommRing F\ninst✝³ : Fintype F\nA : Type\ninst✝² : DecidableEq A\ninst✝¹ : AddCommGroup A\ninst✝ : Module F A\nMC : ModuleCode ι F A\ne ε : ℕ\nhC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε\nh_interleaved_gaps : ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε\nprob_snoc :\n  ∀ (n : ℕ) (P : (Fin (n + 1) → F) → Prop),\n    (do\n          let r_last ← $ᵖ F\n          let r_init ← $ᵖ (Fin n → F)\n          pure (P (Fin.snoc r_init r_last)))\n        True =\n      (do\n          let r ← $ᵖ (Fin (n + 1) → F)\n          pure (P r))\n        True\nmultilinearCombine_snoc :\n  ∀ (n : ℕ) (u : WordStack A (Fin (2 ^ (n + 1))) ι) (r_init : Fin n → F) (r_last : F),\n    multilinearCombine u (Fin.snoc r_init r_last) =\n      multilinearCombine\n        (affineLineEvaluation (splitHalfRowWiseInterleavedWords u).1 (splitHalfRowWiseInterleavedWords u).2 r_last)\n        r_init\nϑ : ℕ\nih : ϑ > 0 → δ_ε_multilinearCorrelatedAgreement_Nat (↑MC) ϑ e ε\nhϑ_gt_0✝ : ϑ + 1 > 0\nhϑ_zero : ¬ϑ = 0\nhϑ_pos : ϑ > 0\nihϑ : δ_ε_multilinearCorrelatedAgreement_Nat (↑MC) ϑ e ε\nu : WordStack A (Fin (2 ^ (ϑ + 1))) ι\nhu :\n  (do\n        let r_last ← $ᵖ F\n        let r_init ← $ᵖ (Fin ϑ → F)\n        pure (Δ₀(multilinearCombine u (Fin.snoc r_init r_last), ↑MC) ≤ ↑e))\n      True >\n    ↑↑(ϑ + 1) * ↑ε / ↑↑(Fintype.card F)\nU₀ : WordStack A (Fin (2 ^ ϑ)) ι := (splitHalfRowWiseInterleavedWords u).1\nU₁ : WordStack A (Fin (2 ^ ϑ)) ι := (splitHalfRowWiseInterleavedWords u).2\nR : Finset F := R_star_tensor MC U₀ U₁\nhprob_eq :\n  (do\n        let r_last ← $ᵖ F\n        let r_init ← $ᵖ (Fin ϑ → F)\n        pure (Δ₀(multilinearCombine u (Fin.snoc r_init r_last), ↑MC) ≤ ↑e))\n      True =\n    (do\n        let r ← $ᵖ (Fin (ϑ + 1) → F)\n        pure (Δ₀(multilinearCombine u r, ↑MC) ≤ ↑e))\n      True\n⊢ (do\n        let r_last ← $ᵖ F\n        let r_init ← $ᵖ (Fin ϑ → F)\n        pure (multilinearCombine_affineComb_split_last_close MC u e r_last r_init))\n      True >\n    ↑(↑(ϑ + 1) * ↑ε) / ↑↑(Fintype.card F)"
+          ],
+          "kind": "tactic",
+          "start": 77921
+        }
+      },
+      {
+        "severity": "error",
+        "position": {
+          "column": 16,
+          "line": 1326
+        },
+        "end_position": {
+          "column": 58,
+          "line": 1326
+        },
+        "message": "failed to synthesize instance of type class\n  Interleavable (Word (ι → A) (Fin (2 ^ ϑ))) ?m.954\n\nHint: Type class instance resolution failures can be inspected with the `set_option trace.Meta.synthInstance true` command.",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "failed to synthesize instance of type class\n  Interleavable (Word (ι → A) (Fin (2 ^ ϑ))) ?m.954\n\nHint: Type class instance resolution failures can be inspected with the `set_option trace.Meta.synthInstance true` command.",
+          "endPos": {
+            "column": 58,
+            "line": 1326
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P12/incomplete/B2/repeat_2/validation/lean/009_candidate_04/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "lean.synthInstanceFailed._namedError",
+          "pos": {
+            "column": 16,
+            "line": 1326
+          },
+          "severity": "error"
+        },
+        "source_line": "                ⋈| (affineLineEvaluation (F := F) U₀ U₁ r) := by",
+        "start_offset": 67867,
+        "start_byte_offset": 72135,
+        "end_offset": 67909,
+        "end_byte_offset": 72183,
+        "source_text": "⋈| (affineLineEvaluation (F := F) U₀ U₁ r)",
+        "failed_tactic": "have hinterleave :\n              affineLineEvaluation (F := F) (⋈| U₀) (⋈| U₁) r =\n                ⋈| (affineLineEvaluation (F := F) U₀ U₁ r) := by\n            ext j k\n            rfl",
+        "tactic_range": {
+          "position": {
+            "line": 1324,
+            "column": 10
+          },
+          "end_position": {
+            "line": 1328,
+            "column": 15
+          },
+          "start_offset": 67768,
+          "end_offset": 67951
+        },
+        "goals": [
+          "affineLineEvaluation (⋈|U₀) (⋈|U₁) r = sorry"
+        ],
+        "local_context": [
+          "ι : Type l\ninst✝⁷ : Fintype ι\ninst✝⁶ : Nonempty ι\ninst✝⁵ : DecidableEq ι\nF : Type\ninst✝⁴ : CommRing F\ninst✝³ : Fintype F\nA : Type\ninst✝² : DecidableEq A\ninst✝¹ : AddCommGroup A\ninst✝ : Module F A\nMC : ModuleCode ι F A\ne ε : ℕ\nhC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε\nh_interleaved_gaps : ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε\nprob_snoc :\n  ∀ (n : ℕ) (P : (Fin (n + 1) → F) → Prop),\n    (do\n          let r_last ← $ᵖ F\n          let r_init ← $ᵖ (Fin n → F)\n          pure (P (Fin.snoc r_init r_last)))\n        True =\n      (do\n          let r ← $ᵖ (Fin (n + 1) → F)\n          pure (P r))\n        True\nmultilinearCombine_snoc :\n  ∀ (n : ℕ) (u : WordStack A (Fin (2 ^ (n + 1))) ι) (r_init : Fin n → F) (r_last : F),\n    multilinearCombine u (Fin.snoc r_init r_last) =\n      multilinearCombine\n        (affineLineEvaluation (splitHalfRowWiseInterleavedWords u).1 (splitHalfRowWiseInterleavedWords u).2 r_last)\n        r_init\nϑ : ℕ\nih : ϑ > 0 → δ_ε_multilinearCorrelatedAgreement_Nat (↑MC) ϑ e ε\nhϑ_gt_0✝ : ϑ + 1 > 0\nhϑ_zero : ¬ϑ = 0\nhϑ_pos : ϑ > 0\nihϑ : δ_ε_multilinearCorrelatedAgreement_Nat (↑MC) ϑ e ε\nu : WordStack A (Fin (2 ^ (ϑ + 1))) ι\nhu :\n  (do\n        let r ← $ᵖ (Fin (ϑ + 1) → F)\n        pure (Δ₀(multilinearCombine u r, ↑MC) ≤ ↑e))\n      True >\n    ↑↑(ϑ + 1) * ↑ε / ↑↑(Fintype.card F)\nU₀ : WordStack A (Fin (2 ^ ϑ)) ι := (splitHalfRowWiseInterleavedWords u).1\nU₁ : WordStack A (Fin (2 ^ ϑ)) ι := (splitHalfRowWiseInterleavedWords u).2\nR : Finset F := R_star_tensor MC U₀ U₁\nhu_split :\n  (do\n        let r_last ← $ᵖ F\n        let r_init ← $ᵖ (Fin ϑ → F)\n        pure (multilinearCombine_affineComb_split_last_close MC u e r_last r_init))\n      True >\n    ↑(↑(ϑ + 1) * ↑ε) / ↑↑(Fintype.card F)\nhR_raw :\n  have U₀ := (splitHalfRowWiseInterleavedWords u).1;\n  have U₁ := (splitHalfRowWiseInterleavedWords u).2;\n  have R_star_set := R_star_tensor MC U₀ U₁;\n  (do\n        let r ← $ᵖ F\n        pure (r ∈ R_star_set))\n      True >\n    ↑ε / ↑(Fintype.card F)\nhR :\n  (do\n        let r ← $ᵖ F\n        pure (r ∈ R))\n      True >\n    ↑ε / ↑(Fintype.card F)\nr : F\nhr : r ∈ R\nhr_mem : r ∈ R_star_tensor MC (splitHalfRowWiseInterleavedWords u).1 (splitHalfRowWiseInterleavedWords u).2\nhr_close :\n  Δ₀(⋈|affineLineEvaluation (fun rowIdx => u ⟨↑rowIdx, ⋯⟩) (fun rowIdx => u ⟨↑rowIdx + 2 ^ ϑ, ⋯⟩) ↑⟨r, hr_mem⟩,\n      interleavedCodeSet ↑MC) ≤\n    ↑e"
+        ],
+        "proof_state_source": "lean_infotree_before_tactic",
+        "proof_state_raw": {
+          "depth": 39,
+          "end": 79356,
+          "goals_after": [
+            "ι : Type l\ninst✝⁷ : Fintype ι\ninst✝⁶ : Nonempty ι\ninst✝⁵ : DecidableEq ι\nF : Type\ninst✝⁴ : CommRing F\ninst✝³ : Fintype F\nA : Type\ninst✝² : DecidableEq A\ninst✝¹ : AddCommGroup A\ninst✝ : Module F A\nMC : ModuleCode ι F A\ne ε : ℕ\nhC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε\nh_interleaved_gaps : ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε\nprob_snoc :\n  ∀ (n : ℕ) (P : (Fin (n + 1) → F) → Prop),\n    (do\n          let r_last ← $ᵖ F\n          let r_init ← $ᵖ (Fin n → F)\n          pure (P (Fin.snoc r_init r_last)))\n        True =\n      (do\n          let r ← $ᵖ (Fin (n + 1) → F)\n          pure (P r))\n        True\nmultilinearCombine_snoc :\n  ∀ (n : ℕ) (u : WordStack A (Fin (2 ^ (n + 1))) ι) (r_init : Fin n → F) (r_last : F),\n    multilinearCombine u (Fin.snoc r_init r_last) =\n      multilinearCombine\n        (affineLineEvaluation (splitHalfRowWiseInterleavedWords u).1 (splitHalfRowWiseInterleavedWords u).2 r_last)\n        r_init\nϑ : ℕ\nih : ϑ > 0 → δ_ε_multilinearCorrelatedAgreement_Nat (↑MC) ϑ e ε\nhϑ_gt_0✝ : ϑ + 1 > 0\nhϑ_zero : ¬ϑ = 0\nhϑ_pos : ϑ > 0\nihϑ : δ_ε_multilinearCorrelatedAgreement_Nat (↑MC) ϑ e ε\nu : WordStack A (Fin (2 ^ (ϑ + 1))) ι\nhu :\n  (do\n        let r ← $ᵖ (Fin (ϑ + 1) → F)\n        pure (Δ₀(multilinearCombine u r, ↑MC) ≤ ↑e))\n      True >\n    ↑↑(ϑ + 1) * ↑ε / ↑↑(Fintype.card F)\nU₀ : WordStack A (Fin (2 ^ ϑ)) ι := (splitHalfRowWiseInterleavedWords u).1\nU₁ : WordStack A (Fin (2 ^ ϑ)) ι := (splitHalfRowWiseInterleavedWords u).2\nR : Finset F := R_star_tensor MC U₀ U₁\nhu_split :\n  (do\n        let r_last ← $ᵖ F\n        let r_init ← $ᵖ (Fin ϑ → F)\n        pure (multilinearCombine_affineComb_split_last_close MC u e r_last r_init))\n      True >\n    ↑(↑(ϑ + 1) * ↑ε) / ↑↑(Fintype.card F)\nhR_raw :\n  have U₀ := (splitHalfRowWiseInterleavedWords u).1;\n  have U₁ := (splitHalfRowWiseInterleavedWords u).2;\n  have R_star_set := R_star_tensor MC U₀ U₁;\n  (do\n        let r ← $ᵖ F\n        pure (r ∈ R_star_set))\n      True >\n    ↑ε / ↑(Fintype.card F)\nhR :\n  (do\n        let r ← $ᵖ F\n        pure (r ∈ R))\n      True >\n    ↑ε / ↑(Fintype.card F)\nr : F\nhr : r ∈ R\nhr_mem : r ∈ R_star_tensor MC (splitHalfRowWiseInterleavedWords u).1 (splitHalfRowWiseInterleavedWords u).2\nhr_close :\n  Δ₀(⋈|affineLineEvaluation (fun rowIdx => u ⟨↑rowIdx, ⋯⟩) (fun rowIdx => u ⟨↑rowIdx + 2 ^ ϑ, ⋯⟩) ↑⟨r, hr_mem⟩,\n      interleavedCodeSet ↑MC) ≤\n    ↑e\nj : ι\nk : Fin (2 ^ ϑ)\n⊢ affineLineEvaluation (⋈|U₀) (⋈|U₁) r j k = sorry j k"
+          ],
+          "goals_before": [
+            "ι : Type l\ninst✝⁷ : Fintype ι\ninst✝⁶ : Nonempty ι\ninst✝⁵ : DecidableEq ι\nF : Type\ninst✝⁴ : CommRing F\ninst✝³ : Fintype F\nA : Type\ninst✝² : DecidableEq A\ninst✝¹ : AddCommGroup A\ninst✝ : Module F A\nMC : ModuleCode ι F A\ne ε : ℕ\nhC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε\nh_interleaved_gaps : ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε\nprob_snoc :\n  ∀ (n : ℕ) (P : (Fin (n + 1) → F) → Prop),\n    (do\n          let r_last ← $ᵖ F\n          let r_init ← $ᵖ (Fin n → F)\n          pure (P (Fin.snoc r_init r_last)))\n        True =\n      (do\n          let r ← $ᵖ (Fin (n + 1) → F)\n          pure (P r))\n        True\nmultilinearCombine_snoc :\n  ∀ (n : ℕ) (u : WordStack A (Fin (2 ^ (n + 1))) ι) (r_init : Fin n → F) (r_last : F),\n    multilinearCombine u (Fin.snoc r_init r_last) =\n      multilinearCombine\n        (affineLineEvaluation (splitHalfRowWiseInterleavedWords u).1 (splitHalfRowWiseInterleavedWords u).2 r_last)\n        r_init\nϑ : ℕ\nih : ϑ > 0 → δ_ε_multilinearCorrelatedAgreement_Nat (↑MC) ϑ e ε\nhϑ_gt_0✝ : ϑ + 1 > 0\nhϑ_zero : ¬ϑ = 0\nhϑ_pos : ϑ > 0\nihϑ : δ_ε_multilinearCorrelatedAgreement_Nat (↑MC) ϑ e ε\nu : WordStack A (Fin (2 ^ (ϑ + 1))) ι\nhu :\n  (do\n        let r ← $ᵖ (Fin (ϑ + 1) → F)\n        pure (Δ₀(multilinearCombine u r, ↑MC) ≤ ↑e))\n      True >\n    ↑↑(ϑ + 1) * ↑ε / ↑↑(Fintype.card F)\nU₀ : WordStack A (Fin (2 ^ ϑ)) ι := (splitHalfRowWiseInterleavedWords u).1\nU₁ : WordStack A (Fin (2 ^ ϑ)) ι := (splitHalfRowWiseInterleavedWords u).2\nR : Finset F := R_star_tensor MC U₀ U₁\nhu_split :\n  (do\n        let r_last ← $ᵖ F\n        let r_init ← $ᵖ (Fin ϑ → F)\n        pure (multilinearCombine_affineComb_split_last_close MC u e r_last r_init))\n      True >\n    ↑(↑(ϑ + 1) * ↑ε) / ↑↑(Fintype.card F)\nhR_raw :\n  have U₀ := (splitHalfRowWiseInterleavedWords u).1;\n  have U₁ := (splitHalfRowWiseInterleavedWords u).2;\n  have R_star_set := R_star_tensor MC U₀ U₁;\n  (do\n        let r ← $ᵖ F\n        pure (r ∈ R_star_set))\n      True >\n    ↑ε / ↑(Fintype.card F)\nhR :\n  (do\n        let r ← $ᵖ F\n        pure (r ∈ R))\n      True >\n    ↑ε / ↑(Fintype.card F)\nr : F\nhr : r ∈ R\nhr_mem : r ∈ R_star_tensor MC (splitHalfRowWiseInterleavedWords u).1 (splitHalfRowWiseInterleavedWords u).2\nhr_close :\n  Δ₀(⋈|affineLineEvaluation (fun rowIdx => u ⟨↑rowIdx, ⋯⟩) (fun rowIdx => u ⟨↑rowIdx + 2 ^ ϑ, ⋯⟩) ↑⟨r, hr_mem⟩,\n      interleavedCodeSet ↑MC) ≤\n    ↑e\n⊢ affineLineEvaluation (⋈|U₀) (⋈|U₁) r = sorry"
+          ],
+          "kind": "tactic",
+          "start": 79159
+        }
+      },
+      {
+        "severity": "error",
+        "position": {
+          "column": 8,
+          "line": 1337
+        },
+        "end_position": {
+          "column": 66,
+          "line": 1340
+        },
+        "message": "Type mismatch: After simplification, term\n  hpair\n has type\n  Δ₀(Matrix.transpose\n        (finMapTwoWords (Matrix.transpose fun rowIdx => u ⟨↑rowIdx, ⋯⟩)\n          (Matrix.transpose fun rowIdx => u ⟨↑rowIdx + 2 ^ ϑ, ⋯⟩)),\n      {V |\n        V.transpose 0 ∈ {V | ∀ (k : Fin (2 ^ ϑ)), V.transpose k ∈ MC} ∧\n          V.transpose 1 ∈ {V | ∀ (k : Fin (2 ^ ϑ)), V.transpose k ∈ MC}}) ≤\n    ↑e\nbut is expected to have type\n  Δ₀(Matrix.transpose u, {V | ∀ (k : Fin (2 ^ (ϑ + 1))), V.transpose k ∈ MC}) ≤ ↑e",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "Type mismatch: After simplification, term\n  hpair\n has type\n  Δ₀(Matrix.transpose\n        (finMapTwoWords (Matrix.transpose fun rowIdx => u ⟨↑rowIdx, ⋯⟩)\n          (Matrix.transpose fun rowIdx => u ⟨↑rowIdx + 2 ^ ϑ, ⋯⟩)),\n      {V |\n        V.transpose 0 ∈ {V | ∀ (k : Fin (2 ^ ϑ)), V.transpose k ∈ MC} ∧\n          V.transpose 1 ∈ {V | ∀ (k : Fin (2 ^ ϑ)), V.transpose k ∈ MC}}) ≤\n    ↑e\nbut is expected to have type\n  Δ₀(Matrix.transpose u, {V | ∀ (k : Fin (2 ^ (ϑ + 1))), V.transpose k ∈ MC}) ≤ ↑e",
+          "endPos": {
+            "column": 66,
+            "line": 1340
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P12/incomplete/B2/repeat_2/validation/lean/009_candidate_04/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 8,
+            "line": 1337
+          },
+          "severity": "error"
+        },
+        "source_line": "        simpa [U₀, U₁, splitHalfRowWiseInterleavedWords,",
+        "start_offset": 68280,
+        "start_byte_offset": 72575,
+        "end_offset": 68537,
+        "end_byte_offset": 72836,
+        "source_text": "simpa [U₀, U₁, splitHalfRowWiseInterleavedWords,\n          Interleavable.interleave, CodeInterleavable.interleaveCode,\n          ModuleCode.moduleInterleavedCode, Matrix.transpose_transpose,\n          Matrix.transpose_apply, Nat.succ_eq_add_one] using hpair",
+        "expected_actual_types": {
+          "actual": "Δ₀(Matrix.transpose\n        (finMapTwoWords (Matrix.transpose fun rowIdx => u ⟨↑rowIdx, ⋯⟩)\n          (Matrix.transpose fun rowIdx => u ⟨↑rowIdx + 2 ^ ϑ, ⋯⟩)),\n      {V |\n        V.transpose 0 ∈ {V | ∀ (k : Fin (2 ^ ϑ)), V.transpose k ∈ MC} ∧\n          V.transpose 1 ∈ {V | ∀ (k : Fin (2 ^ ϑ)), V.transpose k ∈ MC}}) ≤\n    ↑e",
+          "expected": "Δ₀(Matrix.transpose u, {V | ∀ (k : Fin (2 ^ (ϑ + 1))), V.transpose k ∈ MC}) ≤ ↑e"
+        },
+        "failed_tactic": "simpa [U₀, U₁, splitHalfRowWiseInterleavedWords,\n          Interleavable.interleave, CodeInterleavable.interleaveCode,\n          ModuleCode.moduleInterleavedCode, Matrix.transpose_transpose,\n          Matrix.transpose_apply, Nat.succ_eq_add_one] using",
+        "tactic_range": {
+          "position": {
+            "line": 1337,
+            "column": 8
+          },
+          "end_position": {
+            "line": 1340,
+            "column": 60
+          },
+          "start_offset": 68280,
+          "end_offset": 68531
+        },
+        "goals": [
+          "Δ₀(⋈|u, interleavedCodeSet ↑MC) ≤ ↑e"
+        ],
+        "local_context": [
+          "case neg\nι : Type l\ninst✝⁷ : Fintype ι\ninst✝⁶ : Nonempty ι\ninst✝⁵ : DecidableEq ι\nF : Type\ninst✝⁴ : CommRing F\ninst✝³ : Fintype F\nA : Type\ninst✝² : DecidableEq A\ninst✝¹ : AddCommGroup A\ninst✝ : Module F A\nMC : ModuleCode ι F A\ne ε : ℕ\nhC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε\nh_interleaved_gaps : ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε\nprob_snoc :\n  ∀ (n : ℕ) (P : (Fin (n + 1) → F) → Prop),\n    (do\n          let r_last ← $ᵖ F\n          let r_init ← $ᵖ (Fin n → F)\n          pure (P (Fin.snoc r_init r_last)))\n        True =\n      (do\n          let r ← $ᵖ (Fin (n + 1) → F)\n          pure (P r))\n        True\nmultilinearCombine_snoc :\n  ∀ (n : ℕ) (u : WordStack A (Fin (2 ^ (n + 1))) ι) (r_init : Fin n → F) (r_last : F),\n    multilinearCombine u (Fin.snoc r_init r_last) =\n      multilinearCombine\n        (affineLineEvaluation (splitHalfRowWiseInterleavedWords u).1 (splitHalfRowWiseInterleavedWords u).2 r_last)\n        r_init\nϑ : ℕ\nih : ϑ > 0 → δ_ε_multilinearCorrelatedAgreement_Nat (↑MC) ϑ e ε\nhϑ_gt_0✝ : ϑ + 1 > 0\nhϑ_zero : ¬ϑ = 0\nhϑ_pos : ϑ > 0\nihϑ : δ_ε_multilinearCorrelatedAgreement_Nat (↑MC) ϑ e ε\nu : WordStack A (Fin (2 ^ (ϑ + 1))) ι\nhu :\n  (do\n        let r ← $ᵖ (Fin (ϑ + 1) → F)\n        pure (Δ₀(multilinearCombine u r, ↑MC) ≤ ↑e))\n      True >\n    ↑↑(ϑ + 1) * ↑ε / ↑↑(Fintype.card F)\nU₀ : WordStack A (Fin (2 ^ ϑ)) ι := (splitHalfRowWiseInterleavedWords u).1\nU₁ : WordStack A (Fin (2 ^ ϑ)) ι := (splitHalfRowWiseInterleavedWords u).2\nR : Finset F := R_star_tensor MC U₀ U₁\nhu_split :\n  (do\n        let r_last ← $ᵖ F\n        let r_init ← $ᵖ (Fin ϑ → F)\n        pure (multilinearCombine_affineComb_split_last_close MC u e r_last r_init))\n      True >\n    ↑(↑(ϑ + 1) * ↑ε) / ↑↑(Fintype.card F)\nhR_raw :\n  have U₀ := (splitHalfRowWiseInterleavedWords u).1;\n  have U₁ := (splitHalfRowWiseInterleavedWords u).2;\n  have R_star_set := R_star_tensor MC U₀ U₁;\n  (do\n        let r ← $ᵖ F\n        pure (r ∈ R_star_set))\n      True >\n    ↑ε / ↑(Fintype.card F)\nhR :\n  (do\n        let r ← $ᵖ F\n        pure (r ∈ R))\n      True >\n    ↑ε / ↑(Fintype.card F)\nhline :\n  (do\n        let r ← $ᵖ F\n        pure (Δ₀(affineLineEvaluation (⋈|U₀) (⋈|U₁) r, ↑(CodeInterleavable.interleaveCode MC (Fin (2 ^ ϑ)))) ≤ ↑e))\n      True >\n    ↑↑ε / ↑↑(Fintype.card F)\nhpow : 2 ^ ϑ ≥ 1\nhpair : Δ₀(⋈|finMapTwoWords (⋈|U₀) (⋈|U₁), interleavedCodeSet ↑(CodeInterleavable.interleaveCode MC (Fin (2 ^ ϑ)))) ≤ ↑e"
+        ],
+        "proof_state_source": "lean_infotree_before_tactic",
+        "proof_state_raw": {
+          "depth": 20,
+          "end": 79961,
+          "goals_after": [
+            "case neg\nι : Type l\ninst✝⁷ : Fintype ι\ninst✝⁶ : Nonempty ι\ninst✝⁵ : DecidableEq ι\nF : Type\ninst✝⁴ : CommRing F\ninst✝³ : Fintype F\nA : Type\ninst✝² : DecidableEq A\ninst✝¹ : AddCommGroup A\ninst✝ : Module F A\nMC : ModuleCode ι F A\ne ε : ℕ\nhC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε\nh_interleaved_gaps : ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε\nprob_snoc :\n  ∀ (n : ℕ) (P : (Fin (n + 1) → F) → Prop),\n    (do\n          let r_last ← $ᵖ F\n          let r_init ← $ᵖ (Fin n → F)\n          pure (P (Fin.snoc r_init r_last)))\n        True =\n      (do\n          let r ← $ᵖ (Fin (n + 1) → F)\n          pure (P r))\n        True\nmultilinearCombine_snoc :\n  ∀ (n : ℕ) (u : WordStack A (Fin (2 ^ (n + 1))) ι) (r_init : Fin n → F) (r_last : F),\n    multilinearCombine u (Fin.snoc r_init r_last) =\n      multilinearCombine\n        (affineLineEvaluation (splitHalfRowWiseInterleavedWords u).1 (splitHalfRowWiseInterleavedWords u).2 r_last)\n        r_init\nϑ : ℕ\nih : ϑ > 0 → δ_ε_multilinearCorrelatedAgreement_Nat (↑MC) ϑ e ε\nhϑ_gt_0✝ : ϑ + 1 > 0\nhϑ_zero : ¬ϑ = 0\nhϑ_pos : ϑ > 0\nihϑ : δ_ε_multilinearCorrelatedAgreement_Nat (↑MC) ϑ e ε\nu : WordStack A (Fin (2 ^ (ϑ + 1))) ι\nhu :\n  (do\n        let r ← $ᵖ (Fin (ϑ + 1) → F)\n        pure (Δ₀(multilinearCombine u r, ↑MC) ≤ ↑e))\n      True >\n    ↑↑(ϑ + 1) * ↑ε / ↑↑(Fintype.card F)\nU₀ : WordStack A (Fin (2 ^ ϑ)) ι := (splitHalfRowWiseInterleavedWords u).1\nU₁ : WordStack A (Fin (2 ^ ϑ)) ι := (splitHalfRowWiseInterleavedWords u).2\nR : Finset F := R_star_tensor MC U₀ U₁\nhu_split :\n  (do\n        let r_last ← $ᵖ F\n        let r_init ← $ᵖ (Fin ϑ → F)\n        pure (multilinearCombine_affineComb_split_last_close MC u e r_last r_init))\n      True >\n    ↑(↑(ϑ + 1) * ↑ε) / ↑↑(Fintype.card F)\nhR_raw :\n  have U₀ := (splitHalfRowWiseInterleavedWords u).1;\n  have U₁ := (splitHalfRowWiseInterleavedWords u).2;\n  have R_star_set := R_star_tensor MC U₀ U₁;\n  (do\n        let r ← $ᵖ F\n        pure (r ∈ R_star_set))\n      True >\n    ↑ε / ↑(Fintype.card F)\nhR :\n  (do\n        let r ← $ᵖ F\n        pure (r ∈ R))\n      True >\n    ↑ε / ↑(Fintype.card F)\nhline :\n  (do\n        let r ← $ᵖ F\n        pure (Δ₀(affineLineEvaluation (⋈|U₀) (⋈|U₁) r, ↑(CodeInterleavable.interleaveCode MC (Fin (2 ^ ϑ)))) ≤ ↑e))\n      True >\n    ↑↑ε / ↑↑(Fintype.card F)\nhpow : 2 ^ ϑ ≥ 1\nhpair : Δ₀(⋈|finMapTwoWords (⋈|U₀) (⋈|U₁), interleavedCodeSet ↑(CodeInterleavable.interleaveCode MC (Fin (2 ^ ϑ)))) ≤ ↑e\n⊢ Δ₀(Matrix.transpose u, {V | ∀ (k : Fin (2 ^ (ϑ + 1))), V.transpose k ∈ MC}) ≤ ↑e"
+          ],
+          "goals_before": [
+            "case neg\nι : Type l\ninst✝⁷ : Fintype ι\ninst✝⁶ : Nonempty ι\ninst✝⁵ : DecidableEq ι\nF : Type\ninst✝⁴ : CommRing F\ninst✝³ : Fintype F\nA : Type\ninst✝² : DecidableEq A\ninst✝¹ : AddCommGroup A\ninst✝ : Module F A\nMC : ModuleCode ι F A\ne ε : ℕ\nhC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε\nh_interleaved_gaps : ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε\nprob_snoc :\n  ∀ (n : ℕ) (P : (Fin (n + 1) → F) → Prop),\n    (do\n          let r_last ← $ᵖ F\n          let r_init ← $ᵖ (Fin n → F)\n          pure (P (Fin.snoc r_init r_last)))\n        True =\n      (do\n          let r ← $ᵖ (Fin (n + 1) → F)\n          pure (P r))\n        True\nmultilinearCombine_snoc :\n  ∀ (n : ℕ) (u : WordStack A (Fin (2 ^ (n + 1))) ι) (r_init : Fin n → F) (r_last : F),\n    multilinearCombine u (Fin.snoc r_init r_last) =\n      multilinearCombine\n        (affineLineEvaluation (splitHalfRowWiseInterleavedWords u).1 (splitHalfRowWiseInterleavedWords u).2 r_last)\n        r_init\nϑ : ℕ\nih : ϑ > 0 → δ_ε_multilinearCorrelatedAgreement_Nat (↑MC) ϑ e ε\nhϑ_gt_0✝ : ϑ + 1 > 0\nhϑ_zero : ¬ϑ = 0\nhϑ_pos : ϑ > 0\nihϑ : δ_ε_multilinearCorrelatedAgreement_Nat (↑MC) ϑ e ε\nu : WordStack A (Fin (2 ^ (ϑ + 1))) ι\nhu :\n  (do\n        let r ← $ᵖ (Fin (ϑ + 1) → F)\n        pure (Δ₀(multilinearCombine u r, ↑MC) ≤ ↑e))\n      True >\n    ↑↑(ϑ + 1) * ↑ε / ↑↑(Fintype.card F)\nU₀ : WordStack A (Fin (2 ^ ϑ)) ι := (splitHalfRowWiseInterleavedWords u).1\nU₁ : WordStack A (Fin (2 ^ ϑ)) ι := (splitHalfRowWiseInterleavedWords u).2\nR : Finset F := R_star_tensor MC U₀ U₁\nhu_split :\n  (do\n        let r_last ← $ᵖ F\n        let r_init ← $ᵖ (Fin ϑ → F)\n        pure (multilinearCombine_affineComb_split_last_close MC u e r_last r_init))\n      True >\n    ↑(↑(ϑ + 1) * ↑ε) / ↑↑(Fintype.card F)\nhR_raw :\n  have U₀ := (splitHalfRowWiseInterleavedWords u).1;\n  have U₁ := (splitHalfRowWiseInterleavedWords u).2;\n  have R_star_set := R_star_tensor MC U₀ U₁;\n  (do\n        let r ← $ᵖ F\n        pure (r ∈ R_star_set))\n      True >\n    ↑ε / ↑(Fintype.card F)\nhR :\n  (do\n        let r ← $ᵖ F\n        pure (r ∈ R))\n      True >\n    ↑ε / ↑(Fintype.card F)\nhline :\n  (do\n        let r ← $ᵖ F\n        pure (Δ₀(affineLineEvaluation (⋈|U₀) (⋈|U₁) r, ↑(CodeInterleavable.interleaveCode MC (Fin (2 ^ ϑ)))) ≤ ↑e))\n      True >\n    ↑↑ε / ↑↑(Fintype.card F)\nhpow : 2 ^ ϑ ≥ 1\nhpair : Δ₀(⋈|finMapTwoWords (⋈|U₀) (⋈|U₁), interleavedCodeSet ↑(CodeInterleavable.interleaveCode MC (Fin (2 ^ ϑ)))) ≤ ↑e\n⊢ Δ₀(⋈|u, interleavedCodeSet ↑MC) ≤ ↑e"
+          ],
+          "kind": "tactic",
+          "start": 79706
+        }
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 12,
+          "line": 1243
+        },
+        "end_position": {
+          "column": 28,
+          "line": 1243
+        },
+        "message": "This simp argument is unused:\n  Fintype.card_fun\n\nHint: Omit it from the simp argument list.\n  simp [̵F̵i̵n̵t̵y̵p̵e̵.̵c̵a̵r̵d̵_̵f̵u̵n̵,̵ ̵p̵o̵w̵_̵s̵u̵c̵c̵'̵]̵[̲p̲o̲w̲_̲s̲u̲c̲c̲'̲]̲\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "This simp argument is unused:\n  Fintype.card_fun\n\nHint: Omit it from the simp argument list.\n  simp [̵F̵i̵n̵t̵y̵p̵e̵.̵c̵a̵r̵d̵_̵f̵u̵n̵,̵ ̵p̵o̵w̵_̵s̵u̵c̵c̵'̵]̵[̲p̲o̲w̲_̲s̲u̲c̲c̲'̲]̲\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+          "endPos": {
+            "column": 28,
+            "line": 1243
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P12/incomplete/B2/repeat_2/validation/lean/009_candidate_04/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unusedSimpArgs",
+          "pos": {
+            "column": 12,
+            "line": 1243
+          },
+          "severity": "warning"
+        },
+        "source_line": "    · simp [Fintype.card_fun, pow_succ']",
+        "start_offset": 64405,
+        "start_byte_offset": 68493,
+        "end_offset": 64421,
+        "end_byte_offset": 68509,
+        "source_text": "Fintype.card_fun"
+      },
+      {
+        "severity": "information",
+        "position": {
+          "column": 0,
+          "line": 1405
+        },
+        "end_position": {
+          "column": 6,
+          "line": 1405
+        },
+        "message": "interleaved_affine_gaps_imply_tensor_gaps.{l} {ι : Type l} [Fintype ι] [Nonempty ι] [DecidableEq ι] {F : Type}\n  [CommRing F] [Fintype F] {A : Type} [DecidableEq A] [AddCommGroup A] [Module F A] (MC : ModuleCode ι F A) {e ε : ℕ}\n  (hC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε)\n  (h_interleaved_gaps :\n    ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(Code.CodeInterleavable.interleaveCode MC (Fin m))) e ε)\n  (ϑ : ℕ) (hϑ_gt_0 : ϑ > 0) : δ_ε_multilinearCorrelatedAgreement_Nat (↑MC) ϑ e ε",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "interleaved_affine_gaps_imply_tensor_gaps.{l} {ι : Type l} [Fintype ι] [Nonempty ι] [DecidableEq ι] {F : Type}\n  [CommRing F] [Fintype F] {A : Type} [DecidableEq A] [AddCommGroup A] [Module F A] (MC : ModuleCode ι F A) {e ε : ℕ}\n  (hC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε)\n  (h_interleaved_gaps :\n    ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(Code.CodeInterleavable.interleaveCode MC (Fin m))) e ε)\n  (ϑ : ℕ) (hϑ_gt_0 : ϑ > 0) : δ_ε_multilinearCorrelatedAgreement_Nat (↑MC) ϑ e ε",
+          "endPos": {
+            "column": 6,
+            "line": 1405
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P12/incomplete/B2/repeat_2/validation/lean/009_candidate_04/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 0,
+            "line": 1405
+          },
+          "severity": "information"
+        }
+      },
+      {
+        "severity": "information",
+        "position": {
+          "column": 0,
+          "line": 1406
+        },
+        "end_position": {
+          "column": 6,
+          "line": 1406
+        },
+        "message": "'interleaved_affine_gaps_imply_tensor_gaps' depends on axioms: [propext, sorryAx, Classical.choice, Quot.sound]",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "'interleaved_affine_gaps_imply_tensor_gaps' depends on axioms: [propext, sorryAx, Classical.choice, Quot.sound]",
+          "endPos": {
+            "column": 6,
+            "line": 1406
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P12/incomplete/B2/repeat_2/validation/lean/009_candidate_04/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 0,
+            "line": 1406
+          },
+          "severity": "information"
+        }
+      }
+    ],
+    "goals": [
+      "↑↑(#{r | P (Fin.snoc r.2 r.1)}) = ↑↑(#(filter P univ))"
+    ],
+    "local_context": [
+      "case e_a\nι : Type l\ninst✝⁷ : Fintype ι\ninst✝⁶ : Nonempty ι\ninst✝⁵ : DecidableEq ι\nF : Type\ninst✝⁴ : CommRing F\ninst✝³ : Fintype F\nA : Type\ninst✝² : DecidableEq A\ninst✝¹ : AddCommGroup A\ninst✝ : Module F A\nMC : ModuleCode ι F A\ne ε : ℕ\nhC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε\nh_interleaved_gaps : ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε\nn : ℕ\nP : (Fin (n + 1) → F) → Prop"
+    ],
+    "sorries": [
+      {
+        "kind": "transitive_dependency",
+        "axiom": "sorryAx",
+        "position": null,
+        "end_position": null
+      }
+    ],
+    "backend_proof_status": null,
+    "statement_check": "fixed_context_preserved",
+    "axioms": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext",
+      "sorryAx"
+    ],
+    "metrics": {
+      "proof_tokens": 1021
+    },
+    "elapsed_ms": 28403,
+    "raw_log_path": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P12/incomplete/B2/repeat_2/validation/lean/009_candidate_04/stdout.log",
+    "detail": null,
+    "failure_kind": "proof_error"
+  },
+  "measurement": {
+    "proof_tokens": 1021,
+    "raw_heartbeats": null,
+    "token_reduction_pct": 23.175319789315274,
+    "heartbeat_reduction_pct": null,
+    "search_score": null
+  },
+  "facts": {
+    "diagnostics": [
+      {
+        "severity": "error",
+        "position": {
+          "column": 29,
+          "line": 1227
+        },
+        "end_position": {
+          "column": 32,
+          "line": 1227
+        },
+        "message": "Invalid projection: Type of\n  p\nis not known; cannot resolve projection `2`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "Invalid projection: Type of\n  p\nis not known; cannot resolve projection `2`",
+          "endPos": {
+            "column": 32,
+            "line": 1227
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 29,
+            "line": 1227
+          },
+          "severity": "error"
+        },
+        "source_line": "        (fun p _ => Fin.snoc p.2 p.1) ?_ ?_ ?_",
+        "start_offset": 63810,
+        "start_byte_offset": 67878,
+        "end_offset": 63813,
+        "end_byte_offset": 67881,
+        "source_text": "p.2",
+        "failed_tactic": "refine Finset.card_bij\n        (fun p _ => Fin.snoc p.2 p.1) ?_ ?_ ?_",
+        "tactic_range": {
+          "position": {
+            "line": 1226,
+            "column": 6
+          },
+          "end_position": {
+            "line": 1227,
+            "column": 46
+          },
+          "start_offset": 63758,
+          "end_offset": 63827
+        },
+        "goals": [
+          "↑↑(#{r | P (Fin.snoc r.2 r.1)}) = ↑↑(#(filter P univ))"
+        ],
+        "local_context": [
+          "case e_a\nι : Type l\ninst✝⁷ : Fintype ι\ninst✝⁶ : Nonempty ι\ninst✝⁵ : DecidableEq ι\nF : Type\ninst✝⁴ : CommRing F\ninst✝³ : Fintype F\nA : Type\ninst✝² : DecidableEq A\ninst✝¹ : AddCommGroup A\ninst✝ : Module F A\nMC : ModuleCode ι F A\ne ε : ℕ\nhC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε\nh_interleaved_gaps : ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε\nn : ℕ\nP : (Fin (n + 1) → F) → Prop"
+        ],
+        "proof_state_source": "lean_infotree_before_tactic",
+        "proof_state_raw": {
+          "depth": 27,
+          "end": 75026,
+          "goals_after": [
+            "case e_a\nι : Type l\ninst✝⁷ : Fintype ι\ninst✝⁶ : Nonempty ι\ninst✝⁵ : DecidableEq ι\nF : Type\ninst✝⁴ : CommRing F\ninst✝³ : Fintype F\nA : Type\ninst✝² : DecidableEq A\ninst✝¹ : AddCommGroup A\ninst✝ : Module F A\nMC : ModuleCode ι F A\ne ε : ℕ\nhC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε\nh_interleaved_gaps : ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε\nn : ℕ\nP : (Fin (n + 1) → F) → Prop\n⊢ ↑↑(#{r | P (Fin.snoc r.2 r.1)}) = ↑↑(#(filter P univ))"
+          ],
+          "goals_before": [
+            "case e_a\nι : Type l\ninst✝⁷ : Fintype ι\ninst✝⁶ : Nonempty ι\ninst✝⁵ : DecidableEq ι\nF : Type\ninst✝⁴ : CommRing F\ninst✝³ : Fintype F\nA : Type\ninst✝² : DecidableEq A\ninst✝¹ : AddCommGroup A\ninst✝ : Module F A\nMC : ModuleCode ι F A\ne ε : ℕ\nhC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε\nh_interleaved_gaps : ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε\nn : ℕ\nP : (Fin (n + 1) → F) → Prop\n⊢ ↑↑(#{r | P (Fin.snoc r.2 r.1)}) = ↑↑(#(filter P univ))"
+          ],
+          "kind": "tactic",
+          "start": 74957
+        }
+      },
+      {
+        "severity": "error",
+        "position": {
+          "column": 33,
+          "line": 1227
+        },
+        "end_position": {
+          "column": 36,
+          "line": 1227
+        },
+        "message": "Invalid projection: Type of\n  p\nis not known; cannot resolve projection `1`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "Invalid projection: Type of\n  p\nis not known; cannot resolve projection `1`",
+          "endPos": {
+            "column": 36,
+            "line": 1227
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 33,
+            "line": 1227
+          },
+          "severity": "error"
+        },
+        "source_line": "        (fun p _ => Fin.snoc p.2 p.1) ?_ ?_ ?_",
+        "start_offset": 63814,
+        "start_byte_offset": 67882,
+        "end_offset": 63817,
+        "end_byte_offset": 67885,
+        "source_text": "p.1",
+        "failed_tactic": "refine Finset.card_bij\n        (fun p _ => Fin.snoc p.2 p.1) ?_ ?_ ?_",
+        "tactic_range": {
+          "position": {
+            "line": 1226,
+            "column": 6
+          },
+          "end_position": {
+            "line": 1227,
+            "column": 46
+          },
+          "start_offset": 63758,
+          "end_offset": 63827
+        },
+        "goals": [
+          "↑↑(#{r | P (Fin.snoc r.2 r.1)}) = ↑↑(#(filter P univ))"
+        ],
+        "local_context": [
+          "case e_a\nι : Type l\ninst✝⁷ : Fintype ι\ninst✝⁶ : Nonempty ι\ninst✝⁵ : DecidableEq ι\nF : Type\ninst✝⁴ : CommRing F\ninst✝³ : Fintype F\nA : Type\ninst✝² : DecidableEq A\ninst✝¹ : AddCommGroup A\ninst✝ : Module F A\nMC : ModuleCode ι F A\ne ε : ℕ\nhC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε\nh_interleaved_gaps : ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε\nn : ℕ\nP : (Fin (n + 1) → F) → Prop"
+        ],
+        "proof_state_source": "lean_infotree_before_tactic",
+        "proof_state_raw": {
+          "depth": 27,
+          "end": 75026,
+          "goals_after": [
+            "case e_a\nι : Type l\ninst✝⁷ : Fintype ι\ninst✝⁶ : Nonempty ι\ninst✝⁵ : DecidableEq ι\nF : Type\ninst✝⁴ : CommRing F\ninst✝³ : Fintype F\nA : Type\ninst✝² : DecidableEq A\ninst✝¹ : AddCommGroup A\ninst✝ : Module F A\nMC : ModuleCode ι F A\ne ε : ℕ\nhC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε\nh_interleaved_gaps : ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε\nn : ℕ\nP : (Fin (n + 1) → F) → Prop\n⊢ ↑↑(#{r | P (Fin.snoc r.2 r.1)}) = ↑↑(#(filter P univ))"
+          ],
+          "goals_before": [
+            "case e_a\nι : Type l\ninst✝⁷ : Fintype ι\ninst✝⁶ : Nonempty ι\ninst✝⁵ : DecidableEq ι\nF : Type\ninst✝⁴ : CommRing F\ninst✝³ : Fintype F\nA : Type\ninst✝² : DecidableEq A\ninst✝¹ : AddCommGroup A\ninst✝ : Module F A\nMC : ModuleCode ι F A\ne ε : ℕ\nhC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε\nh_interleaved_gaps : ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε\nn : ℕ\nP : (Fin (n + 1) → F) → Prop\n⊢ ↑↑(#{r | P (Fin.snoc r.2 r.1)}) = ↑↑(#(filter P univ))"
+          ],
+          "kind": "tactic",
+          "start": 74957
+        }
+      },
+      {
+        "severity": "error",
+        "position": {
+          "column": 6,
+          "line": 1226
+        },
+        "end_position": {
+          "column": 46,
+          "line": 1227
+        },
+        "message": "Type mismatch\n  card_bij (fun p x => Fin.snoc ?m.161 ?m.162) ?m.165 ?m.166 ?m.167\nhas type\n  #?m.153 = #?m.154\nbut is expected to have type\n  ↑↑(#{r | P (Fin.snoc r.2 r.1)}) = ↑↑(#(filter P univ))",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "Type mismatch\n  card_bij (fun p x => Fin.snoc ?m.161 ?m.162) ?m.165 ?m.166 ?m.167\nhas type\n  #?m.153 = #?m.154\nbut is expected to have type\n  ↑↑(#{r | P (Fin.snoc r.2 r.1)}) = ↑↑(#(filter P univ))",
+          "endPos": {
+            "column": 46,
+            "line": 1227
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 6,
+            "line": 1226
+          },
+          "severity": "error"
+        },
+        "source_line": "    · refine Finset.card_bij",
+        "start_offset": 63758,
+        "start_byte_offset": 67826,
+        "end_offset": 63827,
+        "end_byte_offset": 67895,
+        "source_text": "refine Finset.card_bij\n        (fun p _ => Fin.snoc p.2 p.1) ?_ ?_ ?_",
+        "expected_actual_types": {
+          "actual": "#?m.153 = #?m.154",
+          "expected": "↑↑(#{r | P (Fin.snoc r.2 r.1)}) = ↑↑(#(filter P univ))"
+        },
+        "failed_tactic": "refine Finset.card_bij\n        (fun p _ => Fin.snoc p.2 p.1) ?_ ?_ ?_",
+        "tactic_range": {
+          "position": {
+            "line": 1226,
+            "column": 6
+          },
+          "end_position": {
+            "line": 1227,
+            "column": 46
+          },
+          "start_offset": 63758,
+          "end_offset": 63827
+        },
+        "goals": [
+          "↑↑(#{r | P (Fin.snoc r.2 r.1)}) = ↑↑(#(filter P univ))"
+        ],
+        "local_context": [
+          "case e_a\nι : Type l\ninst✝⁷ : Fintype ι\ninst✝⁶ : Nonempty ι\ninst✝⁵ : DecidableEq ι\nF : Type\ninst✝⁴ : CommRing F\ninst✝³ : Fintype F\nA : Type\ninst✝² : DecidableEq A\ninst✝¹ : AddCommGroup A\ninst✝ : Module F A\nMC : ModuleCode ι F A\ne ε : ℕ\nhC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε\nh_interleaved_gaps : ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε\nn : ℕ\nP : (Fin (n + 1) → F) → Prop"
+        ],
+        "proof_state_source": "lean_infotree_before_tactic",
+        "proof_state_raw": {
+          "depth": 27,
+          "end": 75026,
+          "goals_after": [
+            "case e_a\nι : Type l\ninst✝⁷ : Fintype ι\ninst✝⁶ : Nonempty ι\ninst✝⁵ : DecidableEq ι\nF : Type\ninst✝⁴ : CommRing F\ninst✝³ : Fintype F\nA : Type\ninst✝² : DecidableEq A\ninst✝¹ : AddCommGroup A\ninst✝ : Module F A\nMC : ModuleCode ι F A\ne ε : ℕ\nhC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε\nh_interleaved_gaps : ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε\nn : ℕ\nP : (Fin (n + 1) → F) → Prop\n⊢ ↑↑(#{r | P (Fin.snoc r.2 r.1)}) = ↑↑(#(filter P univ))"
+          ],
+          "goals_before": [
+            "case e_a\nι : Type l\ninst✝⁷ : Fintype ι\ninst✝⁶ : Nonempty ι\ninst✝⁵ : DecidableEq ι\nF : Type\ninst✝⁴ : CommRing F\ninst✝³ : Fintype F\nA : Type\ninst✝² : DecidableEq A\ninst✝¹ : AddCommGroup A\ninst✝ : Module F A\nMC : ModuleCode ι F A\ne ε : ℕ\nhC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε\nh_interleaved_gaps : ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε\nn : ℕ\nP : (Fin (n + 1) → F) → Prop\n⊢ ↑↑(#{r | P (Fin.snoc r.2 r.1)}) = ↑↑(#(filter P univ))"
+          ],
+          "kind": "tactic",
+          "start": 74957
+        }
+      },
+      {
+        "severity": "error",
+        "position": {
+          "column": 4,
+          "line": 1253
+        },
+        "end_position": {
+          "column": 7,
+          "line": 1253
+        },
+        "message": "Tactic `rfl` failed: The left-hand side\n  multilinearCombine u (Fin.snoc r_init r_last)\nis not definitionally equal to the right-hand side\n  multilinearCombine\n    (affineLineEvaluation (splitHalfRowWiseInterleavedWords u).1 (splitHalfRowWiseInterleavedWords u).2 r_last) r_init\n\nι : Type l\ninst✝⁷ : Fintype ι\ninst✝⁶ : Nonempty ι\ninst✝⁵ : DecidableEq ι\nF : Type\ninst✝⁴ : CommRing F\ninst✝³ : Fintype F\nA : Type\ninst✝² : DecidableEq A\ninst✝¹ : AddCommGroup A\ninst✝ : Module F A\nMC : ModuleCode ι F A\ne ε : ℕ\nhC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε\nh_interleaved_gaps : ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε\nprob_snoc :\n  ∀ (n : ℕ) (P : (Fin (n + 1) → F) → Prop),\n    (do\n          let r_last ← $ᵖ F\n          let r_init ← $ᵖ (Fin n → F)\n          pure (P (Fin.snoc r_init r_last)))\n        True =\n      (do\n          let r ← $ᵖ (Fin (n + 1) → F)\n          pure (P r))\n        True\nn : ℕ\nu : WordStack A (Fin (2 ^ (n + 1))) ι\nr_init : Fin n → F\nr_last : F\n⊢ multilinearCombine u (Fin.snoc r_init r_last) =\n    multilinearCombine\n      (affineLineEvaluation (splitHalfRowWiseInterleavedWords u).1 (splitHalfRowWiseInterleavedWords u).2 r_last) r_init",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "Tactic `rfl` failed: The left-hand side\n  multilinearCombine u (Fin.snoc r_init r_last)\nis not definitionally equal to the right-hand side\n  multilinearCombine\n    (affineLineEvaluation (splitHalfRowWiseInterleavedWords u).1 (splitHalfRowWiseInterleavedWords u).2 r_last) r_init\n\nι : Type l\ninst✝⁷ : Fintype ι\ninst✝⁶ : Nonempty ι\ninst✝⁵ : DecidableEq ι\nF : Type\ninst✝⁴ : CommRing F\ninst✝³ : Fintype F\nA : Type\ninst✝² : DecidableEq A\ninst✝¹ : AddCommGroup A\ninst✝ : Module F A\nMC : ModuleCode ι F A\ne ε : ℕ\nhC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε\nh_interleaved_gaps : ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε\nprob_snoc :\n  ∀ (n : ℕ) (P : (Fin (n + 1) → F) → Prop),\n    (do\n          let r_last ← $ᵖ F\n          let r_init ← $ᵖ (Fin n → F)\n          pure (P (Fin.snoc r_init r_last)))\n        True =\n      (do\n          let r ← $ᵖ (Fin (n + 1) → F)\n          pure (P r))\n        True\nn : ℕ\nu : WordStack A (Fin (2 ^ (n + 1))) ι\nr_init : Fin n → F\nr_last : F\n⊢ multilinearCombine u (Fin.snoc r_init r_last) =\n    multilinearCombine\n      (affineLineEvaluation (splitHalfRowWiseInterleavedWords u).1 (splitHalfRowWiseInterleavedWords u).2 r_last) r_init",
+          "endPos": {
+            "column": 7,
+            "line": 1253
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 4,
+            "line": 1253
+          },
+          "severity": "error"
+        },
+        "source_line": "    rfl",
+        "start_offset": 64829,
+        "start_byte_offset": 68924,
+        "end_offset": 64832,
+        "end_byte_offset": 68927,
+        "source_text": "rfl",
+        "failed_tactic": "rfl",
+        "tactic_range": {
+          "position": {
+            "line": 1253,
+            "column": 4
+          },
+          "end_position": {
+            "line": 1253,
+            "column": 7
+          },
+          "start_offset": 64829,
+          "end_offset": 64832
+        },
+        "goals": [
+          "multilinearCombine u (Fin.snoc r_init r_last) =\n    multilinearCombine\n      (affineLineEvaluation (splitHalfRowWiseInterleavedWords u).1 (splitHalfRowWiseInterleavedWords u).2 r_last) r_init"
+        ],
+        "local_context": [
+          "ι : Type l\ninst✝⁷ : Fintype ι\ninst✝⁶ : Nonempty ι\ninst✝⁵ : DecidableEq ι\nF : Type\ninst✝⁴ : CommRing F\ninst✝³ : Fintype F\nA : Type\ninst✝² : DecidableEq A\ninst✝¹ : AddCommGroup A\ninst✝ : Module F A\nMC : ModuleCode ι F A\ne ε : ℕ\nhC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε\nh_interleaved_gaps : ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε\nprob_snoc :\n  ∀ (n : ℕ) (P : (Fin (n + 1) → F) → Prop),\n    (do\n          let r_last ← $ᵖ F\n          let r_init ← $ᵖ (Fin n → F)\n          pure (P (Fin.snoc r_init r_last)))\n        True =\n      (do\n          let r ← $ᵖ (Fin (n + 1) → F)\n          pure (P r))\n        True\nn : ℕ\nu : WordStack A (Fin (2 ^ (n + 1))) ι\nr_init : Fin n → F\nr_last : F"
+        ],
+        "proof_state_source": "lean_infotree_before_tactic",
+        "proof_state_raw": {
+          "depth": 25,
+          "end": 76058,
+          "goals_after": [
+            "ι : Type l\ninst✝⁷ : Fintype ι\ninst✝⁶ : Nonempty ι\ninst✝⁵ : DecidableEq ι\nF : Type\ninst✝⁴ : CommRing F\ninst✝³ : Fintype F\nA : Type\ninst✝² : DecidableEq A\ninst✝¹ : AddCommGroup A\ninst✝ : Module F A\nMC : ModuleCode ι F A\ne ε : ℕ\nhC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε\nh_interleaved_gaps : ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε\nprob_snoc :\n  ∀ (n : ℕ) (P : (Fin (n + 1) → F) → Prop),\n    (do\n          let r_last ← $ᵖ F\n          let r_init ← $ᵖ (Fin n → F)\n          pure (P (Fin.snoc r_init r_last)))\n        True =\n      (do\n          let r ← $ᵖ (Fin (n + 1) → F)\n          pure (P r))\n        True\nn : ℕ\nu : WordStack A (Fin (2 ^ (n + 1))) ι\nr_init : Fin n → F\nr_last : F\n⊢ multilinearCombine u (Fin.snoc r_init r_last) =\n    multilinearCombine\n      (affineLineEvaluation (splitHalfRowWiseInterleavedWords u).1 (splitHalfRowWiseInterleavedWords u).2 r_last) r_init"
+          ],
+          "goals_before": [
+            "ι : Type l\ninst✝⁷ : Fintype ι\ninst✝⁶ : Nonempty ι\ninst✝⁵ : DecidableEq ι\nF : Type\ninst✝⁴ : CommRing F\ninst✝³ : Fintype F\nA : Type\ninst✝² : DecidableEq A\ninst✝¹ : AddCommGroup A\ninst✝ : Module F A\nMC : ModuleCode ι F A\ne ε : ℕ\nhC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε\nh_interleaved_gaps : ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε\nprob_snoc :\n  ∀ (n : ℕ) (P : (Fin (n + 1) → F) → Prop),\n    (do\n          let r_last ← $ᵖ F\n          let r_init ← $ᵖ (Fin n → F)\n          pure (P (Fin.snoc r_init r_last)))\n        True =\n      (do\n          let r ← $ᵖ (Fin (n + 1) → F)\n          pure (P r))\n        True\nn : ℕ\nu : WordStack A (Fin (2 ^ (n + 1))) ι\nr_init : Fin n → F\nr_last : F\n⊢ multilinearCombine u (Fin.snoc r_init r_last) =\n    multilinearCombine\n      (affineLineEvaluation (splitHalfRowWiseInterleavedWords u).1 (splitHalfRowWiseInterleavedWords u).2 r_last) r_init"
+          ],
+          "kind": "tactic",
+          "start": 76055
+        }
+      },
+      {
+        "severity": "error",
+        "position": {
+          "column": 10,
+          "line": 1271
+        },
+        "end_position": {
+          "column": 54,
+          "line": 1272
+        },
+        "message": "Type mismatch: After simplification, term\n  hu\n has type\n  ↑ε / ↑(Fintype.card F) <\n    (do\n        let r_last ← $ᵖ F\n        (fun a =>\n              Δ₀(multilinearCombine (((1 - r_last) • fun rowIdx => u 0) + r_last • fun rowIdx => u 1) a, ↑MC) ≤ ↑e) <$>\n            $ᵖ (Fin 0 → F))\n      True\nbut is expected to have type\n  ↑ε / ↑(Fintype.card F) < ((fun a => Δ₀((1 - a) • u 0 + a • u 1, ↑MC) ≤ ↑e) <$> $ᵖ F) True",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "Type mismatch: After simplification, term\n  hu\n has type\n  ↑ε / ↑(Fintype.card F) <\n    (do\n        let r_last ← $ᵖ F\n        (fun a =>\n              Δ₀(multilinearCombine (((1 - r_last) • fun rowIdx => u 0) + r_last • fun rowIdx => u 1) a, ↑MC) ≤ ↑e) <$>\n            $ᵖ (Fin 0 → F))\n      True\nbut is expected to have type\n  ↑ε / ↑(Fintype.card F) < ((fun a => Δ₀((1 - a) • u 0 + a • u 1, ↑MC) ≤ ↑e) <$> $ᵖ F) True",
+          "endPos": {
+            "column": 54,
+            "line": 1272
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 10,
+            "line": 1271
+          },
+          "severity": "error"
+        },
+        "source_line": "          simpa [multilinearCombine_snoc, affineLineEvaluation,",
+        "start_offset": 65331,
+        "start_byte_offset": 69461,
+        "end_offset": 65439,
+        "end_byte_offset": 69569,
+        "source_text": "simpa [multilinearCombine_snoc, affineLineEvaluation,\n            splitHalfRowWiseInterleavedWords] using hu",
+        "expected_actual_types": {
+          "actual": "↑ε / ↑(Fintype.card F) <\n    (do\n        let r_last ← $ᵖ F\n        (fun a =>\n              Δ₀(multilinearCombine (((1 - r_last) • fun rowIdx => u 0) + r_last • fun rowIdx => u 1) a, ↑MC) ≤ ↑e) <$>\n            $ᵖ (Fin 0 → F))\n      True",
+          "expected": "↑ε / ↑(Fintype.card F) < ((fun a => Δ₀((1 - a) • u 0 + a • u 1, ↑MC) ≤ ↑e) <$> $ᵖ F) True"
+        },
+        "failed_tactic": "simpa [multilinearCombine_snoc, affineLineEvaluation,\n            splitHalfRowWiseInterleavedWords] using",
+        "tactic_range": {
+          "position": {
+            "line": 1271,
+            "column": 10
+          },
+          "end_position": {
+            "line": 1272,
+            "column": 51
+          },
+          "start_offset": 65331,
+          "end_offset": 65436
+        },
+        "goals": [
+          "(do\n        let r ← $ᵖ F\n        pure (Δ₀(affineLineEvaluation (u 0) (u 1) r, ↑MC) ≤ ↑e))\n      True >\n    ↑↑ε / ↑↑(Fintype.card F)"
+        ],
+        "local_context": [
+          "ι : Type l\ninst✝⁷ : Fintype ι\ninst✝⁶ : Nonempty ι\ninst✝⁵ : DecidableEq ι\nF : Type\ninst✝⁴ : CommRing F\ninst✝³ : Fintype F\nA : Type\ninst✝² : DecidableEq A\ninst✝¹ : AddCommGroup A\ninst✝ : Module F A\nMC : ModuleCode ι F A\ne ε : ℕ\nhC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε\nh_interleaved_gaps : ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε\nprob_snoc :\n  ∀ (n : ℕ) (P : (Fin (n + 1) → F) → Prop),\n    (do\n          let r_last ← $ᵖ F\n          let r_init ← $ᵖ (Fin n → F)\n          pure (P (Fin.snoc r_init r_last)))\n        True =\n      (do\n          let r ← $ᵖ (Fin (n + 1) → F)\n          pure (P r))\n        True\nmultilinearCombine_snoc :\n  ∀ (n : ℕ) (u : WordStack A (Fin (2 ^ (n + 1))) ι) (r_init : Fin n → F) (r_last : F),\n    multilinearCombine u (Fin.snoc r_init r_last) =\n      multilinearCombine\n        (affineLineEvaluation (splitHalfRowWiseInterleavedWords u).1 (splitHalfRowWiseInterleavedWords u).2 r_last)\n        r_init\nih : 0 > 0 → δ_ε_multilinearCorrelatedAgreement_Nat (↑MC) 0 e ε\nhϑ_gt_0✝ : 0 + 1 > 0\nu : WordStack A (Fin (2 ^ (0 + 1))) ι\nhu :\n  (do\n        let r_last ← $ᵖ F\n        let r_init ← $ᵖ (Fin 0 → F)\n        pure (Δ₀(multilinearCombine u (Fin.snoc r_init r_last), ↑MC) ≤ ↑e))\n      True >\n    ↑↑(0 + 1) * ↑ε / ↑↑(Fintype.card F)\nhprob_eq :\n  (do\n        let r_last ← $ᵖ F\n        let r_init ← $ᵖ (Fin 0 → F)\n        pure (Δ₀(multilinearCombine u (Fin.snoc r_init r_last), ↑MC) ≤ ↑e))\n      True =\n    (do\n        let r ← $ᵖ (Fin (0 + 1) → F)\n        pure (Δ₀(multilinearCombine u r, ↑MC) ≤ ↑e))\n      True"
+        ],
+        "proof_state_source": "lean_infotree_before_tactic",
+        "proof_state_raw": {
+          "depth": 33,
+          "end": 76697,
+          "goals_after": [
+            "ι : Type l\ninst✝⁷ : Fintype ι\ninst✝⁶ : Nonempty ι\ninst✝⁵ : DecidableEq ι\nF : Type\ninst✝⁴ : CommRing F\ninst✝³ : Fintype F\nA : Type\ninst✝² : DecidableEq A\ninst✝¹ : AddCommGroup A\ninst✝ : Module F A\nMC : ModuleCode ι F A\ne ε : ℕ\nhC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε\nh_interleaved_gaps : ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε\nprob_snoc :\n  ∀ (n : ℕ) (P : (Fin (n + 1) → F) → Prop),\n    (do\n          let r_last ← $ᵖ F\n          let r_init ← $ᵖ (Fin n → F)\n          pure (P (Fin.snoc r_init r_last)))\n        True =\n      (do\n          let r ← $ᵖ (Fin (n + 1) → F)\n          pure (P r))\n        True\nmultilinearCombine_snoc :\n  ∀ (n : ℕ) (u : WordStack A (Fin (2 ^ (n + 1))) ι) (r_init : Fin n → F) (r_last : F),\n    multilinearCombine u (Fin.snoc r_init r_last) =\n      multilinearCombine\n        (affineLineEvaluation (splitHalfRowWiseInterleavedWords u).1 (splitHalfRowWiseInterleavedWords u).2 r_last)\n        r_init\nih : 0 > 0 → δ_ε_multilinearCorrelatedAgreement_Nat (↑MC) 0 e ε\nhϑ_gt_0✝ : 0 + 1 > 0\nu : WordStack A (Fin (2 ^ (0 + 1))) ι\nhu :\n  (do\n        let r_last ← $ᵖ F\n        let r_init ← $ᵖ (Fin 0 → F)\n        pure (Δ₀(multilinearCombine u (Fin.snoc r_init r_last), ↑MC) ≤ ↑e))\n      True >\n    ↑↑(0 + 1) * ↑ε / ↑↑(Fintype.card F)\nhprob_eq :\n  (do\n        let r_last ← $ᵖ F\n        let r_init ← $ᵖ (Fin 0 → F)\n        pure (Δ₀(multilinearCombine u (Fin.snoc r_init r_last), ↑MC) ≤ ↑e))\n      True =\n    (do\n        let r ← $ᵖ (Fin (0 + 1) → F)\n        pure (Δ₀(multilinearCombine u r, ↑MC) ≤ ↑e))\n      True\n⊢ ↑ε / ↑(Fintype.card F) < ((fun a => Δ₀((1 - a) • u 0 + a • u 1, ↑MC) ≤ ↑e) <$> $ᵖ F) True"
+          ],
+          "goals_before": [
+            "ι : Type l\ninst✝⁷ : Fintype ι\ninst✝⁶ : Nonempty ι\ninst✝⁵ : DecidableEq ι\nF : Type\ninst✝⁴ : CommRing F\ninst✝³ : Fintype F\nA : Type\ninst✝² : DecidableEq A\ninst✝¹ : AddCommGroup A\ninst✝ : Module F A\nMC : ModuleCode ι F A\ne ε : ℕ\nhC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε\nh_interleaved_gaps : ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε\nprob_snoc :\n  ∀ (n : ℕ) (P : (Fin (n + 1) → F) → Prop),\n    (do\n          let r_last ← $ᵖ F\n          let r_init ← $ᵖ (Fin n → F)\n          pure (P (Fin.snoc r_init r_last)))\n        True =\n      (do\n          let r ← $ᵖ (Fin (n + 1) → F)\n          pure (P r))\n        True\nmultilinearCombine_snoc :\n  ∀ (n : ℕ) (u : WordStack A (Fin (2 ^ (n + 1))) ι) (r_init : Fin n → F) (r_last : F),\n    multilinearCombine u (Fin.snoc r_init r_last) =\n      multilinearCombine\n        (affineLineEvaluation (splitHalfRowWiseInterleavedWords u).1 (splitHalfRowWiseInterleavedWords u).2 r_last)\n        r_init\nih : 0 > 0 → δ_ε_multilinearCorrelatedAgreement_Nat (↑MC) 0 e ε\nhϑ_gt_0✝ : 0 + 1 > 0\nu : WordStack A (Fin (2 ^ (0 + 1))) ι\nhu :\n  (do\n        let r_last ← $ᵖ F\n        let r_init ← $ᵖ (Fin 0 → F)\n        pure (Δ₀(multilinearCombine u (Fin.snoc r_init r_last), ↑MC) ≤ ↑e))\n      True >\n    ↑↑(0 + 1) * ↑ε / ↑↑(Fintype.card F)\nhprob_eq :\n  (do\n        let r_last ← $ᵖ F\n        let r_init ← $ᵖ (Fin 0 → F)\n        pure (Δ₀(multilinearCombine u (Fin.snoc r_init r_last), ↑MC) ≤ ↑e))\n      True =\n    (do\n        let r ← $ᵖ (Fin (0 + 1) → F)\n        pure (Δ₀(multilinearCombine u r, ↑MC) ≤ ↑e))\n      True\n⊢ (do\n        let r ← $ᵖ F\n        pure (Δ₀(affineLineEvaluation (u 0) (u 1) r, ↑MC) ≤ ↑e))\n      True >\n    ↑↑ε / ↑↑(Fintype.card F)"
+          ],
+          "kind": "tactic",
+          "start": 76592
+        }
+      },
+      {
+        "severity": "error",
+        "position": {
+          "column": 10,
+          "line": 1297
+        },
+        "end_position": {
+          "column": 45,
+          "line": 1298
+        },
+        "message": "Type mismatch: After simplification, term\n  hu\n has type\n  @GT.gt ENNReal ENNReal.instPartialOrder.toLT\n    ((do\n        let r_last ← $ᵖ F\n        let r_init ← $ᵖ (Fin ϑ → F)\n        pure\n            (Δ₀(multilinearCombine\n                  (affineLineEvaluation (splitHalfRowWiseInterleavedWords u).1 (splitHalfRowWiseInterleavedWords u).2\n                    r_last)\n                  r_init,\n                ↑MC) ≤\n              ↑e))\n      True)\n    (↑↑(ϑ + 1) * ↑ε / ↑↑(Fintype.card F))\nbut is expected to have type\n  @GT.gt ENNReal ENNReal.instPartialOrder.toLT\n    ((do\n        let r_last ← $ᵖ F\n        let r_init ← $ᵖ (Fin ϑ → F)\n        pure\n            (Δ₀(multilinearCombine\n                  (affineLineEvaluation (splitHalfRowWiseInterleavedWords u).1 (splitHalfRowWiseInterleavedWords u).2\n                    r_last)\n                  r_init,\n                ↑MC) ≤\n              ↑e))\n      True)\n    (↑(↑(ϑ + 1) * ↑ε) / ↑↑(Fintype.card F))",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "Type mismatch: After simplification, term\n  hu\n has type\n  @GT.gt ENNReal ENNReal.instPartialOrder.toLT\n    ((do\n        let r_last ← $ᵖ F\n        let r_init ← $ᵖ (Fin ϑ → F)\n        pure\n            (Δ₀(multilinearCombine\n                  (affineLineEvaluation (splitHalfRowWiseInterleavedWords u).1 (splitHalfRowWiseInterleavedWords u).2\n                    r_last)\n                  r_init,\n                ↑MC) ≤\n              ↑e))\n      True)\n    (↑↑(ϑ + 1) * ↑ε / ↑↑(Fintype.card F))\nbut is expected to have type\n  @GT.gt ENNReal ENNReal.instPartialOrder.toLT\n    ((do\n        let r_last ← $ᵖ F\n        let r_init ← $ᵖ (Fin ϑ → F)\n        pure\n            (Δ₀(multilinearCombine\n                  (affineLineEvaluation (splitHalfRowWiseInterleavedWords u).1 (splitHalfRowWiseInterleavedWords u).2\n                    r_last)\n                  r_init,\n                ↑MC) ≤\n              ↑e))\n      True)\n    (↑(↑(ϑ + 1) * ↑ε) / ↑↑(Fintype.card F))",
+          "endPos": {
+            "column": 45,
+            "line": 1298
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 10,
+            "line": 1297
+          },
+          "severity": "error"
+        },
+        "source_line": "          simpa only [multilinearCombine_affineComb_split_last_close,",
+        "start_offset": 66594,
+        "start_byte_offset": 70790,
+        "end_offset": 66699,
+        "end_byte_offset": 70895,
+        "source_text": "simpa only [multilinearCombine_affineComb_split_last_close,\n            multilinearCombine_snoc] using hu",
+        "expected_actual_types": {
+          "actual": "@GT.gt ENNReal ENNReal.instPartialOrder.toLT\n    ((do\n        let r_last ← $ᵖ F\n        let r_init ← $ᵖ (Fin ϑ → F)\n        pure\n            (Δ₀(multilinearCombine\n                  (affineLineEvaluation (splitHalfRowWiseInterleavedWords u).1 (splitHalfRowWiseInterleavedWords u).2\n                    r_last)\n                  r_init,\n                ↑MC) ≤\n              ↑e))\n      True)\n    (↑↑(ϑ + 1) * ↑ε / ↑↑(Fintype.card F))",
+          "expected": "@GT.gt ENNReal ENNReal.instPartialOrder.toLT\n    ((do\n        let r_last ← $ᵖ F\n        let r_init ← $ᵖ (Fin ϑ → F)\n        pure\n            (Δ₀(multilinearCombine\n                  (affineLineEvaluation (splitHalfRowWiseInterleavedWords u).1 (splitHalfRowWiseInterleavedWords u).2\n                    r_last)\n                  r_init,\n                ↑MC) ≤\n              ↑e))\n      True)\n    (↑(↑(ϑ + 1) * ↑ε) / ↑↑(Fintype.card F))"
+        },
+        "failed_tactic": "simpa only [multilinearCombine_affineComb_split_last_close,\n            multilinearCombine_snoc] using",
+        "tactic_range": {
+          "position": {
+            "line": 1297,
+            "column": 10
+          },
+          "end_position": {
+            "line": 1298,
+            "column": 42
+          },
+          "start_offset": 66594,
+          "end_offset": 66696
+        },
+        "goals": [
+          "(do\n        let r_last ← $ᵖ F\n        let r_init ← $ᵖ (Fin ϑ → F)\n        pure (multilinearCombine_affineComb_split_last_close MC u e r_last r_init))\n      True >\n    ↑(↑(ϑ + 1) * ↑ε) / ↑↑(Fintype.card F)"
+        ],
+        "local_context": [
+          "ι : Type l\ninst✝⁷ : Fintype ι\ninst✝⁶ : Nonempty ι\ninst✝⁵ : DecidableEq ι\nF : Type\ninst✝⁴ : CommRing F\ninst✝³ : Fintype F\nA : Type\ninst✝² : DecidableEq A\ninst✝¹ : AddCommGroup A\ninst✝ : Module F A\nMC : ModuleCode ι F A\ne ε : ℕ\nhC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε\nh_interleaved_gaps : ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε\nprob_snoc :\n  ∀ (n : ℕ) (P : (Fin (n + 1) → F) → Prop),\n    (do\n          let r_last ← $ᵖ F\n          let r_init ← $ᵖ (Fin n → F)\n          pure (P (Fin.snoc r_init r_last)))\n        True =\n      (do\n          let r ← $ᵖ (Fin (n + 1) → F)\n          pure (P r))\n        True\nmultilinearCombine_snoc :\n  ∀ (n : ℕ) (u : WordStack A (Fin (2 ^ (n + 1))) ι) (r_init : Fin n → F) (r_last : F),\n    multilinearCombine u (Fin.snoc r_init r_last) =\n      multilinearCombine\n        (affineLineEvaluation (splitHalfRowWiseInterleavedWords u).1 (splitHalfRowWiseInterleavedWords u).2 r_last)\n        r_init\nϑ : ℕ\nih : ϑ > 0 → δ_ε_multilinearCorrelatedAgreement_Nat (↑MC) ϑ e ε\nhϑ_gt_0✝ : ϑ + 1 > 0\nhϑ_zero : ¬ϑ = 0\nhϑ_pos : ϑ > 0\nihϑ : δ_ε_multilinearCorrelatedAgreement_Nat (↑MC) ϑ e ε\nu : WordStack A (Fin (2 ^ (ϑ + 1))) ι\nhu :\n  (do\n        let r_last ← $ᵖ F\n        let r_init ← $ᵖ (Fin ϑ → F)\n        pure (Δ₀(multilinearCombine u (Fin.snoc r_init r_last), ↑MC) ≤ ↑e))\n      True >\n    ↑↑(ϑ + 1) * ↑ε / ↑↑(Fintype.card F)\nU₀ : WordStack A (Fin (2 ^ ϑ)) ι := (splitHalfRowWiseInterleavedWords u).1\nU₁ : WordStack A (Fin (2 ^ ϑ)) ι := (splitHalfRowWiseInterleavedWords u).2\nR : Finset F := R_star_tensor MC U₀ U₁\nhprob_eq :\n  (do\n        let r_last ← $ᵖ F\n        let r_init ← $ᵖ (Fin ϑ → F)\n        pure (Δ₀(multilinearCombine u (Fin.snoc r_init r_last), ↑MC) ≤ ↑e))\n      True =\n    (do\n        let r ← $ᵖ (Fin (ϑ + 1) → F)\n        pure (Δ₀(multilinearCombine u r, ↑MC) ≤ ↑e))\n      True"
+        ],
+        "proof_state_source": "lean_infotree_before_tactic",
+        "proof_state_raw": {
+          "depth": 33,
+          "end": 78023,
+          "goals_after": [
+            "ι : Type l\ninst✝⁷ : Fintype ι\ninst✝⁶ : Nonempty ι\ninst✝⁵ : DecidableEq ι\nF : Type\ninst✝⁴ : CommRing F\ninst✝³ : Fintype F\nA : Type\ninst✝² : DecidableEq A\ninst✝¹ : AddCommGroup A\ninst✝ : Module F A\nMC : ModuleCode ι F A\ne ε : ℕ\nhC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε\nh_interleaved_gaps : ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε\nprob_snoc :\n  ∀ (n : ℕ) (P : (Fin (n + 1) → F) → Prop),\n    (do\n          let r_last ← $ᵖ F\n          let r_init ← $ᵖ (Fin n → F)\n          pure (P (Fin.snoc r_init r_last)))\n        True =\n      (do\n          let r ← $ᵖ (Fin (n + 1) → F)\n          pure (P r))\n        True\nmultilinearCombine_snoc :\n  ∀ (n : ℕ) (u : WordStack A (Fin (2 ^ (n + 1))) ι) (r_init : Fin n → F) (r_last : F),\n    multilinearCombine u (Fin.snoc r_init r_last) =\n      multilinearCombine\n        (affineLineEvaluation (splitHalfRowWiseInterleavedWords u).1 (splitHalfRowWiseInterleavedWords u).2 r_last)\n        r_init\nϑ : ℕ\nih : ϑ > 0 → δ_ε_multilinearCorrelatedAgreement_Nat (↑MC) ϑ e ε\nhϑ_gt_0✝ : ϑ + 1 > 0\nhϑ_zero : ¬ϑ = 0\nhϑ_pos : ϑ > 0\nihϑ : δ_ε_multilinearCorrelatedAgreement_Nat (↑MC) ϑ e ε\nu : WordStack A (Fin (2 ^ (ϑ + 1))) ι\nhu :\n  (do\n        let r_last ← $ᵖ F\n        let r_init ← $ᵖ (Fin ϑ → F)\n        pure (Δ₀(multilinearCombine u (Fin.snoc r_init r_last), ↑MC) ≤ ↑e))\n      True >\n    ↑↑(ϑ + 1) * ↑ε / ↑↑(Fintype.card F)\nU₀ : WordStack A (Fin (2 ^ ϑ)) ι := (splitHalfRowWiseInterleavedWords u).1\nU₁ : WordStack A (Fin (2 ^ ϑ)) ι := (splitHalfRowWiseInterleavedWords u).2\nR : Finset F := R_star_tensor MC U₀ U₁\nhprob_eq :\n  (do\n        let r_last ← $ᵖ F\n        let r_init ← $ᵖ (Fin ϑ → F)\n        pure (Δ₀(multilinearCombine u (Fin.snoc r_init r_last), ↑MC) ≤ ↑e))\n      True =\n    (do\n        let r ← $ᵖ (Fin (ϑ + 1) → F)\n        pure (Δ₀(multilinearCombine u r, ↑MC) ≤ ↑e))\n      True\n⊢ (do\n        let r_last ← $ᵖ F\n        let r_init ← $ᵖ (Fin ϑ → F)\n        pure\n            (Δ₀(multilinearCombine\n                  (affineLineEvaluation (splitHalfRowWiseInterleavedWords u).1 (splitHalfRowWiseInterleavedWords u).2\n                    r_last)\n                  r_init,\n                ↑MC) ≤\n              ↑e))\n      True >\n    ↑(↑(ϑ + 1) * ↑ε) / ↑↑(Fintype.card F)"
+          ],
+          "goals_before": [
+            "ι : Type l\ninst✝⁷ : Fintype ι\ninst✝⁶ : Nonempty ι\ninst✝⁵ : DecidableEq ι\nF : Type\ninst✝⁴ : CommRing F\ninst✝³ : Fintype F\nA : Type\ninst✝² : DecidableEq A\ninst✝¹ : AddCommGroup A\ninst✝ : Module F A\nMC : ModuleCode ι F A\ne ε : ℕ\nhC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε\nh_interleaved_gaps : ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε\nprob_snoc :\n  ∀ (n : ℕ) (P : (Fin (n + 1) → F) → Prop),\n    (do\n          let r_last ← $ᵖ F\n          let r_init ← $ᵖ (Fin n → F)\n          pure (P (Fin.snoc r_init r_last)))\n        True =\n      (do\n          let r ← $ᵖ (Fin (n + 1) → F)\n          pure (P r))\n        True\nmultilinearCombine_snoc :\n  ∀ (n : ℕ) (u : WordStack A (Fin (2 ^ (n + 1))) ι) (r_init : Fin n → F) (r_last : F),\n    multilinearCombine u (Fin.snoc r_init r_last) =\n      multilinearCombine\n        (affineLineEvaluation (splitHalfRowWiseInterleavedWords u).1 (splitHalfRowWiseInterleavedWords u).2 r_last)\n        r_init\nϑ : ℕ\nih : ϑ > 0 → δ_ε_multilinearCorrelatedAgreement_Nat (↑MC) ϑ e ε\nhϑ_gt_0✝ : ϑ + 1 > 0\nhϑ_zero : ¬ϑ = 0\nhϑ_pos : ϑ > 0\nihϑ : δ_ε_multilinearCorrelatedAgreement_Nat (↑MC) ϑ e ε\nu : WordStack A (Fin (2 ^ (ϑ + 1))) ι\nhu :\n  (do\n        let r_last ← $ᵖ F\n        let r_init ← $ᵖ (Fin ϑ → F)\n        pure (Δ₀(multilinearCombine u (Fin.snoc r_init r_last), ↑MC) ≤ ↑e))\n      True >\n    ↑↑(ϑ + 1) * ↑ε / ↑↑(Fintype.card F)\nU₀ : WordStack A (Fin (2 ^ ϑ)) ι := (splitHalfRowWiseInterleavedWords u).1\nU₁ : WordStack A (Fin (2 ^ ϑ)) ι := (splitHalfRowWiseInterleavedWords u).2\nR : Finset F := R_star_tensor MC U₀ U₁\nhprob_eq :\n  (do\n        let r_last ← $ᵖ F\n        let r_init ← $ᵖ (Fin ϑ → F)\n        pure (Δ₀(multilinearCombine u (Fin.snoc r_init r_last), ↑MC) ≤ ↑e))\n      True =\n    (do\n        let r ← $ᵖ (Fin (ϑ + 1) → F)\n        pure (Δ₀(multilinearCombine u r, ↑MC) ≤ ↑e))\n      True\n⊢ (do\n        let r_last ← $ᵖ F\n        let r_init ← $ᵖ (Fin ϑ → F)\n        pure (multilinearCombine_affineComb_split_last_close MC u e r_last r_init))\n      True >\n    ↑(↑(ϑ + 1) * ↑ε) / ↑↑(Fintype.card F)"
+          ],
+          "kind": "tactic",
+          "start": 77921
+        }
+      },
+      {
+        "severity": "error",
+        "position": {
+          "column": 16,
+          "line": 1326
+        },
+        "end_position": {
+          "column": 58,
+          "line": 1326
+        },
+        "message": "failed to synthesize instance of type class\n  Interleavable (Word (ι → A) (Fin (2 ^ ϑ))) ?m.954\n\nHint: Type class instance resolution failures can be inspected with the `set_option trace.Meta.synthInstance true` command.",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "failed to synthesize instance of type class\n  Interleavable (Word (ι → A) (Fin (2 ^ ϑ))) ?m.954\n\nHint: Type class instance resolution failures can be inspected with the `set_option trace.Meta.synthInstance true` command.",
+          "endPos": {
+            "column": 58,
+            "line": 1326
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "lean.synthInstanceFailed._namedError",
+          "pos": {
+            "column": 16,
+            "line": 1326
+          },
+          "severity": "error"
+        },
+        "source_line": "                ⋈| (affineLineEvaluation (F := F) U₀ U₁ r) := by",
+        "start_offset": 67867,
+        "start_byte_offset": 72135,
+        "end_offset": 67909,
+        "end_byte_offset": 72183,
+        "source_text": "⋈| (affineLineEvaluation (F := F) U₀ U₁ r)",
+        "failed_tactic": "have hinterleave :\n              affineLineEvaluation (F := F) (⋈| U₀) (⋈| U₁) r =\n                ⋈| (affineLineEvaluation (F := F) U₀ U₁ r) := by\n            ext j k\n            rfl",
+        "tactic_range": {
+          "position": {
+            "line": 1324,
+            "column": 10
+          },
+          "end_position": {
+            "line": 1328,
+            "column": 15
+          },
+          "start_offset": 67768,
+          "end_offset": 67951
+        },
+        "goals": [
+          "affineLineEvaluation (⋈|U₀) (⋈|U₁) r = sorry"
+        ],
+        "local_context": [
+          "ι : Type l\ninst✝⁷ : Fintype ι\ninst✝⁶ : Nonempty ι\ninst✝⁵ : DecidableEq ι\nF : Type\ninst✝⁴ : CommRing F\ninst✝³ : Fintype F\nA : Type\ninst✝² : DecidableEq A\ninst✝¹ : AddCommGroup A\ninst✝ : Module F A\nMC : ModuleCode ι F A\ne ε : ℕ\nhC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε\nh_interleaved_gaps : ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε\nprob_snoc :\n  ∀ (n : ℕ) (P : (Fin (n + 1) → F) → Prop),\n    (do\n          let r_last ← $ᵖ F\n          let r_init ← $ᵖ (Fin n → F)\n          pure (P (Fin.snoc r_init r_last)))\n        True =\n      (do\n          let r ← $ᵖ (Fin (n + 1) → F)\n          pure (P r))\n        True\nmultilinearCombine_snoc :\n  ∀ (n : ℕ) (u : WordStack A (Fin (2 ^ (n + 1))) ι) (r_init : Fin n → F) (r_last : F),\n    multilinearCombine u (Fin.snoc r_init r_last) =\n      multilinearCombine\n        (affineLineEvaluation (splitHalfRowWiseInterleavedWords u).1 (splitHalfRowWiseInterleavedWords u).2 r_last)\n        r_init\nϑ : ℕ\nih : ϑ > 0 → δ_ε_multilinearCorrelatedAgreement_Nat (↑MC) ϑ e ε\nhϑ_gt_0✝ : ϑ + 1 > 0\nhϑ_zero : ¬ϑ = 0\nhϑ_pos : ϑ > 0\nihϑ : δ_ε_multilinearCorrelatedAgreement_Nat (↑MC) ϑ e ε\nu : WordStack A (Fin (2 ^ (ϑ + 1))) ι\nhu :\n  (do\n        let r ← $ᵖ (Fin (ϑ + 1) → F)\n        pure (Δ₀(multilinearCombine u r, ↑MC) ≤ ↑e))\n      True >\n    ↑↑(ϑ + 1) * ↑ε / ↑↑(Fintype.card F)\nU₀ : WordStack A (Fin (2 ^ ϑ)) ι := (splitHalfRowWiseInterleavedWords u).1\nU₁ : WordStack A (Fin (2 ^ ϑ)) ι := (splitHalfRowWiseInterleavedWords u).2\nR : Finset F := R_star_tensor MC U₀ U₁\nhu_split :\n  (do\n        let r_last ← $ᵖ F\n        let r_init ← $ᵖ (Fin ϑ → F)\n        pure (multilinearCombine_affineComb_split_last_close MC u e r_last r_init))\n      True >\n    ↑(↑(ϑ + 1) * ↑ε) / ↑↑(Fintype.card F)\nhR_raw :\n  have U₀ := (splitHalfRowWiseInterleavedWords u).1;\n  have U₁ := (splitHalfRowWiseInterleavedWords u).2;\n  have R_star_set := R_star_tensor MC U₀ U₁;\n  (do\n        let r ← $ᵖ F\n        pure (r ∈ R_star_set))\n      True >\n    ↑ε / ↑(Fintype.card F)\nhR :\n  (do\n        let r ← $ᵖ F\n        pure (r ∈ R))\n      True >\n    ↑ε / ↑(Fintype.card F)\nr : F\nhr : r ∈ R\nhr_mem : r ∈ R_star_tensor MC (splitHalfRowWiseInterleavedWords u).1 (splitHalfRowWiseInterleavedWords u).2\nhr_close :\n  Δ₀(⋈|affineLineEvaluation (fun rowIdx => u ⟨↑rowIdx, ⋯⟩) (fun rowIdx => u ⟨↑rowIdx + 2 ^ ϑ, ⋯⟩) ↑⟨r, hr_mem⟩,\n      interleavedCodeSet ↑MC) ≤\n    ↑e"
+        ],
+        "proof_state_source": "lean_infotree_before_tactic",
+        "proof_state_raw": {
+          "depth": 39,
+          "end": 79356,
+          "goals_after": [
+            "ι : Type l\ninst✝⁷ : Fintype ι\ninst✝⁶ : Nonempty ι\ninst✝⁵ : DecidableEq ι\nF : Type\ninst✝⁴ : CommRing F\ninst✝³ : Fintype F\nA : Type\ninst✝² : DecidableEq A\ninst✝¹ : AddCommGroup A\ninst✝ : Module F A\nMC : ModuleCode ι F A\ne ε : ℕ\nhC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε\nh_interleaved_gaps : ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε\nprob_snoc :\n  ∀ (n : ℕ) (P : (Fin (n + 1) → F) → Prop),\n    (do\n          let r_last ← $ᵖ F\n          let r_init ← $ᵖ (Fin n → F)\n          pure (P (Fin.snoc r_init r_last)))\n        True =\n      (do\n          let r ← $ᵖ (Fin (n + 1) → F)\n          pure (P r))\n        True\nmultilinearCombine_snoc :\n  ∀ (n : ℕ) (u : WordStack A (Fin (2 ^ (n + 1))) ι) (r_init : Fin n → F) (r_last : F),\n    multilinearCombine u (Fin.snoc r_init r_last) =\n      multilinearCombine\n        (affineLineEvaluation (splitHalfRowWiseInterleavedWords u).1 (splitHalfRowWiseInterleavedWords u).2 r_last)\n        r_init\nϑ : ℕ\nih : ϑ > 0 → δ_ε_multilinearCorrelatedAgreement_Nat (↑MC) ϑ e ε\nhϑ_gt_0✝ : ϑ + 1 > 0\nhϑ_zero : ¬ϑ = 0\nhϑ_pos : ϑ > 0\nihϑ : δ_ε_multilinearCorrelatedAgreement_Nat (↑MC) ϑ e ε\nu : WordStack A (Fin (2 ^ (ϑ + 1))) ι\nhu :\n  (do\n        let r ← $ᵖ (Fin (ϑ + 1) → F)\n        pure (Δ₀(multilinearCombine u r, ↑MC) ≤ ↑e))\n      True >\n    ↑↑(ϑ + 1) * ↑ε / ↑↑(Fintype.card F)\nU₀ : WordStack A (Fin (2 ^ ϑ)) ι := (splitHalfRowWiseInterleavedWords u).1\nU₁ : WordStack A (Fin (2 ^ ϑ)) ι := (splitHalfRowWiseInterleavedWords u).2\nR : Finset F := R_star_tensor MC U₀ U₁\nhu_split :\n  (do\n        let r_last ← $ᵖ F\n        let r_init ← $ᵖ (Fin ϑ → F)\n        pure (multilinearCombine_affineComb_split_last_close MC u e r_last r_init))\n      True >\n    ↑(↑(ϑ + 1) * ↑ε) / ↑↑(Fintype.card F)\nhR_raw :\n  have U₀ := (splitHalfRowWiseInterleavedWords u).1;\n  have U₁ := (splitHalfRowWiseInterleavedWords u).2;\n  have R_star_set := R_star_tensor MC U₀ U₁;\n  (do\n        let r ← $ᵖ F\n        pure (r ∈ R_star_set))\n      True >\n    ↑ε / ↑(Fintype.card F)\nhR :\n  (do\n        let r ← $ᵖ F\n        pure (r ∈ R))\n      True >\n    ↑ε / ↑(Fintype.card F)\nr : F\nhr : r ∈ R\nhr_mem : r ∈ R_star_tensor MC (splitHalfRowWiseInterleavedWords u).1 (splitHalfRowWiseInterleavedWords u).2\nhr_close :\n  Δ₀(⋈|affineLineEvaluation (fun rowIdx => u ⟨↑rowIdx, ⋯⟩) (fun rowIdx => u ⟨↑rowIdx + 2 ^ ϑ, ⋯⟩) ↑⟨r, hr_mem⟩,\n      interleavedCodeSet ↑MC) ≤\n    ↑e\nj : ι\nk : Fin (2 ^ ϑ)\n⊢ affineLineEvaluation (⋈|U₀) (⋈|U₁) r j k = sorry j k"
+          ],
+          "goals_before": [
+            "ι : Type l\ninst✝⁷ : Fintype ι\ninst✝⁶ : Nonempty ι\ninst✝⁵ : DecidableEq ι\nF : Type\ninst✝⁴ : CommRing F\ninst✝³ : Fintype F\nA : Type\ninst✝² : DecidableEq A\ninst✝¹ : AddCommGroup A\ninst✝ : Module F A\nMC : ModuleCode ι F A\ne ε : ℕ\nhC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε\nh_interleaved_gaps : ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε\nprob_snoc :\n  ∀ (n : ℕ) (P : (Fin (n + 1) → F) → Prop),\n    (do\n          let r_last ← $ᵖ F\n          let r_init ← $ᵖ (Fin n → F)\n          pure (P (Fin.snoc r_init r_last)))\n        True =\n      (do\n          let r ← $ᵖ (Fin (n + 1) → F)\n          pure (P r))\n        True\nmultilinearCombine_snoc :\n  ∀ (n : ℕ) (u : WordStack A (Fin (2 ^ (n + 1))) ι) (r_init : Fin n → F) (r_last : F),\n    multilinearCombine u (Fin.snoc r_init r_last) =\n      multilinearCombine\n        (affineLineEvaluation (splitHalfRowWiseInterleavedWords u).1 (splitHalfRowWiseInterleavedWords u).2 r_last)\n        r_init\nϑ : ℕ\nih : ϑ > 0 → δ_ε_multilinearCorrelatedAgreement_Nat (↑MC) ϑ e ε\nhϑ_gt_0✝ : ϑ + 1 > 0\nhϑ_zero : ¬ϑ = 0\nhϑ_pos : ϑ > 0\nihϑ : δ_ε_multilinearCorrelatedAgreement_Nat (↑MC) ϑ e ε\nu : WordStack A (Fin (2 ^ (ϑ + 1))) ι\nhu :\n  (do\n        let r ← $ᵖ (Fin (ϑ + 1) → F)\n        pure (Δ₀(multilinearCombine u r, ↑MC) ≤ ↑e))\n      True >\n    ↑↑(ϑ + 1) * ↑ε / ↑↑(Fintype.card F)\nU₀ : WordStack A (Fin (2 ^ ϑ)) ι := (splitHalfRowWiseInterleavedWords u).1\nU₁ : WordStack A (Fin (2 ^ ϑ)) ι := (splitHalfRowWiseInterleavedWords u).2\nR : Finset F := R_star_tensor MC U₀ U₁\nhu_split :\n  (do\n        let r_last ← $ᵖ F\n        let r_init ← $ᵖ (Fin ϑ → F)\n        pure (multilinearCombine_affineComb_split_last_close MC u e r_last r_init))\n      True >\n    ↑(↑(ϑ + 1) * ↑ε) / ↑↑(Fintype.card F)\nhR_raw :\n  have U₀ := (splitHalfRowWiseInterleavedWords u).1;\n  have U₁ := (splitHalfRowWiseInterleavedWords u).2;\n  have R_star_set := R_star_tensor MC U₀ U₁;\n  (do\n        let r ← $ᵖ F\n        pure (r ∈ R_star_set))\n      True >\n    ↑ε / ↑(Fintype.card F)\nhR :\n  (do\n        let r ← $ᵖ F\n        pure (r ∈ R))\n      True >\n    ↑ε / ↑(Fintype.card F)\nr : F\nhr : r ∈ R\nhr_mem : r ∈ R_star_tensor MC (splitHalfRowWiseInterleavedWords u).1 (splitHalfRowWiseInterleavedWords u).2\nhr_close :\n  Δ₀(⋈|affineLineEvaluation (fun rowIdx => u ⟨↑rowIdx, ⋯⟩) (fun rowIdx => u ⟨↑rowIdx + 2 ^ ϑ, ⋯⟩) ↑⟨r, hr_mem⟩,\n      interleavedCodeSet ↑MC) ≤\n    ↑e\n⊢ affineLineEvaluation (⋈|U₀) (⋈|U₁) r = sorry"
+          ],
+          "kind": "tactic",
+          "start": 79159
+        }
+      },
+      {
+        "severity": "error",
+        "position": {
+          "column": 8,
+          "line": 1337
+        },
+        "end_position": {
+          "column": 66,
+          "line": 1340
+        },
+        "message": "Type mismatch: After simplification, term\n  hpair\n has type\n  Δ₀(Matrix.transpose\n        (finMapTwoWords (Matrix.transpose fun rowIdx => u ⟨↑rowIdx, ⋯⟩)\n          (Matrix.transpose fun rowIdx => u ⟨↑rowIdx + 2 ^ ϑ, ⋯⟩)),\n      {V |\n        V.transpose 0 ∈ {V | ∀ (k : Fin (2 ^ ϑ)), V.transpose k ∈ MC} ∧\n          V.transpose 1 ∈ {V | ∀ (k : Fin (2 ^ ϑ)), V.transpose k ∈ MC}}) ≤\n    ↑e\nbut is expected to have type\n  Δ₀(Matrix.transpose u, {V | ∀ (k : Fin (2 ^ (ϑ + 1))), V.transpose k ∈ MC}) ≤ ↑e",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "Type mismatch: After simplification, term\n  hpair\n has type\n  Δ₀(Matrix.transpose\n        (finMapTwoWords (Matrix.transpose fun rowIdx => u ⟨↑rowIdx, ⋯⟩)\n          (Matrix.transpose fun rowIdx => u ⟨↑rowIdx + 2 ^ ϑ, ⋯⟩)),\n      {V |\n        V.transpose 0 ∈ {V | ∀ (k : Fin (2 ^ ϑ)), V.transpose k ∈ MC} ∧\n          V.transpose 1 ∈ {V | ∀ (k : Fin (2 ^ ϑ)), V.transpose k ∈ MC}}) ≤\n    ↑e\nbut is expected to have type\n  Δ₀(Matrix.transpose u, {V | ∀ (k : Fin (2 ^ (ϑ + 1))), V.transpose k ∈ MC}) ≤ ↑e",
+          "endPos": {
+            "column": 66,
+            "line": 1340
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 8,
+            "line": 1337
+          },
+          "severity": "error"
+        },
+        "source_line": "        simpa [U₀, U₁, splitHalfRowWiseInterleavedWords,",
+        "start_offset": 68280,
+        "start_byte_offset": 72575,
+        "end_offset": 68537,
+        "end_byte_offset": 72836,
+        "source_text": "simpa [U₀, U₁, splitHalfRowWiseInterleavedWords,\n          Interleavable.interleave, CodeInterleavable.interleaveCode,\n          ModuleCode.moduleInterleavedCode, Matrix.transpose_transpose,\n          Matrix.transpose_apply, Nat.succ_eq_add_one] using hpair",
+        "expected_actual_types": {
+          "actual": "Δ₀(Matrix.transpose\n        (finMapTwoWords (Matrix.transpose fun rowIdx => u ⟨↑rowIdx, ⋯⟩)\n          (Matrix.transpose fun rowIdx => u ⟨↑rowIdx + 2 ^ ϑ, ⋯⟩)),\n      {V |\n        V.transpose 0 ∈ {V | ∀ (k : Fin (2 ^ ϑ)), V.transpose k ∈ MC} ∧\n          V.transpose 1 ∈ {V | ∀ (k : Fin (2 ^ ϑ)), V.transpose k ∈ MC}}) ≤\n    ↑e",
+          "expected": "Δ₀(Matrix.transpose u, {V | ∀ (k : Fin (2 ^ (ϑ + 1))), V.transpose k ∈ MC}) ≤ ↑e"
+        },
+        "failed_tactic": "simpa [U₀, U₁, splitHalfRowWiseInterleavedWords,\n          Interleavable.interleave, CodeInterleavable.interleaveCode,\n          ModuleCode.moduleInterleavedCode, Matrix.transpose_transpose,\n          Matrix.transpose_apply, Nat.succ_eq_add_one] using",
+        "tactic_range": {
+          "position": {
+            "line": 1337,
+            "column": 8
+          },
+          "end_position": {
+            "line": 1340,
+            "column": 60
+          },
+          "start_offset": 68280,
+          "end_offset": 68531
+        },
+        "goals": [
+          "Δ₀(⋈|u, interleavedCodeSet ↑MC) ≤ ↑e"
+        ],
+        "local_context": [
+          "case neg\nι : Type l\ninst✝⁷ : Fintype ι\ninst✝⁶ : Nonempty ι\ninst✝⁵ : DecidableEq ι\nF : Type\ninst✝⁴ : CommRing F\ninst✝³ : Fintype F\nA : Type\ninst✝² : DecidableEq A\ninst✝¹ : AddCommGroup A\ninst✝ : Module F A\nMC : ModuleCode ι F A\ne ε : ℕ\nhC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε\nh_interleaved_gaps : ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε\nprob_snoc :\n  ∀ (n : ℕ) (P : (Fin (n + 1) → F) → Prop),\n    (do\n          let r_last ← $ᵖ F\n          let r_init ← $ᵖ (Fin n → F)\n          pure (P (Fin.snoc r_init r_last)))\n        True =\n      (do\n          let r ← $ᵖ (Fin (n + 1) → F)\n          pure (P r))\n        True\nmultilinearCombine_snoc :\n  ∀ (n : ℕ) (u : WordStack A (Fin (2 ^ (n + 1))) ι) (r_init : Fin n → F) (r_last : F),\n    multilinearCombine u (Fin.snoc r_init r_last) =\n      multilinearCombine\n        (affineLineEvaluation (splitHalfRowWiseInterleavedWords u).1 (splitHalfRowWiseInterleavedWords u).2 r_last)\n        r_init\nϑ : ℕ\nih : ϑ > 0 → δ_ε_multilinearCorrelatedAgreement_Nat (↑MC) ϑ e ε\nhϑ_gt_0✝ : ϑ + 1 > 0\nhϑ_zero : ¬ϑ = 0\nhϑ_pos : ϑ > 0\nihϑ : δ_ε_multilinearCorrelatedAgreement_Nat (↑MC) ϑ e ε\nu : WordStack A (Fin (2 ^ (ϑ + 1))) ι\nhu :\n  (do\n        let r ← $ᵖ (Fin (ϑ + 1) → F)\n        pure (Δ₀(multilinearCombine u r, ↑MC) ≤ ↑e))\n      True >\n    ↑↑(ϑ + 1) * ↑ε / ↑↑(Fintype.card F)\nU₀ : WordStack A (Fin (2 ^ ϑ)) ι := (splitHalfRowWiseInterleavedWords u).1\nU₁ : WordStack A (Fin (2 ^ ϑ)) ι := (splitHalfRowWiseInterleavedWords u).2\nR : Finset F := R_star_tensor MC U₀ U₁\nhu_split :\n  (do\n        let r_last ← $ᵖ F\n        let r_init ← $ᵖ (Fin ϑ → F)\n        pure (multilinearCombine_affineComb_split_last_close MC u e r_last r_init))\n      True >\n    ↑(↑(ϑ + 1) * ↑ε) / ↑↑(Fintype.card F)\nhR_raw :\n  have U₀ := (splitHalfRowWiseInterleavedWords u).1;\n  have U₁ := (splitHalfRowWiseInterleavedWords u).2;\n  have R_star_set := R_star_tensor MC U₀ U₁;\n  (do\n        let r ← $ᵖ F\n        pure (r ∈ R_star_set))\n      True >\n    ↑ε / ↑(Fintype.card F)\nhR :\n  (do\n        let r ← $ᵖ F\n        pure (r ∈ R))\n      True >\n    ↑ε / ↑(Fintype.card F)\nhline :\n  (do\n        let r ← $ᵖ F\n        pure (Δ₀(affineLineEvaluation (⋈|U₀) (⋈|U₁) r, ↑(CodeInterleavable.interleaveCode MC (Fin (2 ^ ϑ)))) ≤ ↑e))\n      True >\n    ↑↑ε / ↑↑(Fintype.card F)\nhpow : 2 ^ ϑ ≥ 1\nhpair : Δ₀(⋈|finMapTwoWords (⋈|U₀) (⋈|U₁), interleavedCodeSet ↑(CodeInterleavable.interleaveCode MC (Fin (2 ^ ϑ)))) ≤ ↑e"
+        ],
+        "proof_state_source": "lean_infotree_before_tactic",
+        "proof_state_raw": {
+          "depth": 20,
+          "end": 79961,
+          "goals_after": [
+            "case neg\nι : Type l\ninst✝⁷ : Fintype ι\ninst✝⁶ : Nonempty ι\ninst✝⁵ : DecidableEq ι\nF : Type\ninst✝⁴ : CommRing F\ninst✝³ : Fintype F\nA : Type\ninst✝² : DecidableEq A\ninst✝¹ : AddCommGroup A\ninst✝ : Module F A\nMC : ModuleCode ι F A\ne ε : ℕ\nhC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε\nh_interleaved_gaps : ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε\nprob_snoc :\n  ∀ (n : ℕ) (P : (Fin (n + 1) → F) → Prop),\n    (do\n          let r_last ← $ᵖ F\n          let r_init ← $ᵖ (Fin n → F)\n          pure (P (Fin.snoc r_init r_last)))\n        True =\n      (do\n          let r ← $ᵖ (Fin (n + 1) → F)\n          pure (P r))\n        True\nmultilinearCombine_snoc :\n  ∀ (n : ℕ) (u : WordStack A (Fin (2 ^ (n + 1))) ι) (r_init : Fin n → F) (r_last : F),\n    multilinearCombine u (Fin.snoc r_init r_last) =\n      multilinearCombine\n        (affineLineEvaluation (splitHalfRowWiseInterleavedWords u).1 (splitHalfRowWiseInterleavedWords u).2 r_last)\n        r_init\nϑ : ℕ\nih : ϑ > 0 → δ_ε_multilinearCorrelatedAgreement_Nat (↑MC) ϑ e ε\nhϑ_gt_0✝ : ϑ + 1 > 0\nhϑ_zero : ¬ϑ = 0\nhϑ_pos : ϑ > 0\nihϑ : δ_ε_multilinearCorrelatedAgreement_Nat (↑MC) ϑ e ε\nu : WordStack A (Fin (2 ^ (ϑ + 1))) ι\nhu :\n  (do\n        let r ← $ᵖ (Fin (ϑ + 1) → F)\n        pure (Δ₀(multilinearCombine u r, ↑MC) ≤ ↑e))\n      True >\n    ↑↑(ϑ + 1) * ↑ε / ↑↑(Fintype.card F)\nU₀ : WordStack A (Fin (2 ^ ϑ)) ι := (splitHalfRowWiseInterleavedWords u).1\nU₁ : WordStack A (Fin (2 ^ ϑ)) ι := (splitHalfRowWiseInterleavedWords u).2\nR : Finset F := R_star_tensor MC U₀ U₁\nhu_split :\n  (do\n        let r_last ← $ᵖ F\n        let r_init ← $ᵖ (Fin ϑ → F)\n        pure (multilinearCombine_affineComb_split_last_close MC u e r_last r_init))\n      True >\n    ↑(↑(ϑ + 1) * ↑ε) / ↑↑(Fintype.card F)\nhR_raw :\n  have U₀ := (splitHalfRowWiseInterleavedWords u).1;\n  have U₁ := (splitHalfRowWiseInterleavedWords u).2;\n  have R_star_set := R_star_tensor MC U₀ U₁;\n  (do\n        let r ← $ᵖ F\n        pure (r ∈ R_star_set))\n      True >\n    ↑ε / ↑(Fintype.card F)\nhR :\n  (do\n        let r ← $ᵖ F\n        pure (r ∈ R))\n      True >\n    ↑ε / ↑(Fintype.card F)\nhline :\n  (do\n        let r ← $ᵖ F\n        pure (Δ₀(affineLineEvaluation (⋈|U₀) (⋈|U₁) r, ↑(CodeInterleavable.interleaveCode MC (Fin (2 ^ ϑ)))) ≤ ↑e))\n      True >\n    ↑↑ε / ↑↑(Fintype.card F)\nhpow : 2 ^ ϑ ≥ 1\nhpair : Δ₀(⋈|finMapTwoWords (⋈|U₀) (⋈|U₁), interleavedCodeSet ↑(CodeInterleavable.interleaveCode MC (Fin (2 ^ ϑ)))) ≤ ↑e\n⊢ Δ₀(Matrix.transpose u, {V | ∀ (k : Fin (2 ^ (ϑ + 1))), V.transpose k ∈ MC}) ≤ ↑e"
+          ],
+          "goals_before": [
+            "case neg\nι : Type l\ninst✝⁷ : Fintype ι\ninst✝⁶ : Nonempty ι\ninst✝⁵ : DecidableEq ι\nF : Type\ninst✝⁴ : CommRing F\ninst✝³ : Fintype F\nA : Type\ninst✝² : DecidableEq A\ninst✝¹ : AddCommGroup A\ninst✝ : Module F A\nMC : ModuleCode ι F A\ne ε : ℕ\nhC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε\nh_interleaved_gaps : ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε\nprob_snoc :\n  ∀ (n : ℕ) (P : (Fin (n + 1) → F) → Prop),\n    (do\n          let r_last ← $ᵖ F\n          let r_init ← $ᵖ (Fin n → F)\n          pure (P (Fin.snoc r_init r_last)))\n        True =\n      (do\n          let r ← $ᵖ (Fin (n + 1) → F)\n          pure (P r))\n        True\nmultilinearCombine_snoc :\n  ∀ (n : ℕ) (u : WordStack A (Fin (2 ^ (n + 1))) ι) (r_init : Fin n → F) (r_last : F),\n    multilinearCombine u (Fin.snoc r_init r_last) =\n      multilinearCombine\n        (affineLineEvaluation (splitHalfRowWiseInterleavedWords u).1 (splitHalfRowWiseInterleavedWords u).2 r_last)\n        r_init\nϑ : ℕ\nih : ϑ > 0 → δ_ε_multilinearCorrelatedAgreement_Nat (↑MC) ϑ e ε\nhϑ_gt_0✝ : ϑ + 1 > 0\nhϑ_zero : ¬ϑ = 0\nhϑ_pos : ϑ > 0\nihϑ : δ_ε_multilinearCorrelatedAgreement_Nat (↑MC) ϑ e ε\nu : WordStack A (Fin (2 ^ (ϑ + 1))) ι\nhu :\n  (do\n        let r ← $ᵖ (Fin (ϑ + 1) → F)\n        pure (Δ₀(multilinearCombine u r, ↑MC) ≤ ↑e))\n      True >\n    ↑↑(ϑ + 1) * ↑ε / ↑↑(Fintype.card F)\nU₀ : WordStack A (Fin (2 ^ ϑ)) ι := (splitHalfRowWiseInterleavedWords u).1\nU₁ : WordStack A (Fin (2 ^ ϑ)) ι := (splitHalfRowWiseInterleavedWords u).2\nR : Finset F := R_star_tensor MC U₀ U₁\nhu_split :\n  (do\n        let r_last ← $ᵖ F\n        let r_init ← $ᵖ (Fin ϑ → F)\n        pure (multilinearCombine_affineComb_split_last_close MC u e r_last r_init))\n      True >\n    ↑(↑(ϑ + 1) * ↑ε) / ↑↑(Fintype.card F)\nhR_raw :\n  have U₀ := (splitHalfRowWiseInterleavedWords u).1;\n  have U₁ := (splitHalfRowWiseInterleavedWords u).2;\n  have R_star_set := R_star_tensor MC U₀ U₁;\n  (do\n        let r ← $ᵖ F\n        pure (r ∈ R_star_set))\n      True >\n    ↑ε / ↑(Fintype.card F)\nhR :\n  (do\n        let r ← $ᵖ F\n        pure (r ∈ R))\n      True >\n    ↑ε / ↑(Fintype.card F)\nhline :\n  (do\n        let r ← $ᵖ F\n        pure (Δ₀(affineLineEvaluation (⋈|U₀) (⋈|U₁) r, ↑(CodeInterleavable.interleaveCode MC (Fin (2 ^ ϑ)))) ≤ ↑e))\n      True >\n    ↑↑ε / ↑↑(Fintype.card F)\nhpow : 2 ^ ϑ ≥ 1\nhpair : Δ₀(⋈|finMapTwoWords (⋈|U₀) (⋈|U₁), interleavedCodeSet ↑(CodeInterleavable.interleaveCode MC (Fin (2 ^ ϑ)))) ≤ ↑e\n⊢ Δ₀(⋈|u, interleavedCodeSet ↑MC) ≤ ↑e"
+          ],
+          "kind": "tactic",
+          "start": 79706
+        }
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 12,
+          "line": 1243
+        },
+        "end_position": {
+          "column": 28,
+          "line": 1243
+        },
+        "message": "This simp argument is unused:\n  Fintype.card_fun\n\nHint: Omit it from the simp argument list.\n  simp [̵F̵i̵n̵t̵y̵p̵e̵.̵c̵a̵r̵d̵_̵f̵u̵n̵,̵ ̵p̵o̵w̵_̵s̵u̵c̵c̵'̵]̵[̲p̲o̲w̲_̲s̲u̲c̲c̲'̲]̲\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "This simp argument is unused:\n  Fintype.card_fun\n\nHint: Omit it from the simp argument list.\n  simp [̵F̵i̵n̵t̵y̵p̵e̵.̵c̵a̵r̵d̵_̵f̵u̵n̵,̵ ̵p̵o̵w̵_̵s̵u̵c̵c̵'̵]̵[̲p̲o̲w̲_̲s̲u̲c̲c̲'̲]̲\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+          "endPos": {
+            "column": 28,
+            "line": 1243
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unusedSimpArgs",
+          "pos": {
+            "column": 12,
+            "line": 1243
+          },
+          "severity": "warning"
+        },
+        "source_line": "    · simp [Fintype.card_fun, pow_succ']",
+        "start_offset": 64405,
+        "start_byte_offset": 68493,
+        "end_offset": 64421,
+        "end_byte_offset": 68509,
+        "source_text": "Fintype.card_fun"
+      },
+      {
+        "severity": "information",
+        "position": {
+          "column": 0,
+          "line": 1405
+        },
+        "end_position": {
+          "column": 6,
+          "line": 1405
+        },
+        "message": "interleaved_affine_gaps_imply_tensor_gaps.{l} {ι : Type l} [Fintype ι] [Nonempty ι] [DecidableEq ι] {F : Type}\n  [CommRing F] [Fintype F] {A : Type} [DecidableEq A] [AddCommGroup A] [Module F A] (MC : ModuleCode ι F A) {e ε : ℕ}\n  (hC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε)\n  (h_interleaved_gaps :\n    ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(Code.CodeInterleavable.interleaveCode MC (Fin m))) e ε)\n  (ϑ : ℕ) (hϑ_gt_0 : ϑ > 0) : δ_ε_multilinearCorrelatedAgreement_Nat (↑MC) ϑ e ε",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "interleaved_affine_gaps_imply_tensor_gaps.{l} {ι : Type l} [Fintype ι] [Nonempty ι] [DecidableEq ι] {F : Type}\n  [CommRing F] [Fintype F] {A : Type} [DecidableEq A] [AddCommGroup A] [Module F A] (MC : ModuleCode ι F A) {e ε : ℕ}\n  (hC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε)\n  (h_interleaved_gaps :\n    ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(Code.CodeInterleavable.interleaveCode MC (Fin m))) e ε)\n  (ϑ : ℕ) (hϑ_gt_0 : ϑ > 0) : δ_ε_multilinearCorrelatedAgreement_Nat (↑MC) ϑ e ε",
+          "endPos": {
+            "column": 6,
+            "line": 1405
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 0,
+            "line": 1405
+          },
+          "severity": "information"
+        }
+      },
+      {
+        "severity": "information",
+        "position": {
+          "column": 0,
+          "line": 1406
+        },
+        "end_position": {
+          "column": 6,
+          "line": 1406
+        },
+        "message": "'interleaved_affine_gaps_imply_tensor_gaps' depends on axioms: [propext, sorryAx, Classical.choice, Quot.sound]",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "'interleaved_affine_gaps_imply_tensor_gaps' depends on axioms: [propext, sorryAx, Classical.choice, Quot.sound]",
+          "endPos": {
+            "column": 6,
+            "line": 1406
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 0,
+            "line": 1406
+          },
+          "severity": "information"
+        }
+      }
+    ],
+    "goals": [
+      "↑↑(#{r | P (Fin.snoc r.2 r.1)}) = ↑↑(#(filter P univ))"
+    ],
+    "local_context": [
+      "case e_a\nι : Type l\ninst✝⁷ : Fintype ι\ninst✝⁶ : Nonempty ι\ninst✝⁵ : DecidableEq ι\nF : Type\ninst✝⁴ : CommRing F\ninst✝³ : Fintype F\nA : Type\ninst✝² : DecidableEq A\ninst✝¹ : AddCommGroup A\ninst✝ : Module F A\nMC : ModuleCode ι F A\ne ε : ℕ\nhC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε\nh_interleaved_gaps : ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε\nn : ℕ\nP : (Fin (n + 1) → F) → Prop"
+    ],
+    "sorries": [
+      {
+        "kind": "transitive_dependency",
+        "axiom": "sorryAx",
+        "position": null,
+        "end_position": null
+      }
+    ],
+    "axioms": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext",
+      "sorryAx"
+    ],
+    "detail": null,
+    "raw_lean_output": "{\"caption\":\"\",\"data\":\"Invalid projection: Type of\\n  p\\nis not known; cannot resolve projection `2`\",\"endPos\":{\"column\":32,\"line\":1227},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"[anonymous]\",\"pos\":{\"column\":29,\"line\":1227},\"severity\":\"error\"}\n{\"caption\":\"\",\"data\":\"Invalid projection: Type of\\n  p\\nis not known; cannot resolve projection `1`\",\"endPos\":{\"column\":36,\"line\":1227},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"[anonymous]\",\"pos\":{\"column\":33,\"line\":1227},\"severity\":\"error\"}\n{\"caption\":\"\",\"data\":\"Type mismatch\\n  card_bij (fun p x => Fin.snoc ?m.161 ?m.162) ?m.165 ?m.166 ?m.167\\nhas type\\n  #?m.153 = #?m.154\\nbut is expected to have type\\n  ↑↑(#{r | P (Fin.snoc r.2 r.1)}) = ↑↑(#(filter P univ))\",\"endPos\":{\"column\":46,\"line\":1227},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"[anonymous]\",\"pos\":{\"column\":6,\"line\":1226},\"severity\":\"error\"}\n{\"caption\":\"\",\"data\":\"Tactic `rfl` failed: The left-hand side\\n  multilinearCombine u (Fin.snoc r_init r_last)\\nis not definitionally equal to the right-hand side\\n  multilinearCombine\\n    (affineLineEvaluation (splitHalfRowWiseInterleavedWords u).1 (splitHalfRowWiseInterleavedWords u).2 r_last) r_init\\n\\nι : Type l\\ninst✝⁷ : Fintype ι\\ninst✝⁶ : Nonempty ι\\ninst✝⁵ : DecidableEq ι\\nF : Type\\ninst✝⁴ : CommRing F\\ninst✝³ : Fintype F\\nA : Type\\ninst✝² : DecidableEq A\\ninst✝¹ : AddCommGroup A\\ninst✝ : Module F A\\nMC : ModuleCode ι F A\\ne ε : ℕ\\nhC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε\\nh_interleaved_gaps : ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε\\nprob_snoc :\\n  ∀ (n : ℕ) (P : (Fin (n + 1) → F) → Prop),\\n    (do\\n          let r_last ← $ᵖ F\\n          let r_init ← $ᵖ (Fin n → F)\\n          pure (P (Fin.snoc r_init r_last)))\\n        True =\\n      (do\\n          let r ← $ᵖ (Fin (n + 1) → F)\\n          pure (P r))\\n        True\\nn : ℕ\\nu : WordStack A (Fin (2 ^ (n + 1))) ι\\nr_init : Fin n → F\\nr_last : F\\n⊢ multilinearCombine u (Fin.snoc r_init r_last) =\\n    multilinearCombine\\n      (affineLineEvaluation (splitHalfRowWiseInterleavedWords u).1 (splitHalfRowWiseInterleavedWords u).2 r_last) r_init\",\"endPos\":{\"column\":7,\"line\":1253},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"[anonymous]\",\"pos\":{\"column\":4,\"line\":1253},\"severity\":\"error\"}\n{\"caption\":\"\",\"data\":\"Type mismatch: After simplification, term\\n  hu\\n has type\\n  ↑ε / ↑(Fintype.card F) <\\n    (do\\n        let r_last ← $ᵖ F\\n        (fun a =>\\n              Δ₀(multilinearCombine (((1 - r_last) • fun rowIdx => u 0) + r_last • fun rowIdx => u 1) a, ↑MC) ≤ ↑e) <$>\\n            $ᵖ (Fin 0 → F))\\n      True\\nbut is expected to have type\\n  ↑ε / ↑(Fintype.card F) < ((fun a => Δ₀((1 - a) • u 0 + a • u 1, ↑MC) ≤ ↑e) <$> $ᵖ F) True\",\"endPos\":{\"column\":54,\"line\":1272},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"[anonymous]\",\"pos\":{\"column\":10,\"line\":1271},\"severity\":\"error\"}\n{\"caption\":\"\",\"data\":\"Type mismatch: After simplification, term\\n  hu\\n has type\\n  @GT.gt ENNReal ENNReal.instPartialOrder.toLT\\n    ((do\\n        let r_last ← $ᵖ F\\n        let r_init ← $ᵖ (Fin ϑ → F)\\n        pure\\n            (Δ₀(multilinearCombine\\n                  (affineLineEvaluation (splitHalfRowWiseInterleavedWords u).1 (splitHalfRowWiseInterleavedWords u).2\\n                    r_last)\\n                  r_init,\\n                ↑MC) ≤\\n              ↑e))\\n      True)\\n    (↑↑(ϑ + 1) * ↑ε / ↑↑(Fintype.card F))\\nbut is expected to have type\\n  @GT.gt ENNReal ENNReal.instPartialOrder.toLT\\n    ((do\\n        let r_last ← $ᵖ F\\n        let r_init ← $ᵖ (Fin ϑ → F)\\n        pure\\n            (Δ₀(multilinearCombine\\n                  (affineLineEvaluation (splitHalfRowWiseInterleavedWords u).1 (splitHalfRowWiseInterleavedWords u).2\\n                    r_last)\\n                  r_init,\\n                ↑MC) ≤\\n              ↑e))\\n      True)\\n    (↑(↑(ϑ + 1) * ↑ε) / ↑↑(Fintype.card F))\",\"endPos\":{\"column\":45,\"line\":1298},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"[anonymous]\",\"pos\":{\"column\":10,\"line\":1297},\"severity\":\"error\"}\n{\"caption\":\"\",\"data\":\"failed to synthesize instance of type class\\n  Interleavable (Word (ι → A) (Fin (2 ^ ϑ))) ?m.954\\n\\nHint: Type class instance resolution failures can be inspected with the `set_option trace.Meta.synthInstance true` command.\",\"endPos\":{\"column\":58,\"line\":1326},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"lean.synthInstanceFailed._namedError\",\"pos\":{\"column\":16,\"line\":1326},\"severity\":\"error\"}\n{\"caption\":\"\",\"data\":\"Type mismatch: After simplification, term\\n  hpair\\n has type\\n  Δ₀(Matrix.transpose\\n        (finMapTwoWords (Matrix.transpose fun rowIdx => u ⟨↑rowIdx, ⋯⟩)\\n          (Matrix.transpose fun rowIdx => u ⟨↑rowIdx + 2 ^ ϑ, ⋯⟩)),\\n      {V |\\n        V.transpose 0 ∈ {V | ∀ (k : Fin (2 ^ ϑ)), V.transpose k ∈ MC} ∧\\n          V.transpose 1 ∈ {V | ∀ (k : Fin (2 ^ ϑ)), V.transpose k ∈ MC}}) ≤\\n    ↑e\\nbut is expected to have type\\n  Δ₀(Matrix.transpose u, {V | ∀ (k : Fin (2 ^ (ϑ + 1))), V.transpose k ∈ MC}) ≤ ↑e\",\"endPos\":{\"column\":66,\"line\":1340},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"[anonymous]\",\"pos\":{\"column\":8,\"line\":1337},\"severity\":\"error\"}\n{\"caption\":\"\",\"data\":\"This simp argument is unused:\\n  Fintype.card_fun\\n\\nHint: Omit it from the simp argument list.\\n  simp [̵F̵i̵n̵t̵y̵p̵e̵.̵c̵a̵r̵d̵_̵f̵u̵n̵,̵ ̵p̵o̵w̵_̵s̵u̵c̵c̵'̵]̵[̲p̲o̲w̲_̲s̲u̲c̲c̲'̲]̲\\n\\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`\",\"endPos\":{\"column\":28,\"line\":1243},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"linter.unusedSimpArgs\",\"pos\":{\"column\":12,\"line\":1243},\"severity\":\"warning\"}\n{\"caption\":\"\",\"data\":\"interleaved_affine_gaps_imply_tensor_gaps.{l} {ι : Type l} [Fintype ι] [Nonempty ι] [DecidableEq ι] {F : Type}\\n  [CommRing F] [Fintype F] {A : Type} [DecidableEq A] [AddCommGroup A] [Module F A] (MC : ModuleCode ι F A) {e ε : ℕ}\\n  (hC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε)\\n  (h_interleaved_gaps :\\n    ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(Code.CodeInterleavable.interleaveCode MC (Fin m))) e ε)\\n  (ϑ : ℕ) (hϑ_gt_0 : ϑ > 0) : δ_ε_multilinearCorrelatedAgreement_Nat (↑MC) ϑ e ε\",\"endPos\":{\"column\":6,\"line\":1405},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"[anonymous]\",\"pos\":{\"column\":0,\"line\":1405},\"severity\":\"information\"}\n{\"caption\":\"\",\"data\":\"'interleaved_affine_gaps_imply_tensor_gaps' depends on axioms: [propext, sorryAx, Classical.choice, Quot.sound]\",\"endPos\":{\"column\":6,\"line\":1406},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"[anonymous]\",\"pos\":{\"column\":0,\"line\":1406},\"severity\":\"information\"}\n"
+  },
+  "diagnosis": "The remaining goals are transport equalities. Uniform parameters must be reindexed through the bijection `(r_last, r_init) ↦ Fin.snoc r_init r_last`; affine combinations must commute with interleaving/transposition; and the final joint-proximity statement must be normalized explicitly before simplification.",
+  "duplicate_cache": false,
+  "available_at": 1792775165.163431,
+  "cumulative_calls": 4,
+  "cumulative_tokens": 236896,
+  "api_spend_usd": null
+}

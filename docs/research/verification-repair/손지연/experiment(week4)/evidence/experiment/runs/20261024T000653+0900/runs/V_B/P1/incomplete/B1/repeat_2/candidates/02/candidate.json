@@ -1,0 +1,1055 @@
+{
+  "call": 2,
+  "origin": "generated",
+  "body": "by\n  intro v Hin\n  induction post <;>\n    simp [OldExpressions.substOld,\n      Imperative.HasVarsPure.getVars,\n      Lambda.LExpr.LExpr.getVars] at *\n  case app fn e fn_ih e_ih =>\n    split at Hin\n    · split at Hin <;>\n        simp_all [Imperative.HasVarsPure.getVars,\n          Lambda.LExpr.LExpr.getVars]\n    · simp [Imperative.HasVarsPure.getVars,\n          Lambda.LExpr.LExpr.getVars] at Hin ⊢\n      rcases Hin with Hin | Hin\n      · rcases fn_ih Hin with Hin | Hin\n        · exact Or.inl (Or.inl Hin)\n        · exact Or.inr Hin\n      · rcases e_ih Hin with Hin | Hin\n        · exact Or.inl (Or.inr Hin)\n        · exact Or.inr Hin\n  all_goals grind",
+  "proof_sha256": "0e3b4db433c88a4016495a5b6cb733abfe0b20c7caeba32f91192a25b44cf5f9",
+  "full_source_sha256": "24550815fd151388bc9990f37e33bc6a4b4dc4388dcf6f8f868ef50244f3ea9a",
+  "eligible": false,
+  "verification": {
+    "task_id": "P1",
+    "attempt": "candidate_02",
+    "candidate_hash": "24550815fd151388bc9990f37e33bc6a4b4dc4388dcf6f8f868ef50244f3ea9a",
+    "environment_id": "78838691b7ea5b4fe226207f8c51008d414262a54febefbcea237fd4aa2d6cfa",
+    "check_kind": "candidate",
+    "status": "proof_error",
+    "process_exit_code": 1,
+    "diagnostics": [
+      {
+        "severity": "warning",
+        "position": {
+          "column": 8,
+          "line": 171
+        },
+        "end_position": {
+          "column": 29,
+          "line": 171
+        },
+        "message": "declaration uses 'sorry'",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "declaration uses 'sorry'",
+          "endPos": {
+            "column": 29,
+            "line": 171
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P1/incomplete/B1/repeat_2/validation/lean/005_candidate_02/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "hasSorry",
+          "pos": {
+            "column": 8,
+            "line": 171
+          },
+          "severity": "warning"
+        },
+        "source_line": "theorem callElimBlockNoExcept :",
+        "start_offset": 5227,
+        "start_byte_offset": 5259,
+        "end_offset": 5248,
+        "end_byte_offset": 5280,
+        "source_text": "callElimBlockNoExcept"
+      },
+      {
+        "severity": "error",
+        "position": {
+          "column": 23,
+          "line": 3108
+        },
+        "end_position": {
+          "column": 35,
+          "line": 3108
+        },
+        "message": "Application type mismatch: The argument\n  Or.inl Hin\nhas type\n  v ∈ Lambda.LExpr.LExpr.getVars fn ∨ ?m.243\nbut is expected to have type\n  v ∈ Lambda.LExpr.LExpr.getVars fn\nin the application\n  Or.inl (Or.inl Hin)",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "Application type mismatch: The argument\n  Or.inl Hin\nhas type\n  v ∈ Lambda.LExpr.LExpr.getVars fn ∨ ?m.243\nbut is expected to have type\n  v ∈ Lambda.LExpr.LExpr.getVars fn\nin the application\n  Or.inl (Or.inl Hin)",
+          "endPos": {
+            "column": 35,
+            "line": 3108
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P1/incomplete/B1/repeat_2/validation/lean/005_candidate_02/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 23,
+            "line": 3108
+          },
+          "severity": "error"
+        },
+        "source_line": "        · exact Or.inl (Or.inl Hin)",
+        "start_offset": 97660,
+        "start_byte_offset": 99069,
+        "end_offset": 97672,
+        "end_byte_offset": 99081,
+        "source_text": "(Or.inl Hin)",
+        "expected_actual_types": {
+          "actual": "v ∈ Lambda.LExpr.LExpr.getVars fn ∨ ?m.243",
+          "expected": "v ∈ Lambda.LExpr.LExpr.getVars fn"
+        },
+        "failed_tactic": "exact Or.inl (Or.inl Hin)",
+        "tactic_range": {
+          "position": {
+            "line": 3108,
+            "column": 10
+          },
+          "end_position": {
+            "line": 3108,
+            "column": 35
+          },
+          "start_offset": 97647,
+          "end_offset": 97672
+        },
+        "goals": [
+          "v ∈ Lambda.LExpr.LExpr.getVars fn ∨ v ∈ Lambda.LExpr.LExpr.getVars e ∨ v = h1"
+        ],
+        "local_context": [
+          "case h_2.inl.inl\nh2 : Expression.Ident\nm : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\nh1 :\n  Lambda.Identifier\n    { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.IDMeta\nty : Option { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.TypeType\nv : Expression.Ident\nm✝ : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\nfn e : Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\nfn_ih :\n  v ∈ Lambda.LExpr.LExpr.getVars (substOld h2 (Lambda.LExpr.fvar m h1 ty) fn) →\n    v ∈ Lambda.LExpr.LExpr.getVars fn ∨ v = h1\ne_ih :\n  v ∈ Lambda.LExpr.LExpr.getVars (substOld h2 (Lambda.LExpr.fvar m h1 ty) e) → v ∈ Lambda.LExpr.LExpr.getVars e ∨ v = h1\ne1✝ e2✝ : Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\nx✝ :\n  ∀ (m : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata)\n    (ty :\n      Option { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.TypeType)\n    (m_1 :\n      { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata)\n    (x :\n      Lambda.Identifier\n        { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.IDMeta)\n    (ty_1 :\n      Option { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.TypeType),\n    fn = Lambda.LExpr.op m { name := \"old\", metadata := Visibility.unres } ty → e = Lambda.LExpr.fvar m_1 x ty_1 → False\nHin✝ : v ∈ Lambda.LExpr.LExpr.getVars (substOld h2 (Lambda.LExpr.fvar m h1 ty) fn)\nHin : v ∈ Lambda.LExpr.LExpr.getVars fn"
+        ],
+        "proof_state_source": "lean_infotree_before_tactic",
+        "proof_state_raw": {
+          "depth": 21,
+          "end": 106212,
+          "goals_after": [],
+          "goals_before": [
+            "case h_2.inl.inl\nh2 : Expression.Ident\nm : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\nh1 :\n  Lambda.Identifier\n    { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.IDMeta\nty : Option { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.TypeType\nv : Expression.Ident\nm✝ : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\nfn e : Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\nfn_ih :\n  v ∈ Lambda.LExpr.LExpr.getVars (substOld h2 (Lambda.LExpr.fvar m h1 ty) fn) →\n    v ∈ Lambda.LExpr.LExpr.getVars fn ∨ v = h1\ne_ih :\n  v ∈ Lambda.LExpr.LExpr.getVars (substOld h2 (Lambda.LExpr.fvar m h1 ty) e) → v ∈ Lambda.LExpr.LExpr.getVars e ∨ v = h1\ne1✝ e2✝ : Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\nx✝ :\n  ∀ (m : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata)\n    (ty :\n      Option { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.TypeType)\n    (m_1 :\n      { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata)\n    (x :\n      Lambda.Identifier\n        { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.IDMeta)\n    (ty_1 :\n      Option { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.TypeType),\n    fn = Lambda.LExpr.op m { name := \"old\", metadata := Visibility.unres } ty → e = Lambda.LExpr.fvar m_1 x ty_1 → False\nHin✝ : v ∈ Lambda.LExpr.LExpr.getVars (substOld h2 (Lambda.LExpr.fvar m h1 ty) fn)\nHin : v ∈ Lambda.LExpr.LExpr.getVars fn\n⊢ v ∈ Lambda.LExpr.LExpr.getVars fn ∨ v ∈ Lambda.LExpr.LExpr.getVars e ∨ v = h1"
+          ],
+          "kind": "tactic",
+          "start": 106187
+        }
+      },
+      {
+        "severity": "error",
+        "position": {
+          "column": 23,
+          "line": 3109
+        },
+        "end_position": {
+          "column": 26,
+          "line": 3109
+        },
+        "message": "Application type mismatch: The argument\n  Hin\nhas type\n  v = h1\nbut is expected to have type\n  v ∈ Lambda.LExpr.LExpr.getVars e ∨ v = h1\nin the application\n  Or.inr Hin",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "Application type mismatch: The argument\n  Hin\nhas type\n  v = h1\nbut is expected to have type\n  v ∈ Lambda.LExpr.LExpr.getVars e ∨ v = h1\nin the application\n  Or.inr Hin",
+          "endPos": {
+            "column": 26,
+            "line": 3109
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P1/incomplete/B1/repeat_2/validation/lean/005_candidate_02/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 23,
+            "line": 3109
+          },
+          "severity": "error"
+        },
+        "source_line": "        · exact Or.inr Hin",
+        "start_offset": 97696,
+        "start_byte_offset": 99106,
+        "end_offset": 97699,
+        "end_byte_offset": 99109,
+        "source_text": "Hin",
+        "expected_actual_types": {
+          "actual": "v = h1",
+          "expected": "v ∈ Lambda.LExpr.LExpr.getVars e ∨ v = h1"
+        },
+        "failed_tactic": "exact Or.inr Hin",
+        "tactic_range": {
+          "position": {
+            "line": 3109,
+            "column": 10
+          },
+          "end_position": {
+            "line": 3109,
+            "column": 26
+          },
+          "start_offset": 97683,
+          "end_offset": 97699
+        },
+        "goals": [
+          "v ∈ Lambda.LExpr.LExpr.getVars fn ∨ v ∈ Lambda.LExpr.LExpr.getVars e ∨ v = h1"
+        ],
+        "local_context": [
+          "case h_2.inl.inr\nh2 : Expression.Ident\nm : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\nh1 :\n  Lambda.Identifier\n    { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.IDMeta\nty : Option { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.TypeType\nv : Expression.Ident\nm✝ : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\nfn e : Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\nfn_ih :\n  v ∈ Lambda.LExpr.LExpr.getVars (substOld h2 (Lambda.LExpr.fvar m h1 ty) fn) →\n    v ∈ Lambda.LExpr.LExpr.getVars fn ∨ v = h1\ne_ih :\n  v ∈ Lambda.LExpr.LExpr.getVars (substOld h2 (Lambda.LExpr.fvar m h1 ty) e) → v ∈ Lambda.LExpr.LExpr.getVars e ∨ v = h1\ne1✝ e2✝ : Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\nx✝ :\n  ∀ (m : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata)\n    (ty :\n      Option { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.TypeType)\n    (m_1 :\n      { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata)\n    (x :\n      Lambda.Identifier\n        { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.IDMeta)\n    (ty_1 :\n      Option { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.TypeType),\n    fn = Lambda.LExpr.op m { name := \"old\", metadata := Visibility.unres } ty → e = Lambda.LExpr.fvar m_1 x ty_1 → False\nHin✝ : v ∈ Lambda.LExpr.LExpr.getVars (substOld h2 (Lambda.LExpr.fvar m h1 ty) fn)\nHin : v = h1"
+        ],
+        "proof_state_source": "lean_infotree_before_tactic",
+        "proof_state_raw": {
+          "depth": 21,
+          "end": 106240,
+          "goals_after": [],
+          "goals_before": [
+            "case h_2.inl.inr\nh2 : Expression.Ident\nm : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\nh1 :\n  Lambda.Identifier\n    { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.IDMeta\nty : Option { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.TypeType\nv : Expression.Ident\nm✝ : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\nfn e : Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\nfn_ih :\n  v ∈ Lambda.LExpr.LExpr.getVars (substOld h2 (Lambda.LExpr.fvar m h1 ty) fn) →\n    v ∈ Lambda.LExpr.LExpr.getVars fn ∨ v = h1\ne_ih :\n  v ∈ Lambda.LExpr.LExpr.getVars (substOld h2 (Lambda.LExpr.fvar m h1 ty) e) → v ∈ Lambda.LExpr.LExpr.getVars e ∨ v = h1\ne1✝ e2✝ : Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\nx✝ :\n  ∀ (m : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata)\n    (ty :\n      Option { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.TypeType)\n    (m_1 :\n      { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata)\n    (x :\n      Lambda.Identifier\n        { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.IDMeta)\n    (ty_1 :\n      Option { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.TypeType),\n    fn = Lambda.LExpr.op m { name := \"old\", metadata := Visibility.unres } ty → e = Lambda.LExpr.fvar m_1 x ty_1 → False\nHin✝ : v ∈ Lambda.LExpr.LExpr.getVars (substOld h2 (Lambda.LExpr.fvar m h1 ty) fn)\nHin : v = h1\n⊢ v ∈ Lambda.LExpr.LExpr.getVars fn ∨ v ∈ Lambda.LExpr.LExpr.getVars e ∨ v = h1"
+          ],
+          "kind": "tactic",
+          "start": 106224
+        }
+      },
+      {
+        "severity": "error",
+        "position": {
+          "column": 23,
+          "line": 3111
+        },
+        "end_position": {
+          "column": 35,
+          "line": 3111
+        },
+        "message": "Application type mismatch: The argument\n  Or.inr Hin\nhas type\n  ?m.262 ∨ v ∈ Lambda.LExpr.LExpr.getVars e\nbut is expected to have type\n  v ∈ Lambda.LExpr.LExpr.getVars fn\nin the application\n  Or.inl (Or.inr Hin)",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "Application type mismatch: The argument\n  Or.inr Hin\nhas type\n  ?m.262 ∨ v ∈ Lambda.LExpr.LExpr.getVars e\nbut is expected to have type\n  v ∈ Lambda.LExpr.LExpr.getVars fn\nin the application\n  Or.inl (Or.inr Hin)",
+          "endPos": {
+            "column": 35,
+            "line": 3111
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P1/incomplete/B1/repeat_2/validation/lean/005_candidate_02/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 23,
+            "line": 3111
+          },
+          "severity": "error"
+        },
+        "source_line": "        · exact Or.inl (Or.inr Hin)",
+        "start_offset": 97762,
+        "start_byte_offset": 99174,
+        "end_offset": 97774,
+        "end_byte_offset": 99186,
+        "source_text": "(Or.inr Hin)",
+        "expected_actual_types": {
+          "actual": "?m.262 ∨ v ∈ Lambda.LExpr.LExpr.getVars e",
+          "expected": "v ∈ Lambda.LExpr.LExpr.getVars fn"
+        },
+        "failed_tactic": "exact Or.inl (Or.inr Hin)",
+        "tactic_range": {
+          "position": {
+            "line": 3111,
+            "column": 10
+          },
+          "end_position": {
+            "line": 3111,
+            "column": 35
+          },
+          "start_offset": 97749,
+          "end_offset": 97774
+        },
+        "goals": [
+          "v ∈ Lambda.LExpr.LExpr.getVars fn ∨ v ∈ Lambda.LExpr.LExpr.getVars e ∨ v = h1"
+        ],
+        "local_context": [
+          "case h_2.inr.inl\nh2 : Expression.Ident\nm : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\nh1 :\n  Lambda.Identifier\n    { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.IDMeta\nty : Option { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.TypeType\nv : Expression.Ident\nm✝ : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\nfn e : Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\nfn_ih :\n  v ∈ Lambda.LExpr.LExpr.getVars (substOld h2 (Lambda.LExpr.fvar m h1 ty) fn) →\n    v ∈ Lambda.LExpr.LExpr.getVars fn ∨ v = h1\ne_ih :\n  v ∈ Lambda.LExpr.LExpr.getVars (substOld h2 (Lambda.LExpr.fvar m h1 ty) e) → v ∈ Lambda.LExpr.LExpr.getVars e ∨ v = h1\ne1✝ e2✝ : Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\nx✝ :\n  ∀ (m : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata)\n    (ty :\n      Option { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.TypeType)\n    (m_1 :\n      { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata)\n    (x :\n      Lambda.Identifier\n        { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.IDMeta)\n    (ty_1 :\n      Option { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.TypeType),\n    fn = Lambda.LExpr.op m { name := \"old\", metadata := Visibility.unres } ty → e = Lambda.LExpr.fvar m_1 x ty_1 → False\nHin✝ : v ∈ Lambda.LExpr.LExpr.getVars (substOld h2 (Lambda.LExpr.fvar m h1 ty) e)\nHin : v ∈ Lambda.LExpr.LExpr.getVars e"
+        ],
+        "proof_state_source": "lean_infotree_before_tactic",
+        "proof_state_raw": {
+          "depth": 21,
+          "end": 106317,
+          "goals_after": [],
+          "goals_before": [
+            "case h_2.inr.inl\nh2 : Expression.Ident\nm : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\nh1 :\n  Lambda.Identifier\n    { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.IDMeta\nty : Option { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.TypeType\nv : Expression.Ident\nm✝ : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\nfn e : Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\nfn_ih :\n  v ∈ Lambda.LExpr.LExpr.getVars (substOld h2 (Lambda.LExpr.fvar m h1 ty) fn) →\n    v ∈ Lambda.LExpr.LExpr.getVars fn ∨ v = h1\ne_ih :\n  v ∈ Lambda.LExpr.LExpr.getVars (substOld h2 (Lambda.LExpr.fvar m h1 ty) e) → v ∈ Lambda.LExpr.LExpr.getVars e ∨ v = h1\ne1✝ e2✝ : Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\nx✝ :\n  ∀ (m : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata)\n    (ty :\n      Option { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.TypeType)\n    (m_1 :\n      { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata)\n    (x :\n      Lambda.Identifier\n        { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.IDMeta)\n    (ty_1 :\n      Option { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.TypeType),\n    fn = Lambda.LExpr.op m { name := \"old\", metadata := Visibility.unres } ty → e = Lambda.LExpr.fvar m_1 x ty_1 → False\nHin✝ : v ∈ Lambda.LExpr.LExpr.getVars (substOld h2 (Lambda.LExpr.fvar m h1 ty) e)\nHin : v ∈ Lambda.LExpr.LExpr.getVars e\n⊢ v ∈ Lambda.LExpr.LExpr.getVars fn ∨ v ∈ Lambda.LExpr.LExpr.getVars e ∨ v = h1"
+          ],
+          "kind": "tactic",
+          "start": 106292
+        }
+      },
+      {
+        "severity": "error",
+        "position": {
+          "column": 23,
+          "line": 3112
+        },
+        "end_position": {
+          "column": 26,
+          "line": 3112
+        },
+        "message": "Application type mismatch: The argument\n  Hin\nhas type\n  v = h1\nbut is expected to have type\n  v ∈ Lambda.LExpr.LExpr.getVars e ∨ v = h1\nin the application\n  Or.inr Hin",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "Application type mismatch: The argument\n  Hin\nhas type\n  v = h1\nbut is expected to have type\n  v ∈ Lambda.LExpr.LExpr.getVars e ∨ v = h1\nin the application\n  Or.inr Hin",
+          "endPos": {
+            "column": 26,
+            "line": 3112
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P1/incomplete/B1/repeat_2/validation/lean/005_candidate_02/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 23,
+            "line": 3112
+          },
+          "severity": "error"
+        },
+        "source_line": "        · exact Or.inr Hin",
+        "start_offset": 97798,
+        "start_byte_offset": 99211,
+        "end_offset": 97801,
+        "end_byte_offset": 99214,
+        "source_text": "Hin",
+        "expected_actual_types": {
+          "actual": "v = h1",
+          "expected": "v ∈ Lambda.LExpr.LExpr.getVars e ∨ v = h1"
+        },
+        "failed_tactic": "exact Or.inr Hin",
+        "tactic_range": {
+          "position": {
+            "line": 3112,
+            "column": 10
+          },
+          "end_position": {
+            "line": 3112,
+            "column": 26
+          },
+          "start_offset": 97785,
+          "end_offset": 97801
+        },
+        "goals": [
+          "v ∈ Lambda.LExpr.LExpr.getVars fn ∨ v ∈ Lambda.LExpr.LExpr.getVars e ∨ v = h1"
+        ],
+        "local_context": [
+          "case h_2.inr.inr\nh2 : Expression.Ident\nm : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\nh1 :\n  Lambda.Identifier\n    { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.IDMeta\nty : Option { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.TypeType\nv : Expression.Ident\nm✝ : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\nfn e : Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\nfn_ih :\n  v ∈ Lambda.LExpr.LExpr.getVars (substOld h2 (Lambda.LExpr.fvar m h1 ty) fn) →\n    v ∈ Lambda.LExpr.LExpr.getVars fn ∨ v = h1\ne_ih :\n  v ∈ Lambda.LExpr.LExpr.getVars (substOld h2 (Lambda.LExpr.fvar m h1 ty) e) → v ∈ Lambda.LExpr.LExpr.getVars e ∨ v = h1\ne1✝ e2✝ : Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\nx✝ :\n  ∀ (m : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata)\n    (ty :\n      Option { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.TypeType)\n    (m_1 :\n      { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata)\n    (x :\n      Lambda.Identifier\n        { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.IDMeta)\n    (ty_1 :\n      Option { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.TypeType),\n    fn = Lambda.LExpr.op m { name := \"old\", metadata := Visibility.unres } ty → e = Lambda.LExpr.fvar m_1 x ty_1 → False\nHin✝ : v ∈ Lambda.LExpr.LExpr.getVars (substOld h2 (Lambda.LExpr.fvar m h1 ty) e)\nHin : v = h1"
+        ],
+        "proof_state_source": "lean_infotree_before_tactic",
+        "proof_state_raw": {
+          "depth": 21,
+          "end": 106345,
+          "goals_after": [],
+          "goals_before": [
+            "case h_2.inr.inr\nh2 : Expression.Ident\nm : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\nh1 :\n  Lambda.Identifier\n    { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.IDMeta\nty : Option { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.TypeType\nv : Expression.Ident\nm✝ : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\nfn e : Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\nfn_ih :\n  v ∈ Lambda.LExpr.LExpr.getVars (substOld h2 (Lambda.LExpr.fvar m h1 ty) fn) →\n    v ∈ Lambda.LExpr.LExpr.getVars fn ∨ v = h1\ne_ih :\n  v ∈ Lambda.LExpr.LExpr.getVars (substOld h2 (Lambda.LExpr.fvar m h1 ty) e) → v ∈ Lambda.LExpr.LExpr.getVars e ∨ v = h1\ne1✝ e2✝ : Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\nx✝ :\n  ∀ (m : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata)\n    (ty :\n      Option { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.TypeType)\n    (m_1 :\n      { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata)\n    (x :\n      Lambda.Identifier\n        { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.IDMeta)\n    (ty_1 :\n      Option { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.TypeType),\n    fn = Lambda.LExpr.op m { name := \"old\", metadata := Visibility.unres } ty → e = Lambda.LExpr.fvar m_1 x ty_1 → False\nHin✝ : v ∈ Lambda.LExpr.LExpr.getVars (substOld h2 (Lambda.LExpr.fvar m h1 ty) e)\nHin : v = h1\n⊢ v ∈ Lambda.LExpr.LExpr.getVars fn ∨ v ∈ Lambda.LExpr.LExpr.getVars e ∨ v = h1"
+          ],
+          "kind": "tactic",
+          "start": 106329
+        }
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 18,
+          "line": 3102
+        },
+        "end_position": {
+          "column": 48,
+          "line": 3102
+        },
+        "message": "This simp argument is unused:\n  Imperative.HasVarsPure.getVars\n\nHint: Omit it from the simp argument list.\n  simp_all [I̵m̵p̵e̵r̵a̵t̵i̵v̵e̵.̵H̵a̵s̵V̵a̵r̵s̵P̵u̵r̵e̵.̵g̵e̵t̵V̵a̵r̵s̵,̵\n  ̵ ̵ ̵ ̵ ̵ ̵ ̵ ̵ ̵ ̵ ̵Lambda.LExpr.LExpr.getVars]\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "This simp argument is unused:\n  Imperative.HasVarsPure.getVars\n\nHint: Omit it from the simp argument list.\n  simp_all [I̵m̵p̵e̵r̵a̵t̵i̵v̵e̵.̵H̵a̵s̵V̵a̵r̵s̵P̵u̵r̵e̵.̵g̵e̵t̵V̵a̵r̵s̵,̵\n  ̵ ̵ ̵ ̵ ̵ ̵ ̵ ̵ ̵ ̵ ̵Lambda.LExpr.LExpr.getVars]\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+          "endPos": {
+            "column": 48,
+            "line": 3102
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P1/incomplete/B1/repeat_2/validation/lean/005_candidate_02/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unusedSimpArgs",
+          "pos": {
+            "column": 18,
+            "line": 3102
+          },
+          "severity": "warning"
+        },
+        "source_line": "        simp_all [Imperative.HasVarsPure.getVars,",
+        "start_offset": 97404,
+        "start_byte_offset": 98808,
+        "end_offset": 97434,
+        "end_byte_offset": 98838,
+        "source_text": "Imperative.HasVarsPure.getVars"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 12,
+          "line": 3104
+        },
+        "end_position": {
+          "column": 42,
+          "line": 3104
+        },
+        "message": "This simp argument is unused:\n  Imperative.HasVarsPure.getVars\n\nHint: Omit it from the simp argument list.\n  simp [I̵m̵p̵e̵r̵a̵t̵i̵v̵e̵.̵H̵a̵s̵V̵a̵r̵s̵P̵u̵r̵e̵.̵g̵e̵t̵V̵a̵r̵s̵,̵\n  ̵ ̵ ̵ ̵ ̵ ̵ ̵ ̵ ̵ ̵ ̵Lambda.LExpr.LExpr.getVars] at Hin ⊢\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "This simp argument is unused:\n  Imperative.HasVarsPure.getVars\n\nHint: Omit it from the simp argument list.\n  simp [I̵m̵p̵e̵r̵a̵t̵i̵v̵e̵.̵H̵a̵s̵V̵a̵r̵s̵P̵u̵r̵e̵.̵g̵e̵t̵V̵a̵r̵s̵,̵\n  ̵ ̵ ̵ ̵ ̵ ̵ ̵ ̵ ̵ ̵ ̵Lambda.LExpr.LExpr.getVars] at Hin ⊢\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+          "endPos": {
+            "column": 42,
+            "line": 3104
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P1/incomplete/B1/repeat_2/validation/lean/005_candidate_02/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unusedSimpArgs",
+          "pos": {
+            "column": 12,
+            "line": 3104
+          },
+          "severity": "warning"
+        },
+        "source_line": "    · simp [Imperative.HasVarsPure.getVars,",
+        "start_offset": 97486,
+        "start_byte_offset": 98891,
+        "end_offset": 97516,
+        "end_byte_offset": 98921,
+        "source_text": "Imperative.HasVarsPure.getVars"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 8,
+          "line": 3211
+        },
+        "end_position": {
+          "column": 32,
+          "line": 3211
+        },
+        "message": "declaration uses 'sorry'",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "declaration uses 'sorry'",
+          "endPos": {
+            "column": 32,
+            "line": 3211
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P1/incomplete/B1/repeat_2/validation/lean/005_candidate_02/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "hasSorry",
+          "pos": {
+            "column": 8,
+            "line": 3211
+          },
+          "severity": "warning"
+        },
+        "source_line": "theorem callElimStatementCorrect [LawfulBEq Expression.Expr] :",
+        "start_offset": 102618,
+        "start_byte_offset": 104051,
+        "end_offset": 102642,
+        "end_byte_offset": 104075,
+        "source_text": "callElimStatementCorrect"
+      },
+      {
+        "severity": "information",
+        "position": {
+          "column": 0,
+          "line": 4631
+        },
+        "end_position": {
+          "column": 6,
+          "line": 4631
+        },
+        "message": "CallElimCorrect.substOldPostSubset {h2 : Core.Expression.Ident}\n  {m :\n    { base := { Metadata := Core.ExpressionMetadata, IDMeta := Core.Visibility },\n          TypeType := Lambda.LMonoTy }.base.Metadata}\n  {h1 :\n    Lambda.Identifier\n      { base := { Metadata := Core.ExpressionMetadata, IDMeta := Core.Visibility },\n            TypeType := Lambda.LMonoTy }.base.IDMeta}\n  {ty :\n    Option\n      { base := { Metadata := Core.ExpressionMetadata, IDMeta := Core.Visibility },\n          TypeType := Lambda.LMonoTy }.TypeType}\n  {post : Core.Expression.Expr} :\n  (Imperative.HasVarsPure.getVars (Core.OldExpressions.substOld h2 (Lambda.LExpr.fvar m h1 ty) post)).Subset\n    (Imperative.HasVarsPure.getVars post ++ [h1])",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "CallElimCorrect.substOldPostSubset {h2 : Core.Expression.Ident}\n  {m :\n    { base := { Metadata := Core.ExpressionMetadata, IDMeta := Core.Visibility },\n          TypeType := Lambda.LMonoTy }.base.Metadata}\n  {h1 :\n    Lambda.Identifier\n      { base := { Metadata := Core.ExpressionMetadata, IDMeta := Core.Visibility },\n            TypeType := Lambda.LMonoTy }.base.IDMeta}\n  {ty :\n    Option\n      { base := { Metadata := Core.ExpressionMetadata, IDMeta := Core.Visibility },\n          TypeType := Lambda.LMonoTy }.TypeType}\n  {post : Core.Expression.Expr} :\n  (Imperative.HasVarsPure.getVars (Core.OldExpressions.substOld h2 (Lambda.LExpr.fvar m h1 ty) post)).Subset\n    (Imperative.HasVarsPure.getVars post ++ [h1])",
+          "endPos": {
+            "column": 6,
+            "line": 4631
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P1/incomplete/B1/repeat_2/validation/lean/005_candidate_02/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 0,
+            "line": 4631
+          },
+          "severity": "information"
+        }
+      },
+      {
+        "severity": "information",
+        "position": {
+          "column": 0,
+          "line": 4632
+        },
+        "end_position": {
+          "column": 6,
+          "line": 4632
+        },
+        "message": "'CallElimCorrect.substOldPostSubset' depends on axioms: [propext, sorryAx, Classical.choice, Quot.sound]",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "'CallElimCorrect.substOldPostSubset' depends on axioms: [propext, sorryAx, Classical.choice, Quot.sound]",
+          "endPos": {
+            "column": 6,
+            "line": 4632
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P1/incomplete/B1/repeat_2/validation/lean/005_candidate_02/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 0,
+            "line": 4632
+          },
+          "severity": "information"
+        }
+      }
+    ],
+    "goals": [
+      "v ∈ Lambda.LExpr.LExpr.getVars fn ∨ v ∈ Lambda.LExpr.LExpr.getVars e ∨ v = h1"
+    ],
+    "local_context": [
+      "case h_2.inl.inl\nh2 : Expression.Ident\nm : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\nh1 :\n  Lambda.Identifier\n    { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.IDMeta\nty : Option { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.TypeType\nv : Expression.Ident\nm✝ : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\nfn e : Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\nfn_ih :\n  v ∈ Lambda.LExpr.LExpr.getVars (substOld h2 (Lambda.LExpr.fvar m h1 ty) fn) →\n    v ∈ Lambda.LExpr.LExpr.getVars fn ∨ v = h1\ne_ih :\n  v ∈ Lambda.LExpr.LExpr.getVars (substOld h2 (Lambda.LExpr.fvar m h1 ty) e) → v ∈ Lambda.LExpr.LExpr.getVars e ∨ v = h1\ne1✝ e2✝ : Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\nx✝ :\n  ∀ (m : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata)\n    (ty :\n      Option { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.TypeType)\n    (m_1 :\n      { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata)\n    (x :\n      Lambda.Identifier\n        { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.IDMeta)\n    (ty_1 :\n      Option { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.TypeType),\n    fn = Lambda.LExpr.op m { name := \"old\", metadata := Visibility.unres } ty → e = Lambda.LExpr.fvar m_1 x ty_1 → False\nHin✝ : v ∈ Lambda.LExpr.LExpr.getVars (substOld h2 (Lambda.LExpr.fvar m h1 ty) fn)\nHin : v ∈ Lambda.LExpr.LExpr.getVars fn"
+    ],
+    "sorries": [
+      {
+        "kind": "transitive_dependency",
+        "axiom": "sorryAx",
+        "position": null,
+        "end_position": null
+      }
+    ],
+    "backend_proof_status": null,
+    "statement_check": "fixed_context_preserved",
+    "axioms": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext",
+      "sorryAx"
+    ],
+    "metrics": {
+      "proof_tokens": 94
+    },
+    "elapsed_ms": 8416,
+    "raw_log_path": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P1/incomplete/B1/repeat_2/validation/lean/005_candidate_02/stdout.log",
+    "detail": null,
+    "failure_kind": "proof_error"
+  },
+  "measurement": {
+    "proof_tokens": 94,
+    "raw_heartbeats": null,
+    "token_reduction_pct": 69.96805111821087,
+    "heartbeat_reduction_pct": null,
+    "search_score": null
+  },
+  "facts": {
+    "diagnostics": [
+      {
+        "severity": "warning",
+        "position": {
+          "column": 8,
+          "line": 171
+        },
+        "end_position": {
+          "column": 29,
+          "line": 171
+        },
+        "message": "declaration uses 'sorry'",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "declaration uses 'sorry'",
+          "endPos": {
+            "column": 29,
+            "line": 171
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "hasSorry",
+          "pos": {
+            "column": 8,
+            "line": 171
+          },
+          "severity": "warning"
+        },
+        "source_line": "theorem callElimBlockNoExcept :",
+        "start_offset": 5227,
+        "start_byte_offset": 5259,
+        "end_offset": 5248,
+        "end_byte_offset": 5280,
+        "source_text": "callElimBlockNoExcept"
+      },
+      {
+        "severity": "error",
+        "position": {
+          "column": 23,
+          "line": 3108
+        },
+        "end_position": {
+          "column": 35,
+          "line": 3108
+        },
+        "message": "Application type mismatch: The argument\n  Or.inl Hin\nhas type\n  v ∈ Lambda.LExpr.LExpr.getVars fn ∨ ?m.243\nbut is expected to have type\n  v ∈ Lambda.LExpr.LExpr.getVars fn\nin the application\n  Or.inl (Or.inl Hin)",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "Application type mismatch: The argument\n  Or.inl Hin\nhas type\n  v ∈ Lambda.LExpr.LExpr.getVars fn ∨ ?m.243\nbut is expected to have type\n  v ∈ Lambda.LExpr.LExpr.getVars fn\nin the application\n  Or.inl (Or.inl Hin)",
+          "endPos": {
+            "column": 35,
+            "line": 3108
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 23,
+            "line": 3108
+          },
+          "severity": "error"
+        },
+        "source_line": "        · exact Or.inl (Or.inl Hin)",
+        "start_offset": 97660,
+        "start_byte_offset": 99069,
+        "end_offset": 97672,
+        "end_byte_offset": 99081,
+        "source_text": "(Or.inl Hin)",
+        "expected_actual_types": {
+          "actual": "v ∈ Lambda.LExpr.LExpr.getVars fn ∨ ?m.243",
+          "expected": "v ∈ Lambda.LExpr.LExpr.getVars fn"
+        },
+        "failed_tactic": "exact Or.inl (Or.inl Hin)",
+        "tactic_range": {
+          "position": {
+            "line": 3108,
+            "column": 10
+          },
+          "end_position": {
+            "line": 3108,
+            "column": 35
+          },
+          "start_offset": 97647,
+          "end_offset": 97672
+        },
+        "goals": [
+          "v ∈ Lambda.LExpr.LExpr.getVars fn ∨ v ∈ Lambda.LExpr.LExpr.getVars e ∨ v = h1"
+        ],
+        "local_context": [
+          "case h_2.inl.inl\nh2 : Expression.Ident\nm : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\nh1 :\n  Lambda.Identifier\n    { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.IDMeta\nty : Option { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.TypeType\nv : Expression.Ident\nm✝ : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\nfn e : Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\nfn_ih :\n  v ∈ Lambda.LExpr.LExpr.getVars (substOld h2 (Lambda.LExpr.fvar m h1 ty) fn) →\n    v ∈ Lambda.LExpr.LExpr.getVars fn ∨ v = h1\ne_ih :\n  v ∈ Lambda.LExpr.LExpr.getVars (substOld h2 (Lambda.LExpr.fvar m h1 ty) e) → v ∈ Lambda.LExpr.LExpr.getVars e ∨ v = h1\ne1✝ e2✝ : Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\nx✝ :\n  ∀ (m : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata)\n    (ty :\n      Option { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.TypeType)\n    (m_1 :\n      { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata)\n    (x :\n      Lambda.Identifier\n        { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.IDMeta)\n    (ty_1 :\n      Option { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.TypeType),\n    fn = Lambda.LExpr.op m { name := \"old\", metadata := Visibility.unres } ty → e = Lambda.LExpr.fvar m_1 x ty_1 → False\nHin✝ : v ∈ Lambda.LExpr.LExpr.getVars (substOld h2 (Lambda.LExpr.fvar m h1 ty) fn)\nHin : v ∈ Lambda.LExpr.LExpr.getVars fn"
+        ],
+        "proof_state_source": "lean_infotree_before_tactic",
+        "proof_state_raw": {
+          "depth": 21,
+          "end": 106212,
+          "goals_after": [],
+          "goals_before": [
+            "case h_2.inl.inl\nh2 : Expression.Ident\nm : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\nh1 :\n  Lambda.Identifier\n    { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.IDMeta\nty : Option { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.TypeType\nv : Expression.Ident\nm✝ : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\nfn e : Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\nfn_ih :\n  v ∈ Lambda.LExpr.LExpr.getVars (substOld h2 (Lambda.LExpr.fvar m h1 ty) fn) →\n    v ∈ Lambda.LExpr.LExpr.getVars fn ∨ v = h1\ne_ih :\n  v ∈ Lambda.LExpr.LExpr.getVars (substOld h2 (Lambda.LExpr.fvar m h1 ty) e) → v ∈ Lambda.LExpr.LExpr.getVars e ∨ v = h1\ne1✝ e2✝ : Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\nx✝ :\n  ∀ (m : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata)\n    (ty :\n      Option { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.TypeType)\n    (m_1 :\n      { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata)\n    (x :\n      Lambda.Identifier\n        { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.IDMeta)\n    (ty_1 :\n      Option { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.TypeType),\n    fn = Lambda.LExpr.op m { name := \"old\", metadata := Visibility.unres } ty → e = Lambda.LExpr.fvar m_1 x ty_1 → False\nHin✝ : v ∈ Lambda.LExpr.LExpr.getVars (substOld h2 (Lambda.LExpr.fvar m h1 ty) fn)\nHin : v ∈ Lambda.LExpr.LExpr.getVars fn\n⊢ v ∈ Lambda.LExpr.LExpr.getVars fn ∨ v ∈ Lambda.LExpr.LExpr.getVars e ∨ v = h1"
+          ],
+          "kind": "tactic",
+          "start": 106187
+        }
+      },
+      {
+        "severity": "error",
+        "position": {
+          "column": 23,
+          "line": 3109
+        },
+        "end_position": {
+          "column": 26,
+          "line": 3109
+        },
+        "message": "Application type mismatch: The argument\n  Hin\nhas type\n  v = h1\nbut is expected to have type\n  v ∈ Lambda.LExpr.LExpr.getVars e ∨ v = h1\nin the application\n  Or.inr Hin",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "Application type mismatch: The argument\n  Hin\nhas type\n  v = h1\nbut is expected to have type\n  v ∈ Lambda.LExpr.LExpr.getVars e ∨ v = h1\nin the application\n  Or.inr Hin",
+          "endPos": {
+            "column": 26,
+            "line": 3109
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 23,
+            "line": 3109
+          },
+          "severity": "error"
+        },
+        "source_line": "        · exact Or.inr Hin",
+        "start_offset": 97696,
+        "start_byte_offset": 99106,
+        "end_offset": 97699,
+        "end_byte_offset": 99109,
+        "source_text": "Hin",
+        "expected_actual_types": {
+          "actual": "v = h1",
+          "expected": "v ∈ Lambda.LExpr.LExpr.getVars e ∨ v = h1"
+        },
+        "failed_tactic": "exact Or.inr Hin",
+        "tactic_range": {
+          "position": {
+            "line": 3109,
+            "column": 10
+          },
+          "end_position": {
+            "line": 3109,
+            "column": 26
+          },
+          "start_offset": 97683,
+          "end_offset": 97699
+        },
+        "goals": [
+          "v ∈ Lambda.LExpr.LExpr.getVars fn ∨ v ∈ Lambda.LExpr.LExpr.getVars e ∨ v = h1"
+        ],
+        "local_context": [
+          "case h_2.inl.inr\nh2 : Expression.Ident\nm : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\nh1 :\n  Lambda.Identifier\n    { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.IDMeta\nty : Option { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.TypeType\nv : Expression.Ident\nm✝ : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\nfn e : Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\nfn_ih :\n  v ∈ Lambda.LExpr.LExpr.getVars (substOld h2 (Lambda.LExpr.fvar m h1 ty) fn) →\n    v ∈ Lambda.LExpr.LExpr.getVars fn ∨ v = h1\ne_ih :\n  v ∈ Lambda.LExpr.LExpr.getVars (substOld h2 (Lambda.LExpr.fvar m h1 ty) e) → v ∈ Lambda.LExpr.LExpr.getVars e ∨ v = h1\ne1✝ e2✝ : Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\nx✝ :\n  ∀ (m : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata)\n    (ty :\n      Option { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.TypeType)\n    (m_1 :\n      { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata)\n    (x :\n      Lambda.Identifier\n        { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.IDMeta)\n    (ty_1 :\n      Option { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.TypeType),\n    fn = Lambda.LExpr.op m { name := \"old\", metadata := Visibility.unres } ty → e = Lambda.LExpr.fvar m_1 x ty_1 → False\nHin✝ : v ∈ Lambda.LExpr.LExpr.getVars (substOld h2 (Lambda.LExpr.fvar m h1 ty) fn)\nHin : v = h1"
+        ],
+        "proof_state_source": "lean_infotree_before_tactic",
+        "proof_state_raw": {
+          "depth": 21,
+          "end": 106240,
+          "goals_after": [],
+          "goals_before": [
+            "case h_2.inl.inr\nh2 : Expression.Ident\nm : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\nh1 :\n  Lambda.Identifier\n    { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.IDMeta\nty : Option { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.TypeType\nv : Expression.Ident\nm✝ : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\nfn e : Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\nfn_ih :\n  v ∈ Lambda.LExpr.LExpr.getVars (substOld h2 (Lambda.LExpr.fvar m h1 ty) fn) →\n    v ∈ Lambda.LExpr.LExpr.getVars fn ∨ v = h1\ne_ih :\n  v ∈ Lambda.LExpr.LExpr.getVars (substOld h2 (Lambda.LExpr.fvar m h1 ty) e) → v ∈ Lambda.LExpr.LExpr.getVars e ∨ v = h1\ne1✝ e2✝ : Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\nx✝ :\n  ∀ (m : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata)\n    (ty :\n      Option { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.TypeType)\n    (m_1 :\n      { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata)\n    (x :\n      Lambda.Identifier\n        { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.IDMeta)\n    (ty_1 :\n      Option { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.TypeType),\n    fn = Lambda.LExpr.op m { name := \"old\", metadata := Visibility.unres } ty → e = Lambda.LExpr.fvar m_1 x ty_1 → False\nHin✝ : v ∈ Lambda.LExpr.LExpr.getVars (substOld h2 (Lambda.LExpr.fvar m h1 ty) fn)\nHin : v = h1\n⊢ v ∈ Lambda.LExpr.LExpr.getVars fn ∨ v ∈ Lambda.LExpr.LExpr.getVars e ∨ v = h1"
+          ],
+          "kind": "tactic",
+          "start": 106224
+        }
+      },
+      {
+        "severity": "error",
+        "position": {
+          "column": 23,
+          "line": 3111
+        },
+        "end_position": {
+          "column": 35,
+          "line": 3111
+        },
+        "message": "Application type mismatch: The argument\n  Or.inr Hin\nhas type\n  ?m.262 ∨ v ∈ Lambda.LExpr.LExpr.getVars e\nbut is expected to have type\n  v ∈ Lambda.LExpr.LExpr.getVars fn\nin the application\n  Or.inl (Or.inr Hin)",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "Application type mismatch: The argument\n  Or.inr Hin\nhas type\n  ?m.262 ∨ v ∈ Lambda.LExpr.LExpr.getVars e\nbut is expected to have type\n  v ∈ Lambda.LExpr.LExpr.getVars fn\nin the application\n  Or.inl (Or.inr Hin)",
+          "endPos": {
+            "column": 35,
+            "line": 3111
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 23,
+            "line": 3111
+          },
+          "severity": "error"
+        },
+        "source_line": "        · exact Or.inl (Or.inr Hin)",
+        "start_offset": 97762,
+        "start_byte_offset": 99174,
+        "end_offset": 97774,
+        "end_byte_offset": 99186,
+        "source_text": "(Or.inr Hin)",
+        "expected_actual_types": {
+          "actual": "?m.262 ∨ v ∈ Lambda.LExpr.LExpr.getVars e",
+          "expected": "v ∈ Lambda.LExpr.LExpr.getVars fn"
+        },
+        "failed_tactic": "exact Or.inl (Or.inr Hin)",
+        "tactic_range": {
+          "position": {
+            "line": 3111,
+            "column": 10
+          },
+          "end_position": {
+            "line": 3111,
+            "column": 35
+          },
+          "start_offset": 97749,
+          "end_offset": 97774
+        },
+        "goals": [
+          "v ∈ Lambda.LExpr.LExpr.getVars fn ∨ v ∈ Lambda.LExpr.LExpr.getVars e ∨ v = h1"
+        ],
+        "local_context": [
+          "case h_2.inr.inl\nh2 : Expression.Ident\nm : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\nh1 :\n  Lambda.Identifier\n    { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.IDMeta\nty : Option { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.TypeType\nv : Expression.Ident\nm✝ : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\nfn e : Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\nfn_ih :\n  v ∈ Lambda.LExpr.LExpr.getVars (substOld h2 (Lambda.LExpr.fvar m h1 ty) fn) →\n    v ∈ Lambda.LExpr.LExpr.getVars fn ∨ v = h1\ne_ih :\n  v ∈ Lambda.LExpr.LExpr.getVars (substOld h2 (Lambda.LExpr.fvar m h1 ty) e) → v ∈ Lambda.LExpr.LExpr.getVars e ∨ v = h1\ne1✝ e2✝ : Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\nx✝ :\n  ∀ (m : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata)\n    (ty :\n      Option { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.TypeType)\n    (m_1 :\n      { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata)\n    (x :\n      Lambda.Identifier\n        { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.IDMeta)\n    (ty_1 :\n      Option { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.TypeType),\n    fn = Lambda.LExpr.op m { name := \"old\", metadata := Visibility.unres } ty → e = Lambda.LExpr.fvar m_1 x ty_1 → False\nHin✝ : v ∈ Lambda.LExpr.LExpr.getVars (substOld h2 (Lambda.LExpr.fvar m h1 ty) e)\nHin : v ∈ Lambda.LExpr.LExpr.getVars e"
+        ],
+        "proof_state_source": "lean_infotree_before_tactic",
+        "proof_state_raw": {
+          "depth": 21,
+          "end": 106317,
+          "goals_after": [],
+          "goals_before": [
+            "case h_2.inr.inl\nh2 : Expression.Ident\nm : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\nh1 :\n  Lambda.Identifier\n    { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.IDMeta\nty : Option { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.TypeType\nv : Expression.Ident\nm✝ : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\nfn e : Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\nfn_ih :\n  v ∈ Lambda.LExpr.LExpr.getVars (substOld h2 (Lambda.LExpr.fvar m h1 ty) fn) →\n    v ∈ Lambda.LExpr.LExpr.getVars fn ∨ v = h1\ne_ih :\n  v ∈ Lambda.LExpr.LExpr.getVars (substOld h2 (Lambda.LExpr.fvar m h1 ty) e) → v ∈ Lambda.LExpr.LExpr.getVars e ∨ v = h1\ne1✝ e2✝ : Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\nx✝ :\n  ∀ (m : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata)\n    (ty :\n      Option { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.TypeType)\n    (m_1 :\n      { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata)\n    (x :\n      Lambda.Identifier\n        { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.IDMeta)\n    (ty_1 :\n      Option { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.TypeType),\n    fn = Lambda.LExpr.op m { name := \"old\", metadata := Visibility.unres } ty → e = Lambda.LExpr.fvar m_1 x ty_1 → False\nHin✝ : v ∈ Lambda.LExpr.LExpr.getVars (substOld h2 (Lambda.LExpr.fvar m h1 ty) e)\nHin : v ∈ Lambda.LExpr.LExpr.getVars e\n⊢ v ∈ Lambda.LExpr.LExpr.getVars fn ∨ v ∈ Lambda.LExpr.LExpr.getVars e ∨ v = h1"
+          ],
+          "kind": "tactic",
+          "start": 106292
+        }
+      },
+      {
+        "severity": "error",
+        "position": {
+          "column": 23,
+          "line": 3112
+        },
+        "end_position": {
+          "column": 26,
+          "line": 3112
+        },
+        "message": "Application type mismatch: The argument\n  Hin\nhas type\n  v = h1\nbut is expected to have type\n  v ∈ Lambda.LExpr.LExpr.getVars e ∨ v = h1\nin the application\n  Or.inr Hin",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "Application type mismatch: The argument\n  Hin\nhas type\n  v = h1\nbut is expected to have type\n  v ∈ Lambda.LExpr.LExpr.getVars e ∨ v = h1\nin the application\n  Or.inr Hin",
+          "endPos": {
+            "column": 26,
+            "line": 3112
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 23,
+            "line": 3112
+          },
+          "severity": "error"
+        },
+        "source_line": "        · exact Or.inr Hin",
+        "start_offset": 97798,
+        "start_byte_offset": 99211,
+        "end_offset": 97801,
+        "end_byte_offset": 99214,
+        "source_text": "Hin",
+        "expected_actual_types": {
+          "actual": "v = h1",
+          "expected": "v ∈ Lambda.LExpr.LExpr.getVars e ∨ v = h1"
+        },
+        "failed_tactic": "exact Or.inr Hin",
+        "tactic_range": {
+          "position": {
+            "line": 3112,
+            "column": 10
+          },
+          "end_position": {
+            "line": 3112,
+            "column": 26
+          },
+          "start_offset": 97785,
+          "end_offset": 97801
+        },
+        "goals": [
+          "v ∈ Lambda.LExpr.LExpr.getVars fn ∨ v ∈ Lambda.LExpr.LExpr.getVars e ∨ v = h1"
+        ],
+        "local_context": [
+          "case h_2.inr.inr\nh2 : Expression.Ident\nm : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\nh1 :\n  Lambda.Identifier\n    { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.IDMeta\nty : Option { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.TypeType\nv : Expression.Ident\nm✝ : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\nfn e : Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\nfn_ih :\n  v ∈ Lambda.LExpr.LExpr.getVars (substOld h2 (Lambda.LExpr.fvar m h1 ty) fn) →\n    v ∈ Lambda.LExpr.LExpr.getVars fn ∨ v = h1\ne_ih :\n  v ∈ Lambda.LExpr.LExpr.getVars (substOld h2 (Lambda.LExpr.fvar m h1 ty) e) → v ∈ Lambda.LExpr.LExpr.getVars e ∨ v = h1\ne1✝ e2✝ : Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\nx✝ :\n  ∀ (m : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata)\n    (ty :\n      Option { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.TypeType)\n    (m_1 :\n      { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata)\n    (x :\n      Lambda.Identifier\n        { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.IDMeta)\n    (ty_1 :\n      Option { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.TypeType),\n    fn = Lambda.LExpr.op m { name := \"old\", metadata := Visibility.unres } ty → e = Lambda.LExpr.fvar m_1 x ty_1 → False\nHin✝ : v ∈ Lambda.LExpr.LExpr.getVars (substOld h2 (Lambda.LExpr.fvar m h1 ty) e)\nHin : v = h1"
+        ],
+        "proof_state_source": "lean_infotree_before_tactic",
+        "proof_state_raw": {
+          "depth": 21,
+          "end": 106345,
+          "goals_after": [],
+          "goals_before": [
+            "case h_2.inr.inr\nh2 : Expression.Ident\nm : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\nh1 :\n  Lambda.Identifier\n    { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.IDMeta\nty : Option { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.TypeType\nv : Expression.Ident\nm✝ : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\nfn e : Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\nfn_ih :\n  v ∈ Lambda.LExpr.LExpr.getVars (substOld h2 (Lambda.LExpr.fvar m h1 ty) fn) →\n    v ∈ Lambda.LExpr.LExpr.getVars fn ∨ v = h1\ne_ih :\n  v ∈ Lambda.LExpr.LExpr.getVars (substOld h2 (Lambda.LExpr.fvar m h1 ty) e) → v ∈ Lambda.LExpr.LExpr.getVars e ∨ v = h1\ne1✝ e2✝ : Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\nx✝ :\n  ∀ (m : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata)\n    (ty :\n      Option { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.TypeType)\n    (m_1 :\n      { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata)\n    (x :\n      Lambda.Identifier\n        { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.IDMeta)\n    (ty_1 :\n      Option { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.TypeType),\n    fn = Lambda.LExpr.op m { name := \"old\", metadata := Visibility.unres } ty → e = Lambda.LExpr.fvar m_1 x ty_1 → False\nHin✝ : v ∈ Lambda.LExpr.LExpr.getVars (substOld h2 (Lambda.LExpr.fvar m h1 ty) e)\nHin : v = h1\n⊢ v ∈ Lambda.LExpr.LExpr.getVars fn ∨ v ∈ Lambda.LExpr.LExpr.getVars e ∨ v = h1"
+          ],
+          "kind": "tactic",
+          "start": 106329
+        }
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 18,
+          "line": 3102
+        },
+        "end_position": {
+          "column": 48,
+          "line": 3102
+        },
+        "message": "This simp argument is unused:\n  Imperative.HasVarsPure.getVars\n\nHint: Omit it from the simp argument list.\n  simp_all [I̵m̵p̵e̵r̵a̵t̵i̵v̵e̵.̵H̵a̵s̵V̵a̵r̵s̵P̵u̵r̵e̵.̵g̵e̵t̵V̵a̵r̵s̵,̵\n  ̵ ̵ ̵ ̵ ̵ ̵ ̵ ̵ ̵ ̵ ̵Lambda.LExpr.LExpr.getVars]\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "This simp argument is unused:\n  Imperative.HasVarsPure.getVars\n\nHint: Omit it from the simp argument list.\n  simp_all [I̵m̵p̵e̵r̵a̵t̵i̵v̵e̵.̵H̵a̵s̵V̵a̵r̵s̵P̵u̵r̵e̵.̵g̵e̵t̵V̵a̵r̵s̵,̵\n  ̵ ̵ ̵ ̵ ̵ ̵ ̵ ̵ ̵ ̵ ̵Lambda.LExpr.LExpr.getVars]\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+          "endPos": {
+            "column": 48,
+            "line": 3102
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unusedSimpArgs",
+          "pos": {
+            "column": 18,
+            "line": 3102
+          },
+          "severity": "warning"
+        },
+        "source_line": "        simp_all [Imperative.HasVarsPure.getVars,",
+        "start_offset": 97404,
+        "start_byte_offset": 98808,
+        "end_offset": 97434,
+        "end_byte_offset": 98838,
+        "source_text": "Imperative.HasVarsPure.getVars"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 12,
+          "line": 3104
+        },
+        "end_position": {
+          "column": 42,
+          "line": 3104
+        },
+        "message": "This simp argument is unused:\n  Imperative.HasVarsPure.getVars\n\nHint: Omit it from the simp argument list.\n  simp [I̵m̵p̵e̵r̵a̵t̵i̵v̵e̵.̵H̵a̵s̵V̵a̵r̵s̵P̵u̵r̵e̵.̵g̵e̵t̵V̵a̵r̵s̵,̵\n  ̵ ̵ ̵ ̵ ̵ ̵ ̵ ̵ ̵ ̵ ̵Lambda.LExpr.LExpr.getVars] at Hin ⊢\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "This simp argument is unused:\n  Imperative.HasVarsPure.getVars\n\nHint: Omit it from the simp argument list.\n  simp [I̵m̵p̵e̵r̵a̵t̵i̵v̵e̵.̵H̵a̵s̵V̵a̵r̵s̵P̵u̵r̵e̵.̵g̵e̵t̵V̵a̵r̵s̵,̵\n  ̵ ̵ ̵ ̵ ̵ ̵ ̵ ̵ ̵ ̵ ̵Lambda.LExpr.LExpr.getVars] at Hin ⊢\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+          "endPos": {
+            "column": 42,
+            "line": 3104
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unusedSimpArgs",
+          "pos": {
+            "column": 12,
+            "line": 3104
+          },
+          "severity": "warning"
+        },
+        "source_line": "    · simp [Imperative.HasVarsPure.getVars,",
+        "start_offset": 97486,
+        "start_byte_offset": 98891,
+        "end_offset": 97516,
+        "end_byte_offset": 98921,
+        "source_text": "Imperative.HasVarsPure.getVars"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 8,
+          "line": 3211
+        },
+        "end_position": {
+          "column": 32,
+          "line": 3211
+        },
+        "message": "declaration uses 'sorry'",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "declaration uses 'sorry'",
+          "endPos": {
+            "column": 32,
+            "line": 3211
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "hasSorry",
+          "pos": {
+            "column": 8,
+            "line": 3211
+          },
+          "severity": "warning"
+        },
+        "source_line": "theorem callElimStatementCorrect [LawfulBEq Expression.Expr] :",
+        "start_offset": 102618,
+        "start_byte_offset": 104051,
+        "end_offset": 102642,
+        "end_byte_offset": 104075,
+        "source_text": "callElimStatementCorrect"
+      },
+      {
+        "severity": "information",
+        "position": {
+          "column": 0,
+          "line": 4631
+        },
+        "end_position": {
+          "column": 6,
+          "line": 4631
+        },
+        "message": "CallElimCorrect.substOldPostSubset {h2 : Core.Expression.Ident}\n  {m :\n    { base := { Metadata := Core.ExpressionMetadata, IDMeta := Core.Visibility },\n          TypeType := Lambda.LMonoTy }.base.Metadata}\n  {h1 :\n    Lambda.Identifier\n      { base := { Metadata := Core.ExpressionMetadata, IDMeta := Core.Visibility },\n            TypeType := Lambda.LMonoTy }.base.IDMeta}\n  {ty :\n    Option\n      { base := { Metadata := Core.ExpressionMetadata, IDMeta := Core.Visibility },\n          TypeType := Lambda.LMonoTy }.TypeType}\n  {post : Core.Expression.Expr} :\n  (Imperative.HasVarsPure.getVars (Core.OldExpressions.substOld h2 (Lambda.LExpr.fvar m h1 ty) post)).Subset\n    (Imperative.HasVarsPure.getVars post ++ [h1])",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "CallElimCorrect.substOldPostSubset {h2 : Core.Expression.Ident}\n  {m :\n    { base := { Metadata := Core.ExpressionMetadata, IDMeta := Core.Visibility },\n          TypeType := Lambda.LMonoTy }.base.Metadata}\n  {h1 :\n    Lambda.Identifier\n      { base := { Metadata := Core.ExpressionMetadata, IDMeta := Core.Visibility },\n            TypeType := Lambda.LMonoTy }.base.IDMeta}\n  {ty :\n    Option\n      { base := { Metadata := Core.ExpressionMetadata, IDMeta := Core.Visibility },\n          TypeType := Lambda.LMonoTy }.TypeType}\n  {post : Core.Expression.Expr} :\n  (Imperative.HasVarsPure.getVars (Core.OldExpressions.substOld h2 (Lambda.LExpr.fvar m h1 ty) post)).Subset\n    (Imperative.HasVarsPure.getVars post ++ [h1])",
+          "endPos": {
+            "column": 6,
+            "line": 4631
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 0,
+            "line": 4631
+          },
+          "severity": "information"
+        }
+      },
+      {
+        "severity": "information",
+        "position": {
+          "column": 0,
+          "line": 4632
+        },
+        "end_position": {
+          "column": 6,
+          "line": 4632
+        },
+        "message": "'CallElimCorrect.substOldPostSubset' depends on axioms: [propext, sorryAx, Classical.choice, Quot.sound]",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "'CallElimCorrect.substOldPostSubset' depends on axioms: [propext, sorryAx, Classical.choice, Quot.sound]",
+          "endPos": {
+            "column": 6,
+            "line": 4632
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 0,
+            "line": 4632
+          },
+          "severity": "information"
+        }
+      }
+    ],
+    "goals": [
+      "v ∈ Lambda.LExpr.LExpr.getVars fn ∨ v ∈ Lambda.LExpr.LExpr.getVars e ∨ v = h1"
+    ],
+    "local_context": [
+      "case h_2.inl.inl\nh2 : Expression.Ident\nm : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\nh1 :\n  Lambda.Identifier\n    { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.IDMeta\nty : Option { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.TypeType\nv : Expression.Ident\nm✝ : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\nfn e : Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\nfn_ih :\n  v ∈ Lambda.LExpr.LExpr.getVars (substOld h2 (Lambda.LExpr.fvar m h1 ty) fn) →\n    v ∈ Lambda.LExpr.LExpr.getVars fn ∨ v = h1\ne_ih :\n  v ∈ Lambda.LExpr.LExpr.getVars (substOld h2 (Lambda.LExpr.fvar m h1 ty) e) → v ∈ Lambda.LExpr.LExpr.getVars e ∨ v = h1\ne1✝ e2✝ : Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\nx✝ :\n  ∀ (m : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata)\n    (ty :\n      Option { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.TypeType)\n    (m_1 :\n      { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata)\n    (x :\n      Lambda.Identifier\n        { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.IDMeta)\n    (ty_1 :\n      Option { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.TypeType),\n    fn = Lambda.LExpr.op m { name := \"old\", metadata := Visibility.unres } ty → e = Lambda.LExpr.fvar m_1 x ty_1 → False\nHin✝ : v ∈ Lambda.LExpr.LExpr.getVars (substOld h2 (Lambda.LExpr.fvar m h1 ty) fn)\nHin : v ∈ Lambda.LExpr.LExpr.getVars fn"
+    ],
+    "sorries": [
+      {
+        "kind": "transitive_dependency",
+        "axiom": "sorryAx",
+        "position": null,
+        "end_position": null
+      }
+    ],
+    "axioms": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext",
+      "sorryAx"
+    ],
+    "detail": null,
+    "raw_lean_output": "{\"caption\":\"\",\"data\":\"declaration uses 'sorry'\",\"endPos\":{\"column\":29,\"line\":171},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"hasSorry\",\"pos\":{\"column\":8,\"line\":171},\"severity\":\"warning\"}\n{\"caption\":\"\",\"data\":\"Application type mismatch: The argument\\n  Or.inl Hin\\nhas type\\n  v ∈ Lambda.LExpr.LExpr.getVars fn ∨ ?m.243\\nbut is expected to have type\\n  v ∈ Lambda.LExpr.LExpr.getVars fn\\nin the application\\n  Or.inl (Or.inl Hin)\",\"endPos\":{\"column\":35,\"line\":3108},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"[anonymous]\",\"pos\":{\"column\":23,\"line\":3108},\"severity\":\"error\"}\n{\"caption\":\"\",\"data\":\"Application type mismatch: The argument\\n  Hin\\nhas type\\n  v = h1\\nbut is expected to have type\\n  v ∈ Lambda.LExpr.LExpr.getVars e ∨ v = h1\\nin the application\\n  Or.inr Hin\",\"endPos\":{\"column\":26,\"line\":3109},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"[anonymous]\",\"pos\":{\"column\":23,\"line\":3109},\"severity\":\"error\"}\n{\"caption\":\"\",\"data\":\"Application type mismatch: The argument\\n  Or.inr Hin\\nhas type\\n  ?m.262 ∨ v ∈ Lambda.LExpr.LExpr.getVars e\\nbut is expected to have type\\n  v ∈ Lambda.LExpr.LExpr.getVars fn\\nin the application\\n  Or.inl (Or.inr Hin)\",\"endPos\":{\"column\":35,\"line\":3111},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"[anonymous]\",\"pos\":{\"column\":23,\"line\":3111},\"severity\":\"error\"}\n{\"caption\":\"\",\"data\":\"Application type mismatch: The argument\\n  Hin\\nhas type\\n  v = h1\\nbut is expected to have type\\n  v ∈ Lambda.LExpr.LExpr.getVars e ∨ v = h1\\nin the application\\n  Or.inr Hin\",\"endPos\":{\"column\":26,\"line\":3112},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"[anonymous]\",\"pos\":{\"column\":23,\"line\":3112},\"severity\":\"error\"}\n{\"caption\":\"\",\"data\":\"This simp argument is unused:\\n  Imperative.HasVarsPure.getVars\\n\\nHint: Omit it from the simp argument list.\\n  simp_all [I̵m̵p̵e̵r̵a̵t̵i̵v̵e̵.̵H̵a̵s̵V̵a̵r̵s̵P̵u̵r̵e̵.̵g̵e̵t̵V̵a̵r̵s̵,̵\\n  ̵ ̵ ̵ ̵ ̵ ̵ ̵ ̵ ̵ ̵ ̵Lambda.LExpr.LExpr.getVars]\\n\\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`\",\"endPos\":{\"column\":48,\"line\":3102},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"linter.unusedSimpArgs\",\"pos\":{\"column\":18,\"line\":3102},\"severity\":\"warning\"}\n{\"caption\":\"\",\"data\":\"This simp argument is unused:\\n  Imperative.HasVarsPure.getVars\\n\\nHint: Omit it from the simp argument list.\\n  simp [I̵m̵p̵e̵r̵a̵t̵i̵v̵e̵.̵H̵a̵s̵V̵a̵r̵s̵P̵u̵r̵e̵.̵g̵e̵t̵V̵a̵r̵s̵,̵\\n  ̵ ̵ ̵ ̵ ̵ ̵ ̵ ̵ ̵ ̵ ̵Lambda.LExpr.LExpr.getVars] at Hin ⊢\\n\\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`\",\"endPos\":{\"column\":42,\"line\":3104},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"linter.unusedSimpArgs\",\"pos\":{\"column\":12,\"line\":3104},\"severity\":\"warning\"}\n{\"caption\":\"\",\"data\":\"declaration uses 'sorry'\",\"endPos\":{\"column\":32,\"line\":3211},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"hasSorry\",\"pos\":{\"column\":8,\"line\":3211},\"severity\":\"warning\"}\n{\"caption\":\"\",\"data\":\"CallElimCorrect.substOldPostSubset {h2 : Core.Expression.Ident}\\n  {m :\\n    { base := { Metadata := Core.ExpressionMetadata, IDMeta := Core.Visibility },\\n          TypeType := Lambda.LMonoTy }.base.Metadata}\\n  {h1 :\\n    Lambda.Identifier\\n      { base := { Metadata := Core.ExpressionMetadata, IDMeta := Core.Visibility },\\n            TypeType := Lambda.LMonoTy }.base.IDMeta}\\n  {ty :\\n    Option\\n      { base := { Metadata := Core.ExpressionMetadata, IDMeta := Core.Visibility },\\n          TypeType := Lambda.LMonoTy }.TypeType}\\n  {post : Core.Expression.Expr} :\\n  (Imperative.HasVarsPure.getVars (Core.OldExpressions.substOld h2 (Lambda.LExpr.fvar m h1 ty) post)).Subset\\n    (Imperative.HasVarsPure.getVars post ++ [h1])\",\"endPos\":{\"column\":6,\"line\":4631},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"[anonymous]\",\"pos\":{\"column\":0,\"line\":4631},\"severity\":\"information\"}\n{\"caption\":\"\",\"data\":\"'CallElimCorrect.substOldPostSubset' depends on axioms: [propext, sorryAx, Classical.choice, Quot.sound]\",\"endPos\":{\"column\":6,\"line\":4632},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"[anonymous]\",\"pos\":{\"column\":0,\"line\":4632},\"severity\":\"information\"}\n"
+  },
+  "diagnosis": "The structural induction is valid, but `grind` cannot reduce the `substOld` application match when the function and argument are known only through branch equalities. Explicitly splitting that match and its identifier test lets `simp_all` expose the replacement-variable membership case; the remaining constructor cases are discharged as before.",
+  "duplicate_cache": false,
+  "available_at": 1792772805.6903949,
+  "cumulative_calls": 2,
+  "cumulative_tokens": 145663,
+  "api_spend_usd": null
+}

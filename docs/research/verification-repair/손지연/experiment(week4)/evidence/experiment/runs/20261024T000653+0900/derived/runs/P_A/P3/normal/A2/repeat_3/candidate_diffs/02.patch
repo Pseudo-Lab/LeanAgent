@@ -1,0 +1,34 @@
+--- candidate_01.proof.lean
++++ candidate_02.proof.lean
+@@ -10,20 +10,14 @@
+     have hd := Hdef k hk
+     simp [Hndef k hk'] at hd
+   have Hzip :
+-      (ks'.zip vs').unzip.1.Disjoint (ks.zip vs).unzip.1 := by
++      ((ks'.zip vs').unzip.1).Disjoint ((ks.zip vs).unzip.1) := by
+     rw [List.unzip_zip] <;> simp_all
+-  refine ⟨updatedStates σ ks' vs', rfl,
+-    updatedStatesInit HlenI Hndef (InitStatesNodup Hinit), ?_⟩
+-  have Hdef₁ : isDefined (updatedStates σ ks' vs') ks :=
+-    updatedStatesDefMonotone Hdef
+-  have Heq : updatedStates (updatedStates σ ks' vs') ks vs = σ'' := by
+-    calc
++  refine ⟨_, rfl, updatedStatesInit HlenI Hndef (InitStatesNodup Hinit), ?_⟩
++  have Hcomm :
+       updatedStates (updatedStates σ ks' vs') ks vs =
+-          updatedStates' (updatedStates' σ (ks'.zip vs')) (ks.zip vs) := rfl
+-      _ = updatedStates' (updatedStates' σ (ks.zip vs)) (ks'.zip vs') :=
+-        updatedStatesComm Hzip
+-      _ = updatedStates (updatedStates σ ks vs) ks' vs' := rfl
+-      _ = updatedStates σ' ks' vs' := by
+-        rw [← UpdateStatesUpdated Hup]
+-      _ = σ'' := (InitStatesUpdated Hinit).symm
+-  exact Heq ▸ updatedStatesUpdate HlenU Hdef₁
+\ No newline at end of file
++      updatedStates (updatedStates σ ks vs) ks' vs' := by
++    change updatedStates' (updatedStates' σ (ks'.zip vs')) (ks.zip vs) =
++      updatedStates' (updatedStates' σ (ks.zip vs)) (ks'.zip vs')
++    exact updatedStatesComm Hzip
++  rw [InitStatesUpdated Hinit, UpdateStatesUpdated Hup, ← Hcomm]
++  exact updatedStatesUpdate HlenU (updatedStatesDefMonotone Hdef)
+\ No newline at end of file

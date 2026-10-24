@@ -1,0 +1,80 @@
+--- candidate_01.proof.lean
++++ candidate_02.proof.lean
+@@ -3,7 +3,7 @@
+   let S := (fun (g : C_i) =>
+     (fiberwiseDisagreementSet 𝔽q β i steps h_i_add_steps f g).ncard) '' Set.univ
+   have hS_nonempty : S.Nonempty := Set.image_nonempty.mpr Set.univ_nonempty
+-  rcases Nat.sInf_mem hS_nonempty with ⟨g, _, hg_min⟩
++  rcases Nat.sInf_mem hS_nonempty with ⟨⟨g, hg_code⟩, _, hg_min⟩
+   have hg_min_dist :
+       (fiberwiseDisagreementSet 𝔽q β i steps h_i_add_steps f g).ncard =
+         fiberwiseDistance 𝔽q β (h_ℓ_add_R_rate := h_ℓ_add_R_rate)
+@@ -40,17 +40,38 @@
+     rw [←hx₁, ←hx₂, hk]
+ 
+   let D := Finset.filter (fun x => f x ≠ g x) Finset.univ
+-  let FW := (fiberwiseDisagreementSet 𝔽q β i steps h_i_add_steps f g).toFinset
++  let FW := D.image q
++  have h_FW_eq :
++      (FW : Set _) = fiberwiseDisagreementSet 𝔽q β i steps h_i_add_steps f g := by
++    ext y
++    constructor
++    · intro hy
++      change y ∈ FW at hy
++      rw [Finset.mem_image] at hy
++      rcases hy with ⟨x, hx, rfl⟩
++      have hx_ne : f x ≠ g x := by
++        simpa only [D, Finset.mem_filter, Finset.mem_univ, true_and] using hx
++      change ∃ x', q x' = q x ∧ f x' ≠ g x'
++      exact ⟨x, rfl, hx_ne⟩
++    · intro hy
++      change ∃ x, q x = y ∧ f x ≠ g x at hy
++      rcases hy with ⟨x, hxq, hx_ne⟩
++      change y ∈ FW
++      rw [Finset.mem_image]
++      refine ⟨x, ?_, hxq⟩
++      simpa only [D, Finset.mem_filter, Finset.mem_univ, true_and] using hx_ne
++  have h_FW_card :
++      FW.card = (fiberwiseDisagreementSet 𝔽q β i steps h_i_add_steps f g).ncard := by
++    have h := congrArg Set.ncard h_FW_eq
++    simpa using h
++
+   let T := FW ×ˢ (Finset.univ : Finset (Fin (2 ^ steps)))
+   have h_maps : Set.MapsTo enc (D : Set _) (T : Set _) := by
+     intro x hx
+-    have hx_ne : f x ≠ g x := by
+-      simpa only [D, Finset.mem_filter, Finset.mem_univ, true_and] using hx
+-    simp only [T, enc, Finset.mem_product, Set.mem_toFinset, Finset.mem_univ, and_true]
+-    change ∃ x',
+-      iteratedQuotientMap 𝔽q β h_ℓ_add_R_rate (i := i) (k := steps)
+-        (h_bound := by omega) x' = q x ∧ f x' ≠ g x'
+-    exact ⟨x, rfl, hx_ne⟩
++    change x ∈ D at hx
++    change enc x ∈ T
++    simp only [T, enc, Finset.mem_product, Finset.mem_univ, and_true]
++    exact Finset.mem_image.mpr ⟨x, hx, rfl⟩
+   have h_card : D.card ≤ T.card := by
+     apply Finset.card_le_card_of_injOn (f := enc)
+     · exact h_maps
+@@ -58,8 +79,8 @@
+   have h_hamming_le :
+       hammingDist f g ≤ 2 ^ steps *
+         (fiberwiseDisagreementSet 𝔽q β i steps h_i_add_steps f g).ncard := by
+-    simpa only [D, T, FW, hammingDist, Finset.card_product, Finset.card_univ,
+-      Fintype.card_fin, Set.ncard_eq_toFinset_card, mul_comm] using h_card
++    simpa only [D, T, hammingDist, Finset.card_product, Finset.card_univ,
++      Fintype.card_fin, h_FW_card, mul_comm] using h_card
+ 
+   have h_selected_lt :
+       2 * (fiberwiseDisagreementSet 𝔽q β i steps h_i_add_steps f g).ncard <
+@@ -103,8 +124,8 @@
+       Code.distFromCode (u := f) (C := C_i) ≤ (hammingDist f g : ℕ∞) := by
+     unfold Code.distFromCode
+     apply sInf_le
+-    use (g : _)
+-    exact ⟨g.property, le_rfl⟩
++    use g
++    exact ⟨hg_code, le_rfl⟩
+   unfold hammingClose
+   change 2 * Code.distFromCode (u := f) (C := C_i) <
+     (BBF_CodeDistance ℓ 𝓡 ⟨i, by omega⟩ : ℕ∞)

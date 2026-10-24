@@ -1,0 +1,19 @@
+--- candidate_01.proof.lean
++++ candidate_02.proof.lean
+@@ -4,9 +4,11 @@
+   case app =>
+     unfold extractOldExprVars
+     split <;>
+-      simp_all [Imperative.HasVarsPure.getVars,
++      simp_all [default, Imperative.HasVarsPure.getVars,
+         Lambda.LExpr.LExpr.getVars, List.Subset]
++    all_goals grind
+   all_goals
+-    simp_all [extractOldExprVars,
++    simp_all [default, extractOldExprVars,
+       Imperative.HasVarsPure.getVars,
+-      Lambda.LExpr.LExpr.getVars, List.Subset]
+\ No newline at end of file
++      Lambda.LExpr.LExpr.getVars, List.Subset]
++    grind
+\ No newline at end of file

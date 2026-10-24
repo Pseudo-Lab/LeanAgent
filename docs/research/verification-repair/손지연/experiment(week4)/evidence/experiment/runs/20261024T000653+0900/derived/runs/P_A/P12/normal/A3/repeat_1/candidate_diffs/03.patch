@@ -1,0 +1,52 @@
+--- candidate_02.proof.lean
++++ candidate_03.proof.lean
+@@ -33,15 +33,17 @@
+           simp only
+           have hsnoc : ∀ r : Fin (k + 1 + 1) → F,
+               Fin.snoc (fun i : Fin (k + 1) => r i.castSucc)
+-                (r (Fin.last (k + 1))) = r := fun r => by
++                (r (Fin.last (k + 1))) = r := by
++            intro r
+             funext i
+             by_cases h : i = Fin.last (k + 1)
+-            · simp only [h, Fin.snoc_last]
+-            · have hval : i.val ≠ Fin.last (k + 1) := by omega
+-              rw [Fin.val_last] at hval
+-              have hi : i.val < k + 1 := by omega
+-              simp only [Fin.snoc, Fin.castSucc_castLT, cast_eq, dite_eq_ite,
+-                ite_eq_left_iff, not_lt, isEmpty_Prop, not_le, hi, IsEmpty.forall_iff]
++            · subst i
++              simp only [Fin.snoc_last]
++            · let j : Fin (k + 1) := ⟨i.val, by omega⟩
++              have hij : i = j.castSucc := by
++                apply Fin.ext
++                rfl
++              rw [hij, Fin.snoc_castSucc]
+           let P : F → (Fin (k + 1) → F) → Prop := fun r_last r_init =>
+             Δ₀(multilinearCombine (u := u) (r := Fin.snoc r_init r_last), MC) ≤ e
+           have hsplit := prob_split_last_uniform_sampling_of_finFun
+@@ -83,13 +85,18 @@
+               funext j i
+               rfl
+             rw [hword]
+-            simpa only [interleave_wordStack_eq, CodeInterleavable.interleaveCode,
+-              ModuleCode.moduleInterleavedCode] using h
++            change Δ₀(Matrix.transpose (affineLineEvaluation U₀ U₁ r),
++              interleavedCodeSet (MC : Set (Word A ι))) ≤ e
++            simpa only [interleave_wordStack_eq] using h
+           have hfinal : jointProximityNat₂ (u₀ := W₀) (u₁ := W₁) (e := e)
+               (C := MC ^⋈ (Fin (2 ^ (k + 1)))) := by
+             apply h_interleaved_gaps (2 ^ (k + 1)) Nat.one_le_two_pow
+               (u₀ := W₀) (u₁ := W₁)
+             exact hp
++          have hfinal' : jointProximityNat₂ (u₀ := W₀) (u₁ := W₁) (e := e)
++              (C := interleavedCodeSet (MC : Set (Word A ι))) := by
++            change jointProximityNat₂ (u₀ := W₀) (u₁ := W₁) (e := e)
++              (C := MC ^⋈ (Fin (2 ^ (k + 1))))
++            exact hfinal
+           apply CA_split_rowwise_implies_CA (u := u) (e := e)
+-          simpa only [W₀, W₁, U₀, U₁, interleave_wordStack_eq,
+-            CodeInterleavable.interleaveCode, ModuleCode.moduleInterleavedCode] using hfinal
+\ No newline at end of file
++          simpa only [W₀, W₁, U₀, U₁, interleave_wordStack_eq] using hfinal'
+\ No newline at end of file

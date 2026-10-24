@@ -1,0 +1,53 @@
+by
+  intro ϑ hϑ_gt_0
+  induction ϑ using Nat.case_strong_induction_on with
+  | zero => omega
+  | succ ϑ ih =>
+      by_cases hϑ_zero : ϑ = 0
+      · subst ϑ
+        simpa [δ_ε_multilinearCorrelatedAgreement_Nat, multilinearCombine,
+          jointProximityNat₂, finMapTwoWords] using hC_proximityGapAffineLines
+      · have hϑ_pos : 0 < ϑ := Nat.pos_of_ne_zero hϑ_zero
+        have ihϑ : δ_ε_multilinearCorrelatedAgreement_Nat
+            (F := F) (A := A) (ι := ι) (C := MC) (ϑ := ϑ) (e := e) (ε := ε) :=
+          ih ϑ (Nat.lt_succ_self ϑ) hϑ_pos
+        intro u hu
+        let U₀ := (splitHalfRowWiseInterleavedWords (ϑ := ϑ) u).1
+        let U₁ := (splitHalfRowWiseInterleavedWords (ϑ := ϑ) u).2
+        let R := R_star_tensor MC (m := ϑ) (e := e) (ε := ε) U₀ U₁
+        have hu_split :
+            Pr_{ let r_last ← $ᵖ F;
+                 let r_init ← $ᵖ (Fin ϑ → F)}[
+              multilinearCombine_affineComb_split_last_close
+                (MC := MC) (u := u) (e := e) r_last r_init]
+              > (((Nat.cast (R := ℝ≥0) (ϑ + 1)) * ε : ℝ≥0) /
+                (Fintype.card F : ℝ≥0)) := by
+          simpa [multilinearCombine_affineComb_split_last_close] using hu
+        have hR :
+            Pr_{let r ← $ᵖ F}[r ∈ R] >
+              (↑ε : ENNReal) / (Fintype.card F : ENNReal) := by
+          simpa [U₀, U₁, R] using
+            (prob_R_star_gt_threshold (MC := MC) (ε := ε)
+              (u := u) (e := e) hu_split)
+        have hclose : ∀ r : R,
+            jointProximityNat
+              (u := affineLineEvaluation U₀ U₁ r.val)
+              (e := e) (C := MC) := by
+          simpa [U₀, U₁, R] using
+            (correlatedAgreement_of_mem_R_star_tensor
+              (MC := MC) (e := e) (ε := ε) (ih := ihϑ) u)
+        have h_affine_probability :
+            Pr_{let r ← $ᵖ F}[
+              Δ₀(affineLineEvaluation (F := F) (⋈| U₀) (⋈| U₁) r,
+                MC ^⋈ (Fin (2 ^ ϑ))) ≤ e]
+              > (↑ε : ENNReal) / (Fintype.card F : ENNReal) := by
+          apply lt_of_lt_of_le hR
+          apply Pr_le_Pr_of_implies
+          intro r hr
+          simpa [jointProximityNat, affineLineEvaluation] using
+            (hclose ⟨r, hr⟩)
+        have h_interleaved :=
+          (h_interleaved_gaps (2 ^ ϑ) (by positivity))
+            (⋈| U₀) (⋈| U₁) h_affine_probability
+        simpa [U₀, U₁, jointProximityNat₂, jointProximityNat,
+          finMapTwoWords] using h_interleaved

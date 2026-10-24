@@ -1,0 +1,16 @@
+--- candidate_02.proof.lean
++++ candidate_03.proof.lean
+@@ -5,10 +5,10 @@
+     · funext x
+       have hf'' := congrFun hf' x
+       simpa using hf''
+-    · have hfc : Continuous f := hf.smooth.continuous
++    · have hf_cont : Continuous f := hf.smooth.continuous
+       fun_prop
+     · fun_prop
+   · intro x
+     simp only [Pi.zero_apply]
+-    exact real_inner_self_nonneg' (f x)
++    apply real_inner_self_nonneg'
+   · exact (IsTestFunction.inner hf hf).integrable
+\ No newline at end of file

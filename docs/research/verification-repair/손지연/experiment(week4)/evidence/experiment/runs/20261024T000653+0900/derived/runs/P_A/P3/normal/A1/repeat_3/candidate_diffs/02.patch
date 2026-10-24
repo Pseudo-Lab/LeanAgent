@@ -1,0 +1,72 @@
+--- original_input.proof.lean
++++ candidate_02.proof.lean
+@@ -1,47 +1,22 @@
+ by
+   intros Hup Hinit
+-  exists (updatedStates σ ks' vs')
+-  have Hk : (isDefined σ' ks) := UpdateStatesDefined Hup
+-  have Hlen1 := InitStatesLength Hinit
+-  have Hlen2 := UpdateStatesLength Hup
+-  induction Hup generalizing σ''
+-  case update_none =>
+-    simp_all
+-    apply And.intro
+-    refine updatedStatesInit Hlen1 ?_ ?_
+-    exact InitStatesNotDefined Hinit
+-    exact InitStatesNodup Hinit
+-    simp [InitStatesUpdated Hinit]
+-    constructor
+-  case update_some σ x v σ₀ xs vs σ₁ Hup Hups ih =>
+-    refine ⟨rfl, ?_, ?_⟩
+-    . apply updatedStatesInit Hlen1
+-      apply UpdateStateNotDefMonotone' ?_ Hup
+-      apply UpdateStatesNotDefMonotone' ?_ Hups
+-      exact InitStatesNotDefined Hinit
+-      exact InitStatesNodup Hinit
+-    . apply UpdateStates.update_some (σ':=updatedStates σ₀ ks' vs')
+-      . simp [UpdateStateUpdated Hup, updatedStates]
+-        rw [← updatedStateComm']
+-        . have Hdef := UpdateStateDefined' Hup
+-          simp [isDefined, Option.isSome] at Hdef
+-          split at Hdef <;> simp_all
+-          next val heq =>
+-          apply updatedStateUpdate (v':=val)
+-          apply InitStatesSomeMonotone heq
+-          apply updatedStatesInit
+-          . simp_all
+-          . apply UpdateStateNotDefMonotone' ?_ Hup
+-            apply UpdateStatesNotDefMonotone' ?_ Hups
+-            apply InitStatesNotDefined Hinit
+-          . exact InitStatesNodup Hinit
+-        . rw [List.unzip_zip] <;> simp_all
+-          have Hnd := InitStatesNotDefined Hinit
+-          simp [isNotDefined, isDefined] at *
+-          apply Not.intro
+-          intros Hin
+-          specialize Hnd _ Hin
+-          simp_all
+-      . apply (ih Hinit ?_ ?_).2.2
+-        . simp [isDefined] at * <;> simp_all
+-        . simp_all
+\ No newline at end of file
++  have Hleni := InitStatesLength Hinit
++  have Hlenu := UpdateStatesLength Hup
++  have Hdisj : ks'.Disjoint ks := by
++    intro k Hki Hku
++    have Hnone := InitStatesNotDefined Hinit k Hki
++    have Hsome := UpdateStatesDefined Hup k Hku
++    simp [Hnone, Option.isSome] at Hsome
++  have Hcomm :
++      updatedStates (updatedStates σ ks' vs') ks vs =
++        updatedStates (updatedStates σ ks vs) ks' vs' := by
++    unfold updatedStates
++    apply updatedStatesComm
++    rw [List.unzip_zip, List.unzip_zip] <;> simp_all
++  refine ⟨updatedStates σ ks' vs', rfl, ?_, ?_⟩
++  · exact updatedStatesInit Hleni
++      (UpdateStatesNotDefMonotone' (InitStatesNotDefined Hinit) Hup)
++      (InitStatesNodup Hinit)
++  · rw [InitStatesUpdated Hinit, UpdateStatesUpdated Hup, ← Hcomm]
++    exact updatedStatesUpdate Hlenu
++      (updatedStatesDefMonotone (UpdateStatesDefined' Hup))
+\ No newline at end of file

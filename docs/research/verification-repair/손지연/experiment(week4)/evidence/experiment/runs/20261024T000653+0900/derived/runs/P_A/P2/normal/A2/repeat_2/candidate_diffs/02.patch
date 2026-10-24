@@ -1,0 +1,29 @@
+--- candidate_01.proof.lean
++++ candidate_02.proof.lean
+@@ -1,18 +1,17 @@
+ by
+   intros Hnorm
++  have appendSubset {a b c d : List Expression.Ident}
++      (h₁ : a.Subset b) (h₂ : c.Subset d) :
++      (a ++ c).Subset (b ++ d) := by
++    intro x hx
++    simp only [List.mem_append] at hx ⊢
++    cases hx with
++    | inl hx => exact Or.inl (h₁ hx)
++    | inr hx => exact Or.inr (h₂ hx)
+   induction post <;>
+     simp [Imperative.HasVarsPure.getVars, extractOldExprVars,
+           Lambda.LExpr.LExpr.getVars] at * <;>
+     try simp_all
+-  all_goals
+-    have appendSubset {a b c d : List Expression.Ident}
+-        (h₁ : a.Subset b) (h₂ : c.Subset d) :
+-        (a ++ c).Subset (b ++ d) := by
+-      intro x hx
+-      simp only [List.mem_append] at hx ⊢
+-      cases hx with
+-      | inl hx => exact Or.inl (h₁ hx)
+-      | inr hx => exact Or.inr (h₂ hx)
+   case app fn e fn_ih e_ih =>
+     unfold extractOldExprVars
+     split

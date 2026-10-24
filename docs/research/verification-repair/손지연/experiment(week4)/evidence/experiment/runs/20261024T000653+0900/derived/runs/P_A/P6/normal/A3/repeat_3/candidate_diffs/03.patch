@@ -1,0 +1,40 @@
+--- candidate_02.proof.lean
++++ candidate_03.proof.lean
+@@ -47,11 +47,11 @@
+               𝓢(𝓕.crAnStatistics φ, 𝓕.crAnStatistics ψ) •
+                 (left * ι (ofCrAnListF [ψ, φ]) * right)) := by
+           have h1 := insertionSort_of_eq_list 𝓕.crAnTimeOrderRel φ φs' [φ, ψ] φs
+-            (by simp_all)
++            (by simp [hφψ, hψφ])
+           rw [crAnTimeOrderList,
+             show φs' ++ φ :: ψ :: φs = φs' ++ [φ, ψ] ++ φs by simp, h1]
+           have h2 := insertionSort_of_eq_list 𝓕.crAnTimeOrderRel φ φs' [ψ, φ] φs
+-            (by simp_all)
++            (by simp [hφψ, hψφ])
+           rw [crAnTimeOrderList,
+             show φs' ++ ψ :: φ :: φs = φs' ++ [ψ, φ] ++ φs by simp, h2]
+           repeat rw [ofCrAnListF_append]
+@@ -79,16 +79,16 @@
+       by_cases hq : (𝓕 |>ₛ φ) ≠ (𝓕 |>ₛ ψ)
+       · simp [ι_superCommuteF_of_diff_statistic hq]
+       · rw [crAnTimeOrderSign,
+-          Wick.koszulSign_eq_rel_eq_stat _ _ hφψ hψφ (by simp_all),
++          Wick.koszulSign_eq_rel_eq_stat _ _ hφψ hψφ (by simpa using hq),
+           ← crAnTimeOrderSign, ← ofCrAnListF_append, timeOrderF_ofCrAnListF]
+         simp only [map_smul, Algebra.mul_smul_comm]
+     · simp only [map_mul, zero_mul, map_zero, mul_zero, pa]
+     · intro x y hx hy hpx hpy
+-      simp_all [pa, mul_add, add_mul]
++      simpa [pa, mul_add, add_mul] using congrArg₂ (· + ·) hpx hpy
+     · intro x hx hpx
+-      simp_all [pa]
++      simpa [pa] using congrArg (x • ·) hpx
+   · simp only [map_mul, mul_zero, map_zero, pb]
+   · intro x y hx hy hpx hpy
+-    simp_all [pb, mul_add]
++    simpa [pb, mul_add] using congrArg₂ (· + ·) hpx hpy
+   · intro x hx hpx
+-    simp_all [pb]
+\ No newline at end of file
++    simpa [pb] using congrArg (x • ·) hpx
+\ No newline at end of file

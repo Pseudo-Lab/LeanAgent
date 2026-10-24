@@ -1,0 +1,119 @@
+--- original_input.proof.lean
++++ candidate_03.proof.lean
+@@ -1,83 +1,45 @@
+ by
+-  generalize eq : [] = Γ at der
++  generalize hΓ : [] = Γ at der
+   have der' : Typing Γ t τ := der
+-  induction der <;> subst eq
++  induction der <;> subst hΓ
+   case var mem => grind
+   case app t₁ _ _ t₂ l r ih_l ih_r =>
+     right
+-    cases ih_l rfl l with
+-    | inl val_l =>
+-        cases ih_r rfl r with
+-        | inl val_r =>
+-            have ⟨σ, t₁, eq⟩ := l.canonical_form_abs val_l
+-            exists t₁ ^ᵗᵗ t₂
+-            grind
+-        | inr red_r =>
+-            obtain ⟨t₂', _⟩ := red_r
+-            exists t₁.app t₂'
+-            grind
+-    | inr red_l =>
+-        obtain ⟨t₁', _⟩ := red_l
+-        exists t₁'.app t₂
+-        grind
++    rcases ih_l rfl l with val_l | ⟨t₁', step_l⟩
++    · rcases ih_r rfl r with val_r | ⟨t₂', step_r⟩
++      · obtain ⟨σ, body, h⟩ := l.canonical_form_abs val_l
++        exact ⟨body ^ᵗᵗ t₂, by grind⟩
++      · exact ⟨t₁.app t₂', by grind⟩
++    · exact ⟨t₁'.app t₂, by grind⟩
+   case tapp σ' der _ ih =>
+     right
+-    specialize ih rfl der
+-    cases ih with
+-    | inl val =>
+-        obtain ⟨_, t, _⟩ := der.canonical_form_tabs val
+-        exists t ^ᵗᵞ σ'
+-        grind
+-    | inr red =>
+-        obtain ⟨t', _⟩ := red
+-        exists .tapp t' σ'
+-        grind
++    rcases ih rfl der with val | ⟨t', step⟩
++    · obtain ⟨σ, body, h⟩ := der.canonical_form_tabs val
++      exact ⟨body ^ᵗᵞ σ', by grind⟩
++    · exact ⟨.tapp t' σ', by grind⟩
+   case let' t₁ σ t₂ τ L der _ ih _ =>
+     right
+-    cases ih rfl der with
+-    | inl _ =>
+-        exists t₂ ^ᵗᵗ t₁
+-        grind
+-    | inr red =>
+-        obtain ⟨t₁', _⟩ := red
+-        exists t₁'.let' t₂
+-        grind
++    rcases ih rfl der with val | ⟨t₁', step⟩
++    · exact ⟨t₂ ^ᵗᵗ t₁, by grind⟩
++    · exact ⟨t₁'.let' t₂, by grind⟩
+   case inl der _ ih =>
+-    cases (ih rfl der) with
+-    | inl val => grind
+-    | inr red =>
+-        right
+-        obtain ⟨t', _⟩ := red
+-        exists .inl t'
+-        grind
++    rcases ih rfl der with val | ⟨t', step⟩
++    · grind
++    · exact Or.inr ⟨.inl t', by grind⟩
+   case inr der _ ih =>
+-    cases (ih rfl der) with
+-    | inl val => grind
+-    | inr red =>
+-        right
+-        obtain ⟨t', _⟩ := red
+-        exists .inr t'
+-        grind
++    rcases ih rfl der with val | ⟨t', step⟩
++    · grind
++    · exact Or.inr ⟨.inr t', by grind⟩
+   case case t₁ _ _ t₂ _ t₃ _ der _ _ ih _ _ =>
+     right
+-    cases ih rfl der with
+-    | inl val =>
+-        have ⟨t₁, lr⟩ := der.canonical_form_sum val
+-        cases lr <;> [exists t₂ ^ᵗᵗ t₁; exists t₃ ^ᵗᵗ t₁] <;> grind
+-    | inr red =>
+-        obtain ⟨t₁', _⟩ := red
+-        exists t₁'.case t₂ t₃
+-        grind
++    rcases ih rfl der with val | ⟨t₁', step⟩
++    · obtain ⟨arg, side⟩ := der.canonical_form_sum val
++      rcases side with h | h
++      · exact ⟨t₂ ^ᵗᵗ arg, by grind⟩
++      · exact ⟨t₃ ^ᵗᵗ arg, by grind⟩
++    · exact ⟨t₁'.case t₂ t₃, by grind⟩
+   case sub => grind
+-  case abs σ _ τ L _ _=>
+-    left
+-    constructor
+-    apply LC.abs L
+-    · grind only [→ wf, cases Term.LC]
+-    · grind only [→ wf]
+-  case tabs L _ _=>
+-    left
+-    constructor
+-    apply LC.tabs L
+-    · grind only [→ wf, cases Term.LC]
+-    · grind only [→ wf]
+\ No newline at end of file
++  case abs σ _ τ L _ _ =>
++    exact Or.inl ⟨LC.abs L (by grind only [→ wf, cases Term.LC]) (by grind only [→ wf])⟩
++  case tabs L _ _ =>
++    exact Or.inl ⟨LC.tabs L (by grind only [→ wf, cases Term.LC]) (by grind only [→ wf])⟩
+\ No newline at end of file

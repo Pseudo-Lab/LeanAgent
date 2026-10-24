@@ -1,0 +1,26 @@
+--- candidate_01.proof.lean
++++ candidate_02.proof.lean
+@@ -8,17 +8,14 @@
+     unfold extractOldExprVars
+     split
+     · simp [Lambda.LExpr.LExpr.getVars]
+-      intro x hx
+-      exact hx
+     · next hfalse =>
+       cases Hnorm with
+       | app hfn he hn =>
+         exfalso
+-        specialize hn ?_
++        apply hn
+         constructor
+         cases hn
+-        apply hfalse
+-        rfl
++        exact hfalse rfl
+     · cases Hnorm
+-      simp_all [List.Subset]
+-  all_goals cases Hnorm <;> simp_all [List.Subset]
+\ No newline at end of file
++      grind
++  all_goals cases Hnorm <;> grind
+\ No newline at end of file

@@ -1,0 +1,43 @@
+by
+  intro d e f h i
+  have hde := (hrelation d e).mp h.1
+  have hef := (hrelation e f).mp h.2
+  have hd0 := hde.2 (0 : Fin 9)
+  have hd1 := hde.2 (1 : Fin 9)
+  have hd2 := hde.2 (2 : Fin 9)
+  have hd3 := hde.2 (3 : Fin 9)
+  have hd4 := hde.2 (4 : Fin 9)
+  have hd5 := hde.2 (5 : Fin 9)
+  have hd6 := hde.2 (6 : Fin 9)
+  have hd7 := hde.2 (7 : Fin 9)
+  have hd8 := hde.2 (8 : Fin 9)
+  have he0 := hef.2 (0 : Fin 9)
+  have he1 := hef.2 (1 : Fin 9)
+  have he2 := hef.2 (2 : Fin 9)
+  have he3 := hef.2 (3 : Fin 9)
+  have he4 := hef.2 (4 : Fin 9)
+  have he5 := hef.2 (5 : Fin 9)
+  have he6 := hef.2 (6 : Fin 9)
+  have he7 := hef.2 (7 : Fin 9)
+  have he8 := hef.2 (8 : Fin 9)
+  rcases hd0 with ⟨kd0, hd0⟩
+  rcases hd1 with ⟨kd1, hd1⟩
+  rcases hd2 with ⟨kd2, hd2⟩
+  rcases hd3 with ⟨kd3, hd3⟩
+  rcases hd4 with ⟨kd4, hd4⟩
+  rcases hd5 with ⟨kd5, hd5⟩
+  rcases hd6 with ⟨kd6, hd6⟩
+  rcases hd7 with ⟨kd7, hd7⟩
+  rcases hd8 with ⟨kd8, hd8⟩
+  rcases he0 with ⟨ke0, he0⟩
+  rcases he1 with ⟨ke1, he1⟩
+  rcases he2 with ⟨ke2, he2⟩
+  rcases he3 with ⟨ke3, he3⟩
+  rcases he4 with ⟨ke4, he4⟩
+  rcases he5 with ⟨ke5, he5⟩
+  rcases he6 with ⟨ke6, he6⟩
+  rcases he7 with ⟨ke7, he7⟩
+  rcases he8 with ⟨ke8, he8⟩
+  fin_cases i <;>
+    norm_num [hdigits_to_num, Fin.sum_univ_succ] at hd0 hd1 hd2 hd3 hd4 hd5 hd6 hd7 hd8 he0 he1 he2 he3 he4 he5 he6 he7 he8 ⊢ <;>
+    omega

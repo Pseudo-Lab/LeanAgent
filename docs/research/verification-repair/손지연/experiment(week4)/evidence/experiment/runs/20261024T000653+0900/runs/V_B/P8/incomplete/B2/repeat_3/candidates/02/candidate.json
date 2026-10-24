@@ -1,0 +1,177 @@
+{
+  "call": 2,
+  "origin": "generated",
+  "body": "by\n  intro a a₁ a₂ h₁ h₂\n  revert a₂\n  induction h₁ with\n  | @refl x =>\n      intro a₂ h₂\n      exact ⟨a₂, h₂, .refl a₂⟩\n  | @red_I x =>\n      intro a₂ h₂\n      cases h₂ with\n      | refl =>\n          exact ⟨x, .refl x, .red_I x⟩\n      | red_I =>\n          exact ⟨x, .refl x, .refl x⟩\n      | @par l l' r r' hl hr =>\n          have hl' : l' = I := I_irreducible l' hl\n          subst l'\n          exact ⟨r', hr, .red_I r'⟩\n  | @red_K x y =>\n      intro a₂ h₂\n      cases h₂ with\n      | refl =>\n          exact ⟨x, .refl x, .red_K x y⟩\n      | red_K =>\n          exact ⟨x, .refl x, .refl x⟩\n      | @par l l' r r' hl hr =>\n          obtain ⟨x', hx, hl'⟩ := Ka_irreducible x l' hl\n          subst l'\n          exact ⟨x', hx, .red_K x' r'⟩\n  | @red_S x y z =>\n      intro a₂ h₂\n      cases h₂ with\n      | refl =>\n          exact ⟨x ⬝ z ⬝ (y ⬝ z), .refl _, .red_S x y z⟩\n      | red_S =>\n          exact ⟨x ⬝ z ⬝ (y ⬝ z), .refl _, .refl _⟩\n      | @par l l' r r' hl hr =>\n          obtain ⟨x', y', hx, hy, hl'⟩ := Sab_irreducible x y l' hl\n          subst l'\n          exact\n            ⟨x' ⬝ r' ⬝ (y' ⬝ r'),\n              .par (.par hx hr) (.par hy hr),\n              .red_S x' y' r'⟩\n  | @par x x' y y' hx hy ihx ihy =>\n      intro a₂ h₂\n      cases h₂ with\n      | refl =>\n          exact ⟨x' ⬝ y', .refl _, .par hx hy⟩\n      | @red_I z =>\n          have hx' : x' = I := I_irreducible x' hx\n          subst x'\n          exact ⟨y', .red_I y', hy⟩\n      | @red_K u v =>\n          obtain ⟨u', hu, hx'⟩ := Ka_irreducible a₂ x' hx\n          subst x'\n          exact ⟨u', .red_K u' y', hu⟩\n      | @red_S u v w =>\n          obtain ⟨u', v', hu, hv, hx'⟩ := Sab_irreducible u v x' hx\n          subst x'\n          exact\n            ⟨u' ⬝ y' ⬝ (v' ⬝ y'),\n              .red_S u' v' y',\n              .par (.par hu hy) (.par hv hy)⟩\n      | @par u u' v v' hu hv =>\n          obtain ⟨p, hxp, hup⟩ := ihx hu\n          obtain ⟨q, hyq, hvq⟩ := ihy hv\n          exact ⟨p ⬝ q, .par hxp hyq, .par hup hvq⟩",
+  "proof_sha256": "a84eff092b117aedbda0dae5d86b8295f01e550367a15ba4b205bd692756cfb4",
+  "full_source_sha256": "79d95f6ef2bd269bd85afe13cb661bfad44346f4a0802d81c3a9ee1eb5d9f497",
+  "eligible": true,
+  "verification": {
+    "task_id": "P8",
+    "attempt": "candidate_02",
+    "candidate_hash": "79d95f6ef2bd269bd85afe13cb661bfad44346f4a0802d81c3a9ee1eb5d9f497",
+    "environment_id": "539810be844b4918624a39f96635209e5268d60962b8f167956106aaa6dbee0f",
+    "check_kind": "candidate",
+    "status": "candidate_pass",
+    "process_exit_code": 0,
+    "diagnostics": [
+      {
+        "severity": "information",
+        "position": {
+          "column": 0,
+          "line": 230
+        },
+        "end_position": {
+          "column": 6,
+          "line": 230
+        },
+        "message": "Cslib.SKI.parallelReduction_diamond : Relation.Diamond Cslib.SKI.ParallelReduction",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "Cslib.SKI.parallelReduction_diamond : Relation.Diamond Cslib.SKI.ParallelReduction",
+          "endPos": {
+            "column": 6,
+            "line": 230
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P8/incomplete/B2/repeat_3/validation/lean/005_candidate_02/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 0,
+            "line": 230
+          },
+          "severity": "information"
+        }
+      },
+      {
+        "severity": "information",
+        "position": {
+          "column": 0,
+          "line": 231
+        },
+        "end_position": {
+          "column": 6,
+          "line": 231
+        },
+        "message": "'Cslib.SKI.parallelReduction_diamond' does not depend on any axioms",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "'Cslib.SKI.parallelReduction_diamond' does not depend on any axioms",
+          "endPos": {
+            "column": 6,
+            "line": 231
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P8/incomplete/B2/repeat_3/validation/lean/005_candidate_02/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 0,
+            "line": 231
+          },
+          "severity": "information"
+        }
+      }
+    ],
+    "goals": null,
+    "local_context": null,
+    "sorries": [],
+    "backend_proof_status": null,
+    "statement_check": "fixed_context_preserved",
+    "axioms": [],
+    "metrics": {
+      "proof_tokens": 509,
+      "raw_heartbeats": 393508,
+      "heartbeats": 393
+    },
+    "elapsed_ms": 4350,
+    "raw_log_path": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P8/incomplete/B2/repeat_3/validation/lean/005_candidate_02/stdout.log",
+    "detail": null,
+    "failure_kind": null
+  },
+  "measurement": {
+    "proof_tokens": 509,
+    "raw_heartbeats": 393508,
+    "token_reduction_pct": -12.114537444933916,
+    "heartbeat_reduction_pct": 73.02951545956498,
+    "search_score": 30.45748900731553
+  },
+  "facts": {
+    "diagnostics": [
+      {
+        "severity": "information",
+        "position": {
+          "column": 0,
+          "line": 230
+        },
+        "end_position": {
+          "column": 6,
+          "line": 230
+        },
+        "message": "Cslib.SKI.parallelReduction_diamond : Relation.Diamond Cslib.SKI.ParallelReduction",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "Cslib.SKI.parallelReduction_diamond : Relation.Diamond Cslib.SKI.ParallelReduction",
+          "endPos": {
+            "column": 6,
+            "line": 230
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 0,
+            "line": 230
+          },
+          "severity": "information"
+        }
+      },
+      {
+        "severity": "information",
+        "position": {
+          "column": 0,
+          "line": 231
+        },
+        "end_position": {
+          "column": 6,
+          "line": 231
+        },
+        "message": "'Cslib.SKI.parallelReduction_diamond' does not depend on any axioms",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "'Cslib.SKI.parallelReduction_diamond' does not depend on any axioms",
+          "endPos": {
+            "column": 6,
+            "line": 231
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 0,
+            "line": 231
+          },
+          "severity": "information"
+        }
+      }
+    ],
+    "goals": null,
+    "local_context": null,
+    "sorries": [],
+    "axioms": [],
+    "detail": null,
+    "raw_lean_output": "{\"caption\":\"\",\"data\":\"Cslib.SKI.parallelReduction_diamond : Relation.Diamond Cslib.SKI.ParallelReduction\",\"endPos\":{\"column\":6,\"line\":230},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"[anonymous]\",\"pos\":{\"column\":0,\"line\":230},\"severity\":\"information\"}\n{\"caption\":\"\",\"data\":\"'Cslib.SKI.parallelReduction_diamond' does not depend on any axioms\",\"endPos\":{\"column\":6,\"line\":231},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"[anonymous]\",\"pos\":{\"column\":0,\"line\":231},\"severity\":\"information\"}\n"
+  },
+  "diagnosis": "In the `par.red_K` case, constructor-index refinement does not introduce `u`; the K argument is the refined local `a₂`. In the `par.par` case, the target term argument of each induction hypothesis is implicit, so `ihx` and `ihy` must be applied directly to the reduction proofs.",
+  "duplicate_cache": false,
+  "available_at": 1792775978.769126,
+  "cumulative_calls": 2,
+  "cumulative_tokens": 38185,
+  "api_spend_usd": null
+}

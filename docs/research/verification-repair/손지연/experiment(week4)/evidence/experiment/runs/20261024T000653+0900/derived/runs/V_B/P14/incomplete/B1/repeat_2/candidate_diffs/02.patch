@@ -1,0 +1,57 @@
+--- candidate_01.proof.lean
++++ candidate_02.proof.lean
+@@ -20,7 +20,10 @@
+       have hex : ∃ U ∈ P, T ∩ U = ∅ := by
+         by_contra hn
+         push_neg at hn
+-        exact hPS ⟨T, hT, hn⟩
++        apply hPS
++        refine ⟨T, hT, ?_⟩
++        intro U hU
++        exact Set.nonempty_iff_ne_empty.mp (hn U hU)
+       rcases hex with ⟨U, hU, hTU⟩
+       apply hTc
+       apply hup hU
+@@ -37,9 +40,15 @@
+   have hQP : Q.card = P.card := by
+     let e : {T // T ∈ Q} ≃ {T // T ∈ P} :=
+       { toFun := fun T =>
+-          ⟨T.1ᶜ, (hcomp' T.1).2 (by simpa [Q] using T.2)⟩
++          ⟨T.1ᶜ, (hcomp' T.1).2 (by
++            have hTQ : T.1 ∈ Q := T.2
++            change T.1 ∈ Finset.univ.filter (fun U : Set S => U ∉ P) at hTQ
++            exact (Finset.mem_filter.mp hTQ).2)⟩
+         invFun := fun T =>
+-          ⟨T.1ᶜ, by simpa [Q] using (hcomp T.1).1 T.2⟩
++          ⟨T.1ᶜ, by
++            change T.1ᶜ ∈ Finset.univ.filter (fun U : Set S => U ∉ P)
++            exact Finset.mem_filter.mpr
++              ⟨Finset.mem_univ _, (hcomp T.1).1 T.2⟩⟩
+         left_inv := by
+           intro T
+           apply Subtype.ext
+@@ -52,11 +61,22 @@
+   have hdisj : Disjoint P Q := by
+     refine Finset.disjoint_left.mpr ?_
+     intro T hT hTQ
+-    have hnT : T ∉ P := by simpa [Q] using hTQ
++    have hnT : T ∉ P := by
++      change T ∈ Finset.univ.filter (fun U : Set S => U ∉ P) at hTQ
++      exact (Finset.mem_filter.mp hTQ).2
+     exact hnT hT
+   have hunion : P ∪ Q = Finset.univ := by
+     ext T
+-    simp [Q]
++    constructor
++    · intro _
++      exact Finset.mem_univ T
++    · intro _
++      by_cases hT : T ∈ P
++      · exact Finset.mem_union.mpr (Or.inl hT)
++      · apply Finset.mem_union.mpr
++        right
++        change T ∈ Finset.univ.filter (fun U : Set S => U ∉ P)
++        exact Finset.mem_filter.mpr ⟨Finset.mem_univ T, hT⟩
+   have htotal : P.card + Q.card = Fintype.card (Set S) := by
+     rw [← Finset.card_union_of_disjoint hdisj, hunion]
+     simp

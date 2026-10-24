@@ -1,0 +1,64 @@
+--- candidate_01.proof.lean
++++ candidate_02.proof.lean
+@@ -13,12 +13,13 @@
+         (i := i) steps h_i_add_steps f = FW.ncard := by
+     change sInf S = FW.ncard
+     exact hg.symm
+-  let D := Finset.filter (fun x => f x ≠ (g : C_i) x) Finset.univ
++  let D := Finset.filter (fun x => f x ≠ g.val x) Finset.univ
+   let q := fun x =>
+     iteratedQuotientMap 𝔽q β h_ℓ_add_R_rate (i := i)
+       (k := steps) (h_bound := h_i_add_steps) x
+-  let k := fun x =>
+-    pointToIterateQuotientIndex (i := ⟨i, by omega⟩) (steps := steps)
++  let k := fun
++      (x : sDomain 𝔽q β h_ℓ_add_R_rate ⟨i, by omega⟩) =>
++    pointToIterateQuotientIndex 𝔽q β (i := ⟨i, by omega⟩) (steps := steps)
+       (h_i_add_steps := h_i_add_steps) (x := x)
+   let encode := fun x => (q x, k x)
+   have h_card :
+@@ -26,9 +27,9 @@
+         (FW.toFinset ×ˢ (Finset.univ : Finset (Fin (2 ^ steps)))).card := by
+     apply Finset.card_le_card_of_injOn (f := encode)
+     · intro x hx
+-      have hx_ne : f x ≠ (g : C_i) x := (Finset.mem_filter.mp hx).2
++      have hx_ne : f x ≠ g.val x := (Finset.mem_filter.mp hx).2
+       simp only [Finset.mem_product, Set.mem_toFinset, Finset.mem_univ, and_true]
+-      change ∃ x', q x' = q x ∧ f x' ≠ (g : C_i) x'
++      change ∃ x', q x' = q x ∧ f x' ≠ g.val x'
+       exact ⟨x, rfl, hx_ne⟩
+     · intro x _ z _ hxz
+       have hq : q x = q z := congrArg Prod.fst hxz
+@@ -56,7 +57,7 @@
+               (y := q z) (k z) := by rw [hq, hk]
+         _ = z := hz_reconstruct
+   have h_hamming_le_fw :
+-      hammingDist f (g : C_i) ≤
++      hammingDist f g.val ≤
+         2 ^ steps * fiberwiseDistance 𝔽q β
+           (h_ℓ_add_R_rate := h_ℓ_add_R_rate)
+           (i := i) steps h_i_add_steps f := by
+@@ -72,11 +73,11 @@
+   have h_dist_le_hamming :
+       Code.distFromCode f
+           (BBF_Code 𝔽q β (h_ℓ_add_R_rate := h_ℓ_add_R_rate) ⟨i, by omega⟩) ≤
+-        (hammingDist f (g : C_i) : ℕ∞) := by
+-    change Code.distFromCode f C_i ≤ (hammingDist f (g : C_i) : ℕ∞)
++        (hammingDist f g.val : ℕ∞) := by
++    change Code.distFromCode f C_i ≤ (hammingDist f g.val : ℕ∞)
+     unfold Code.distFromCode
+     apply sInf_le
+-    exact ⟨(g : C_i), g.property, le_rfl⟩
++    exact ⟨g.val, g.property, le_rfl⟩
+   have h_fw_nat :
+       2 * fiberwiseDistance 𝔽q β (h_ℓ_add_R_rate := h_ℓ_add_R_rate)
+           (i := i) steps h_i_add_steps f <
+@@ -123,7 +124,7 @@
+   calc
+     2 * Code.distFromCode f
+         (BBF_Code 𝔽q β (h_ℓ_add_R_rate := h_ℓ_add_R_rate) ⟨i, by omega⟩) ≤
+-        2 * (hammingDist f (g : C_i) : ℕ∞) :=
++        2 * (hammingDist f g.val : ℕ∞) :=
+       mul_le_mul_left' h_dist_le_hamming 2
+     _ ≤ 2 *
+         (2 ^ steps * fiberwiseDistance 𝔽q β

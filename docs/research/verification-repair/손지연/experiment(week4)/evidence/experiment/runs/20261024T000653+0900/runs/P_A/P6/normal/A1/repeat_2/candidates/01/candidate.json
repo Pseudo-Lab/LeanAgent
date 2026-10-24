@@ -1,0 +1,185 @@
+{
+  "call": 1,
+  "origin": "generated",
+  "body": "by\n  let pb (b : 𝓕.FieldOpFreeAlgebra)\n      (_ : b ∈ Submodule.span ℂ (Set.range ofCrAnListFBasis)) : Prop :=\n    ι 𝓣ᶠ(a * [ofCrAnOpF φ, ofCrAnOpF ψ]ₛF * b) =\n      ι ([ofCrAnOpF φ, ofCrAnOpF ψ]ₛF * 𝓣ᶠ(a * b))\n  change pb b (Basis.mem_span _ b)\n  apply Submodule.span_induction\n  · rintro _ ⟨φs, rfl⟩\n    simp only [ofListBasis_eq_ofList, map_mul, pb]\n    let pa (a : 𝓕.FieldOpFreeAlgebra)\n        (_ : a ∈ Submodule.span ℂ (Set.range ofCrAnListFBasis)) : Prop :=\n      ι 𝓣ᶠ(a * [ofCrAnOpF φ, ofCrAnOpF ψ]ₛF * ofCrAnListF φs) =\n        ι ([ofCrAnOpF φ, ofCrAnOpF ψ]ₛF * 𝓣ᶠ(a * ofCrAnListF φs))\n    change pa a (Basis.mem_span _ a)\n    apply Submodule.span_induction\n    · rintro _ ⟨φs', rfl⟩\n      simp only [ofListBasis_eq_ofList, map_mul, pa]\n      let s := List.insertionSort crAnTimeOrderRel (φs' ++ φs)\n      let l₀ := List.takeWhile (fun c => ¬ crAnTimeOrderRel φ c) s\n      let l₁ := List.filter (fun c => crAnTimeOrderRel φ c ∧ crAnTimeOrderRel c φ) φs'\n      let l₂ := List.filter (fun c => crAnTimeOrderRel φ c ∧ crAnTimeOrderRel c φ) φs\n      let l₃ := List.filter (fun c => crAnTimeOrderRel φ c ∧ ¬ crAnTimeOrderRel c φ) s\n      calc\n        _ = crAnTimeOrderSign (φs' ++ φ :: ψ :: φs) •\n              ι (ofCrAnListF (crAnTimeOrderList (φs' ++ φ :: ψ :: φs))) -\n            crAnTimeOrderSign (φs' ++ ψ :: φ :: φs) •\n              𝓢(𝓕.crAnStatistics φ, 𝓕.crAnStatistics ψ) •\n              ι (ofCrAnListF (crAnTimeOrderList (φs' ++ ψ :: φ :: φs))) := by\n          conv_lhs =>\n            rw [← ofCrAnListF_singleton, ← ofCrAnListF_singleton,\n              superCommuteF_ofCrAnListF_ofCrAnListF]\n            simp [mul_sub, sub_mul, ← ofCrAnListF_append]\n            rw [timeOrderF_ofCrAnListF, timeOrderF_ofCrAnListF]\n          simp only [map_smul, sub_right_inj]\n          module\n        _ = crAnTimeOrderSign (φs' ++ φ :: ψ :: φs) •\n            (ι (ofCrAnListF (crAnTimeOrderList (φs' ++ φ :: ψ :: φs))) -\n              𝓢(𝓕.crAnStatistics φ, 𝓕.crAnStatistics ψ) •\n              ι (ofCrAnListF (crAnTimeOrderList (φs' ++ ψ :: φ :: φs)))) := by\n          rw [crAnTimeOrderSign_swap_eq_time hφψ hψφ]\n          module\n        _ = crAnTimeOrderSign (φs' ++ [φ, ψ] ++ φs) •\n            (ι (ofCrAnListF l₀) * ι (ofCrAnListF l₁) *\n                ι (ofCrAnListF [φ, ψ]) * ι (ofCrAnListF l₂) * ι (ofCrAnListF l₃) -\n              𝓢(𝓕.crAnStatistics φ, 𝓕.crAnStatistics ψ) •\n                ι (ofCrAnListF l₀) * ι (ofCrAnListF l₁) *\n                ι (ofCrAnListF [ψ, φ]) * ι (ofCrAnListF l₂) * ι (ofCrAnListF l₃)) := by\n          have h1 := insertionSort_of_eq_list 𝓕.crAnTimeOrderRel φ φs' [φ, ψ] φs\n            (by simp_all)\n          rw [crAnTimeOrderList,\n            show φs' ++ φ :: ψ :: φs = φs' ++ [φ, ψ] ++ φs by simp, h1]\n          have h2 := insertionSort_of_eq_list 𝓕.crAnTimeOrderRel φ φs' [ψ, φ] φs\n            (by simp_all)\n          rw [crAnTimeOrderList,\n            show φs' ++ ψ :: φ :: φs = φs' ++ [ψ, φ] ++ φs by simp, h2]\n          repeat rw [ofCrAnListF_append]\n          simp [s, l₀, l₁, l₂, l₃]\n        _ = crAnTimeOrderSign (φs' ++ [φ, ψ] ++ φs) •\n            (ι (ofCrAnListF l₀) * ι (ofCrAnListF l₁) *\n              (ι (ofCrAnListF [φ, ψ]) -\n                𝓢(𝓕.crAnStatistics φ, 𝓕.crAnStatistics ψ) •\n                  ι (ofCrAnListF [ψ, φ])) *\n              ι (ofCrAnListF l₂) * ι (ofCrAnListF l₃)) := by\n          simp [mul_sub, sub_mul]\n        _ = crAnTimeOrderSign (φs' ++ [φ, ψ] ++ φs) •\n            (ι (ofCrAnListF l₀) * ι (ofCrAnListF l₁) *\n              ι [ofCrAnOpF φ, ofCrAnOpF ψ]ₛF *\n              ι (ofCrAnListF l₂) * ι (ofCrAnListF l₃)) := by\n          congr\n          rw [superCommuteF_ofCrAnOpF_ofCrAnOpF, ← ofCrAnListF_singleton,\n            ← ofCrAnListF_singleton]\n          simp [← ofCrAnListF_append]\n      rw [Subalgebra.mem_center_iff.mp\n        (ι_superCommuteF_ofCrAnOpF_ofCrAnOpF_mem_center φ ψ)]\n      repeat rw [mul_assoc]\n      rw [← map_mul, ← map_mul, ← map_mul, ← ofCrAnListF_append,\n        ← ofCrAnListF_append, ← ofCrAnListF_append]\n      have hs := insertionSort_of_takeWhile_filter 𝓕.crAnTimeOrderRel φ φs' φs\n      simp [l₀, l₁, l₂, l₃, s, decide_not, Bool.decide_and,\n        List.append_assoc, List.cons_append] at hs ⊢\n      rw [← hs, ← crAnTimeOrderList]\n      by_cases hq : (𝓕 |>ₛ φ) ≠ (𝓕 |>ₛ ψ)\n      · simp [ι_superCommuteF_of_diff_statistic hq]\n      · rw [crAnTimeOrderSign,\n          Wick.koszulSign_eq_rel_eq_stat _ _ hφψ hψφ (by simp_all),\n          ← crAnTimeOrderSign, ← ofCrAnListF_append, timeOrderF_ofCrAnListF]\n        simp only [map_smul, Algebra.mul_smul_comm]\n    · simp only [map_mul, zero_mul, map_zero, mul_zero, pa]\n    · intro x y hx hy hpx hpy\n      simp_all [pa, mul_add, add_mul]\n    · intro x hx hpx\n      simp_all [pa]\n  · simp only [map_mul, mul_zero, map_zero, pb]\n  · intro x y hx hy hpx hpy\n    simp_all [pb, mul_add]\n  · intro x hx hpx\n    simp_all [pb]",
+  "proof_sha256": "ebad03a1cc0a86dd3a3e9b4d8e2b31a4fc83636d113357521d4b9b2f02d200d3",
+  "full_source_sha256": "3e1fe17a08fe9d7e0935fc15561d97291250219962c191b384cbe619da6e2425",
+  "eligible": true,
+  "verification": {
+    "task_id": "P6",
+    "attempt": "candidate_01",
+    "candidate_hash": "3e1fe17a08fe9d7e0935fc15561d97291250219962c191b384cbe619da6e2425",
+    "environment_id": "a8ea488063a518912258eeebed8ac874bee2baabe51aabe25a8cdf4ef5d1e6eb",
+    "check_kind": "candidate",
+    "status": "candidate_pass",
+    "process_exit_code": 0,
+    "diagnostics": [
+      {
+        "severity": "information",
+        "position": {
+          "column": 0,
+          "line": 451
+        },
+        "end_position": {
+          "column": 6,
+          "line": 451
+        },
+        "message": "FieldSpecification.WickAlgebra.ι_timeOrderF_superCommuteF_eq_time {𝓕 : FieldSpecification} {φ ψ : 𝓕.CrAnFieldOp}\n  (hφψ : FieldSpecification.crAnTimeOrderRel φ ψ) (hψφ : FieldSpecification.crAnTimeOrderRel ψ φ)\n  (a b : 𝓕.FieldOpFreeAlgebra) :\n  FieldSpecification.WickAlgebra.ι\n      (FieldSpecification.FieldOpFreeAlgebra.timeOrderF\n        (a *\n            (FieldSpecification.FieldOpFreeAlgebra.superCommuteF (FieldSpecification.FieldOpFreeAlgebra.ofCrAnOpF φ))\n              (FieldSpecification.FieldOpFreeAlgebra.ofCrAnOpF ψ) *\n          b)) =\n    FieldSpecification.WickAlgebra.ι\n      ((FieldSpecification.FieldOpFreeAlgebra.superCommuteF (FieldSpecification.FieldOpFreeAlgebra.ofCrAnOpF φ))\n          (FieldSpecification.FieldOpFreeAlgebra.ofCrAnOpF ψ) *\n        FieldSpecification.FieldOpFreeAlgebra.timeOrderF (a * b))",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "FieldSpecification.WickAlgebra.ι_timeOrderF_superCommuteF_eq_time {𝓕 : FieldSpecification} {φ ψ : 𝓕.CrAnFieldOp}\n  (hφψ : FieldSpecification.crAnTimeOrderRel φ ψ) (hψφ : FieldSpecification.crAnTimeOrderRel ψ φ)\n  (a b : 𝓕.FieldOpFreeAlgebra) :\n  FieldSpecification.WickAlgebra.ι\n      (FieldSpecification.FieldOpFreeAlgebra.timeOrderF\n        (a *\n            (FieldSpecification.FieldOpFreeAlgebra.superCommuteF (FieldSpecification.FieldOpFreeAlgebra.ofCrAnOpF φ))\n              (FieldSpecification.FieldOpFreeAlgebra.ofCrAnOpF ψ) *\n          b)) =\n    FieldSpecification.WickAlgebra.ι\n      ((FieldSpecification.FieldOpFreeAlgebra.superCommuteF (FieldSpecification.FieldOpFreeAlgebra.ofCrAnOpF φ))\n          (FieldSpecification.FieldOpFreeAlgebra.ofCrAnOpF ψ) *\n        FieldSpecification.FieldOpFreeAlgebra.timeOrderF (a * b))",
+          "endPos": {
+            "column": 6,
+            "line": 451
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/P_A/P6/normal/A1/repeat_2/validation/lean/002_candidate_01/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 0,
+            "line": 451
+          },
+          "severity": "information"
+        }
+      },
+      {
+        "severity": "information",
+        "position": {
+          "column": 0,
+          "line": 452
+        },
+        "end_position": {
+          "column": 6,
+          "line": 452
+        },
+        "message": "'FieldSpecification.WickAlgebra.ι_timeOrderF_superCommuteF_eq_time' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "'FieldSpecification.WickAlgebra.ι_timeOrderF_superCommuteF_eq_time' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+          "endPos": {
+            "column": 6,
+            "line": 452
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/P_A/P6/normal/A1/repeat_2/validation/lean/002_candidate_01/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 0,
+            "line": 452
+          },
+          "severity": "information"
+        }
+      }
+    ],
+    "goals": null,
+    "local_context": null,
+    "sorries": [],
+    "backend_proof_status": null,
+    "statement_check": "fixed_context_preserved",
+    "axioms": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext"
+    ],
+    "metrics": {
+      "proof_tokens": 948,
+      "raw_heartbeats": 41463094,
+      "heartbeats": 41463
+    },
+    "elapsed_ms": 11449,
+    "raw_log_path": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/P_A/P6/normal/A1/repeat_2/validation/lean/002_candidate_01/stdout.log",
+    "detail": null,
+    "failure_kind": null
+  },
+  "measurement": {
+    "proof_tokens": 948,
+    "raw_heartbeats": 41463094,
+    "token_reduction_pct": 19.181585677749357,
+    "heartbeat_reduction_pct": 1.1209510071555795,
+    "search_score": 10.151268342452468
+  },
+  "facts": {
+    "diagnostics": [
+      {
+        "severity": "information",
+        "position": {
+          "column": 0,
+          "line": 451
+        },
+        "end_position": {
+          "column": 6,
+          "line": 451
+        },
+        "message": "FieldSpecification.WickAlgebra.ι_timeOrderF_superCommuteF_eq_time {𝓕 : FieldSpecification} {φ ψ : 𝓕.CrAnFieldOp}\n  (hφψ : FieldSpecification.crAnTimeOrderRel φ ψ) (hψφ : FieldSpecification.crAnTimeOrderRel ψ φ)\n  (a b : 𝓕.FieldOpFreeAlgebra) :\n  FieldSpecification.WickAlgebra.ι\n      (FieldSpecification.FieldOpFreeAlgebra.timeOrderF\n        (a *\n            (FieldSpecification.FieldOpFreeAlgebra.superCommuteF (FieldSpecification.FieldOpFreeAlgebra.ofCrAnOpF φ))\n              (FieldSpecification.FieldOpFreeAlgebra.ofCrAnOpF ψ) *\n          b)) =\n    FieldSpecification.WickAlgebra.ι\n      ((FieldSpecification.FieldOpFreeAlgebra.superCommuteF (FieldSpecification.FieldOpFreeAlgebra.ofCrAnOpF φ))\n          (FieldSpecification.FieldOpFreeAlgebra.ofCrAnOpF ψ) *\n        FieldSpecification.FieldOpFreeAlgebra.timeOrderF (a * b))",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "FieldSpecification.WickAlgebra.ι_timeOrderF_superCommuteF_eq_time {𝓕 : FieldSpecification} {φ ψ : 𝓕.CrAnFieldOp}\n  (hφψ : FieldSpecification.crAnTimeOrderRel φ ψ) (hψφ : FieldSpecification.crAnTimeOrderRel ψ φ)\n  (a b : 𝓕.FieldOpFreeAlgebra) :\n  FieldSpecification.WickAlgebra.ι\n      (FieldSpecification.FieldOpFreeAlgebra.timeOrderF\n        (a *\n            (FieldSpecification.FieldOpFreeAlgebra.superCommuteF (FieldSpecification.FieldOpFreeAlgebra.ofCrAnOpF φ))\n              (FieldSpecification.FieldOpFreeAlgebra.ofCrAnOpF ψ) *\n          b)) =\n    FieldSpecification.WickAlgebra.ι\n      ((FieldSpecification.FieldOpFreeAlgebra.superCommuteF (FieldSpecification.FieldOpFreeAlgebra.ofCrAnOpF φ))\n          (FieldSpecification.FieldOpFreeAlgebra.ofCrAnOpF ψ) *\n        FieldSpecification.FieldOpFreeAlgebra.timeOrderF (a * b))",
+          "endPos": {
+            "column": 6,
+            "line": 451
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 0,
+            "line": 451
+          },
+          "severity": "information"
+        }
+      },
+      {
+        "severity": "information",
+        "position": {
+          "column": 0,
+          "line": 452
+        },
+        "end_position": {
+          "column": 6,
+          "line": 452
+        },
+        "message": "'FieldSpecification.WickAlgebra.ι_timeOrderF_superCommuteF_eq_time' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "'FieldSpecification.WickAlgebra.ι_timeOrderF_superCommuteF_eq_time' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+          "endPos": {
+            "column": 6,
+            "line": 452
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 0,
+            "line": 452
+          },
+          "severity": "information"
+        }
+      }
+    ],
+    "goals": null,
+    "local_context": null,
+    "sorries": [],
+    "axioms": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext"
+    ],
+    "detail": null,
+    "raw_lean_output": "{\"caption\":\"\",\"data\":\"FieldSpecification.WickAlgebra.ι_timeOrderF_superCommuteF_eq_time {𝓕 : FieldSpecification} {φ ψ : 𝓕.CrAnFieldOp}\\n  (hφψ : FieldSpecification.crAnTimeOrderRel φ ψ) (hψφ : FieldSpecification.crAnTimeOrderRel ψ φ)\\n  (a b : 𝓕.FieldOpFreeAlgebra) :\\n  FieldSpecification.WickAlgebra.ι\\n      (FieldSpecification.FieldOpFreeAlgebra.timeOrderF\\n        (a *\\n            (FieldSpecification.FieldOpFreeAlgebra.superCommuteF (FieldSpecification.FieldOpFreeAlgebra.ofCrAnOpF φ))\\n              (FieldSpecification.FieldOpFreeAlgebra.ofCrAnOpF ψ) *\\n          b)) =\\n    FieldSpecification.WickAlgebra.ι\\n      ((FieldSpecification.FieldOpFreeAlgebra.superCommuteF (FieldSpecification.FieldOpFreeAlgebra.ofCrAnOpF φ))\\n          (FieldSpecification.FieldOpFreeAlgebra.ofCrAnOpF ψ) *\\n        FieldSpecification.FieldOpFreeAlgebra.timeOrderF (a * b))\",\"endPos\":{\"column\":6,\"line\":451},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"[anonymous]\",\"pos\":{\"column\":0,\"line\":451},\"severity\":\"information\"}\n{\"caption\":\"\",\"data\":\"'FieldSpecification.WickAlgebra.ι_timeOrderF_superCommuteF_eq_time' depends on axioms: [propext,\\n Classical.choice,\\n Quot.sound]\",\"endPos\":{\"column\":6,\"line\":452},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"[anonymous]\",\"pos\":{\"column\":0,\"line\":452},\"severity\":\"information\"}\n"
+  },
+  "diagnosis": "The main cost is the basis reduction followed by repeated elaboration of five large list expressions in the basis case. This refactoring names those lists once and reuses them through the factorization and reconstruction steps, reducing proof syntax and duplicated elaboration while preserving the original argument.",
+  "duplicate_cache": false,
+  "available_at": 1792772398.684285,
+  "cumulative_calls": 1,
+  "cumulative_tokens": 22434,
+  "api_spend_usd": null
+}

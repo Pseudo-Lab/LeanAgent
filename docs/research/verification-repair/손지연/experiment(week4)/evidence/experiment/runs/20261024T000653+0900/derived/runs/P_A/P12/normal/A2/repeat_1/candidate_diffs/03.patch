@@ -1,0 +1,59 @@
+--- candidate_02.proof.lean
++++ candidate_03.proof.lean
+@@ -9,14 +9,11 @@
+       cases ϑ_sub_1 with
+       | zero =>
+           simp only [zero_add, gt_iff_lt, zero_lt_one, ModuleCode, forall_const]
+-          intro u
+-          let toAffineLineEval :=
+-            multilinearCombine₁_eq_affineLineEvaluation (F := F) (u := u)
+-          intro hprob_gt
+-          simp_rw [toAffineLineEval] at hprob_gt
+-          let prob_eq := prob_uniform_singleton_finFun_eq (F := F)
+-            (P := fun r => Δ₀(affineLineEvaluation (u 0) (u 1) r, MC) ≤ e)
+-          simp_rw [prob_eq, Nat.cast_one, ENNReal.coe_one, one_mul] at hprob_gt
++          intro u hprob_gt
++          simp_rw [multilinearCombine₁_eq_affineLineEvaluation (F := F) (u := u)] at hprob_gt
++          simp_rw [prob_uniform_singleton_finFun_eq (F := F)
++            (P := fun r => Δ₀(affineLineEvaluation (u 0) (u 1) r, MC) ≤ e),
++            Nat.cast_one, ENNReal.coe_one, one_mul] at hprob_gt
+           have h_correlated_agreement :=
+             hC_proximityGapAffineLines (u 0) (u 1) hprob_gt
+           simp only [jointProximityNat₂, Fin.isValue] at h_correlated_agreement
+@@ -47,11 +44,11 @@
+               simp only [Fin.snoc, Fin.castSucc_castLT, cast_eq, dite_eq_ite,
+                 ite_eq_left_iff, not_lt]
+               simp only [isEmpty_Prop, not_le, h_i_lt, IsEmpty.forall_iff]
+-          let P : F → (Fin (ϑ_sub_2 + 1) → F) → Prop := fun r_last r_init =>
+-            Δ₀(multilinearCombine (u := u) (r := Fin.snoc r_init r_last), MC) ≤ e
+-          let hP_split_r_last := prob_split_last_uniform_sampling_of_finFun
+-            (ϑ := ϑ_sub_2 + 1) (F := F) (P := P)
+-          unfold P at hP_split_r_last
++          have hP_split_r_last :=
++            prob_split_last_uniform_sampling_of_finFun
++              (ϑ := ϑ_sub_2 + 1) (F := F)
++              (P := fun r_last r_init =>
++                Δ₀(multilinearCombine (u := u) (r := Fin.snoc r_init r_last), MC) ≤ e)
+           simp_rw [h_finsnoc_eq_r] at hP_split_r_last
+           rw [hP_split_r_last] at hP_multilinearCombine_close_gt
+           have multilinearCombine_snoc_eq_multilinearCombine_affine
+@@ -101,13 +98,8 @@
+                   (u₁ := ⋈|(show WordStack A (Fin (2 ^ (ϑ_sub_2 + 1))) ι from U₁)) r,
+                   MC ^⋈ (Fin (2 ^ (ϑ_sub_2 + 1)))) ≤ e)
+                 (f := fun r => r ∈ R_star_set) (h_imp := h_r_implies))
+-          have h_final_gap : jointProximityNat₂
+-              (u₀ := ⋈|(show WordStack A (Fin (2 ^ (ϑ_sub_2 + 1))) ι from U₀))
+-              (u₁ := ⋈|(show WordStack A (Fin (2 ^ (ϑ_sub_2 + 1))) ι from U₁))
+-              (e := e) (C := MC ^⋈ (Fin (2 ^ (ϑ_sub_2 + 1)))) := by
+-            apply h_interleaved_gaps (2 ^ (ϑ_sub_2 + 1)) Nat.one_le_two_pow
+-              (u₀ := ⋈|(show WordStack A (Fin (2 ^ (ϑ_sub_2 + 1))) ι from U₀))
+-              (u₁ := ⋈|(show WordStack A (Fin (2 ^ (ϑ_sub_2 + 1))) ι from U₁))
+-              h_prob_line_gt_eps_div_q
+           apply CA_split_rowwise_implies_CA (u := u) (e := e)
+-          exact h_final_gap
+\ No newline at end of file
++          apply h_interleaved_gaps (2 ^ (ϑ_sub_2 + 1)) Nat.one_le_two_pow
++            (u₀ := ⋈|(show WordStack A (Fin (2 ^ (ϑ_sub_2 + 1))) ι from U₀))
++            (u₁ := ⋈|(show WordStack A (Fin (2 ^ (ϑ_sub_2 + 1))) ι from U₁))
++          exact h_prob_line_gt_eps_div_q
+\ No newline at end of file

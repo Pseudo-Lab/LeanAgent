@@ -1,0 +1,95 @@
+by
+  classical
+  rcases boundedu with ⟨B, T, hBT⟩
+  let S : Finset ℤ := Finset.Icc B T
+  let V := ↥S
+  let f : ℕ → V × V × V × V := fun n =>
+    (⟨u n, by simpa [S] using hBT n⟩,
+      (⟨u (n + 1), by simpa [S] using hBT (n + 1)⟩,
+        (⟨u (n + 2), by simpa [S] using hBT (n + 2)⟩,
+          ⟨u (n + 3), by simpa [S] using hBT (n + 3)⟩)))
+  have cycle : ∀ a b : ℕ, a < b → f a = f b →
+      ∃ N c : ℕ, c > 0 ∧ ∀ n ≥ N, u (n + c) = u n := by
+    intro a b hab hf
+    have h0 : u a = u b := by
+      simpa [f] using
+        (congrArg (fun x : V × V × V × V => (x.1 : ℤ)) hf)
+    have h1 : u (a + 1) = u (b + 1) := by
+      simpa [f] using
+        (congrArg (fun x : V × V × V × V => (x.2.1 : ℤ)) hf)
+    have h2 : u (a + 2) = u (b + 2) := by
+      simpa [f] using
+        (congrArg (fun x : V × V × V × V => (x.2.2.1 : ℤ)) hf)
+    have h3 : u (a + 3) = u (b + 3) := by
+      simpa [f] using
+        (congrArg (fun x : V × V × V × V => (x.2.2.2 : ℤ)) hf)
+    let c := b - a
+    have hc : 0 < c := by
+      dsimp [c]
+      omega
+    have hbc : a + c = b := by
+      dsimp [c]
+      omega
+    have hb0 : u (a + 0 + c) = u (a + 0) := by
+      rw [show a + 0 + c = b by omega, Nat.add_zero]
+      exact h0.symm
+    have hb1 : u (a + 1 + c) = u (a + 1) := by
+      rw [show a + 1 + c = b + 1 by omega]
+      exact h1.symm
+    have hb2 : u (a + 2 + c) = u (a + 2) := by
+      rw [show a + 2 + c = b + 2 by omega]
+      exact h2.symm
+    have hb3 : u (a + 3 + c) = u (a + 3) := by
+      rw [show a + 3 + c = b + 3 by omega]
+      exact h3.symm
+    have hper : ∀ k : ℕ, u (a + k + c) = u (a + k) := by
+      intro k
+      induction k using Nat.strong_induction_on with
+      | h k ih =>
+        by_cases hk : k < 4
+        · interval_cases k
+          · simpa using hb0
+          · simpa using hb1
+          · simpa using hb2
+          · simpa using hb3
+        · have hk4 : 4 ≤ k := by omega
+          have hm1 : u (a + k + c - 1) = u (a + k - 1) := by
+            have hh := ih (k - 1) (by omega)
+            have hi : a + k + c - 1 = a + (k - 1) + c := by omega
+            have hj : a + k - 1 = a + (k - 1) := by omega
+            rw [hi, hj]
+            exact hh
+          have hm2 : u (a + k + c - 2) = u (a + k - 2) := by
+            have hh := ih (k - 2) (by omega)
+            have hi : a + k + c - 2 = a + (k - 2) + c := by omega
+            have hj : a + k - 2 = a + (k - 2) := by omega
+            rw [hi, hj]
+            exact hh
+          have hm3 : u (a + k + c - 3) = u (a + k - 3) := by
+            have hh := ih (k - 3) (by omega)
+            have hi : a + k + c - 3 = a + (k - 3) + c := by omega
+            have hj : a + k - 3 = a + (k - 3) := by omega
+            rw [hi, hj]
+            exact hh
+          have hm4 : u (a + k + c - 4) = u (a + k - 4) := by
+            have hh := ih (k - 4) (by omega)
+            have hi : a + k + c - 4 = a + (k - 4) + c := by omega
+            have hj : a + k - 4 = a + (k - 4) := by omega
+            rw [hi, hj]
+            exact hh
+          have hl := (hu (a + k) (by omega)).1
+          have hr := (hu (a + k + c) (by omega)).1
+          rw [hm1, hm2, hm3, hm4] at hr
+          have heq : (u (a + k + c) : ℝ) = (u (a + k) : ℝ) :=
+            hr.trans hl.symm
+          exact_mod_cast heq
+    refine ⟨a, c, hc, ?_⟩
+    intro n hn
+    have hh := hper (n - a)
+    have hna : a + (n - a) = n := by omega
+    rw [hna] at hh
+    exact hh
+  obtain ⟨a, b, hab, hf⟩ := Finite.exists_ne_map_eq_of_infinite f
+  rcases lt_or_gt_of_ne hab with hablt | hbalt
+  · exact cycle a b hablt hf
+  · exact cycle b a hbalt hf.symm

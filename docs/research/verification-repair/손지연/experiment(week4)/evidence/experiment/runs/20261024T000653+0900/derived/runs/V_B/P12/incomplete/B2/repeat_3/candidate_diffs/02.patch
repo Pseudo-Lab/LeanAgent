@@ -1,0 +1,51 @@
+--- candidate_01.proof.lean
++++ candidate_02.proof.lean
+@@ -3,7 +3,10 @@
+   intro ϑ hϑ_gt_0
+   induction ϑ, hϑ_gt_0 using Nat.le_induction with
+   | base =>
+-      simpa using hC_proximityGapAffineLines
++      simpa [δ_ε_multilinearCorrelatedAgreement_Nat,
++        e_ε_correlatedAgreementAffineLinesNat, multilinearCombine,
++        jointProximityNat₂, jointProximityNat, finMapTwoWords,
++        affineLineEvaluation] using hC_proximityGapAffineLines
+   | succ ϑ hϑ_ge_one ih =>
+       intro u h_close
+       let U₀ := (splitHalfRowWiseInterleavedWords (ϑ := ϑ) u).1
+@@ -15,7 +18,9 @@
+               (MC := MC) (u := u) (e := e) r_last r_init ]
+             > (((Nat.cast (R := ℝ≥0) (ϑ + 1)) * ε : ℝ≥0) /
+                 (Fintype.card F : ℝ≥0)) := by
+-        simpa [multilinearCombine_affineComb_split_last_close] using h_close
++        simpa [multilinearCombine_affineComb_split_last_close,
++          multilinearCombine, splitHalfRowWiseInterleavedWords,
++          affineLineEvaluation] using h_close
+       have hR :
+           Pr_{ let r ← $ᵖ F }[
+             r ∈ R_star_tensor MC (m := ϑ) (e := e) (ε := ε) U₀ U₁ ]
+@@ -31,13 +36,18 @@
+         apply lt_of_lt_of_le hR
+         apply Pr_le_Pr_of_implies
+         intro r hr
+-        have hr' : r ∈ R_star_tensor MC (m := ϑ) (e := e) (ε := ε) U₀ U₁ := hr
+         have h_joint := correlatedAgreement_of_mem_R_star_tensor
+           (MC := MC) (e := e) (ε := ε) (ϑ_pred := ϑ) ih u
+-          (⟨r, hr'⟩ : R_star_tensor MC (m := ϑ) (e := e) (ε := ε) U₀ U₁)
+-        simpa [jointProximityNat, U₀, U₁] using h_joint
++          (⟨r, hr⟩ : R_star_tensor MC (m := ϑ) (e := e) (ε := ε) U₀ U₁)
++        simpa [jointProximityNat, U₀, U₁, Interleavable.interleave,
++          affineLineEvaluation, Matrix.transpose_apply, Pi.add_apply,
++          Pi.smul_apply] using h_joint
++      have hpow : 2 ^ ϑ ≥ 1 := by
++        exact Nat.one_le_iff_ne_zero.mpr (pow_ne_zero ϑ (by decide))
+       have h_joint_halves :=
+-        (h_interleaved_gaps (2 ^ ϑ) (by positivity))
++        (h_interleaved_gaps (2 ^ ϑ) hpow)
+           (⋈| U₀) (⋈| U₁) h_affine_probability
+       simpa [jointProximityNat₂, jointProximityNat, U₀, U₁,
+-        splitHalfRowWiseInterleavedWords] using h_joint_halves
+\ No newline at end of file
++        splitHalfRowWiseInterleavedWords, finMapTwoWords,
++        Interleavable.interleave, CodeInterleavable.interleaveCode,
++        interleavedCodeSet, Matrix.transpose_apply] using h_joint_halves
+\ No newline at end of file

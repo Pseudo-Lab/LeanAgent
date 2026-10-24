@@ -1,0 +1,15 @@
+--- candidate_01.proof.lean
++++ candidate_02.proof.lean
+@@ -15,8 +15,5 @@
+         updatedStates (updatedStates σ ks' vs') ks vs := by
+     apply updatedStatesComm
+     simpa [List.unzip_zip Hlen, List.unzip_zip Hlen'] using Hdisj
+-  have Hu : UpdateStates (updatedStates σ ks' vs') ks vs
+-      (updatedStates (updatedStates σ ks' vs') ks vs) :=
+-    updatedStatesUpdate Hlen (updatedStatesDefMonotone Hdef)
+-  rw [← Hcomm, ← UpdateStatesUpdated Hup, ← InitStatesUpdated Hinit] at Hu
+-  exact Hu
+\ No newline at end of file
++  rw [InitStatesUpdated Hinit, UpdateStatesUpdated Hup, Hcomm]
++  exact updatedStatesUpdate Hlen (updatedStatesDefMonotone Hdef)
+\ No newline at end of file

@@ -1,0 +1,57 @@
+--- candidate_01.proof.lean
++++ candidate_02.proof.lean
+@@ -11,21 +11,37 @@
+           Lambda.LExpr.LExpr.getVars]
+     · simp [Imperative.HasVarsPure.getVars,
+         Lambda.LExpr.LExpr.getVars] at Hin
+-      cases Hin <;> simp_all
+-      cases fn_ih <;> simp_all
+-      cases e_ih <;> simp_all
++      rcases Hin with Hin | Hin
++      · rcases fn_ih Hin with Hin | Hin
++        · exact Or.inl Hin
++        · exact Or.inr (Or.inr Hin)
++      · rcases e_ih Hin with Hin | Hin
++        · exact Or.inr (Or.inl Hin)
++        · exact Or.inr (Or.inr Hin)
+   case quant k ty tr_ih e_ih =>
+-    cases Hin <;> simp_all
+-    cases tr_ih <;> simp_all
+-    cases e_ih <;> simp_all
++    rcases Hin with Hin | Hin
++    · rcases tr_ih Hin with Hin | Hin
++      · exact Or.inl Hin
++      · exact Or.inr (Or.inr Hin)
++    · rcases e_ih Hin with Hin | Hin
++      · exact Or.inr (Or.inl Hin)
++      · exact Or.inr (Or.inr Hin)
+   case ite c t e c_ih t_ih e_ih =>
+-    cases Hin with
+-    | inl Hin => cases c_ih <;> simp_all
+-    | inr Hin =>
+-      cases Hin with
+-      | inl Hin => cases t_ih <;> simp_all
+-      | inr Hin => cases e_ih <;> simp_all
++    rcases Hin with Hin | Hin | Hin
++    · rcases c_ih Hin with Hin | Hin
++      · exact Or.inl Hin
++      · exact Or.inr (Or.inr (Or.inr Hin))
++    · rcases t_ih Hin with Hin | Hin
++      · exact Or.inr (Or.inl Hin)
++      · exact Or.inr (Or.inr (Or.inr Hin))
++    · rcases e_ih Hin with Hin | Hin
++      · exact Or.inr (Or.inr (Or.inl Hin))
++      · exact Or.inr (Or.inr (Or.inr Hin))
+   case eq e1 e2 e1_ih e2_ih =>
+-    cases Hin <;> simp_all
+-    cases e1_ih <;> simp_all
+-    cases e2_ih <;> simp_all
+\ No newline at end of file
++    rcases Hin with Hin | Hin
++    · rcases e1_ih Hin with Hin | Hin
++      · exact Or.inl Hin
++      · exact Or.inr (Or.inr Hin)
++    · rcases e2_ih Hin with Hin | Hin
++      · exact Or.inr (Or.inl Hin)
++      · exact Or.inr (Or.inr Hin)
+\ No newline at end of file

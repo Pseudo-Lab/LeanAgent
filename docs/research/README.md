@@ -12,7 +12,7 @@
 | `Autoformalization` | 박선영 · 남성우 | [autoformalization](autoformalization/README.md) |
 | `Automated Theorem Proving` (ATP) | 권주원 · 손지연 | [automated-theorem-proving](automated-theorem-proving/README.md) |
 | `Verifier-guided Agent` | 정소미 · 박성호 | [verifier-guided-agent](verifier-guided-agent/README.md) |
-| 검증·수리 설계 | 손지연 | [verification-repair](verification-repair/README.md) |
+| 검증·수리 설계·구현·실험 | 손지연 | [verification-repair](verification-repair/README.md): Week 3 초기 검증 / Week 4 구현·15문제 실험 |
 
 ## 문제 연구
 

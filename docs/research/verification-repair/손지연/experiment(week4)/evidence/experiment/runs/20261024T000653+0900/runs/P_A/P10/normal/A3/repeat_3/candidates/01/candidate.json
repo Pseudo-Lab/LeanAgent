@@ -1,0 +1,773 @@
+{
+  "call": 1,
+  "origin": "generated",
+  "body": "by\n  unfold fiberwiseClose at h_fw_dist_lt\n  unfold hammingClose\n  let d_fw := fiberwiseDistance 𝔽q β (i := i) steps h_i_add_steps f\n  let C_i := BBF_Code 𝔽q β (h_ℓ_add_R_rate := h_ℓ_add_R_rate) ⟨i, by omega⟩\n  let d_H := Code.distFromCode f C_i\n  let d_i := BBF_CodeDistance ℓ 𝓡 ⟨i, by omega⟩\n  let d_next := BBF_CodeDistance ℓ 𝓡 ⟨i + steps, by omega⟩\n  have hdpos : 0 < d_i := by\n    dsimp [d_i, BBF_CodeDistance]\n    omega\n  have hC : Nonempty C_i := by\n    simp only [nonempty_subtype, C_i]\n    exact Submodule.nonempty _\n  obtain ⟨g, hg, hmin⟩ : ∃ g ∈ C_i, d_fw =\n      (fiberwiseDisagreementSet 𝔽q β i steps h_i_add_steps f g).ncard := by\n    let S := (fun g : C_i =>\n      (fiberwiseDisagreementSet 𝔽q β i steps h_i_add_steps f g).ncard) '' Set.univ\n    have hm : sInf S ∈ S := Nat.sInf_mem (Set.image_nonempty.mpr Set.univ_nonempty)\n    rcases hm with ⟨g, _, h⟩\n    exact ⟨g, g.property, h.symm⟩\n  have hfg : (hammingDist f g : ℕ∞) ≤ d_fw * 2 ^ steps := by\n    change (hammingDist f g : ℕ∞) ≤ ↑d_fw * ↑(2 ^ steps)\n    rw [← ENat.coe_mul, ENat.coe_le_coe, hmin]\n    set Δ := Finset.filter (fun x => f x ≠ g x) Finset.univ\n    set Y := fiberwiseDisagreementSet 𝔽q β i steps h_i_add_steps f g\n    let Q := iteratedQuotientMap 𝔽q β h_ℓ_add_R_rate (i := i)\n      (k := steps) (h_bound := h_i_add_steps)\n    let K := fun x : sDomain 𝔽q β h_ℓ_add_R_rate ⟨i, by omega⟩ =>\n      pointToIterateQuotientIndex (i := ⟨i, by omega⟩) (steps := steps)\n        (h_i_add_steps := h_i_add_steps) (x := x)\n    let F := qMap_total_fiber 𝔽q β (i := ⟨i, by omega⟩) (steps := steps)\n      (h_i_add_steps := by apply Nat.lt_add_of_pos_right_of_le; omega)\n    let e : {x // x ∈ Δ} → {y // y ∈ Y.toFinset} × Fin (2 ^ steps) := fun x =>\n      (⟨Q x, by\n        rw [Set.mem_toFinset]\n        change ∃ z, Q z = Q x ∧ f z ≠ g z\n        exact ⟨x, rfl, (Finset.mem_filter.mp x.property).2⟩⟩, K x)\n    have he : Function.Injective e := by\n      intro x x' h\n      have hQ : Q x = Q x' := by\n        simpa only [e] using congrArg (fun z => z.1.val) h\n      have hK : K x = K x' := by\n        simpa only [e] using congrArg Prod.snd h\n      apply Subtype.ext\n      have hx : F (Q x) (K x) = x := by\n        exact (is_fiber_iff_generates_quotient_point 𝔽q β i steps h_i_add_steps\n          (x := x) (y := Q x)).mp rfl\n      have hx' : F (Q x') (K x') = x' := by\n        exact (is_fiber_iff_generates_quotient_point 𝔽q β i steps h_i_add_steps\n          (x := x') (y := Q x')).mp rfl\n      rw [← hx, ← hx', hQ, hK]\n    change Δ.card ≤ Y.ncard * 2 ^ steps\n    calc\n      Δ.card = Fintype.card {x // x ∈ Δ} := by simp\n      _ ≤ Fintype.card ({y // y ∈ Y.toFinset} × Fin (2 ^ steps)) :=\n        Fintype.card_le_of_injective e he\n      _ = Y.ncard * 2 ^ steps := by simp\n  have hbridge : d_H ≤ d_fw * 2 ^ steps := by\n    apply le_trans (b := (hammingDist f g : ℕ∞))\n    · simp only [distFromCode, SetLike.mem_coe, hammingDist, ne_eq, d_H]\n      apply sInf_le\n      exact ⟨g, hg, le_rfl⟩\n    · exact hfg\n  have hfw : 2 * d_fw ≤ d_next - 1 :=\n    Nat.le_of_lt_succ (WithTop.coe_lt_coe.1 h_fw_dist_lt)\n  have hid : (d_next - 1) * 2 ^ steps = d_i - 1 := by\n    dsimp [d_i, d_next, BBF_CodeDistance]\n    rw [Nat.sub_mul, ← Nat.pow_add, ← Nat.pow_add]\n    have h₁ : ℓ + 𝓡 - (i + steps) + steps = ℓ + 𝓡 - i := by omega\n    have h₂ : ℓ - (i + steps) + steps = ℓ - i := by omega\n    rw [h₁, h₂]\n  have hfinite : d_H ≠ ⊤ := by\n    dsimp [d_H]\n    rw [Code.distFromCode_eq_top_iff_empty f C_i]\n    exact Set.nonempty_iff_ne_empty'.mp hC\n  let n := ENat.toNat d_H\n  have hdH : d_H = n := (ENat.coe_toNat hfinite).symm\n  have hn : 2 * n ≤ d_i - 1 := by\n    have hn' : n ≤ d_fw * 2 ^ steps := by\n      rw [← ENat.coe_le_coe]\n      exact le_of_eq_of_le hdH.symm hbridge\n    calc\n      2 * n ≤ 2 * (d_fw * 2 ^ steps) := by gcongr\n      _ = (2 * d_fw) * 2 ^ steps := by rw [mul_assoc]\n      _ ≤ (d_next - 1) * 2 ^ steps := by gcongr\n      _ = d_i - 1 := hid\n  simp only [d_H, n] at hdH\n  rw [hdH]\n  change ((2 : ℕ) : ℕ∞) * ↑Δ₀(f, C_i).toNat <\n    ↑(BBF_CodeDistance ℓ 𝓡 ⟨i, by omega⟩)\n  rw [← ENat.coe_mul, ENat.coe_lt_coe]\n  exact Nat.lt_of_le_pred hdpos hn",
+  "proof_sha256": "8e9801d989aaa14de4b18d3f763f2e1fb9e30fecfa334b3349cc35c47825e5a5",
+  "full_source_sha256": "09daa81d5aa967dce58aa39af60748c655d25f64dd3db50f0caf8d5bbdd8b69b",
+  "eligible": false,
+  "verification": {
+    "task_id": "P10",
+    "attempt": "candidate_01",
+    "candidate_hash": "09daa81d5aa967dce58aa39af60748c655d25f64dd3db50f0caf8d5bbdd8b69b",
+    "environment_id": "0c6971d601fccc37e69d84ddfa1ac63a41527ba5fa2d7e4f87c63547c308939a",
+    "check_kind": "candidate",
+    "status": "invalid_candidate",
+    "process_exit_code": null,
+    "diagnostics": [
+      {
+        "severity": "warning",
+        "position": {
+          "column": 84,
+          "line": 395
+        },
+        "end_position": {
+          "column": 96,
+          "line": 395
+        },
+        "message": "`not_lt_zero'` has been deprecated: Use `_root_.not_lt_zero` instead",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "`not_lt_zero'` has been deprecated: Use `_root_.not_lt_zero` instead",
+          "endPos": {
+            "column": 96,
+            "line": 395
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/P_A/P10/normal/A3/repeat_3/validation/lean/001_candidate_01_guard/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "Lean.Linter.deprecatedAttr",
+          "pos": {
+            "column": 84,
+            "line": 395
+          },
+          "severity": "warning"
+        }
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 48,
+          "line": 487
+        },
+        "end_position": {
+          "column": 60,
+          "line": 487
+        },
+        "message": "`not_lt_zero'` has been deprecated: Use `_root_.not_lt_zero` instead",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "`not_lt_zero'` has been deprecated: Use `_root_.not_lt_zero` instead",
+          "endPos": {
+            "column": 60,
+            "line": 487
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/P_A/P10/normal/A3/repeat_3/validation/lean/001_candidate_01_guard/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "Lean.Linter.deprecatedAttr",
+          "pos": {
+            "column": 48,
+            "line": 487
+          },
+          "severity": "warning"
+        }
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 4,
+          "line": 809
+        },
+        "end_position": {
+          "column": 14,
+          "line": 809
+        },
+        "message": "declaration uses `sorry`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "declaration uses `sorry`",
+          "endPos": {
+            "column": 14,
+            "line": 809
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/P_A/P10/normal/A3/repeat_3/validation/lean/001_candidate_01_guard/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "hasSorry",
+          "pos": {
+            "column": 4,
+            "line": 809
+          },
+          "severity": "warning"
+        }
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 6,
+          "line": 845
+        },
+        "end_position": {
+          "column": 32,
+          "line": 845
+        },
+        "message": "declaration uses `sorry`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "declaration uses `sorry`",
+          "endPos": {
+            "column": 32,
+            "line": 845
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/P_A/P10/normal/A3/repeat_3/validation/lean/001_candidate_01_guard/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "hasSorry",
+          "pos": {
+            "column": 6,
+            "line": 845
+          },
+          "severity": "warning"
+        }
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 8,
+          "line": 959
+        },
+        "end_position": {
+          "column": 36,
+          "line": 959
+        },
+        "message": "declaration uses `sorry`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "declaration uses `sorry`",
+          "endPos": {
+            "column": 36,
+            "line": 959
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/P_A/P10/normal/A3/repeat_3/validation/lean/001_candidate_01_guard/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "hasSorry",
+          "pos": {
+            "column": 8,
+            "line": 959
+          },
+          "severity": "warning"
+        }
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 15,
+          "line": 1025
+        },
+        "end_position": {
+          "column": 29,
+          "line": 1025
+        },
+        "message": "`Subtype.eq_iff` has been deprecated: Use `Subtype.ext_iff` instead\n\nNote: The updated constant has a different type:\n  ∀ {α : Sort u} {p : α → Prop} {a1 a2 : { x // p x }}, a1 = a2 ↔ ↑a1 = ↑a2\ninstead of\n  ∀ {α : Sort u_1} {p : α → Prop} {a1 a2 : { x // p x }}, a1 = a2 ↔ ↑a1 = ↑a2",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "`Subtype.eq_iff` has been deprecated: Use `Subtype.ext_iff` instead\n\nNote: The updated constant has a different type:\n  ∀ {α : Sort u} {p : α → Prop} {a1 a2 : { x // p x }}, a1 = a2 ↔ ↑a1 = ↑a2\ninstead of\n  ∀ {α : Sort u_1} {p : α → Prop} {a1 a2 : { x // p x }}, a1 = a2 ↔ ↑a1 = ↑a2",
+          "endPos": {
+            "column": 29,
+            "line": 1025
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/P_A/P10/normal/A3/repeat_3/validation/lean/001_candidate_01_guard/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "Lean.Linter.deprecatedAttr",
+          "pos": {
+            "column": 15,
+            "line": 1025
+          },
+          "severity": "warning"
+        }
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 15,
+          "line": 1033
+        },
+        "end_position": {
+          "column": 29,
+          "line": 1033
+        },
+        "message": "`Subtype.eq_iff` has been deprecated: Use `Subtype.ext_iff` instead\n\nNote: The updated constant has a different type:\n  ∀ {α : Sort u} {p : α → Prop} {a1 a2 : { x // p x }}, a1 = a2 ↔ ↑a1 = ↑a2\ninstead of\n  ∀ {α : Sort u_1} {p : α → Prop} {a1 a2 : { x // p x }}, a1 = a2 ↔ ↑a1 = ↑a2",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "`Subtype.eq_iff` has been deprecated: Use `Subtype.ext_iff` instead\n\nNote: The updated constant has a different type:\n  ∀ {α : Sort u} {p : α → Prop} {a1 a2 : { x // p x }}, a1 = a2 ↔ ↑a1 = ↑a2\ninstead of\n  ∀ {α : Sort u_1} {p : α → Prop} {a1 a2 : { x // p x }}, a1 = a2 ↔ ↑a1 = ↑a2",
+          "endPos": {
+            "column": 29,
+            "line": 1033
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/P_A/P10/normal/A3/repeat_3/validation/lean/001_candidate_01_guard/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "Lean.Linter.deprecatedAttr",
+          "pos": {
+            "column": 15,
+            "line": 1033
+          },
+          "severity": "warning"
+        }
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 28,
+          "line": 1047
+        },
+        "end_position": {
+          "column": 60,
+          "line": 1047
+        },
+        "message": "`AddSubmonoidClass.coe_finset_sum` has been deprecated: Use `AddSubmonoidClass.coe_finsetSum` instead",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "`AddSubmonoidClass.coe_finset_sum` has been deprecated: Use `AddSubmonoidClass.coe_finsetSum` instead",
+          "endPos": {
+            "column": 60,
+            "line": 1047
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/P_A/P10/normal/A3/repeat_3/validation/lean/001_candidate_01_guard/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "Lean.Linter.deprecatedAttr",
+          "pos": {
+            "column": 28,
+            "line": 1047
+          },
+          "severity": "warning"
+        }
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 52,
+          "line": 1085
+        },
+        "end_position": {
+          "column": 67,
+          "line": 1085
+        },
+        "message": "`Nat.add_eq_zero` has been deprecated: Use `Nat.add_eq_zero_iff` instead",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "`Nat.add_eq_zero` has been deprecated: Use `Nat.add_eq_zero_iff` instead",
+          "endPos": {
+            "column": 67,
+            "line": 1085
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/P_A/P10/normal/A3/repeat_3/validation/lean/001_candidate_01_guard/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "Lean.Linter.deprecatedAttr",
+          "pos": {
+            "column": 52,
+            "line": 1085
+          },
+          "severity": "warning"
+        }
+      },
+      {
+        "severity": "information",
+        "position": {
+          "column": 0,
+          "line": 1248
+        },
+        "end_position": {
+          "column": 6,
+          "line": 1248
+        },
+        "message": "hammingClose 𝔽q β : (i : Fin (ℓ + 1)) → OracleFunction 𝔽q β i → Prop",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "hammingClose 𝔽q β : (i : Fin (ℓ + 1)) → OracleFunction 𝔽q β i → Prop",
+          "endPos": {
+            "column": 6,
+            "line": 1248
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/P_A/P10/normal/A3/repeat_3/validation/lean/001_candidate_01_guard/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 0,
+            "line": 1248
+          },
+          "severity": "information"
+        }
+      },
+      {
+        "severity": "error",
+        "position": {
+          "column": 0,
+          "line": 1423
+        },
+        "end_position": {
+          "column": 4213,
+          "line": 1423
+        },
+        "message": "repair lexer: <repair_body>:42:50: unexpected identifier after decimal point; consider parenthesizing the number",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "repair lexer: <repair_body>:42:50: unexpected identifier after decimal point; consider parenthesizing the number",
+          "endPos": {
+            "column": 4213,
+            "line": 1423
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/P_A/P10/normal/A3/repeat_3/validation/lean/001_candidate_01_guard/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 0,
+            "line": 1423
+          },
+          "severity": "error"
+        }
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 8,
+          "line": 1427
+        },
+        "end_position": {
+          "column": 60,
+          "line": 1427
+        },
+        "message": "declaration uses `sorry`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "declaration uses `sorry`",
+          "endPos": {
+            "column": 60,
+            "line": 1427
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/P_A/P10/normal/A3/repeat_3/validation/lean/001_candidate_01_guard/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "hasSorry",
+          "pos": {
+            "column": 8,
+            "line": 1427
+          },
+          "severity": "warning"
+        }
+      }
+    ],
+    "goals": null,
+    "local_context": null,
+    "sorries": null,
+    "backend_proof_status": null,
+    "statement_check": "not_run",
+    "axioms": null,
+    "metrics": {},
+    "elapsed_ms": 0,
+    "raw_log_path": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/P_A/P10/normal/A3/repeat_3/validation/lean/001_candidate_01_guard/stdout.log",
+    "detail": "parse-only proof boundary/policy check failed",
+    "failure_kind": "syntax"
+  },
+  "measurement": {
+    "proof_tokens": null,
+    "raw_heartbeats": null,
+    "token_reduction_pct": null,
+    "heartbeat_reduction_pct": null,
+    "search_score": null
+  },
+  "facts": {
+    "diagnostics": [
+      {
+        "severity": "warning",
+        "position": {
+          "column": 84,
+          "line": 395
+        },
+        "end_position": {
+          "column": 96,
+          "line": 395
+        },
+        "message": "`not_lt_zero'` has been deprecated: Use `_root_.not_lt_zero` instead",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "`not_lt_zero'` has been deprecated: Use `_root_.not_lt_zero` instead",
+          "endPos": {
+            "column": 96,
+            "line": 395
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "Lean.Linter.deprecatedAttr",
+          "pos": {
+            "column": 84,
+            "line": 395
+          },
+          "severity": "warning"
+        }
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 48,
+          "line": 487
+        },
+        "end_position": {
+          "column": 60,
+          "line": 487
+        },
+        "message": "`not_lt_zero'` has been deprecated: Use `_root_.not_lt_zero` instead",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "`not_lt_zero'` has been deprecated: Use `_root_.not_lt_zero` instead",
+          "endPos": {
+            "column": 60,
+            "line": 487
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "Lean.Linter.deprecatedAttr",
+          "pos": {
+            "column": 48,
+            "line": 487
+          },
+          "severity": "warning"
+        }
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 4,
+          "line": 809
+        },
+        "end_position": {
+          "column": 14,
+          "line": 809
+        },
+        "message": "declaration uses `sorry`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "declaration uses `sorry`",
+          "endPos": {
+            "column": 14,
+            "line": 809
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "hasSorry",
+          "pos": {
+            "column": 4,
+            "line": 809
+          },
+          "severity": "warning"
+        }
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 6,
+          "line": 845
+        },
+        "end_position": {
+          "column": 32,
+          "line": 845
+        },
+        "message": "declaration uses `sorry`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "declaration uses `sorry`",
+          "endPos": {
+            "column": 32,
+            "line": 845
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "hasSorry",
+          "pos": {
+            "column": 6,
+            "line": 845
+          },
+          "severity": "warning"
+        }
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 8,
+          "line": 959
+        },
+        "end_position": {
+          "column": 36,
+          "line": 959
+        },
+        "message": "declaration uses `sorry`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "declaration uses `sorry`",
+          "endPos": {
+            "column": 36,
+            "line": 959
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "hasSorry",
+          "pos": {
+            "column": 8,
+            "line": 959
+          },
+          "severity": "warning"
+        }
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 15,
+          "line": 1025
+        },
+        "end_position": {
+          "column": 29,
+          "line": 1025
+        },
+        "message": "`Subtype.eq_iff` has been deprecated: Use `Subtype.ext_iff` instead\n\nNote: The updated constant has a different type:\n  ∀ {α : Sort u} {p : α → Prop} {a1 a2 : { x // p x }}, a1 = a2 ↔ ↑a1 = ↑a2\ninstead of\n  ∀ {α : Sort u_1} {p : α → Prop} {a1 a2 : { x // p x }}, a1 = a2 ↔ ↑a1 = ↑a2",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "`Subtype.eq_iff` has been deprecated: Use `Subtype.ext_iff` instead\n\nNote: The updated constant has a different type:\n  ∀ {α : Sort u} {p : α → Prop} {a1 a2 : { x // p x }}, a1 = a2 ↔ ↑a1 = ↑a2\ninstead of\n  ∀ {α : Sort u_1} {p : α → Prop} {a1 a2 : { x // p x }}, a1 = a2 ↔ ↑a1 = ↑a2",
+          "endPos": {
+            "column": 29,
+            "line": 1025
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "Lean.Linter.deprecatedAttr",
+          "pos": {
+            "column": 15,
+            "line": 1025
+          },
+          "severity": "warning"
+        }
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 15,
+          "line": 1033
+        },
+        "end_position": {
+          "column": 29,
+          "line": 1033
+        },
+        "message": "`Subtype.eq_iff` has been deprecated: Use `Subtype.ext_iff` instead\n\nNote: The updated constant has a different type:\n  ∀ {α : Sort u} {p : α → Prop} {a1 a2 : { x // p x }}, a1 = a2 ↔ ↑a1 = ↑a2\ninstead of\n  ∀ {α : Sort u_1} {p : α → Prop} {a1 a2 : { x // p x }}, a1 = a2 ↔ ↑a1 = ↑a2",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "`Subtype.eq_iff` has been deprecated: Use `Subtype.ext_iff` instead\n\nNote: The updated constant has a different type:\n  ∀ {α : Sort u} {p : α → Prop} {a1 a2 : { x // p x }}, a1 = a2 ↔ ↑a1 = ↑a2\ninstead of\n  ∀ {α : Sort u_1} {p : α → Prop} {a1 a2 : { x // p x }}, a1 = a2 ↔ ↑a1 = ↑a2",
+          "endPos": {
+            "column": 29,
+            "line": 1033
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "Lean.Linter.deprecatedAttr",
+          "pos": {
+            "column": 15,
+            "line": 1033
+          },
+          "severity": "warning"
+        }
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 28,
+          "line": 1047
+        },
+        "end_position": {
+          "column": 60,
+          "line": 1047
+        },
+        "message": "`AddSubmonoidClass.coe_finset_sum` has been deprecated: Use `AddSubmonoidClass.coe_finsetSum` instead",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "`AddSubmonoidClass.coe_finset_sum` has been deprecated: Use `AddSubmonoidClass.coe_finsetSum` instead",
+          "endPos": {
+            "column": 60,
+            "line": 1047
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "Lean.Linter.deprecatedAttr",
+          "pos": {
+            "column": 28,
+            "line": 1047
+          },
+          "severity": "warning"
+        }
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 52,
+          "line": 1085
+        },
+        "end_position": {
+          "column": 67,
+          "line": 1085
+        },
+        "message": "`Nat.add_eq_zero` has been deprecated: Use `Nat.add_eq_zero_iff` instead",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "`Nat.add_eq_zero` has been deprecated: Use `Nat.add_eq_zero_iff` instead",
+          "endPos": {
+            "column": 67,
+            "line": 1085
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "Lean.Linter.deprecatedAttr",
+          "pos": {
+            "column": 52,
+            "line": 1085
+          },
+          "severity": "warning"
+        }
+      },
+      {
+        "severity": "information",
+        "position": {
+          "column": 0,
+          "line": 1248
+        },
+        "end_position": {
+          "column": 6,
+          "line": 1248
+        },
+        "message": "hammingClose 𝔽q β : (i : Fin (ℓ + 1)) → OracleFunction 𝔽q β i → Prop",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "hammingClose 𝔽q β : (i : Fin (ℓ + 1)) → OracleFunction 𝔽q β i → Prop",
+          "endPos": {
+            "column": 6,
+            "line": 1248
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 0,
+            "line": 1248
+          },
+          "severity": "information"
+        }
+      },
+      {
+        "severity": "error",
+        "position": {
+          "column": 0,
+          "line": 1423
+        },
+        "end_position": {
+          "column": 4213,
+          "line": 1423
+        },
+        "message": "repair lexer: <repair_body>:42:50: unexpected identifier after decimal point; consider parenthesizing the number",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "repair lexer: <repair_body>:42:50: unexpected identifier after decimal point; consider parenthesizing the number",
+          "endPos": {
+            "column": 4213,
+            "line": 1423
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 0,
+            "line": 1423
+          },
+          "severity": "error"
+        }
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 8,
+          "line": 1427
+        },
+        "end_position": {
+          "column": 60,
+          "line": 1427
+        },
+        "message": "declaration uses `sorry`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "declaration uses `sorry`",
+          "endPos": {
+            "column": 60,
+            "line": 1427
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "hasSorry",
+          "pos": {
+            "column": 8,
+            "line": 1427
+          },
+          "severity": "warning"
+        }
+      }
+    ],
+    "goals": null,
+    "local_context": null,
+    "sorries": null,
+    "axioms": null,
+    "detail": "parse-only proof boundary/policy check failed",
+    "raw_lean_output": "{\"caption\":\"\",\"data\":\"`not_lt_zero'` has been deprecated: Use `_root_.not_lt_zero` instead\",\"endPos\":{\"column\":96,\"line\":395},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"Lean.Linter.deprecatedAttr\",\"pos\":{\"column\":84,\"line\":395},\"severity\":\"warning\"}\n{\"caption\":\"\",\"data\":\"`not_lt_zero'` has been deprecated: Use `_root_.not_lt_zero` instead\",\"endPos\":{\"column\":60,\"line\":487},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"Lean.Linter.deprecatedAttr\",\"pos\":{\"column\":48,\"line\":487},\"severity\":\"warning\"}\n{\"caption\":\"\",\"data\":\"declaration uses `sorry`\",\"endPos\":{\"column\":14,\"line\":809},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"hasSorry\",\"pos\":{\"column\":4,\"line\":809},\"severity\":\"warning\"}\n{\"caption\":\"\",\"data\":\"declaration uses `sorry`\",\"endPos\":{\"column\":32,\"line\":845},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"hasSorry\",\"pos\":{\"column\":6,\"line\":845},\"severity\":\"warning\"}\n{\"caption\":\"\",\"data\":\"declaration uses `sorry`\",\"endPos\":{\"column\":36,\"line\":959},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"hasSorry\",\"pos\":{\"column\":8,\"line\":959},\"severity\":\"warning\"}\n{\"caption\":\"\",\"data\":\"`Subtype.eq_iff` has been deprecated: Use `Subtype.ext_iff` instead\\n\\nNote: The updated constant has a different type:\\n  ∀ {α : Sort u} {p : α → Prop} {a1 a2 : { x // p x }}, a1 = a2 ↔ ↑a1 = ↑a2\\ninstead of\\n  ∀ {α : Sort u_1} {p : α → Prop} {a1 a2 : { x // p x }}, a1 = a2 ↔ ↑a1 = ↑a2\",\"endPos\":{\"column\":29,\"line\":1025},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"Lean.Linter.deprecatedAttr\",\"pos\":{\"column\":15,\"line\":1025},\"severity\":\"warning\"}\n{\"caption\":\"\",\"data\":\"`Subtype.eq_iff` has been deprecated: Use `Subtype.ext_iff` instead\\n\\nNote: The updated constant has a different type:\\n  ∀ {α : Sort u} {p : α → Prop} {a1 a2 : { x // p x }}, a1 = a2 ↔ ↑a1 = ↑a2\\ninstead of\\n  ∀ {α : Sort u_1} {p : α → Prop} {a1 a2 : { x // p x }}, a1 = a2 ↔ ↑a1 = ↑a2\",\"endPos\":{\"column\":29,\"line\":1033},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"Lean.Linter.deprecatedAttr\",\"pos\":{\"column\":15,\"line\":1033},\"severity\":\"warning\"}\n{\"caption\":\"\",\"data\":\"`AddSubmonoidClass.coe_finset_sum` has been deprecated: Use `AddSubmonoidClass.coe_finsetSum` instead\",\"endPos\":{\"column\":60,\"line\":1047},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"Lean.Linter.deprecatedAttr\",\"pos\":{\"column\":28,\"line\":1047},\"severity\":\"warning\"}\n{\"caption\":\"\",\"data\":\"`Nat.add_eq_zero` has been deprecated: Use `Nat.add_eq_zero_iff` instead\",\"endPos\":{\"column\":67,\"line\":1085},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"Lean.Linter.deprecatedAttr\",\"pos\":{\"column\":52,\"line\":1085},\"severity\":\"warning\"}\n{\"caption\":\"\",\"data\":\"hammingClose 𝔽q β : (i : Fin (ℓ + 1)) → OracleFunction 𝔽q β i → Prop\",\"endPos\":{\"column\":6,\"line\":1248},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"[anonymous]\",\"pos\":{\"column\":0,\"line\":1248},\"severity\":\"information\"}\n{\"caption\":\"\",\"data\":\"repair lexer: <repair_body>:42:50: unexpected identifier after decimal point; consider parenthesizing the number\",\"endPos\":{\"column\":4213,\"line\":1423},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"[anonymous]\",\"pos\":{\"column\":0,\"line\":1423},\"severity\":\"error\"}\n{\"caption\":\"\",\"data\":\"declaration uses `sorry`\",\"endPos\":{\"column\":60,\"line\":1427},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"hasSorry\",\"pos\":{\"column\":8,\"line\":1427},\"severity\":\"warning\"}\n"
+  },
+  "diagnosis": "The proof is valid but spends most of its syntax and elaboration work constructing a disjoint `biUnion` of fibers and normalizing its cardinality. A smaller argument injects disagreeing points directly into `fiberwiseDisagreementSet × Fin (2 ^ steps)`; the quotient point and fiber index reconstruct the original point via `is_fiber_iff_generates_quotient_point`.",
+  "duplicate_cache": false,
+  "available_at": 1792775344.229585,
+  "cumulative_calls": 1,
+  "cumulative_tokens": 57762,
+  "api_spend_usd": null
+}

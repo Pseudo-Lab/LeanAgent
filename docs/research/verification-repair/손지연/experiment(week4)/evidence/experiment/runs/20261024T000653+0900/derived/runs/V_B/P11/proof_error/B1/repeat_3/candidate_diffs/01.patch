@@ -1,0 +1,78 @@
+--- initial.proof.lean
++++ candidate_01.proof.lean
+@@ -13,14 +13,12 @@
+         conv_rhs => enter[2]; rw [←Nat.pow_one 2]
+         rw [←pow_add]; congr
+         rw [Nat.sub_add_eq_sub_sub_rev (h1 := by omega) (h2 := by omega)]
+-        -- ⊢ ℓ - ↑i = ℓ - (↑i + 1 - 1)
+         rw [Nat.add_sub_cancel (n := i) (m := 1)]
+       omega
+     ⟩) +
+     r_chal * (coeffs ⟨j.val * 2 + 1, by
+-      exact experiment_missing_lemma
+-      · omega
+-      · omega
++      exact mul_two_add_bit_lt_two_pow (c := ℓ - i) (a := j)
++        (b := ℓ - (↑i + 1)) (i := 1) (by omega) (by omega)
+     ⟩)
+   have h_eval_qMap_x₀ : (AdditiveNTT.qMap 𝔽q β ⟨i, by omega⟩).eval x₀.val = y := by
+     have h := iteratedQuotientMap_k_eq_1_is_qMap 𝔽q β h_ℓ_add_R_rate i (by omega) x₀
+@@ -29,7 +27,6 @@
+     have h_res := is_fiber_iff_generates_quotient_point 𝔽q β i (steps := 1) (by omega)
+       (x := x₀) (y := y).mpr (by rw [pointToIterateQuotientIndex_qMap_total_fiber_eq_self])
+     rw [h_res]
+-    -- exact qMap_eval_fiber_eq_self ⟦L⟧ ⟨i + 1, by omega⟩ (by simp only; omega) h_i_succ_lt y 0
+   have h_eval_qMap_x₁ : (AdditiveNTT.qMap 𝔽q β ⟨i, by omega⟩).eval x₁.val = y := by
+     have h := iteratedQuotientMap_k_eq_1_is_qMap 𝔽q β h_ℓ_add_R_rate i (by omega) x₁
+     simp only [Subtype.eq_iff] at h
+@@ -49,8 +46,7 @@
+     simp only [Fin.isValue, AddSubmonoidClass.coe_finset_sum, SetLike.val_smul]
+     have h_index : ℓ + 𝓡 - i = (ℓ + 𝓡 - (i.val + 1)) + 1 := by omega
+     rw! (castMode := .all) [h_index]
+-    rw [Fin.sum_univ_succ, Fin.sum_univ_succ] -- (free_term + y_repr) - (free_term + y_repr) = 1
+-    -- First, simplify the free terms
++    rw [Fin.sum_univ_succ, Fin.sum_univ_succ]
+     simp only [fiber_coeff, eqRec_eq_cast, lt_one_iff, reducePow, Fin.isValue,
+       Fin.coe_ofNat_eq_mod, mod_succ, dite_smul, ite_smul, zero_smul, one_smul, zero_mod]
+     have h_cast_0 :
+@@ -88,7 +84,6 @@
+       ↓reduceDIte, add_tsub_cancel_right, Fin.eta, imp_self, implies_true]
+   set P_i_plus_1 :=
+     intermediateEvaluationPoly 𝔽q β h_ℓ_add_R_rate (i := ⟨i+1, by omega⟩) new_coeffs
+-  -- Set up the even and odd refinement polynomials
+   set P₀_coeffs := fun j : Fin (2^(ℓ - (i + 1))) => coeffs ⟨j.val * 2, by
+     have h1 : ℓ - (i + 1) + 1 = ℓ - i := by omega
+     have h2 : 2^(ℓ - (i + 1) + 1) = 2^(ℓ - i) := by rw [h1]
+@@ -102,7 +97,6 @@
+   set P₀ := evenRefinement 𝔽q β h_ℓ_add_R_rate i coeffs
+   set P₁ := oddRefinement 𝔽q β h_ℓ_add_R_rate i coeffs
+   have h_P_i_eval := evaluation_poly_split_identity 𝔽q β h_ℓ_add_R_rate ⟨i, by omega⟩ coeffs
+-  -- Equation 39 : P^(i)(X) = P₀^(i+1)(q^(i)(X)) + X · P₁^(i+1)(q^(i)(X))
+   have h_equation_39_x₀ : P_i.eval x₀.val = P₀.eval y.val + x₀.val * P₁.eval y.val := by
+     simp only [h_P_i_eval, Fin.eta, Polynomial.eval_add, eval_comp,
+       h_eval_qMap_x₀, Polynomial.eval_mul, Polynomial.eval_X, P_i, P₀, P₁]
+@@ -111,11 +105,9 @@
+       h_eval_qMap_x₁, Polynomial.eval_mul, Polynomial.eval_X, P_i, P₀, P₁]
+   set f_i := fun (x : (sDomain 𝔽q β h_ℓ_add_R_rate) ⟨i, by omega⟩) => P_i.eval (x.val : L)
+   set f_i_plus_1 := fold (i := ⟨i, by omega⟩) (h_i := by omega) (f := f_i) (r_chal := r_chal)
+-  -- Unfold the definition of f_i_plus_1 using the fold function
+   have h_fold_def : f_i_plus_1 y =
+       f_i x₀ * ((1 - r_chal) * x₁.val - r_chal) +
+       f_i x₁ * (r_chal - (1 - r_chal) * x₀.val) := rfl
+-  -- Main calculation following the outline
+   calc f_i_plus_1 y
+     = f_i x₀ * ((1 - r_chal) * x₁.val - r_chal) +
+         f_i x₁ * (r_chal - (1 - r_chal) * x₀.val) := h_fold_def
+@@ -135,12 +127,9 @@
+         intermediateEvaluationPoly]
+       conv_lhs => enter [1]; rw [mul_comm, ←Polynomial.eval_C_mul]
+       conv_lhs => enter [2]; rw [mul_comm, ←Polynomial.eval_C_mul]
+-      -- ⊢ eval y (C (1-r) * ∑...) + eval y (C r * ∑...) = eval y (∑...)
+       rw [←Polynomial.eval_add]
+-      -- ⊢ poly_left.eval y = poly_right.eval y
+       congr
+       simp_rw [mul_sum, ←Finset.sum_add_distrib]
+-      -- We now prove that the terms inside the sums are equal for each index.
+       apply Finset.sum_congr rfl
+       intro j hj
+       have h_j_lt : j.val < 2 ^ (ℓ - (↑i + 1)) := by

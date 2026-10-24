@@ -1,0 +1,52 @@
+--- candidate_01.proof.lean
++++ candidate_02.proof.lean
+@@ -25,30 +25,30 @@
+     refine ⟨x.1, rfl, ?_⟩
+     simpa only [Dfin, Finset.mem_filter, Finset.mem_univ, true_and] using x.2
+   have h_encode_injective : Function.Injective encode := by
+-    intro x₁ x₂ h
+-    let y₁ := iteratedQuotientMap 𝔽q β h_ℓ_add_R_rate (i := i)
+-      (k := steps) (h_bound := h_i_add_steps) x₁.1
+-    let y₂ := iteratedQuotientMap 𝔽q β h_ℓ_add_R_rate (i := i)
+-      (k := steps) (h_bound := h_i_add_steps) x₂.1
+-    let k₁ := pointToIterateQuotientIndex 𝔽q β (i := ⟨i, by omega⟩)
+-      (steps := steps) (h_i_add_steps := h_i_add_steps) (x := x₁.1)
+-    let k₂ := pointToIterateQuotientIndex 𝔽q β (i := ⟨i, by omega⟩)
+-      (steps := steps) (h_i_add_steps := h_i_add_steps) (x := x₂.1)
+-    have hy : y₁ = y₂ := by
++    intro xa xb h
++    let ya := iteratedQuotientMap 𝔽q β h_ℓ_add_R_rate (i := i)
++      (k := steps) (h_bound := h_i_add_steps) xa.1
++    let yb := iteratedQuotientMap 𝔽q β h_ℓ_add_R_rate (i := i)
++      (k := steps) (h_bound := h_i_add_steps) xb.1
++    let ka := pointToIterateQuotientIndex 𝔽q β (i := ⟨i, by omega⟩)
++      (steps := steps) (h_i_add_steps := h_i_add_steps) (x := xa.1)
++    let kb := pointToIterateQuotientIndex 𝔽q β (i := ⟨i, by omega⟩)
++      (steps := steps) (h_i_add_steps := h_i_add_steps) (x := xb.1)
++    have hy : ya = yb := by
+       have hh := congrArg (fun z => z.1.val) h
+-      simpa only [encode, y₁, y₂] using hh
+-    have hk : k₁ = k₂ := by
++      simpa only [encode, ya, yb] using hh
++    have hk : ka = kb := by
+       have hh := congrArg Prod.snd h
+-      simpa only [encode, k₁, k₂] using hh
+-    have hx₁ := (is_fiber_iff_generates_quotient_point 𝔽q β i steps
+-      h_i_add_steps (x := x₁.1) (y := y₁)).mp (by rfl)
+-    have hx₂ := (is_fiber_iff_generates_quotient_point 𝔽q β i steps
+-      h_i_add_steps (x := x₂.1) (y := y₂)).mp (by rfl)
++      simpa only [encode, ka, kb] using hh
++    have hxa := (is_fiber_iff_generates_quotient_point 𝔽q β i steps
++      h_i_add_steps (x := xa.1) (y := ya)).mp (by rfl)
++    have hxb := (is_fiber_iff_generates_quotient_point 𝔽q β i steps
++      h_i_add_steps (x := xb.1) (y := yb)).mp (by rfl)
+     apply Subtype.ext
+     calc
+-      x₁.1 = _ := hx₁.symm
++      xa.1 = _ := hxa.symm
+       _ = _ := by rw [hy, hk]
+-      _ = x₂.1 := hx₂
++      _ = xb.1 := hxb
+   have h_card : Dfin.card ≤ Efin.card * 2 ^ steps := by
+     simpa only [Fintype.card_prod, Fintype.card_coe, Fintype.card_fin] using
+       (Fintype.card_le_of_injective encode h_encode_injective)

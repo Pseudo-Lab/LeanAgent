@@ -1,0 +1,359 @@
+{
+  "family": "V_B",
+  "problem": 14,
+  "condition": "B1",
+  "repeat": 3,
+  "error_category": "proof_error",
+  "max_calls": 4,
+  "target": "putnam_1964_b2",
+  "prefix": "import Mathlib\nimport Aesop\n\nset_option maxHeartbeats 0\n\nopen Set Function Filter Topology\n\n\ntheorem putnam_1964_b2\n(S : Type*) [Fintype S] [Nonempty S]\n(P : Finset (Set S))\n(hPP : ∀ T ∈ P, ∀ U ∈ P, T ∩ U ≠ ∅)\n(hPS : ¬∃ T : Set S, T ∉ P ∧ (∀ U ∈ P, T ∩ U ≠ ∅))\n: (P.card = 2 ^ (Fintype.card S - 1)) := ",
+  "suffix": "\n",
+  "original_body": null,
+  "initial_body": "by \n  have h_no_empty : ∀ (T : Set S), T ∈ P → T.Nonempty := by\n    intro T hT\n    have h₁ : T ∩ T ≠ ∅ := hPP T hT T hT\n    have h₂ : T ∩ T = T := by simp [Set.ext_iff]\n    rw [h₂] at h₁\n    exact experiment_missing_lemma\n  \n  have h_subset_or_compl : ∀ (A : Set S), A ∈ P ∨ Aᶜ ∈ P := by\n    intro A\n    by_contra! h\n    have h₁ : A ∉ P := h.1\n    have h₂ : Aᶜ ∉ P := h.2\n    \n    have h₃ : ∃ (U : Set S), U ∈ P ∧ A ∩ U = ∅ := by\n      have h₄ : ¬(A ∉ P ∧ ∀ (U : Set S), U ∈ P → A ∩ U ≠ ∅) := by\n        intro h₅\n        have h₆ : ∃ (T : Set S), T ∉ P ∧ (∀ U ∈ P, T ∩ U ≠ ∅) := by\n          refine' ⟨A, _⟩\n          constructor\n          · exact h₅.1\n          · intro U hU\n            have h₇ := h₅.2 U hU\n            have h₈ : A ∩ U ≠ ∅ := h₇\n            have h₉ : A ∩ U = U ∩ A := by\n              ext x\n              simp [Set.mem_inter_iff]\n              <;> tauto\n            have h₁₀ : U ∩ A ≠ ∅ := by\n              intro h₁₁\n              apply h₈\n              simp_all [Set.ext_iff]\n              <;> aesop\n            simpa [Set.inter_comm] using h₁₀\n        exact hPS h₆\n      by_cases h₅ : A ∉ P\n      · have h₆ : ¬(∀ (U : Set S), U ∈ P → A ∩ U ≠ ∅) := by\n          intro h₇\n          exact h₄ ⟨h₅, h₇⟩\n        push_neg at h₆\n        obtain ⟨U, hU, h₈⟩ := h₆\n        refine' ⟨U, hU, _⟩\n        have h₉ : A ∩ U = ∅ := by\n          by_contra h₁₀\n          have h₁₁ : A ∩ U ≠ ∅ := h₁₀\n          simp_all [Set.ext_iff]\n          <;> aesop\n        exact h₉\n      · exfalso\n        simp_all\n    \n    have h₄ : ∃ (V : Set S), V ∈ P ∧ Aᶜ ∩ V = ∅ := by\n      have h₅ : ¬(Aᶜ ∉ P ∧ ∀ (U : Set S), U ∈ P → Aᶜ ∩ U ≠ ∅) := by\n        intro h₆\n        have h₇ : ∃ (T : Set S), T ∉ P ∧ (∀ U ∈ P, T ∩ U ≠ ∅) := by\n          refine' ⟨Aᶜ, _⟩\n          constructor\n          · exact h₆.1\n          · intro U hU\n            have h₈ := h₆.2 U hU\n            have h₉ : Aᶜ ∩ U ≠ ∅ := h₈\n            have h₁₀ : Aᶜ ∩ U = U ∩ Aᶜ := by\n              ext x\n              simp [Set.mem_inter_iff]\n              <;> tauto\n            have h₁₁ : U ∩ Aᶜ ≠ ∅ := by\n              intro h₁₂\n              apply h₉\n              simp_all [Set.ext_iff]\n              <;> aesop\n            simpa [Set.inter_comm] using h₁₁\n        exact hPS h₇\n      by_cases h₆ : Aᶜ ∉ P\n      · have h₇ : ¬(∀ (U : Set S), U ∈ P → Aᶜ ∩ U ≠ ∅) := by\n          intro h₈\n          exact h₅ ⟨h₆, h₈⟩\n        push_neg at h₇\n        obtain ⟨V, hV, h₈⟩ := h₇\n        refine' ⟨V, hV, _⟩\n        have h₉ : Aᶜ ∩ V = ∅ := by\n          by_contra h₁₀\n          have h₁₁ : Aᶜ ∩ V ≠ ∅ := h₁₀\n          simp_all [Set.ext_iff]\n          <;> aesop\n        exact h₉\n      · exfalso\n        simp_all\n    \n    obtain ⟨U, hU, hU'⟩ := h₃\n    obtain ⟨V, hV, hV'⟩ := h₄\n    \n    have h₅ : U ⊆ Aᶜ := by\n      intro x hx\n      by_contra h₆\n      have h₇ : x ∈ A := by simp_all [Set.mem_compl_iff]\n      have h₈ : x ∈ A ∩ U := Set.mem_inter h₇ hx\n      rw [hU'] at h₈\n      simp at h₈\n      <;> aesop\n    have h₆ : V ⊆ A := by\n      intro x hx\n      by_contra h₇\n      have h₈ : x ∈ Aᶜ := by simp_all [Set.mem_compl_iff]\n      have h₉ : x ∈ Aᶜ ∩ V := Set.mem_inter h₈ hx\n      rw [hV'] at h₉\n      simp at h₉\n      <;> aesop\n    \n    have h₇ : U ∩ V = ∅ := by\n      apply Set.eq_empty_of_forall_not_mem\n      intro x hx\n      have h₈ : x ∈ U := Set.mem_of_mem_inter_left hx\n      have h₉ : x ∈ V := Set.mem_of_mem_inter_right hx\n      have h₁₀ : x ∈ Aᶜ := h₅ h₈\n      have h₁₁ : x ∈ A := h₆ h₉\n      simp_all [Set.mem_compl_iff]\n      <;> aesop\n    \n    have h₈ : U ∩ V ≠ ∅ := hPP U hU V hV\n    simp_all [Set.ext_iff]\n    <;> aesop\n  \n  have h_not_both : ∀ (A : Set S), A ∈ P → Aᶜ ∉ P := by\n    intro A hA\n    by_contra h\n    have h₁ : Aᶜ ∈ P := h\n    have h₂ : A ∩ Aᶜ = ∅ := by\n      ext x\n      simp [Set.mem_inter_iff]\n      <;> tauto\n    have h₃ : A ∩ Aᶜ ≠ ∅ := hPP A hA Aᶜ h₁\n    rw [h₂] at h₃\n    contradiction\n  \n  have h_card : P.card = 2 ^ (Fintype.card S - 1) := by\n    classical\n    \n    let Q : Finset (Set S) := (Finset.univ : Finset (Set S)) \\ P\n    \n    have h₁ : P.card = Q.card := by\n      \n      have h₂ : ∀ (A : Set S), A ∈ P → Aᶜ ∈ Q := by\n        intro A hA\n        have h₃ : Aᶜ ∈ (Finset.univ : Finset (Set S)) := Finset.mem_univ _\n        have h₄ : Aᶜ ∉ P := h_not_both A hA\n        simp only [Q, Finset.mem_sdiff] at *\n        tauto\n      have h₃ : ∀ (A : Set S), A ∈ Q → Aᶜ ∈ P := by\n        intro A hA\n        have h₄ : A ∈ (Finset.univ : Finset (Set S)) := by\n          simp only [Q, Finset.mem_sdiff] at hA\n          tauto\n        have h₅ : A ∉ P := by\n          simp only [Q, Finset.mem_sdiff] at hA\n          tauto\n        have h₆ : A ∈ (Finset.univ : Finset (Set S)) := by tauto\n        have h₇ : A ∈ P ∨ Aᶜ ∈ P := h_subset_or_compl A\n        cases h₇ with\n        | inl h₈ =>\n          exfalso\n          tauto\n        | inr h₈ =>\n          exact h₈\n      \n      have h₄ : P.card = Q.card := by\n        \n        have h₅ : P.card = Q.card := by\n          \n          have h₆ : ∀ (A : Set S), A ∈ P → Aᶜ ∈ Q := h₂\n          have h₇ : ∀ (A : Set S), A ∈ Q → Aᶜ ∈ P := h₃\n          \n          have h₈ : P.card = Q.card := by\n            \n            apply Finset.card_bij' (fun A _ => Aᶜ) (fun A _ => Aᶜ)\n            <;> simp_all [Set.ext_iff]\n            <;>\n            (try\n              {\n                aesop\n              })\n            <;>\n            (try\n              {\n                tauto\n              })\n            <;>\n            (try\n              {\n                intros\n                <;>\n                simp_all [Set.ext_iff]\n                <;>\n                tauto\n              })\n            <;>\n            (try\n              {\n                intros\n                <;>\n                simp_all [Set.ext_iff]\n                <;>\n                tauto\n              })\n          exact h₈\n        exact h₅\n      exact h₄\n    \n    have h₂ : P.card + Q.card = 2 ^ Fintype.card S := by\n      have h₃ : P.card + Q.card = (Finset.univ : Finset (Set S)).card := by\n        have h₄ : Disjoint P Q := by\n          rw [Finset.disjoint_left]\n          intro A hA hA'\n          simp only [Q, Finset.mem_sdiff] at hA'\n          tauto\n        have h₅ : P ∪ Q = (Finset.univ : Finset (Set S)) := by\n          apply Finset.ext\n          intro A\n          simp only [Q, Finset.mem_union, Finset.mem_sdiff, Finset.mem_univ, true_and]\n          <;>\n          by_cases h₆ : A ∈ P <;> simp_all [h_subset_or_compl]\n          <;>\n          (try tauto)\n          <;>\n          (try\n            {\n              have h₇ := h_subset_or_compl A\n              cases h₇ with\n              | inl h₈ => tauto\n              | inr h₈ =>\n                have h₉ : Aᶜ ∈ P := h₈\n                have h₁₀ : A ∈ P ∨ Aᶜ ∈ P := by tauto\n                tauto\n            })\n        have h₆ : P.card + Q.card = (P ∪ Q).card := by\n          rw [← Finset.card_union_add_card_inter P Q]\n          have h₇ : P ∩ Q = ∅ := Finset.disjoint_iff_inter_eq_empty.mp h₄\n          rw [h₇]\n          simp\n        rw [h₅] at h₆\n        exact h₆\n      have h₄ : (Finset.univ : Finset (Set S)).card = 2 ^ Fintype.card S := by\n        simp [Fintype.card_fun]\n        <;>\n        simp_all [Fintype.card_fun]\n        <;>\n        ring_nf\n        <;>\n        simp_all [Fintype.card_fun]\n        <;>\n        norm_num\n        <;>\n        aesop\n      linarith\n    \n    have h₃ : P.card * 2 = 2 ^ Fintype.card S := by\n      have h₄ : P.card + Q.card = 2 ^ Fintype.card S := h₂\n      have h₅ : P.card = Q.card := h₁\n      linarith\n    \n    have h₄ : Fintype.card S ≥ 1 := by\n      have h₅ : Nonempty S := inferInstance\n      have h₆ : 0 < Fintype.card S := by\n        apply Fintype.card_pos_iff.mpr\n        exact ⟨Classical.choice h₅⟩\n      omega\n    have h₅ : P.card = 2 ^ (Fintype.card S - 1) := by\n      have h₆ : P.card * 2 = 2 ^ Fintype.card S := h₃\n      have h₇ : Fintype.card S ≥ 1 := h₄\n      have h₈ : 2 ^ (Fintype.card S - 1) * 2 = 2 ^ Fintype.card S := by\n        have h₉ : Fintype.card S - 1 + 1 = Fintype.card S := by\n          have h₁₀ : Fintype.card S ≥ 1 := h₄\n          omega\n        calc\n          2 ^ (Fintype.card S - 1) * 2 = 2 ^ (Fintype.card S - 1) * 2 ^ 1 := by norm_num\n          _ = 2 ^ ((Fintype.card S - 1) + 1) := by\n            rw [← pow_add]\n          _ = 2 ^ Fintype.card S := by\n            rw [h₉]\n            <;> simp [add_comm]\n      have h₉ : P.card = 2 ^ (Fintype.card S - 1) := by\n        have h₁₀ : P.card * 2 = 2 ^ Fintype.card S := h₃\n        have h₁₁ : 2 ^ (Fintype.card S - 1) * 2 = 2 ^ Fintype.card S := h₈\n        have h₁₂ : P.card = 2 ^ (Fintype.card S - 1) := by\n          nlinarith\n        exact h₁₂\n      exact h₉\n    exact h₅\n  \n  exact h_card",
+  "initial_status": "proof_error",
+  "initial_facts": {
+    "diagnostics": [
+      {
+        "severity": "error",
+        "position": {
+          "column": 10,
+          "line": 20
+        },
+        "end_position": {
+          "column": 34,
+          "line": 20
+        },
+        "message": "Unknown identifier `experiment_missing_lemma`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "Unknown identifier `experiment_missing_lemma`",
+          "endPos": {
+            "column": 34,
+            "line": 20
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "lean.unknownIdentifier._namedError",
+          "pos": {
+            "column": 10,
+            "line": 20
+          },
+          "severity": "error"
+        },
+        "source_line": "    exact experiment_missing_lemma",
+        "start_offset": 499,
+        "start_byte_offset": 552,
+        "end_offset": 523,
+        "end_byte_offset": 576,
+        "source_text": "experiment_missing_lemma",
+        "failed_tactic": "exact experiment_missing_lemma",
+        "tactic_range": {
+          "position": {
+            "line": 20,
+            "column": 4
+          },
+          "end_position": {
+            "line": 20,
+            "column": 34
+          },
+          "start_offset": 493,
+          "end_offset": 523
+        },
+        "goals": [
+          "T.Nonempty"
+        ],
+        "local_context": [
+          "S : Type u_1\ninst✝¹ : Fintype S\ninst✝ : Nonempty S\nP : Finset (Set S)\nhPP : ∀ T ∈ P, ∀ U ∈ P, T ∩ U ≠ ∅\nhPS : ¬∃ T ∉ P, ∀ U ∈ P, T ∩ U ≠ ∅\nT : Set S\nhT : T ∈ P\nh₁ : T ≠ ∅\nh₂ : T ∩ T = T"
+        ],
+        "proof_state_source": "lean_infotree_before_tactic",
+        "proof_state_raw": {
+          "depth": 19,
+          "end": 7707,
+          "goals_after": [],
+          "goals_before": [
+            "S : Type u_1\ninst✝¹ : Fintype S\ninst✝ : Nonempty S\nP : Finset (Set S)\nhPP : ∀ T ∈ P, ∀ U ∈ P, T ∩ U ≠ ∅\nhPS : ¬∃ T ∉ P, ∀ U ∈ P, T ∩ U ≠ ∅\nT : Set S\nhT : T ∈ P\nh₁ : T ≠ ∅\nh₂ : T ∩ T = T\n⊢ T.Nonempty"
+          ],
+          "kind": "tactic",
+          "start": 7677
+        }
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 12,
+          "line": 123
+        },
+        "end_position": {
+          "column": 42,
+          "line": 123
+        },
+        "message": "`Set.eq_empty_of_forall_not_mem` has been deprecated: Use `Set.eq_empty_of_forall_notMem` instead",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "`Set.eq_empty_of_forall_not_mem` has been deprecated: Use `Set.eq_empty_of_forall_notMem` instead",
+          "endPos": {
+            "column": 42,
+            "line": 123
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "Lean.Linter.deprecatedAttr",
+          "pos": {
+            "column": 12,
+            "line": 123
+          },
+          "severity": "warning"
+        },
+        "source_line": "      apply Set.eq_empty_of_forall_not_mem",
+        "start_offset": 3503,
+        "start_byte_offset": 4018,
+        "end_offset": 3533,
+        "end_byte_offset": 4048,
+        "source_text": "Set.eq_empty_of_forall_not_mem"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 36,
+          "line": 18
+        },
+        "end_position": {
+          "column": 47,
+          "line": 18
+        },
+        "message": "This simp argument is unused:\n  Set.ext_iff\n\nHint: Omit it from the simp argument list.\n  simp ̵[̵S̵e̵t̵.̵e̵x̵t̵_̵i̵f̵f̵]̵\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "This simp argument is unused:\n  Set.ext_iff\n\nHint: Omit it from the simp argument list.\n  simp ̵[̵S̵e̵t̵.̵e̵x̵t̵_̵i̵f̵f̵]̵\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+          "endPos": {
+            "column": 47,
+            "line": 18
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unusedSimpArgs",
+          "pos": {
+            "column": 36,
+            "line": 18
+          },
+          "severity": "warning"
+        },
+        "source_line": "    have h₂ : T ∩ T = T := by simp [Set.ext_iff]",
+        "start_offset": 458,
+        "start_byte_offset": 507,
+        "end_offset": 469,
+        "end_byte_offset": 518,
+        "source_text": "Set.ext_iff"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 12,
+          "line": 142
+        },
+        "end_position": {
+          "column": 29,
+          "line": 142
+        },
+        "message": "This simp argument is unused:\n  Set.mem_inter_iff\n\nHint: Omit it from the simp argument list.\n  simp ̵[̵S̵e̵t̵.̵m̵e̵m̵_̵i̵n̵t̵e̵r̵_̵i̵f̵f̵]̵\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "This simp argument is unused:\n  Set.mem_inter_iff\n\nHint: Omit it from the simp argument list.\n  simp ̵[̵S̵e̵t̵.̵m̵e̵m̵_̵i̵n̵t̵e̵r̵_̵i̵f̵f̵]̵\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+          "endPos": {
+            "column": 29,
+            "line": 142
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unusedSimpArgs",
+          "pos": {
+            "column": 12,
+            "line": 142
+          },
+          "severity": "warning"
+        },
+        "source_line": "      simp [Set.mem_inter_iff]",
+        "start_offset": 4034,
+        "start_byte_offset": 4611,
+        "end_offset": 4051,
+        "end_byte_offset": 4628,
+        "source_text": "Set.mem_inter_iff"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 44,
+          "line": 233
+        },
+        "end_position": {
+          "column": 61,
+          "line": 233
+        },
+        "message": "This simp argument is unused:\n  h_subset_or_compl\n\nHint: Omit it from the simp argument list.\n  simp_all ̵[̵h̵_̵s̵u̵b̵s̵e̵t̵_̵o̵r̵_̵c̵o̵m̵p̵l̵]̵\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "This simp argument is unused:\n  h_subset_or_compl\n\nHint: Omit it from the simp argument list.\n  simp_all ̵[̵h̵_̵s̵u̵b̵s̵e̵t̵_̵o̵r̵_̵c̵o̵m̵p̵l̵]̵\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+          "endPos": {
+            "column": 61,
+            "line": 233
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unusedSimpArgs",
+          "pos": {
+            "column": 44,
+            "line": 233
+          },
+          "severity": "warning"
+        },
+        "source_line": "          by_cases h₆ : A ∈ P <;> simp_all [h_subset_or_compl]",
+        "start_offset": 6662,
+        "start_byte_offset": 7383,
+        "end_offset": 6679,
+        "end_byte_offset": 7400,
+        "source_text": "h_subset_or_compl"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 14,
+          "line": 255
+        },
+        "end_position": {
+          "column": 30,
+          "line": 255
+        },
+        "message": "This simp argument is unused:\n  Fintype.card_fun\n\nHint: Omit it from the simp argument list.\n  simp ̵[̵F̵i̵n̵t̵y̵p̵e̵.̵c̵a̵r̵d̵_̵f̵u̵n̵]̵\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "This simp argument is unused:\n  Fintype.card_fun\n\nHint: Omit it from the simp argument list.\n  simp ̵[̵F̵i̵n̵t̵y̵p̵e̵.̵c̵a̵r̵d̵_̵f̵u̵n̵]̵\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+          "endPos": {
+            "column": 30,
+            "line": 255
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unusedSimpArgs",
+          "pos": {
+            "column": 14,
+            "line": 255
+          },
+          "severity": "warning"
+        },
+        "source_line": "        simp [Fintype.card_fun]",
+        "start_offset": 7369,
+        "start_byte_offset": 8142,
+        "end_offset": 7385,
+        "end_byte_offset": 8158,
+        "source_text": "Fintype.card_fun"
+      },
+      {
+        "severity": "information",
+        "position": {
+          "column": 0,
+          "line": 304
+        },
+        "end_position": {
+          "column": 6,
+          "line": 304
+        },
+        "message": "putnam_1964_b2.{u_1} (S : Type u_1) [Fintype S] [Nonempty S] (P : Finset (Set S)) (hPP : ∀ T ∈ P, ∀ U ∈ P, T ∩ U ≠ ∅)\n  (hPS : ¬∃ T ∉ P, ∀ U ∈ P, T ∩ U ≠ ∅) : P.card = 2 ^ (Fintype.card S - 1)",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "putnam_1964_b2.{u_1} (S : Type u_1) [Fintype S] [Nonempty S] (P : Finset (Set S)) (hPP : ∀ T ∈ P, ∀ U ∈ P, T ∩ U ≠ ∅)\n  (hPS : ¬∃ T ∉ P, ∀ U ∈ P, T ∩ U ≠ ∅) : P.card = 2 ^ (Fintype.card S - 1)",
+          "endPos": {
+            "column": 6,
+            "line": 304
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 0,
+            "line": 304
+          },
+          "severity": "information"
+        }
+      },
+      {
+        "severity": "information",
+        "position": {
+          "column": 0,
+          "line": 305
+        },
+        "end_position": {
+          "column": 6,
+          "line": 305
+        },
+        "message": "'putnam_1964_b2' depends on axioms: [propext, sorryAx, Classical.choice, Quot.sound]",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "'putnam_1964_b2' depends on axioms: [propext, sorryAx, Classical.choice, Quot.sound]",
+          "endPos": {
+            "column": 6,
+            "line": 305
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 0,
+            "line": 305
+          },
+          "severity": "information"
+        }
+      }
+    ],
+    "goals": [
+      "T.Nonempty"
+    ],
+    "local_context": [
+      "S : Type u_1\ninst✝¹ : Fintype S\ninst✝ : Nonempty S\nP : Finset (Set S)\nhPP : ∀ T ∈ P, ∀ U ∈ P, T ∩ U ≠ ∅\nhPS : ¬∃ T ∉ P, ∀ U ∈ P, T ∩ U ≠ ∅\nT : Set S\nhT : T ∈ P\nh₁ : T ≠ ∅\nh₂ : T ∩ T = T"
+    ],
+    "sorries": [
+      {
+        "kind": "transitive_dependency",
+        "axiom": "sorryAx",
+        "position": null,
+        "end_position": null
+      }
+    ],
+    "axioms": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext",
+      "sorryAx"
+    ],
+    "detail": null,
+    "raw_lean_output": "{\"caption\":\"\",\"data\":\"Unknown identifier `experiment_missing_lemma`\",\"endPos\":{\"column\":34,\"line\":20},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"lean.unknownIdentifier._namedError\",\"pos\":{\"column\":10,\"line\":20},\"severity\":\"error\"}\n{\"caption\":\"\",\"data\":\"`Set.eq_empty_of_forall_not_mem` has been deprecated: Use `Set.eq_empty_of_forall_notMem` instead\",\"endPos\":{\"column\":42,\"line\":123},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"Lean.Linter.deprecatedAttr\",\"pos\":{\"column\":12,\"line\":123},\"severity\":\"warning\"}\n{\"caption\":\"\",\"data\":\"This simp argument is unused:\\n  Set.ext_iff\\n\\nHint: Omit it from the simp argument list.\\n  simp ̵[̵S̵e̵t̵.̵e̵x̵t̵_̵i̵f̵f̵]̵\\n\\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`\",\"endPos\":{\"column\":47,\"line\":18},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"linter.unusedSimpArgs\",\"pos\":{\"column\":36,\"line\":18},\"severity\":\"warning\"}\n{\"caption\":\"\",\"data\":\"This simp argument is unused:\\n  Set.mem_inter_iff\\n\\nHint: Omit it from the simp argument list.\\n  simp ̵[̵S̵e̵t̵.̵m̵e̵m̵_̵i̵n̵t̵e̵r̵_̵i̵f̵f̵]̵\\n\\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`\",\"endPos\":{\"column\":29,\"line\":142},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"linter.unusedSimpArgs\",\"pos\":{\"column\":12,\"line\":142},\"severity\":\"warning\"}\n{\"caption\":\"\",\"data\":\"This simp argument is unused:\\n  h_subset_or_compl\\n\\nHint: Omit it from the simp argument list.\\n  simp_all ̵[̵h̵_̵s̵u̵b̵s̵e̵t̵_̵o̵r̵_̵c̵o̵m̵p̵l̵]̵\\n\\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`\",\"endPos\":{\"column\":61,\"line\":233},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"linter.unusedSimpArgs\",\"pos\":{\"column\":44,\"line\":233},\"severity\":\"warning\"}\n{\"caption\":\"\",\"data\":\"This simp argument is unused:\\n  Fintype.card_fun\\n\\nHint: Omit it from the simp argument list.\\n  simp ̵[̵F̵i̵n̵t̵y̵p̵e̵.̵c̵a̵r̵d̵_̵f̵u̵n̵]̵\\n\\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`\",\"endPos\":{\"column\":30,\"line\":255},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"linter.unusedSimpArgs\",\"pos\":{\"column\":14,\"line\":255},\"severity\":\"warning\"}\n{\"caption\":\"\",\"data\":\"putnam_1964_b2.{u_1} (S : Type u_1) [Fintype S] [Nonempty S] (P : Finset (Set S)) (hPP : ∀ T ∈ P, ∀ U ∈ P, T ∩ U ≠ ∅)\\n  (hPS : ¬∃ T ∉ P, ∀ U ∈ P, T ∩ U ≠ ∅) : P.card = 2 ^ (Fintype.card S - 1)\",\"endPos\":{\"column\":6,\"line\":304},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"[anonymous]\",\"pos\":{\"column\":0,\"line\":304},\"severity\":\"information\"}\n{\"caption\":\"\",\"data\":\"'putnam_1964_b2' depends on axioms: [propext, sorryAx, Classical.choice, Quot.sound]\",\"endPos\":{\"column\":6,\"line\":305},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"[anonymous]\",\"pos\":{\"column\":0,\"line\":305},\"severity\":\"information\"}\n"
+  },
+  "baseline_metrics": {
+    "proof_tokens": 1802,
+    "raw_heartbeats": 134641978,
+    "heartbeats": 134641
+  },
+  "initial_measurement": {
+    "proof_tokens": 1801,
+    "raw_heartbeats": null,
+    "token_reduction_pct": 0.05549389567147678,
+    "heartbeat_reduction_pct": null,
+    "search_score": null
+  },
+  "original_candidate": null
+}

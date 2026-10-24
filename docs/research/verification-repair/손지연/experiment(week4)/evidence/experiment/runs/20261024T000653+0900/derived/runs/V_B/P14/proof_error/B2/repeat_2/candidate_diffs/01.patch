@@ -1,0 +1,40 @@
+--- initial.proof.lean
++++ candidate_01.proof.lean
+@@ -1,10 +1,10 @@
+-by 
++by
+   have h_no_empty : ∀ (T : Set S), T ∈ P → T.Nonempty := by
+     intro T hT
+     have h₁ : T ∩ T ≠ ∅ := hPP T hT T hT
+     have h₂ : T ∩ T = T := by simp [Set.ext_iff]
+     rw [h₂] at h₁
+-    exact experiment_missing_lemma
++    exact Set.nonempty_iff_ne_empty.mpr h₁
+   
+   have h_subset_or_compl : ∀ (A : Set S), A ∈ P ∨ Aᶜ ∈ P := by
+     intro A
+@@ -138,7 +138,6 @@
+     let Q : Finset (Set S) := (Finset.univ : Finset (Set S)) \ P
+     
+     have h₁ : P.card = Q.card := by
+-      
+       have h₂ : ∀ (A : Set S), A ∈ P → Aᶜ ∈ Q := by
+         intro A hA
+         have h₃ : Aᶜ ∈ (Finset.univ : Finset (Set S)) := Finset.mem_univ _
+@@ -161,16 +160,11 @@
+           tauto
+         | inr h₈ =>
+           exact h₈
+-      
+       have h₄ : P.card = Q.card := by
+-        
+         have h₅ : P.card = Q.card := by
+-          
+           have h₆ : ∀ (A : Set S), A ∈ P → Aᶜ ∈ Q := h₂
+           have h₇ : ∀ (A : Set S), A ∈ Q → Aᶜ ∈ P := h₃
+-          
+           have h₈ : P.card = Q.card := by
+-            
+             apply Finset.card_bij' (fun A _ => Aᶜ) (fun A _ => Aᶜ)
+             <;> simp_all [Set.ext_iff]
+             <;>

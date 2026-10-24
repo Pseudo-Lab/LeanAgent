@@ -1,0 +1,43 @@
+--- candidate_02.proof.lean
++++ candidate_03.proof.lean
+@@ -1,20 +1,19 @@
+ by
+   generalize eq : [] = Γ at der
+-  have der' := der
+   induction der <;> subst eq
+   case var mem => grind
+   case app t₁ _ _ t₂ l r ih_l ih_r =>
+     right
+     rcases ih_l rfl l with val_l | ⟨u, hu⟩
+     · rcases ih_r rfl r with val_r | ⟨u, hu⟩
+-      · obtain ⟨_, u, h⟩ := l.canonical_form_abs val_l
++      · obtain ⟨_, u, _⟩ := l.canonical_form_abs val_l
+         exact ⟨u ^ᵗᵗ t₂, by grind⟩
+       · exact ⟨t₁.app u, by grind⟩
+     · exact ⟨u.app t₂, by grind⟩
+   case tapp σ' der _ ih =>
+     right
+     rcases ih rfl der with val | ⟨u, hu⟩
+-    · obtain ⟨_, u, h⟩ := der.canonical_form_tabs val
++    · obtain ⟨_, u, _⟩ := der.canonical_form_tabs val
+       exact ⟨u ^ᵗᵞ σ', by grind⟩
+     · exact ⟨.tapp u σ', by grind⟩
+   case let' t₁ σ t₂ τ L der _ ih _ =>
+@@ -39,13 +38,7 @@
+   case sub => grind
+   case abs σ _ τ L _ _ =>
+     left
+-    constructor
+-    apply LC.abs L
+-    · grind only [→ wf, cases Term.LC]
+-    · grind only [→ wf]
++    exact ⟨LC.abs L (by grind only [→ wf, cases Term.LC]) (by grind only [→ wf])⟩
+   case tabs L _ _ =>
+     left
+-    constructor
+-    apply LC.tabs L
+-    · grind only [→ wf, cases Term.LC]
+-    · grind only [→ wf]
+\ No newline at end of file
++    exact ⟨LC.tabs L (by grind only [→ wf, cases Term.LC]) (by grind only [→ wf])⟩
+\ No newline at end of file

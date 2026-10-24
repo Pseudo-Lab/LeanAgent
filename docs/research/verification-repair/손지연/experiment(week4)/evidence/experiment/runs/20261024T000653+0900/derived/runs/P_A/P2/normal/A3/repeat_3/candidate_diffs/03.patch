@@ -1,0 +1,37 @@
+--- candidate_02.proof.lean
++++ candidate_03.proof.lean
+@@ -5,19 +5,21 @@
+       (a ++ b).Subset (c ++ d) := by
+     intro x hx
+     simp only [List.mem_append] at hx ⊢
+-    exact hx.imp hac hbd
++    cases hx with
++    | inl hx => exact Or.inl (hac hx)
++    | inr hx => exact Or.inr (hbd hx)
+   induction Hnorm
+   case app fn e m Hnfn Hne Hwf ih1 ih2 =>
+     unfold extractOldExprVars
+     split
+-    · simp [Lambda.LExpr.LExpr.getVars]
++    · simp
+       intro x hx
+       exact hx
+     · next Hfalse =>
+       exfalso
+       specialize Hwf (by constructor)
+       cases Hwf
+-      exact Hfalse rfl
++      exact Hfalse () _ _ rfl
+     · simpa [Lambda.LExpr.LExpr.getVars] using append_mono ih1 ih2
+   case quant tr e trih eih =>
+     simpa [extractOldExprVars, Imperative.HasVarsPure.getVars,
+@@ -29,5 +31,5 @@
+     simpa [extractOldExprVars, Imperative.HasVarsPure.getVars,
+       Lambda.LExpr.LExpr.getVars] using append_mono e1ih e2ih
+   all_goals
+-    simp [extractOldExprVars, Imperative.HasVarsPure.getVars,
+-      Lambda.LExpr.LExpr.getVars] at *
+\ No newline at end of file
++    simp_all [extractOldExprVars, Imperative.HasVarsPure.getVars,
++      Lambda.LExpr.LExpr.getVars]
+\ No newline at end of file

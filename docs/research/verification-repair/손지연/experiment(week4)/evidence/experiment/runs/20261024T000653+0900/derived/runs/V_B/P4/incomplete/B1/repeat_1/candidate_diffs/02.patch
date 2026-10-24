@@ -1,0 +1,71 @@
+--- candidate_01.proof.lean
++++ candidate_02.proof.lean
+@@ -1,54 +1,15 @@
+ by
+-  funext x
+-  simp only [Pi.zero_apply]
+-  by_contra hx
+-  have hxpos : 0 < ⟪f x, f x⟫_ℝ := real_inner_self_pos'.2 hx
+-  have hopen : IsOpen {y : Y | 0 < ⟪f y, f x⟫_ℝ} := by
+-    apply isOpen_lt continuous_const
+-    fun_prop
+-  obtain ⟨ε, hε, hball⟩ := Metric.isOpen_iff.1 hopen x hxpos
+-  let b := ContDiffBump.ofInnerProductSpace x (ε / 2) (half_pos hε)
+-  let g : Y → V := fun y => b y • f x
+-  have hgcompact : HasCompactSupport g := by
+-    refine HasCompactSupport.intro (tsupport b) b.hasCompactSupport ?_
+-    intro y hy
+-    apply subset_tsupport
+-    intro hby
+-    apply hy
+-    simp [g, hby]
+-  have hgtest : IsTestFunction g := by
+-    constructor
+-    · dsimp [g]
++  have hf' := hg f hf
++  rw [MeasureTheory.integral_eq_zero_iff_of_nonneg] at hf'
++  · rw [Continuous.ae_eq_iff_eq] at hf'
++    · funext x
++      have hf'' := congrFun hf' x
++      simpa using hf''
++    · have hf : Continuous f := hf.smooth.continuous
+       fun_prop
+-    · exact hgcompact
+-  have hzero := hg g hgtest
+-  rw [MeasureTheory.integral_eq_zero_iff_of_nonneg] at hzero
+-  · rw [Continuous.ae_eq_iff_eq] at hzero
+-    · have hself := congrFun hzero x
+-      have : ⟪f x, f x⟫_ℝ = 0 := by
+-        simpa [g, b] using hself
+-      exact hx (real_inner_self_eq_zero'.1 this)
+     · fun_prop
+-    · fun_prop
+-  · intro y
+-    by_cases hby : b y = 0
+-    · simp [g, hby]
+-    · have hyts : y ∈ tsupport b := subset_tsupport _ hby
+-      have hyclosed : y ∈ Metric.closedBall x (ε / 2) := by
+-        rw [b.tsupport_eq] at hyts
+-        simpa [b] using hyts
+-      have hyball : y ∈ Metric.ball x ε := by
+-        rw [Metric.mem_ball]
+-        have hydist := Metric.mem_closedBall.1 hyclosed
+-        linarith
+-      have hinner : 0 < ⟪f y, f x⟫_ℝ := hball hyball
+-      simp only [g, real_inner_smul_right]
+-      exact mul_nonneg (b.nonneg y) hinner.le
+-  · have hicompact : HasCompactSupport (fun y => ⟪f y, g y⟫_ℝ) := by
+-      refine HasCompactSupport.intro (tsupport b) b.hasCompactSupport ?_
+-      intro y hy
+-      apply subset_tsupport
+-      intro hby
+-      apply hy
+-      simp [g, hby]
+-    exact (show Continuous (fun y => ⟪f y, g y⟫_ℝ) by fun_prop).integrable_of_hasCompactSupport hicompact
+\ No newline at end of file
++  · intro x
++    simp only [Pi.zero_apply]
++    apply real_inner_self_nonneg'
++  · apply IsTestFunction.integrable
++    exact IsTestFunction.inner hf hf
+\ No newline at end of file

@@ -1,0 +1,413 @@
+{
+  "call": 1,
+  "origin": "generated",
+  "body": "by\n  intros Hup Hinit\n  have HlenU := UpdateStatesLength Hup\n  have HlenI := InitStatesLength Hinit\n  have Hinit' : InitStates σ ks' vs' (updatedStates σ ks' vs') :=\n    updatedStatesInit HlenI\n      (UpdateStatesNotDefMonotone' (InitStatesNotDefined Hinit) Hup)\n      (InitStatesNodup Hinit)\n  refine ⟨_, rfl, Hinit', ?_⟩\n  have Hdis : ks.Disjoint ks' := by\n    intro k hk hk'\n    have Hd := UpdateStatesDefined Hup k hk\n    have Hn := InitStatesNotDefined Hinit k hk'\n    rw [Hn] at Hd\n    simp [Option.isSome] at Hd\n  have Hzip :\n      (ks'.zip vs').unzip.1.Disjoint (ks.zip vs).unzip.1 := by\n    simpa [List.unzip_zip, HlenI, HlenU] using Hdis.symm\n  have Hcomm :\n      updatedStates (updatedStates σ ks' vs') ks vs =\n        updatedStates (updatedStates σ ks vs) ks' vs' := by\n    simpa [updatedStates] using\n      (updatedStatesComm (σ := σ) (kvs := ks'.zip vs')\n        (kvs' := ks.zip vs) Hzip)\n  have Hend :\n      updatedStates (updatedStates σ ks' vs') ks vs = σ'' := by\n    rw [Hcomm, ← UpdateStatesUpdated Hup, ← InitStatesUpdated Hinit]\n  have Hdef : isDefined (updatedStates σ ks' vs') ks := by\n    simpa [updatedStates] using\n      (updatedStatesDefMonotone (ves := ks'.zip vs')\n        (UpdateStatesDefined' Hup))\n  rw [← Hend]\n  exact updatedStatesUpdate HlenU Hdef",
+  "proof_sha256": "842771185af91d9f5b374f8510ed9e2e93549767425503161d9f655db7e9cb56",
+  "full_source_sha256": "a2053f94320360cfcbfad74aa6050510ecd2889d841d36246fd588e2d25ac1c1",
+  "eligible": false,
+  "verification": {
+    "task_id": "P3",
+    "attempt": "candidate_01",
+    "candidate_hash": "a2053f94320360cfcbfad74aa6050510ecd2889d841d36246fd588e2d25ac1c1",
+    "environment_id": "78838691b7ea5b4fe226207f8c51008d414262a54febefbcea237fd4aa2d6cfa",
+    "check_kind": "candidate",
+    "status": "invalid_candidate",
+    "process_exit_code": null,
+    "diagnostics": [
+      {
+        "severity": "error",
+        "position": {
+          "column": 0,
+          "line": 1092
+        },
+        "end_position": {
+          "column": 1330,
+          "line": 1092
+        },
+        "message": "repair lexer: <repair_body>:17:26: unexpected identifier after decimal point; consider parenthesizing the number",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "repair lexer: <repair_body>:17:26: unexpected identifier after decimal point; consider parenthesizing the number",
+          "endPos": {
+            "column": 1330,
+            "line": 1092
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/P_A/P3/normal/A0/repeat_1/validation/lean/001_candidate_01_guard/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 0,
+            "line": 1092
+          },
+          "severity": "error"
+        }
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 8,
+          "line": 1093
+        },
+        "end_position": {
+          "column": 24,
+          "line": 1093
+        },
+        "message": "declaration uses 'sorry'",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "declaration uses 'sorry'",
+          "endPos": {
+            "column": 24,
+            "line": 1093
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/P_A/P3/normal/A0/repeat_1/validation/lean/001_candidate_01_guard/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "hasSorry",
+          "pos": {
+            "column": 8,
+            "line": 1093
+          },
+          "severity": "warning"
+        }
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 8,
+          "line": 2138
+        },
+        "end_position": {
+          "column": 35,
+          "line": 2138
+        },
+        "message": "declaration uses 'sorry'",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "declaration uses 'sorry'",
+          "endPos": {
+            "column": 35,
+            "line": 2138
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/P_A/P3/normal/A0/repeat_1/validation/lean/001_candidate_01_guard/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "hasSorry",
+          "pos": {
+            "column": 8,
+            "line": 2138
+          },
+          "severity": "warning"
+        }
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 8,
+          "line": 2149
+        },
+        "end_position": {
+          "column": 34,
+          "line": 2149
+        },
+        "message": "declaration uses 'sorry'",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "declaration uses 'sorry'",
+          "endPos": {
+            "column": 34,
+            "line": 2149
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/P_A/P3/normal/A0/repeat_1/validation/lean/001_candidate_01_guard/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "hasSorry",
+          "pos": {
+            "column": 8,
+            "line": 2149
+          },
+          "severity": "warning"
+        }
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 8,
+          "line": 2163
+        },
+        "end_position": {
+          "column": 32,
+          "line": 2163
+        },
+        "message": "declaration uses 'sorry'",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "declaration uses 'sorry'",
+          "endPos": {
+            "column": 32,
+            "line": 2163
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/P_A/P3/normal/A0/repeat_1/validation/lean/001_candidate_01_guard/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "hasSorry",
+          "pos": {
+            "column": 8,
+            "line": 2163
+          },
+          "severity": "warning"
+        }
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 8,
+          "line": 2208
+        },
+        "end_position": {
+          "column": 31,
+          "line": 2208
+        },
+        "message": "declaration uses 'sorry'",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "declaration uses 'sorry'",
+          "endPos": {
+            "column": 31,
+            "line": 2208
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/P_A/P3/normal/A0/repeat_1/validation/lean/001_candidate_01_guard/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "hasSorry",
+          "pos": {
+            "column": 8,
+            "line": 2208
+          },
+          "severity": "warning"
+        }
+      }
+    ],
+    "goals": null,
+    "local_context": null,
+    "sorries": null,
+    "backend_proof_status": null,
+    "statement_check": "not_run",
+    "axioms": null,
+    "metrics": {},
+    "elapsed_ms": 0,
+    "raw_log_path": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/P_A/P3/normal/A0/repeat_1/validation/lean/001_candidate_01_guard/stdout.log",
+    "detail": "parse-only proof boundary/policy check failed",
+    "failure_kind": "syntax"
+  },
+  "measurement": {
+    "proof_tokens": null,
+    "raw_heartbeats": null,
+    "token_reduction_pct": null,
+    "heartbeat_reduction_pct": null,
+    "search_score": null
+  },
+  "facts": {
+    "diagnostics": [
+      {
+        "severity": "error",
+        "position": {
+          "column": 0,
+          "line": 1092
+        },
+        "end_position": {
+          "column": 1330,
+          "line": 1092
+        },
+        "message": "repair lexer: <repair_body>:17:26: unexpected identifier after decimal point; consider parenthesizing the number",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "repair lexer: <repair_body>:17:26: unexpected identifier after decimal point; consider parenthesizing the number",
+          "endPos": {
+            "column": 1330,
+            "line": 1092
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 0,
+            "line": 1092
+          },
+          "severity": "error"
+        }
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 8,
+          "line": 1093
+        },
+        "end_position": {
+          "column": 24,
+          "line": 1093
+        },
+        "message": "declaration uses 'sorry'",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "declaration uses 'sorry'",
+          "endPos": {
+            "column": 24,
+            "line": 1093
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "hasSorry",
+          "pos": {
+            "column": 8,
+            "line": 1093
+          },
+          "severity": "warning"
+        }
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 8,
+          "line": 2138
+        },
+        "end_position": {
+          "column": 35,
+          "line": 2138
+        },
+        "message": "declaration uses 'sorry'",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "declaration uses 'sorry'",
+          "endPos": {
+            "column": 35,
+            "line": 2138
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "hasSorry",
+          "pos": {
+            "column": 8,
+            "line": 2138
+          },
+          "severity": "warning"
+        }
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 8,
+          "line": 2149
+        },
+        "end_position": {
+          "column": 34,
+          "line": 2149
+        },
+        "message": "declaration uses 'sorry'",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "declaration uses 'sorry'",
+          "endPos": {
+            "column": 34,
+            "line": 2149
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "hasSorry",
+          "pos": {
+            "column": 8,
+            "line": 2149
+          },
+          "severity": "warning"
+        }
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 8,
+          "line": 2163
+        },
+        "end_position": {
+          "column": 32,
+          "line": 2163
+        },
+        "message": "declaration uses 'sorry'",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "declaration uses 'sorry'",
+          "endPos": {
+            "column": 32,
+            "line": 2163
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "hasSorry",
+          "pos": {
+            "column": 8,
+            "line": 2163
+          },
+          "severity": "warning"
+        }
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 8,
+          "line": 2208
+        },
+        "end_position": {
+          "column": 31,
+          "line": 2208
+        },
+        "message": "declaration uses 'sorry'",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "declaration uses 'sorry'",
+          "endPos": {
+            "column": 31,
+            "line": 2208
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "hasSorry",
+          "pos": {
+            "column": 8,
+            "line": 2208
+          },
+          "severity": "warning"
+        }
+      }
+    ],
+    "goals": null,
+    "local_context": null,
+    "sorries": null,
+    "axioms": null,
+    "detail": "parse-only proof boundary/policy check failed",
+    "raw_lean_output": "{\"caption\":\"\",\"data\":\"repair lexer: <repair_body>:17:26: unexpected identifier after decimal point; consider parenthesizing the number\",\"endPos\":{\"column\":1330,\"line\":1092},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"[anonymous]\",\"pos\":{\"column\":0,\"line\":1092},\"severity\":\"error\"}\n{\"caption\":\"\",\"data\":\"declaration uses 'sorry'\",\"endPos\":{\"column\":24,\"line\":1093},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"hasSorry\",\"pos\":{\"column\":8,\"line\":1093},\"severity\":\"warning\"}\n{\"caption\":\"\",\"data\":\"declaration uses 'sorry'\",\"endPos\":{\"column\":35,\"line\":2138},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"hasSorry\",\"pos\":{\"column\":8,\"line\":2138},\"severity\":\"warning\"}\n{\"caption\":\"\",\"data\":\"declaration uses 'sorry'\",\"endPos\":{\"column\":34,\"line\":2149},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"hasSorry\",\"pos\":{\"column\":8,\"line\":2149},\"severity\":\"warning\"}\n{\"caption\":\"\",\"data\":\"declaration uses 'sorry'\",\"endPos\":{\"column\":32,\"line\":2163},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"hasSorry\",\"pos\":{\"column\":8,\"line\":2163},\"severity\":\"warning\"}\n{\"caption\":\"\",\"data\":\"declaration uses 'sorry'\",\"endPos\":{\"column\":31,\"line\":2208},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"hasSorry\",\"pos\":{\"column\":8,\"line\":2208},\"severity\":\"warning\"}\n"
+  },
+  "diagnosis": "The original proof performs a costly induction over UpdateStates and repeatedly reconstructs intermediate initialization/update derivations. A shorter proof uses the deterministic updatedStates representation, establishes disjointness from definedness versus non-definedness, commutes the two batches with updatedStatesComm, and constructs both relations directly.",
+  "duplicate_cache": false,
+  "available_at": 1792769058.146122,
+  "cumulative_calls": 1,
+  "cumulative_tokens": 32668,
+  "api_spend_usd": null
+}

@@ -1,0 +1,31 @@
+by
+  intros Hup Hinit
+  have HlenUp := UpdateStatesLength Hup
+  have HlenInit := InitStatesLength Hinit
+  have Hnot : isNotDefined σ ks' :=
+    UpdateStatesNotDefMonotone' (InitStatesNotDefined Hinit) Hup
+  have Hdefined : isDefined σ ks := UpdateStatesDefined' Hup
+  have Hnodup : ks'.Nodup := InitStatesNodup Hinit
+  have Hdisj : ks'.Disjoint ks := by
+    intro k Hk' Hk
+    have Hnone := Hnot k Hk'
+    have Hsome := Hdefined k Hk
+    simp [Option.isSome, Hnone] at Hsome
+  have Hzipdisj :
+      List.Disjoint (ks'.zip vs').unzip.1 (ks.zip vs).unzip.1 := by
+    rw [List.unzip_zip HlenInit, List.unzip_zip HlenUp]
+    exact Hdisj
+  have Hcomm :
+      updatedStates (updatedStates σ ks' vs') ks vs =
+        updatedStates (updatedStates σ ks vs) ks' vs' := by
+    simpa [updatedStates] using
+      (updatedStatesComm (σ := σ) (kvs := ks'.zip vs')
+        (kvs' := ks.zip vs) Hzipdisj)
+  have Hσ' : σ' = updatedStates σ ks vs := UpdateStatesUpdated Hup
+  have Hσ'' : σ'' = updatedStates σ' ks' vs' := InitStatesUpdated Hinit
+  refine ⟨updatedStates σ ks' vs', rfl, ?_, ?_⟩
+  · exact updatedStatesInit HlenInit Hnot Hnodup
+  · have Hdefined₁ : isDefined (updatedStates σ ks' vs') ks := by
+      exact updatedStatesDefMonotone (ves := ks'.zip vs') Hdefined
+    rw [Hσ'', Hσ', ← Hcomm]
+    exact updatedStatesUpdate HlenUp Hdefined₁

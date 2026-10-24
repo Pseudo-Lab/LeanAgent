@@ -1,0 +1,3785 @@
+{
+  "call": 1,
+  "origin": "generated",
+  "body": "by\n  have h_no_empty : ∀ (T : Set S), T ∈ P → T.Nonempty := by\n    intro T hT\n    have h₁ : T ∩ T ≠ ∅ := hPP T hT T hT\n    have h₂ : T ∩ T = T := by simp [Set.ext_iff]\n    rw [h₂] at h₁\n    exact Set.nonempty_iff_ne_empty.mpr h₁\n  \n  have h_subset_or_compl : ∀ (A : Set S), A ∈ P ∨ Aᶜ ∈ P := by\n    intro A\n    by_contra! h\n    have h₁ : A ∉ P := h.1\n    have h₂ : Aᶜ ∉ P := h.2\n    \n    have h₃ : ∃ (U : Set S), U ∈ P ∧ A ∩ U = ∅ := by\n      have h₄ : ¬(A ∉ P ∧ ∀ (U : Set S), U ∈ P → A ∩ U ≠ ∅) := by\n        intro h₅\n        have h₆ : ∃ (T : Set S), T ∉ P ∧ (∀ U ∈ P, T ∩ U ≠ ∅) := by\n          refine' ⟨A, _⟩\n          constructor\n          · exact h₅.1\n          · intro U hU\n            have h₇ := h₅.2 U hU\n            have h₈ : A ∩ U ≠ ∅ := h₇\n            have h₉ : A ∩ U = U ∩ A := by\n              ext x\n              simp [Set.mem_inter_iff]\n              <;> tauto\n            have h₁₀ : U ∩ A ≠ ∅ := by\n              intro h₁₁\n              apply h₈\n              simp_all [Set.ext_iff]\n              <;> aesop\n            simpa [Set.inter_comm] using h₁₀\n        exact hPS h₆\n      by_cases h₅ : A ∉ P\n      · have h₆ : ¬(∀ (U : Set S), U ∈ P → A ∩ U ≠ ∅) := by\n          intro h₇\n          exact h₄ ⟨h₅, h₇⟩\n        push_neg at h₆\n        obtain ⟨U, hU, h₈⟩ := h₆\n        refine' ⟨U, hU, _⟩\n        have h₉ : A ∩ U = ∅ := by\n          by_contra h₁₀\n          have h₁₁ : A ∩ U ≠ ∅ := h₁₀\n          simp_all [Set.ext_iff]\n          <;> aesop\n        exact h₉\n      · exfalso\n        simp_all\n    \n    have h₄ : ∃ (V : Set S), V ∈ P ∧ Aᶜ ∩ V = ∅ := by\n      have h₅ : ¬(Aᶜ ∉ P ∧ ∀ (U : Set S), U ∈ P → Aᶜ ∩ U ≠ ∅) := by\n        intro h₆\n        have h₇ : ∃ (T : Set S), T ∉ P ∧ (∀ U ∈ P, T ∩ U ≠ ∅) := by\n          refine' ⟨Aᶜ, _⟩\n          constructor\n          · exact h₆.1\n          · intro U hU\n            have h₈ := h₆.2 U hU\n            have h₉ : Aᶜ ∩ U ≠ ∅ := h₈\n            have h₁₀ : Aᶜ ∩ U = U ∩ Aᶜ := by\n              ext x\n              simp [Set.mem_inter_iff]\n              <;> tauto\n            have h₁₁ : U ∩ Aᶜ ≠ ∅ := by\n              intro h₁₂\n              apply h₉\n              simp_all [Set.ext_iff]\n              <;> aesop\n            simpa [Set.inter_comm] using h₁₁\n        exact hPS h₇\n      by_cases h₆ : Aᶜ ∉ P\n      · have h₇ : ¬(∀ (U : Set S), U ∈ P → Aᶜ ∩ U ≠ ∅) := by\n          intro h₈\n          exact h₅ ⟨h₆, h₈⟩\n        push_neg at h₇\n        obtain ⟨V, hV, h₈⟩ := h₇\n        refine' ⟨V, hV, _⟩\n        have h₉ : Aᶜ ∩ V = ∅ := by\n          by_contra h₁₀\n          have h₁₁ : Aᶜ ∩ V ≠ ∅ := h₁₀\n          simp_all [Set.ext_iff]\n          <;> aesop\n        exact h₉\n      · exfalso\n        simp_all\n    \n    obtain ⟨U, hU, hU'⟩ := h₃\n    obtain ⟨V, hV, hV'⟩ := h₄\n    \n    have h₅ : U ⊆ Aᶜ := by\n      intro x hx\n      by_contra h₆\n      have h₇ : x ∈ A := by simp_all [Set.mem_compl_iff]\n      have h₈ : x ∈ A ∩ U := Set.mem_inter h₇ hx\n      rw [hU'] at h₈\n      simp at h₈\n      <;> aesop\n    have h₆ : V ⊆ A := by\n      intro x hx\n      by_contra h₇\n      have h₈ : x ∈ Aᶜ := by simp_all [Set.mem_compl_iff]\n      have h₉ : x ∈ Aᶜ ∩ V := Set.mem_inter h₈ hx\n      rw [hV'] at h₉\n      simp at h₉\n      <;> aesop\n    \n    have h₇ : U ∩ V = ∅ := by\n      apply Set.eq_empty_of_forall_not_mem\n      intro x hx\n      have h₈ : x ∈ U := Set.mem_of_mem_inter_left hx\n      have h₉ : x ∈ V := Set.mem_of_mem_inter_right hx\n      have h₁₀ : x ∈ Aᶜ := h₅ h₈\n      have h₁₁ : x ∈ A := h₆ h₉\n      simp_all [Set.mem_compl_iff]\n      <;> aesop\n    \n    have h₈ : U ∩ V ≠ ∅ := hPP U hU V hV\n    simp_all [Set.ext_iff]\n    <;> aesop\n  \n  have h_not_both : ∀ (A : Set S), A ∈ P → Aᶜ ∉ P := by\n    intro A hA\n    by_contra h\n    have h₁ : Aᶜ ∈ P := h\n    have h₂ : A ∩ Aᶜ = ∅ := by\n      ext x\n      simp [Set.mem_inter_iff]\n      <;> tauto\n    have h₃ : A ∩ Aᶜ ≠ ∅ := hPP A hA Aᶜ h₁\n    rw [h₂] at h₃\n    contradiction\n  \n  have h_card : P.card = 2 ^ (Fintype.card S - 1) := by\n    classical\n    \n    let Q : Finset (Set S) := (Finset.univ : Finset (Set S)) \\ P\n    \n    have h₁ : P.card = Q.card := by\n      \n      have h₂ : ∀ (A : Set S), A ∈ P → Aᶜ ∈ Q := by\n        intro A hA\n        have h₃ : Aᶜ ∈ (Finset.univ : Finset (Set S)) := Finset.mem_univ _\n        have h₄ : Aᶜ ∉ P := h_not_both A hA\n        simp only [Q, Finset.mem_sdiff] at *\n        tauto\n      have h₃ : ∀ (A : Set S), A ∈ Q → Aᶜ ∈ P := by\n        intro A hA\n        have h₄ : A ∈ (Finset.univ : Finset (Set S)) := by\n          simp only [Q, Finset.mem_sdiff] at hA\n          tauto\n        have h₅ : A ∉ P := by\n          simp only [Q, Finset.mem_sdiff] at hA\n          tauto\n        have h₆ : A ∈ (Finset.univ : Finset (Set S)) := by tauto\n        have h₇ : A ∈ P ∨ Aᶜ ∈ P := h_subset_or_compl A\n        cases h₇ with\n        | inl h₈ =>\n          exfalso\n          tauto\n        | inr h₈ =>\n          exact h₈\n      \n      have h₄ : P.card = Q.card := by\n        \n        have h₅ : P.card = Q.card := by\n          \n          have h₆ : ∀ (A : Set S), A ∈ P → Aᶜ ∈ Q := h₂\n          have h₇ : ∀ (A : Set S), A ∈ Q → Aᶜ ∈ P := h₃\n          \n          have h₈ : P.card = Q.card := by\n            \n            apply Finset.card_bij' (fun A _ => Aᶜ) (fun A _ => Aᶜ)\n            <;> simp_all [Set.ext_iff]\n            <;>\n            (try\n              {\n                aesop\n              })\n            <;>\n            (try\n              {\n                tauto\n              })\n            <;>\n            (try\n              {\n                intros\n                <;>\n                simp_all [Set.ext_iff]\n                <;>\n                tauto\n              })\n            <;>\n            (try\n              {\n                intros\n                <;>\n                simp_all [Set.ext_iff]\n                <;>\n                tauto\n              })\n          exact h₈\n        exact h₅\n      exact h₄\n    \n    have h₂ : P.card + Q.card = 2 ^ Fintype.card S := by\n      have h₃ : P.card + Q.card = (Finset.univ : Finset (Set S)).card := by\n        have h₄ : Disjoint P Q := by\n          rw [Finset.disjoint_left]\n          intro A hA hA'\n          simp only [Q, Finset.mem_sdiff] at hA'\n          tauto\n        have h₅ : P ∪ Q = (Finset.univ : Finset (Set S)) := by\n          apply Finset.ext\n          intro A\n          simp only [Q, Finset.mem_union, Finset.mem_sdiff, Finset.mem_univ, true_and]\n          <;>\n          by_cases h₆ : A ∈ P <;> simp_all [h_subset_or_compl]\n          <;>\n          (try tauto)\n          <;>\n          (try\n            {\n              have h₇ := h_subset_or_compl A\n              cases h₇ with\n              | inl h₈ => tauto\n              | inr h₈ =>\n                have h₉ : Aᶜ ∈ P := h₈\n                have h₁₀ : A ∈ P ∨ Aᶜ ∈ P := by tauto\n                tauto\n            })\n        have h₆ : P.card + Q.card = (P ∪ Q).card := by\n          rw [← Finset.card_union_add_card_inter P Q]\n          have h₇ : P ∩ Q = ∅ := Finset.disjoint_iff_inter_eq_empty.mp h₄\n          rw [h₇]\n          simp\n        rw [h₅] at h₆\n        exact h₆\n      have h₄ : (Finset.univ : Finset (Set S)).card = 2 ^ Fintype.card S := by\n        simp [Fintype.card_fun]\n        <;>\n        simp_all [Fintype.card_fun]\n        <;>\n        ring_nf\n        <;>\n        simp_all [Fintype.card_fun]\n        <;>\n        norm_num\n        <;>\n        aesop\n      linarith\n    \n    have h₃ : P.card * 2 = 2 ^ Fintype.card S := by\n      have h₄ : P.card + Q.card = 2 ^ Fintype.card S := h₂\n      have h₅ : P.card = Q.card := h₁\n      linarith\n    \n    have h₄ : Fintype.card S ≥ 1 := by\n      have h₅ : Nonempty S := inferInstance\n      have h₆ : 0 < Fintype.card S := by\n        apply Fintype.card_pos_iff.mpr\n        exact ⟨Classical.choice h₅⟩\n      omega\n    have h₅ : P.card = 2 ^ (Fintype.card S - 1) := by\n      have h₆ : P.card * 2 = 2 ^ Fintype.card S := h₃\n      have h₇ : Fintype.card S ≥ 1 := h₄\n      have h₈ : 2 ^ (Fintype.card S - 1) * 2 = 2 ^ Fintype.card S := by\n        have h₉ : Fintype.card S - 1 + 1 = Fintype.card S := by\n          have h₁₀ : Fintype.card S ≥ 1 := h₄\n          omega\n        calc\n          2 ^ (Fintype.card S - 1) * 2 = 2 ^ (Fintype.card S - 1) * 2 ^ 1 := by norm_num\n          _ = 2 ^ ((Fintype.card S - 1) + 1) := by\n            rw [← pow_add]\n          _ = 2 ^ Fintype.card S := by\n            rw [h₉]\n            <;> simp [add_comm]\n      have h₉ : P.card = 2 ^ (Fintype.card S - 1) := by\n        have h₁₀ : P.card * 2 = 2 ^ Fintype.card S := h₃\n        have h₁₁ : 2 ^ (Fintype.card S - 1) * 2 = 2 ^ Fintype.card S := h₈\n        have h₁₂ : P.card = 2 ^ (Fintype.card S - 1) := by\n          nlinarith\n        exact h₁₂\n      exact h₉\n    exact h₅\n  \n  exact h_card",
+  "proof_sha256": "dbf5c27937413afeef864dce0d518f57b071dd4d8e572edcbe4ff77cbf6ee2c0",
+  "full_source_sha256": "754b83b4ab3d1d9ca327c0d2b0be1416c858c305afaaea9d0b89ef922feeee42",
+  "eligible": true,
+  "verification": {
+    "task_id": "P14",
+    "attempt": "candidate_01",
+    "candidate_hash": "754b83b4ab3d1d9ca327c0d2b0be1416c858c305afaaea9d0b89ef922feeee42",
+    "environment_id": "c218c5dbbcf99921ca86ad4bf735357e5c523193eb17a84ce9e613754310a6b5",
+    "check_kind": "candidate",
+    "status": "candidate_pass",
+    "process_exit_code": 0,
+    "diagnostics": [
+      {
+        "severity": "warning",
+        "position": {
+          "column": 12,
+          "line": 123
+        },
+        "end_position": {
+          "column": 42,
+          "line": 123
+        },
+        "message": "`Set.eq_empty_of_forall_not_mem` has been deprecated: Use `Set.eq_empty_of_forall_notMem` instead",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "`Set.eq_empty_of_forall_not_mem` has been deprecated: Use `Set.eq_empty_of_forall_notMem` instead",
+          "endPos": {
+            "column": 42,
+            "line": 123
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P14/proof_error/B2/repeat_1/validation/lean/002_candidate_01/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "Lean.Linter.deprecatedAttr",
+          "pos": {
+            "column": 12,
+            "line": 123
+          },
+          "severity": "warning"
+        },
+        "source_line": "      apply Set.eq_empty_of_forall_not_mem",
+        "start_offset": 3510,
+        "start_byte_offset": 4027,
+        "end_offset": 3540,
+        "end_byte_offset": 4057,
+        "source_text": "Set.eq_empty_of_forall_not_mem"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 36,
+          "line": 18
+        },
+        "end_position": {
+          "column": 47,
+          "line": 18
+        },
+        "message": "This simp argument is unused:\n  Set.ext_iff\n\nHint: Omit it from the simp argument list.\n  simp ̵[̵S̵e̵t̵.̵e̵x̵t̵_̵i̵f̵f̵]̵\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "This simp argument is unused:\n  Set.ext_iff\n\nHint: Omit it from the simp argument list.\n  simp ̵[̵S̵e̵t̵.̵e̵x̵t̵_̵i̵f̵f̵]̵\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+          "endPos": {
+            "column": 47,
+            "line": 18
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P14/proof_error/B2/repeat_1/validation/lean/002_candidate_01/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unusedSimpArgs",
+          "pos": {
+            "column": 36,
+            "line": 18
+          },
+          "severity": "warning"
+        },
+        "source_line": "    have h₂ : T ∩ T = T := by simp [Set.ext_iff]",
+        "start_offset": 457,
+        "start_byte_offset": 506,
+        "end_offset": 468,
+        "end_byte_offset": 517,
+        "source_text": "Set.ext_iff"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 12,
+          "line": 142
+        },
+        "end_position": {
+          "column": 29,
+          "line": 142
+        },
+        "message": "This simp argument is unused:\n  Set.mem_inter_iff\n\nHint: Omit it from the simp argument list.\n  simp ̵[̵S̵e̵t̵.̵m̵e̵m̵_̵i̵n̵t̵e̵r̵_̵i̵f̵f̵]̵\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "This simp argument is unused:\n  Set.mem_inter_iff\n\nHint: Omit it from the simp argument list.\n  simp ̵[̵S̵e̵t̵.̵m̵e̵m̵_̵i̵n̵t̵e̵r̵_̵i̵f̵f̵]̵\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+          "endPos": {
+            "column": 29,
+            "line": 142
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P14/proof_error/B2/repeat_1/validation/lean/002_candidate_01/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unusedSimpArgs",
+          "pos": {
+            "column": 12,
+            "line": 142
+          },
+          "severity": "warning"
+        },
+        "source_line": "      simp [Set.mem_inter_iff]",
+        "start_offset": 4041,
+        "start_byte_offset": 4620,
+        "end_offset": 4058,
+        "end_byte_offset": 4637,
+        "source_text": "Set.mem_inter_iff"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 44,
+          "line": 233
+        },
+        "end_position": {
+          "column": 61,
+          "line": 233
+        },
+        "message": "This simp argument is unused:\n  h_subset_or_compl\n\nHint: Omit it from the simp argument list.\n  simp_all ̵[̵h̵_̵s̵u̵b̵s̵e̵t̵_̵o̵r̵_̵c̵o̵m̵p̵l̵]̵\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "This simp argument is unused:\n  h_subset_or_compl\n\nHint: Omit it from the simp argument list.\n  simp_all ̵[̵h̵_̵s̵u̵b̵s̵e̵t̵_̵o̵r̵_̵c̵o̵m̵p̵l̵]̵\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+          "endPos": {
+            "column": 61,
+            "line": 233
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P14/proof_error/B2/repeat_1/validation/lean/002_candidate_01/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unusedSimpArgs",
+          "pos": {
+            "column": 44,
+            "line": 233
+          },
+          "severity": "warning"
+        },
+        "source_line": "          by_cases h₆ : A ∈ P <;> simp_all [h_subset_or_compl]",
+        "start_offset": 6669,
+        "start_byte_offset": 7392,
+        "end_offset": 6686,
+        "end_byte_offset": 7409,
+        "source_text": "h_subset_or_compl"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 14,
+          "line": 255
+        },
+        "end_position": {
+          "column": 30,
+          "line": 255
+        },
+        "message": "This simp argument is unused:\n  Fintype.card_fun\n\nHint: Omit it from the simp argument list.\n  simp ̵[̵F̵i̵n̵t̵y̵p̵e̵.̵c̵a̵r̵d̵_̵f̵u̵n̵]̵\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "This simp argument is unused:\n  Fintype.card_fun\n\nHint: Omit it from the simp argument list.\n  simp ̵[̵F̵i̵n̵t̵y̵p̵e̵.̵c̵a̵r̵d̵_̵f̵u̵n̵]̵\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+          "endPos": {
+            "column": 30,
+            "line": 255
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P14/proof_error/B2/repeat_1/validation/lean/002_candidate_01/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unusedSimpArgs",
+          "pos": {
+            "column": 14,
+            "line": 255
+          },
+          "severity": "warning"
+        },
+        "source_line": "        simp [Fintype.card_fun]",
+        "start_offset": 7376,
+        "start_byte_offset": 8151,
+        "end_offset": 7392,
+        "end_byte_offset": 8167,
+        "source_text": "Fintype.card_fun"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 18,
+          "line": 46
+        },
+        "end_position": {
+          "column": 23,
+          "line": 46
+        },
+        "message": "this tactic is never executed\n\nNote: This linter can be disabled with `set_option linter.unreachableTactic false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "this tactic is never executed\n\nNote: This linter can be disabled with `set_option linter.unreachableTactic false`",
+          "endPos": {
+            "column": 23,
+            "line": 46
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P14/proof_error/B2/repeat_1/validation/lean/002_candidate_01/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unreachableTactic",
+          "pos": {
+            "column": 18,
+            "line": 46
+          },
+          "severity": "warning"
+        },
+        "source_line": "              <;> aesop",
+        "start_offset": 1320,
+        "start_byte_offset": 1490,
+        "end_offset": 1325,
+        "end_byte_offset": 1495,
+        "source_text": "aesop"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 14,
+          "line": 60
+        },
+        "end_position": {
+          "column": 19,
+          "line": 60
+        },
+        "message": "this tactic is never executed\n\nNote: This linter can be disabled with `set_option linter.unreachableTactic false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "this tactic is never executed\n\nNote: This linter can be disabled with `set_option linter.unreachableTactic false`",
+          "endPos": {
+            "column": 19,
+            "line": 60
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P14/proof_error/B2/repeat_1/validation/lean/002_candidate_01/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unreachableTactic",
+          "pos": {
+            "column": 14,
+            "line": 60
+          },
+          "severity": "warning"
+        },
+        "source_line": "          <;> aesop",
+        "start_offset": 1751,
+        "start_byte_offset": 1997,
+        "end_offset": 1756,
+        "end_byte_offset": 2002,
+        "source_text": "aesop"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 18,
+          "line": 83
+        },
+        "end_position": {
+          "column": 23,
+          "line": 83
+        },
+        "message": "this tactic is never executed\n\nNote: This linter can be disabled with `set_option linter.unreachableTactic false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "this tactic is never executed\n\nNote: This linter can be disabled with `set_option linter.unreachableTactic false`",
+          "endPos": {
+            "column": 23,
+            "line": 83
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P14/proof_error/B2/repeat_1/validation/lean/002_candidate_01/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unreachableTactic",
+          "pos": {
+            "column": 18,
+            "line": 83
+          },
+          "severity": "warning"
+        },
+        "source_line": "              <;> aesop",
+        "start_offset": 2455,
+        "start_byte_offset": 2817,
+        "end_offset": 2460,
+        "end_byte_offset": 2822,
+        "source_text": "aesop"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 14,
+          "line": 97
+        },
+        "end_position": {
+          "column": 19,
+          "line": 97
+        },
+        "message": "this tactic is never executed\n\nNote: This linter can be disabled with `set_option linter.unreachableTactic false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "this tactic is never executed\n\nNote: This linter can be disabled with `set_option linter.unreachableTactic false`",
+          "endPos": {
+            "column": 19,
+            "line": 97
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P14/proof_error/B2/repeat_1/validation/lean/002_candidate_01/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unreachableTactic",
+          "pos": {
+            "column": 14,
+            "line": 97
+          },
+          "severity": "warning"
+        },
+        "source_line": "          <;> aesop",
+        "start_offset": 2890,
+        "start_byte_offset": 3336,
+        "end_offset": 2895,
+        "end_byte_offset": 3341,
+        "source_text": "aesop"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 10,
+          "line": 112
+        },
+        "end_position": {
+          "column": 15,
+          "line": 112
+        },
+        "message": "this tactic is never executed\n\nNote: This linter can be disabled with `set_option linter.unreachableTactic false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "this tactic is never executed\n\nNote: This linter can be disabled with `set_option linter.unreachableTactic false`",
+          "endPos": {
+            "column": 15,
+            "line": 112
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P14/proof_error/B2/repeat_1/validation/lean/002_candidate_01/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unreachableTactic",
+          "pos": {
+            "column": 10,
+            "line": 112
+          },
+          "severity": "warning"
+        },
+        "source_line": "      <;> aesop",
+        "start_offset": 3233,
+        "start_byte_offset": 3718,
+        "end_offset": 3238,
+        "end_byte_offset": 3723,
+        "source_text": "aesop"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 10,
+          "line": 120
+        },
+        "end_position": {
+          "column": 15,
+          "line": 120
+        },
+        "message": "this tactic is never executed\n\nNote: This linter can be disabled with `set_option linter.unreachableTactic false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "this tactic is never executed\n\nNote: This linter can be disabled with `set_option linter.unreachableTactic false`",
+          "endPos": {
+            "column": 15,
+            "line": 120
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P14/proof_error/B2/repeat_1/validation/lean/002_candidate_01/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unreachableTactic",
+          "pos": {
+            "column": 10,
+            "line": 120
+          },
+          "severity": "warning"
+        },
+        "source_line": "      <;> aesop",
+        "start_offset": 3457,
+        "start_byte_offset": 3968,
+        "end_offset": 3462,
+        "end_byte_offset": 3973,
+        "source_text": "aesop"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 10,
+          "line": 130
+        },
+        "end_position": {
+          "column": 15,
+          "line": 130
+        },
+        "message": "this tactic is never executed\n\nNote: This linter can be disabled with `set_option linter.unreachableTactic false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "this tactic is never executed\n\nNote: This linter can be disabled with `set_option linter.unreachableTactic false`",
+          "endPos": {
+            "column": 15,
+            "line": 130
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P14/proof_error/B2/repeat_1/validation/lean/002_candidate_01/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unreachableTactic",
+          "pos": {
+            "column": 10,
+            "line": 130
+          },
+          "severity": "warning"
+        },
+        "source_line": "      <;> aesop",
+        "start_offset": 3777,
+        "start_byte_offset": 4324,
+        "end_offset": 3782,
+        "end_byte_offset": 4329,
+        "source_text": "aesop"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 8,
+          "line": 134
+        },
+        "end_position": {
+          "column": 13,
+          "line": 134
+        },
+        "message": "this tactic is never executed\n\nNote: This linter can be disabled with `set_option linter.unreachableTactic false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "this tactic is never executed\n\nNote: This linter can be disabled with `set_option linter.unreachableTactic false`",
+          "endPos": {
+            "column": 13,
+            "line": 134
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P14/proof_error/B2/repeat_1/validation/lean/002_candidate_01/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unreachableTactic",
+          "pos": {
+            "column": 8,
+            "line": 134
+          },
+          "severity": "warning"
+        },
+        "source_line": "    <;> aesop",
+        "start_offset": 3864,
+        "start_byte_offset": 4419,
+        "end_offset": 3869,
+        "end_byte_offset": 4424,
+        "source_text": "aesop"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 10,
+          "line": 143
+        },
+        "end_position": {
+          "column": 15,
+          "line": 143
+        },
+        "message": "this tactic is never executed\n\nNote: This linter can be disabled with `set_option linter.unreachableTactic false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "this tactic is never executed\n\nNote: This linter can be disabled with `set_option linter.unreachableTactic false`",
+          "endPos": {
+            "column": 15,
+            "line": 143
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P14/proof_error/B2/repeat_1/validation/lean/002_candidate_01/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unreachableTactic",
+          "pos": {
+            "column": 10,
+            "line": 143
+          },
+          "severity": "warning"
+        },
+        "source_line": "      <;> tauto",
+        "start_offset": 4070,
+        "start_byte_offset": 4649,
+        "end_offset": 4075,
+        "end_byte_offset": 4654,
+        "source_text": "tauto"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 12,
+          "line": 190
+        },
+        "end_position": {
+          "column": 16,
+          "line": 193
+        },
+        "message": "this tactic is never executed\n\nNote: This linter can be disabled with `set_option linter.unreachableTactic false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "this tactic is never executed\n\nNote: This linter can be disabled with `set_option linter.unreachableTactic false`",
+          "endPos": {
+            "column": 16,
+            "line": 193
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P14/proof_error/B2/repeat_1/validation/lean/002_candidate_01/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unreachableTactic",
+          "pos": {
+            "column": 12,
+            "line": 190
+          },
+          "severity": "warning"
+        },
+        "source_line": "            (try",
+        "start_offset": 5536,
+        "start_byte_offset": 6239,
+        "end_offset": 5595,
+        "end_byte_offset": 6298,
+        "source_text": "(try\n              {\n                aesop\n              })"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 12,
+          "line": 195
+        },
+        "end_position": {
+          "column": 16,
+          "line": 198
+        },
+        "message": "this tactic is never executed\n\nNote: This linter can be disabled with `set_option linter.unreachableTactic false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "this tactic is never executed\n\nNote: This linter can be disabled with `set_option linter.unreachableTactic false`",
+          "endPos": {
+            "column": 16,
+            "line": 198
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P14/proof_error/B2/repeat_1/validation/lean/002_candidate_01/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unreachableTactic",
+          "pos": {
+            "column": 12,
+            "line": 195
+          },
+          "severity": "warning"
+        },
+        "source_line": "            (try",
+        "start_offset": 5624,
+        "start_byte_offset": 6327,
+        "end_offset": 5683,
+        "end_byte_offset": 6386,
+        "source_text": "(try\n              {\n                tauto\n              })"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 12,
+          "line": 200
+        },
+        "end_position": {
+          "column": 16,
+          "line": 207
+        },
+        "message": "this tactic is never executed\n\nNote: This linter can be disabled with `set_option linter.unreachableTactic false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "this tactic is never executed\n\nNote: This linter can be disabled with `set_option linter.unreachableTactic false`",
+          "endPos": {
+            "column": 16,
+            "line": 207
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P14/proof_error/B2/repeat_1/validation/lean/002_candidate_01/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unreachableTactic",
+          "pos": {
+            "column": 12,
+            "line": 200
+          },
+          "severity": "warning"
+        },
+        "source_line": "            (try",
+        "start_offset": 5712,
+        "start_byte_offset": 6415,
+        "end_offset": 5873,
+        "end_byte_offset": 6576,
+        "source_text": "(try\n              {\n                intros\n                <;>\n                simp_all [Set.ext_iff]\n                <;>\n                tauto\n              })"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 12,
+          "line": 209
+        },
+        "end_position": {
+          "column": 16,
+          "line": 216
+        },
+        "message": "this tactic is never executed\n\nNote: This linter can be disabled with `set_option linter.unreachableTactic false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "this tactic is never executed\n\nNote: This linter can be disabled with `set_option linter.unreachableTactic false`",
+          "endPos": {
+            "column": 16,
+            "line": 216
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P14/proof_error/B2/repeat_1/validation/lean/002_candidate_01/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unreachableTactic",
+          "pos": {
+            "column": 12,
+            "line": 209
+          },
+          "severity": "warning"
+        },
+        "source_line": "            (try",
+        "start_offset": 5902,
+        "start_byte_offset": 6605,
+        "end_offset": 6063,
+        "end_byte_offset": 6766,
+        "source_text": "(try\n              {\n                intros\n                <;>\n                simp_all [Set.ext_iff]\n                <;>\n                tauto\n              })"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 10,
+          "line": 235
+        },
+        "end_position": {
+          "column": 21,
+          "line": 235
+        },
+        "message": "this tactic is never executed\n\nNote: This linter can be disabled with `set_option linter.unreachableTactic false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "this tactic is never executed\n\nNote: This linter can be disabled with `set_option linter.unreachableTactic false`",
+          "endPos": {
+            "column": 21,
+            "line": 235
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P14/proof_error/B2/repeat_1/validation/lean/002_candidate_01/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unreachableTactic",
+          "pos": {
+            "column": 10,
+            "line": 235
+          },
+          "severity": "warning"
+        },
+        "source_line": "          (try tauto)",
+        "start_offset": 6712,
+        "start_byte_offset": 7435,
+        "end_offset": 6723,
+        "end_byte_offset": 7446,
+        "source_text": "(try tauto)"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 10,
+          "line": 237
+        },
+        "end_position": {
+          "column": 14,
+          "line": 246
+        },
+        "message": "this tactic is never executed\n\nNote: This linter can be disabled with `set_option linter.unreachableTactic false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "this tactic is never executed\n\nNote: This linter can be disabled with `set_option linter.unreachableTactic false`",
+          "endPos": {
+            "column": 14,
+            "line": 246
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P14/proof_error/B2/repeat_1/validation/lean/002_candidate_01/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unreachableTactic",
+          "pos": {
+            "column": 10,
+            "line": 237
+          },
+          "severity": "warning"
+        },
+        "source_line": "          (try",
+        "start_offset": 6748,
+        "start_byte_offset": 7471,
+        "end_offset": 7027,
+        "end_byte_offset": 7778,
+        "source_text": "(try\n            {\n              have h₇ := h_subset_or_compl A\n              cases h₇ with\n              | inl h₈ => tauto\n              | inr h₈ =>\n                have h₉ : Aᶜ ∈ P := h₈\n                have h₁₀ : A ∈ P ∨ Aᶜ ∈ P := by tauto\n                tauto\n            })"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 8,
+          "line": 257
+        },
+        "end_position": {
+          "column": 35,
+          "line": 257
+        },
+        "message": "this tactic is never executed\n\nNote: This linter can be disabled with `set_option linter.unreachableTactic false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "this tactic is never executed\n\nNote: This linter can be disabled with `set_option linter.unreachableTactic false`",
+          "endPos": {
+            "column": 35,
+            "line": 257
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P14/proof_error/B2/repeat_1/validation/lean/002_candidate_01/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unreachableTactic",
+          "pos": {
+            "column": 8,
+            "line": 257
+          },
+          "severity": "warning"
+        },
+        "source_line": "        simp_all [Fintype.card_fun]",
+        "start_offset": 7414,
+        "start_byte_offset": 8189,
+        "end_offset": 7441,
+        "end_byte_offset": 8216,
+        "source_text": "simp_all [Fintype.card_fun]"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 8,
+          "line": 259
+        },
+        "end_position": {
+          "column": 15,
+          "line": 259
+        },
+        "message": "this tactic is never executed\n\nNote: This linter can be disabled with `set_option linter.unreachableTactic false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "this tactic is never executed\n\nNote: This linter can be disabled with `set_option linter.unreachableTactic false`",
+          "endPos": {
+            "column": 15,
+            "line": 259
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P14/proof_error/B2/repeat_1/validation/lean/002_candidate_01/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unreachableTactic",
+          "pos": {
+            "column": 8,
+            "line": 259
+          },
+          "severity": "warning"
+        },
+        "source_line": "        ring_nf",
+        "start_offset": 7462,
+        "start_byte_offset": 8237,
+        "end_offset": 7469,
+        "end_byte_offset": 8244,
+        "source_text": "ring_nf"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 8,
+          "line": 261
+        },
+        "end_position": {
+          "column": 35,
+          "line": 261
+        },
+        "message": "this tactic is never executed\n\nNote: This linter can be disabled with `set_option linter.unreachableTactic false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "this tactic is never executed\n\nNote: This linter can be disabled with `set_option linter.unreachableTactic false`",
+          "endPos": {
+            "column": 35,
+            "line": 261
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P14/proof_error/B2/repeat_1/validation/lean/002_candidate_01/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unreachableTactic",
+          "pos": {
+            "column": 8,
+            "line": 261
+          },
+          "severity": "warning"
+        },
+        "source_line": "        simp_all [Fintype.card_fun]",
+        "start_offset": 7490,
+        "start_byte_offset": 8265,
+        "end_offset": 7517,
+        "end_byte_offset": 8292,
+        "source_text": "simp_all [Fintype.card_fun]"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 8,
+          "line": 263
+        },
+        "end_position": {
+          "column": 16,
+          "line": 263
+        },
+        "message": "this tactic is never executed\n\nNote: This linter can be disabled with `set_option linter.unreachableTactic false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "this tactic is never executed\n\nNote: This linter can be disabled with `set_option linter.unreachableTactic false`",
+          "endPos": {
+            "column": 16,
+            "line": 263
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P14/proof_error/B2/repeat_1/validation/lean/002_candidate_01/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unreachableTactic",
+          "pos": {
+            "column": 8,
+            "line": 263
+          },
+          "severity": "warning"
+        },
+        "source_line": "        norm_num",
+        "start_offset": 7538,
+        "start_byte_offset": 8313,
+        "end_offset": 7546,
+        "end_byte_offset": 8321,
+        "source_text": "norm_num"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 8,
+          "line": 265
+        },
+        "end_position": {
+          "column": 13,
+          "line": 265
+        },
+        "message": "this tactic is never executed\n\nNote: This linter can be disabled with `set_option linter.unreachableTactic false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "this tactic is never executed\n\nNote: This linter can be disabled with `set_option linter.unreachableTactic false`",
+          "endPos": {
+            "column": 13,
+            "line": 265
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P14/proof_error/B2/repeat_1/validation/lean/002_candidate_01/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unreachableTactic",
+          "pos": {
+            "column": 8,
+            "line": 265
+          },
+          "severity": "warning"
+        },
+        "source_line": "        aesop",
+        "start_offset": 7567,
+        "start_byte_offset": 8342,
+        "end_offset": 7572,
+        "end_byte_offset": 8347,
+        "source_text": "aesop"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 16,
+          "line": 292
+        },
+        "end_position": {
+          "column": 31,
+          "line": 292
+        },
+        "message": "this tactic is never executed\n\nNote: This linter can be disabled with `set_option linter.unreachableTactic false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "this tactic is never executed\n\nNote: This linter can be disabled with `set_option linter.unreachableTactic false`",
+          "endPos": {
+            "column": 31,
+            "line": 292
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P14/proof_error/B2/repeat_1/validation/lean/002_candidate_01/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unreachableTactic",
+          "pos": {
+            "column": 16,
+            "line": 292
+          },
+          "severity": "warning"
+        },
+        "source_line": "            <;> simp [add_comm]",
+        "start_offset": 8575,
+        "start_byte_offset": 9402,
+        "end_offset": 8590,
+        "end_byte_offset": 9417,
+        "source_text": "simp [add_comm]"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 14,
+          "line": 41
+        },
+        "end_position": {
+          "column": 17,
+          "line": 41
+        },
+        "message": "Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice\n\nNote: This linter can be disabled with `set_option linter.unnecessarySeqFocus false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice\n\nNote: This linter can be disabled with `set_option linter.unnecessarySeqFocus false`",
+          "endPos": {
+            "column": 17,
+            "line": 41
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P14/proof_error/B2/repeat_1/validation/lean/002_candidate_01/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unnecessarySeqFocus",
+          "pos": {
+            "column": 14,
+            "line": 41
+          },
+          "severity": "warning"
+        },
+        "source_line": "              <;> tauto",
+        "start_offset": 1169,
+        "start_byte_offset": 1323,
+        "end_offset": 1172,
+        "end_byte_offset": 1326,
+        "source_text": "<;>"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 14,
+          "line": 78
+        },
+        "end_position": {
+          "column": 17,
+          "line": 78
+        },
+        "message": "Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice\n\nNote: This linter can be disabled with `set_option linter.unnecessarySeqFocus false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice\n\nNote: This linter can be disabled with `set_option linter.unnecessarySeqFocus false`",
+          "endPos": {
+            "column": 17,
+            "line": 78
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P14/proof_error/B2/repeat_1/validation/lean/002_candidate_01/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unnecessarySeqFocus",
+          "pos": {
+            "column": 14,
+            "line": 78
+          },
+          "severity": "warning"
+        },
+        "source_line": "              <;> tauto",
+        "start_offset": 2303,
+        "start_byte_offset": 2647,
+        "end_offset": 2306,
+        "end_byte_offset": 2650,
+        "source_text": "<;>"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 10,
+          "line": 232
+        },
+        "end_position": {
+          "column": 13,
+          "line": 232
+        },
+        "message": "Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice\n\nNote: This linter can be disabled with `set_option linter.unnecessarySeqFocus false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice\n\nNote: This linter can be disabled with `set_option linter.unnecessarySeqFocus false`",
+          "endPos": {
+            "column": 13,
+            "line": 232
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P14/proof_error/B2/repeat_1/validation/lean/002_candidate_01/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unnecessarySeqFocus",
+          "pos": {
+            "column": 10,
+            "line": 232
+          },
+          "severity": "warning"
+        },
+        "source_line": "          <;>",
+        "start_offset": 6621,
+        "start_byte_offset": 7340,
+        "end_offset": 6624,
+        "end_byte_offset": 7343,
+        "source_text": "<;>"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 18,
+          "line": 46
+        },
+        "end_position": {
+          "column": 23,
+          "line": 46
+        },
+        "message": "'aesop' tactic does nothing\n\nNote: This linter can be disabled with `set_option linter.unusedTactic false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "'aesop' tactic does nothing\n\nNote: This linter can be disabled with `set_option linter.unusedTactic false`",
+          "endPos": {
+            "column": 23,
+            "line": 46
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P14/proof_error/B2/repeat_1/validation/lean/002_candidate_01/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unusedTactic",
+          "pos": {
+            "column": 18,
+            "line": 46
+          },
+          "severity": "warning"
+        },
+        "source_line": "              <;> aesop",
+        "start_offset": 1320,
+        "start_byte_offset": 1490,
+        "end_offset": 1325,
+        "end_byte_offset": 1495,
+        "source_text": "aesop"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 14,
+          "line": 60
+        },
+        "end_position": {
+          "column": 19,
+          "line": 60
+        },
+        "message": "'aesop' tactic does nothing\n\nNote: This linter can be disabled with `set_option linter.unusedTactic false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "'aesop' tactic does nothing\n\nNote: This linter can be disabled with `set_option linter.unusedTactic false`",
+          "endPos": {
+            "column": 19,
+            "line": 60
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P14/proof_error/B2/repeat_1/validation/lean/002_candidate_01/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unusedTactic",
+          "pos": {
+            "column": 14,
+            "line": 60
+          },
+          "severity": "warning"
+        },
+        "source_line": "          <;> aesop",
+        "start_offset": 1751,
+        "start_byte_offset": 1997,
+        "end_offset": 1756,
+        "end_byte_offset": 2002,
+        "source_text": "aesop"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 18,
+          "line": 83
+        },
+        "end_position": {
+          "column": 23,
+          "line": 83
+        },
+        "message": "'aesop' tactic does nothing\n\nNote: This linter can be disabled with `set_option linter.unusedTactic false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "'aesop' tactic does nothing\n\nNote: This linter can be disabled with `set_option linter.unusedTactic false`",
+          "endPos": {
+            "column": 23,
+            "line": 83
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P14/proof_error/B2/repeat_1/validation/lean/002_candidate_01/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unusedTactic",
+          "pos": {
+            "column": 18,
+            "line": 83
+          },
+          "severity": "warning"
+        },
+        "source_line": "              <;> aesop",
+        "start_offset": 2455,
+        "start_byte_offset": 2817,
+        "end_offset": 2460,
+        "end_byte_offset": 2822,
+        "source_text": "aesop"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 14,
+          "line": 97
+        },
+        "end_position": {
+          "column": 19,
+          "line": 97
+        },
+        "message": "'aesop' tactic does nothing\n\nNote: This linter can be disabled with `set_option linter.unusedTactic false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "'aesop' tactic does nothing\n\nNote: This linter can be disabled with `set_option linter.unusedTactic false`",
+          "endPos": {
+            "column": 19,
+            "line": 97
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P14/proof_error/B2/repeat_1/validation/lean/002_candidate_01/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unusedTactic",
+          "pos": {
+            "column": 14,
+            "line": 97
+          },
+          "severity": "warning"
+        },
+        "source_line": "          <;> aesop",
+        "start_offset": 2890,
+        "start_byte_offset": 3336,
+        "end_offset": 2895,
+        "end_byte_offset": 3341,
+        "source_text": "aesop"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 10,
+          "line": 112
+        },
+        "end_position": {
+          "column": 15,
+          "line": 112
+        },
+        "message": "'aesop' tactic does nothing\n\nNote: This linter can be disabled with `set_option linter.unusedTactic false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "'aesop' tactic does nothing\n\nNote: This linter can be disabled with `set_option linter.unusedTactic false`",
+          "endPos": {
+            "column": 15,
+            "line": 112
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P14/proof_error/B2/repeat_1/validation/lean/002_candidate_01/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unusedTactic",
+          "pos": {
+            "column": 10,
+            "line": 112
+          },
+          "severity": "warning"
+        },
+        "source_line": "      <;> aesop",
+        "start_offset": 3233,
+        "start_byte_offset": 3718,
+        "end_offset": 3238,
+        "end_byte_offset": 3723,
+        "source_text": "aesop"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 10,
+          "line": 120
+        },
+        "end_position": {
+          "column": 15,
+          "line": 120
+        },
+        "message": "'aesop' tactic does nothing\n\nNote: This linter can be disabled with `set_option linter.unusedTactic false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "'aesop' tactic does nothing\n\nNote: This linter can be disabled with `set_option linter.unusedTactic false`",
+          "endPos": {
+            "column": 15,
+            "line": 120
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P14/proof_error/B2/repeat_1/validation/lean/002_candidate_01/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unusedTactic",
+          "pos": {
+            "column": 10,
+            "line": 120
+          },
+          "severity": "warning"
+        },
+        "source_line": "      <;> aesop",
+        "start_offset": 3457,
+        "start_byte_offset": 3968,
+        "end_offset": 3462,
+        "end_byte_offset": 3973,
+        "source_text": "aesop"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 10,
+          "line": 130
+        },
+        "end_position": {
+          "column": 15,
+          "line": 130
+        },
+        "message": "'aesop' tactic does nothing\n\nNote: This linter can be disabled with `set_option linter.unusedTactic false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "'aesop' tactic does nothing\n\nNote: This linter can be disabled with `set_option linter.unusedTactic false`",
+          "endPos": {
+            "column": 15,
+            "line": 130
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P14/proof_error/B2/repeat_1/validation/lean/002_candidate_01/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unusedTactic",
+          "pos": {
+            "column": 10,
+            "line": 130
+          },
+          "severity": "warning"
+        },
+        "source_line": "      <;> aesop",
+        "start_offset": 3777,
+        "start_byte_offset": 4324,
+        "end_offset": 3782,
+        "end_byte_offset": 4329,
+        "source_text": "aesop"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 8,
+          "line": 134
+        },
+        "end_position": {
+          "column": 13,
+          "line": 134
+        },
+        "message": "'aesop' tactic does nothing\n\nNote: This linter can be disabled with `set_option linter.unusedTactic false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "'aesop' tactic does nothing\n\nNote: This linter can be disabled with `set_option linter.unusedTactic false`",
+          "endPos": {
+            "column": 13,
+            "line": 134
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P14/proof_error/B2/repeat_1/validation/lean/002_candidate_01/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unusedTactic",
+          "pos": {
+            "column": 8,
+            "line": 134
+          },
+          "severity": "warning"
+        },
+        "source_line": "    <;> aesop",
+        "start_offset": 3864,
+        "start_byte_offset": 4419,
+        "end_offset": 3869,
+        "end_byte_offset": 4424,
+        "source_text": "aesop"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 10,
+          "line": 143
+        },
+        "end_position": {
+          "column": 15,
+          "line": 143
+        },
+        "message": "'tauto' tactic does nothing\n\nNote: This linter can be disabled with `set_option linter.unusedTactic false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "'tauto' tactic does nothing\n\nNote: This linter can be disabled with `set_option linter.unusedTactic false`",
+          "endPos": {
+            "column": 15,
+            "line": 143
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P14/proof_error/B2/repeat_1/validation/lean/002_candidate_01/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unusedTactic",
+          "pos": {
+            "column": 10,
+            "line": 143
+          },
+          "severity": "warning"
+        },
+        "source_line": "      <;> tauto",
+        "start_offset": 4070,
+        "start_byte_offset": 4649,
+        "end_offset": 4075,
+        "end_byte_offset": 4654,
+        "source_text": "tauto"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 12,
+          "line": 190
+        },
+        "end_position": {
+          "column": 16,
+          "line": 193
+        },
+        "message": "'(try { aesop\n  })' tactic does nothing\n\nNote: This linter can be disabled with `set_option linter.unusedTactic false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "'(try { aesop\n  })' tactic does nothing\n\nNote: This linter can be disabled with `set_option linter.unusedTactic false`",
+          "endPos": {
+            "column": 16,
+            "line": 193
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P14/proof_error/B2/repeat_1/validation/lean/002_candidate_01/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unusedTactic",
+          "pos": {
+            "column": 12,
+            "line": 190
+          },
+          "severity": "warning"
+        },
+        "source_line": "            (try",
+        "start_offset": 5536,
+        "start_byte_offset": 6239,
+        "end_offset": 5595,
+        "end_byte_offset": 6298,
+        "source_text": "(try\n              {\n                aesop\n              })"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 12,
+          "line": 195
+        },
+        "end_position": {
+          "column": 16,
+          "line": 198
+        },
+        "message": "'(try { tauto\n  })' tactic does nothing\n\nNote: This linter can be disabled with `set_option linter.unusedTactic false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "'(try { tauto\n  })' tactic does nothing\n\nNote: This linter can be disabled with `set_option linter.unusedTactic false`",
+          "endPos": {
+            "column": 16,
+            "line": 198
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P14/proof_error/B2/repeat_1/validation/lean/002_candidate_01/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unusedTactic",
+          "pos": {
+            "column": 12,
+            "line": 195
+          },
+          "severity": "warning"
+        },
+        "source_line": "            (try",
+        "start_offset": 5624,
+        "start_byte_offset": 6327,
+        "end_offset": 5683,
+        "end_byte_offset": 6386,
+        "source_text": "(try\n              {\n                tauto\n              })"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 12,
+          "line": 200
+        },
+        "end_position": {
+          "column": 16,
+          "line": 207
+        },
+        "message": "'(try { intros <;> simp_all [Set.ext_iff] <;> tauto\n  })' tactic does nothing\n\nNote: This linter can be disabled with `set_option linter.unusedTactic false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "'(try { intros <;> simp_all [Set.ext_iff] <;> tauto\n  })' tactic does nothing\n\nNote: This linter can be disabled with `set_option linter.unusedTactic false`",
+          "endPos": {
+            "column": 16,
+            "line": 207
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P14/proof_error/B2/repeat_1/validation/lean/002_candidate_01/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unusedTactic",
+          "pos": {
+            "column": 12,
+            "line": 200
+          },
+          "severity": "warning"
+        },
+        "source_line": "            (try",
+        "start_offset": 5712,
+        "start_byte_offset": 6415,
+        "end_offset": 5873,
+        "end_byte_offset": 6576,
+        "source_text": "(try\n              {\n                intros\n                <;>\n                simp_all [Set.ext_iff]\n                <;>\n                tauto\n              })"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 12,
+          "line": 209
+        },
+        "end_position": {
+          "column": 16,
+          "line": 216
+        },
+        "message": "'(try { intros <;> simp_all [Set.ext_iff] <;> tauto\n  })' tactic does nothing\n\nNote: This linter can be disabled with `set_option linter.unusedTactic false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "'(try { intros <;> simp_all [Set.ext_iff] <;> tauto\n  })' tactic does nothing\n\nNote: This linter can be disabled with `set_option linter.unusedTactic false`",
+          "endPos": {
+            "column": 16,
+            "line": 216
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P14/proof_error/B2/repeat_1/validation/lean/002_candidate_01/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unusedTactic",
+          "pos": {
+            "column": 12,
+            "line": 209
+          },
+          "severity": "warning"
+        },
+        "source_line": "            (try",
+        "start_offset": 5902,
+        "start_byte_offset": 6605,
+        "end_offset": 6063,
+        "end_byte_offset": 6766,
+        "source_text": "(try\n              {\n                intros\n                <;>\n                simp_all [Set.ext_iff]\n                <;>\n                tauto\n              })"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 10,
+          "line": 235
+        },
+        "end_position": {
+          "column": 21,
+          "line": 235
+        },
+        "message": "'(try tauto)' tactic does nothing\n\nNote: This linter can be disabled with `set_option linter.unusedTactic false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "'(try tauto)' tactic does nothing\n\nNote: This linter can be disabled with `set_option linter.unusedTactic false`",
+          "endPos": {
+            "column": 21,
+            "line": 235
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P14/proof_error/B2/repeat_1/validation/lean/002_candidate_01/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unusedTactic",
+          "pos": {
+            "column": 10,
+            "line": 235
+          },
+          "severity": "warning"
+        },
+        "source_line": "          (try tauto)",
+        "start_offset": 6712,
+        "start_byte_offset": 7435,
+        "end_offset": 6723,
+        "end_byte_offset": 7446,
+        "source_text": "(try tauto)"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 10,
+          "line": 237
+        },
+        "end_position": {
+          "column": 14,
+          "line": 246
+        },
+        "message": "'(try {\n    have h₇ := h_subset_or_compl A\n    cases h₇ with\n    | inl h₈ => tauto\n    | inr h₈ =>\n      have h₉ : Aᶜ ∈ P := h₈\n      have h₁₀ : A ∈ P ∨ Aᶜ ∈ P := by tauto\n      tauto\n  })' tactic does nothing\n\nNote: This linter can be disabled with `set_option linter.unusedTactic false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "'(try {\n    have h₇ := h_subset_or_compl A\n    cases h₇ with\n    | inl h₈ => tauto\n    | inr h₈ =>\n      have h₉ : Aᶜ ∈ P := h₈\n      have h₁₀ : A ∈ P ∨ Aᶜ ∈ P := by tauto\n      tauto\n  })' tactic does nothing\n\nNote: This linter can be disabled with `set_option linter.unusedTactic false`",
+          "endPos": {
+            "column": 14,
+            "line": 246
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P14/proof_error/B2/repeat_1/validation/lean/002_candidate_01/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unusedTactic",
+          "pos": {
+            "column": 10,
+            "line": 237
+          },
+          "severity": "warning"
+        },
+        "source_line": "          (try",
+        "start_offset": 6748,
+        "start_byte_offset": 7471,
+        "end_offset": 7027,
+        "end_byte_offset": 7778,
+        "source_text": "(try\n            {\n              have h₇ := h_subset_or_compl A\n              cases h₇ with\n              | inl h₈ => tauto\n              | inr h₈ =>\n                have h₉ : Aᶜ ∈ P := h₈\n                have h₁₀ : A ∈ P ∨ Aᶜ ∈ P := by tauto\n                tauto\n            })"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 8,
+          "line": 257
+        },
+        "end_position": {
+          "column": 35,
+          "line": 257
+        },
+        "message": "'simp_all [Fintype.card_fun]' tactic does nothing\n\nNote: This linter can be disabled with `set_option linter.unusedTactic false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "'simp_all [Fintype.card_fun]' tactic does nothing\n\nNote: This linter can be disabled with `set_option linter.unusedTactic false`",
+          "endPos": {
+            "column": 35,
+            "line": 257
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P14/proof_error/B2/repeat_1/validation/lean/002_candidate_01/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unusedTactic",
+          "pos": {
+            "column": 8,
+            "line": 257
+          },
+          "severity": "warning"
+        },
+        "source_line": "        simp_all [Fintype.card_fun]",
+        "start_offset": 7414,
+        "start_byte_offset": 8189,
+        "end_offset": 7441,
+        "end_byte_offset": 8216,
+        "source_text": "simp_all [Fintype.card_fun]"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 8,
+          "line": 259
+        },
+        "end_position": {
+          "column": 15,
+          "line": 259
+        },
+        "message": "'ring_nf' tactic does nothing\n\nNote: This linter can be disabled with `set_option linter.unusedTactic false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "'ring_nf' tactic does nothing\n\nNote: This linter can be disabled with `set_option linter.unusedTactic false`",
+          "endPos": {
+            "column": 15,
+            "line": 259
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P14/proof_error/B2/repeat_1/validation/lean/002_candidate_01/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unusedTactic",
+          "pos": {
+            "column": 8,
+            "line": 259
+          },
+          "severity": "warning"
+        },
+        "source_line": "        ring_nf",
+        "start_offset": 7462,
+        "start_byte_offset": 8237,
+        "end_offset": 7469,
+        "end_byte_offset": 8244,
+        "source_text": "ring_nf"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 8,
+          "line": 261
+        },
+        "end_position": {
+          "column": 35,
+          "line": 261
+        },
+        "message": "'simp_all [Fintype.card_fun]' tactic does nothing\n\nNote: This linter can be disabled with `set_option linter.unusedTactic false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "'simp_all [Fintype.card_fun]' tactic does nothing\n\nNote: This linter can be disabled with `set_option linter.unusedTactic false`",
+          "endPos": {
+            "column": 35,
+            "line": 261
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P14/proof_error/B2/repeat_1/validation/lean/002_candidate_01/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unusedTactic",
+          "pos": {
+            "column": 8,
+            "line": 261
+          },
+          "severity": "warning"
+        },
+        "source_line": "        simp_all [Fintype.card_fun]",
+        "start_offset": 7490,
+        "start_byte_offset": 8265,
+        "end_offset": 7517,
+        "end_byte_offset": 8292,
+        "source_text": "simp_all [Fintype.card_fun]"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 8,
+          "line": 263
+        },
+        "end_position": {
+          "column": 16,
+          "line": 263
+        },
+        "message": "'norm_num' tactic does nothing\n\nNote: This linter can be disabled with `set_option linter.unusedTactic false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "'norm_num' tactic does nothing\n\nNote: This linter can be disabled with `set_option linter.unusedTactic false`",
+          "endPos": {
+            "column": 16,
+            "line": 263
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P14/proof_error/B2/repeat_1/validation/lean/002_candidate_01/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unusedTactic",
+          "pos": {
+            "column": 8,
+            "line": 263
+          },
+          "severity": "warning"
+        },
+        "source_line": "        norm_num",
+        "start_offset": 7538,
+        "start_byte_offset": 8313,
+        "end_offset": 7546,
+        "end_byte_offset": 8321,
+        "source_text": "norm_num"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 8,
+          "line": 265
+        },
+        "end_position": {
+          "column": 13,
+          "line": 265
+        },
+        "message": "'aesop' tactic does nothing\n\nNote: This linter can be disabled with `set_option linter.unusedTactic false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "'aesop' tactic does nothing\n\nNote: This linter can be disabled with `set_option linter.unusedTactic false`",
+          "endPos": {
+            "column": 13,
+            "line": 265
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P14/proof_error/B2/repeat_1/validation/lean/002_candidate_01/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unusedTactic",
+          "pos": {
+            "column": 8,
+            "line": 265
+          },
+          "severity": "warning"
+        },
+        "source_line": "        aesop",
+        "start_offset": 7567,
+        "start_byte_offset": 8342,
+        "end_offset": 7572,
+        "end_byte_offset": 8347,
+        "source_text": "aesop"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 16,
+          "line": 292
+        },
+        "end_position": {
+          "column": 31,
+          "line": 292
+        },
+        "message": "'simp [add_comm]' tactic does nothing\n\nNote: This linter can be disabled with `set_option linter.unusedTactic false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "'simp [add_comm]' tactic does nothing\n\nNote: This linter can be disabled with `set_option linter.unusedTactic false`",
+          "endPos": {
+            "column": 31,
+            "line": 292
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P14/proof_error/B2/repeat_1/validation/lean/002_candidate_01/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unusedTactic",
+          "pos": {
+            "column": 16,
+            "line": 292
+          },
+          "severity": "warning"
+        },
+        "source_line": "            <;> simp [add_comm]",
+        "start_offset": 8575,
+        "start_byte_offset": 9402,
+        "end_offset": 8590,
+        "end_byte_offset": 9417,
+        "source_text": "simp [add_comm]"
+      },
+      {
+        "severity": "information",
+        "position": {
+          "column": 0,
+          "line": 304
+        },
+        "end_position": {
+          "column": 6,
+          "line": 304
+        },
+        "message": "putnam_1964_b2.{u_1} (S : Type u_1) [Fintype S] [Nonempty S] (P : Finset (Set S)) (hPP : ∀ T ∈ P, ∀ U ∈ P, T ∩ U ≠ ∅)\n  (hPS : ¬∃ T ∉ P, ∀ U ∈ P, T ∩ U ≠ ∅) : P.card = 2 ^ (Fintype.card S - 1)",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "putnam_1964_b2.{u_1} (S : Type u_1) [Fintype S] [Nonempty S] (P : Finset (Set S)) (hPP : ∀ T ∈ P, ∀ U ∈ P, T ∩ U ≠ ∅)\n  (hPS : ¬∃ T ∉ P, ∀ U ∈ P, T ∩ U ≠ ∅) : P.card = 2 ^ (Fintype.card S - 1)",
+          "endPos": {
+            "column": 6,
+            "line": 304
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P14/proof_error/B2/repeat_1/validation/lean/002_candidate_01/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 0,
+            "line": 304
+          },
+          "severity": "information"
+        }
+      },
+      {
+        "severity": "information",
+        "position": {
+          "column": 0,
+          "line": 305
+        },
+        "end_position": {
+          "column": 6,
+          "line": 305
+        },
+        "message": "'putnam_1964_b2' depends on axioms: [propext, Classical.choice, Quot.sound]",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "'putnam_1964_b2' depends on axioms: [propext, Classical.choice, Quot.sound]",
+          "endPos": {
+            "column": 6,
+            "line": 305
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P14/proof_error/B2/repeat_1/validation/lean/002_candidate_01/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 0,
+            "line": 305
+          },
+          "severity": "information"
+        }
+      }
+    ],
+    "goals": null,
+    "local_context": null,
+    "sorries": [],
+    "backend_proof_status": null,
+    "statement_check": "fixed_context_preserved",
+    "axioms": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext"
+    ],
+    "metrics": {
+      "proof_tokens": 1802,
+      "raw_heartbeats": 134625138,
+      "heartbeats": 134625
+    },
+    "elapsed_ms": 23617,
+    "raw_log_path": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P14/proof_error/B2/repeat_1/validation/lean/002_candidate_01/stdout.log",
+    "detail": null,
+    "failure_kind": null
+  },
+  "measurement": {
+    "proof_tokens": 1802,
+    "raw_heartbeats": 134625138,
+    "token_reduction_pct": 0.0,
+    "heartbeat_reduction_pct": 0.012507243469050966,
+    "search_score": 0.006253621734525483
+  },
+  "facts": {
+    "diagnostics": [
+      {
+        "severity": "warning",
+        "position": {
+          "column": 12,
+          "line": 123
+        },
+        "end_position": {
+          "column": 42,
+          "line": 123
+        },
+        "message": "`Set.eq_empty_of_forall_not_mem` has been deprecated: Use `Set.eq_empty_of_forall_notMem` instead",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "`Set.eq_empty_of_forall_not_mem` has been deprecated: Use `Set.eq_empty_of_forall_notMem` instead",
+          "endPos": {
+            "column": 42,
+            "line": 123
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "Lean.Linter.deprecatedAttr",
+          "pos": {
+            "column": 12,
+            "line": 123
+          },
+          "severity": "warning"
+        },
+        "source_line": "      apply Set.eq_empty_of_forall_not_mem",
+        "start_offset": 3510,
+        "start_byte_offset": 4027,
+        "end_offset": 3540,
+        "end_byte_offset": 4057,
+        "source_text": "Set.eq_empty_of_forall_not_mem"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 36,
+          "line": 18
+        },
+        "end_position": {
+          "column": 47,
+          "line": 18
+        },
+        "message": "This simp argument is unused:\n  Set.ext_iff\n\nHint: Omit it from the simp argument list.\n  simp ̵[̵S̵e̵t̵.̵e̵x̵t̵_̵i̵f̵f̵]̵\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "This simp argument is unused:\n  Set.ext_iff\n\nHint: Omit it from the simp argument list.\n  simp ̵[̵S̵e̵t̵.̵e̵x̵t̵_̵i̵f̵f̵]̵\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+          "endPos": {
+            "column": 47,
+            "line": 18
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unusedSimpArgs",
+          "pos": {
+            "column": 36,
+            "line": 18
+          },
+          "severity": "warning"
+        },
+        "source_line": "    have h₂ : T ∩ T = T := by simp [Set.ext_iff]",
+        "start_offset": 457,
+        "start_byte_offset": 506,
+        "end_offset": 468,
+        "end_byte_offset": 517,
+        "source_text": "Set.ext_iff"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 12,
+          "line": 142
+        },
+        "end_position": {
+          "column": 29,
+          "line": 142
+        },
+        "message": "This simp argument is unused:\n  Set.mem_inter_iff\n\nHint: Omit it from the simp argument list.\n  simp ̵[̵S̵e̵t̵.̵m̵e̵m̵_̵i̵n̵t̵e̵r̵_̵i̵f̵f̵]̵\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "This simp argument is unused:\n  Set.mem_inter_iff\n\nHint: Omit it from the simp argument list.\n  simp ̵[̵S̵e̵t̵.̵m̵e̵m̵_̵i̵n̵t̵e̵r̵_̵i̵f̵f̵]̵\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+          "endPos": {
+            "column": 29,
+            "line": 142
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unusedSimpArgs",
+          "pos": {
+            "column": 12,
+            "line": 142
+          },
+          "severity": "warning"
+        },
+        "source_line": "      simp [Set.mem_inter_iff]",
+        "start_offset": 4041,
+        "start_byte_offset": 4620,
+        "end_offset": 4058,
+        "end_byte_offset": 4637,
+        "source_text": "Set.mem_inter_iff"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 44,
+          "line": 233
+        },
+        "end_position": {
+          "column": 61,
+          "line": 233
+        },
+        "message": "This simp argument is unused:\n  h_subset_or_compl\n\nHint: Omit it from the simp argument list.\n  simp_all ̵[̵h̵_̵s̵u̵b̵s̵e̵t̵_̵o̵r̵_̵c̵o̵m̵p̵l̵]̵\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "This simp argument is unused:\n  h_subset_or_compl\n\nHint: Omit it from the simp argument list.\n  simp_all ̵[̵h̵_̵s̵u̵b̵s̵e̵t̵_̵o̵r̵_̵c̵o̵m̵p̵l̵]̵\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+          "endPos": {
+            "column": 61,
+            "line": 233
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unusedSimpArgs",
+          "pos": {
+            "column": 44,
+            "line": 233
+          },
+          "severity": "warning"
+        },
+        "source_line": "          by_cases h₆ : A ∈ P <;> simp_all [h_subset_or_compl]",
+        "start_offset": 6669,
+        "start_byte_offset": 7392,
+        "end_offset": 6686,
+        "end_byte_offset": 7409,
+        "source_text": "h_subset_or_compl"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 14,
+          "line": 255
+        },
+        "end_position": {
+          "column": 30,
+          "line": 255
+        },
+        "message": "This simp argument is unused:\n  Fintype.card_fun\n\nHint: Omit it from the simp argument list.\n  simp ̵[̵F̵i̵n̵t̵y̵p̵e̵.̵c̵a̵r̵d̵_̵f̵u̵n̵]̵\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "This simp argument is unused:\n  Fintype.card_fun\n\nHint: Omit it from the simp argument list.\n  simp ̵[̵F̵i̵n̵t̵y̵p̵e̵.̵c̵a̵r̵d̵_̵f̵u̵n̵]̵\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+          "endPos": {
+            "column": 30,
+            "line": 255
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unusedSimpArgs",
+          "pos": {
+            "column": 14,
+            "line": 255
+          },
+          "severity": "warning"
+        },
+        "source_line": "        simp [Fintype.card_fun]",
+        "start_offset": 7376,
+        "start_byte_offset": 8151,
+        "end_offset": 7392,
+        "end_byte_offset": 8167,
+        "source_text": "Fintype.card_fun"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 18,
+          "line": 46
+        },
+        "end_position": {
+          "column": 23,
+          "line": 46
+        },
+        "message": "this tactic is never executed\n\nNote: This linter can be disabled with `set_option linter.unreachableTactic false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "this tactic is never executed\n\nNote: This linter can be disabled with `set_option linter.unreachableTactic false`",
+          "endPos": {
+            "column": 23,
+            "line": 46
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unreachableTactic",
+          "pos": {
+            "column": 18,
+            "line": 46
+          },
+          "severity": "warning"
+        },
+        "source_line": "              <;> aesop",
+        "start_offset": 1320,
+        "start_byte_offset": 1490,
+        "end_offset": 1325,
+        "end_byte_offset": 1495,
+        "source_text": "aesop"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 14,
+          "line": 60
+        },
+        "end_position": {
+          "column": 19,
+          "line": 60
+        },
+        "message": "this tactic is never executed\n\nNote: This linter can be disabled with `set_option linter.unreachableTactic false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "this tactic is never executed\n\nNote: This linter can be disabled with `set_option linter.unreachableTactic false`",
+          "endPos": {
+            "column": 19,
+            "line": 60
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unreachableTactic",
+          "pos": {
+            "column": 14,
+            "line": 60
+          },
+          "severity": "warning"
+        },
+        "source_line": "          <;> aesop",
+        "start_offset": 1751,
+        "start_byte_offset": 1997,
+        "end_offset": 1756,
+        "end_byte_offset": 2002,
+        "source_text": "aesop"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 18,
+          "line": 83
+        },
+        "end_position": {
+          "column": 23,
+          "line": 83
+        },
+        "message": "this tactic is never executed\n\nNote: This linter can be disabled with `set_option linter.unreachableTactic false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "this tactic is never executed\n\nNote: This linter can be disabled with `set_option linter.unreachableTactic false`",
+          "endPos": {
+            "column": 23,
+            "line": 83
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unreachableTactic",
+          "pos": {
+            "column": 18,
+            "line": 83
+          },
+          "severity": "warning"
+        },
+        "source_line": "              <;> aesop",
+        "start_offset": 2455,
+        "start_byte_offset": 2817,
+        "end_offset": 2460,
+        "end_byte_offset": 2822,
+        "source_text": "aesop"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 14,
+          "line": 97
+        },
+        "end_position": {
+          "column": 19,
+          "line": 97
+        },
+        "message": "this tactic is never executed\n\nNote: This linter can be disabled with `set_option linter.unreachableTactic false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "this tactic is never executed\n\nNote: This linter can be disabled with `set_option linter.unreachableTactic false`",
+          "endPos": {
+            "column": 19,
+            "line": 97
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unreachableTactic",
+          "pos": {
+            "column": 14,
+            "line": 97
+          },
+          "severity": "warning"
+        },
+        "source_line": "          <;> aesop",
+        "start_offset": 2890,
+        "start_byte_offset": 3336,
+        "end_offset": 2895,
+        "end_byte_offset": 3341,
+        "source_text": "aesop"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 10,
+          "line": 112
+        },
+        "end_position": {
+          "column": 15,
+          "line": 112
+        },
+        "message": "this tactic is never executed\n\nNote: This linter can be disabled with `set_option linter.unreachableTactic false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "this tactic is never executed\n\nNote: This linter can be disabled with `set_option linter.unreachableTactic false`",
+          "endPos": {
+            "column": 15,
+            "line": 112
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unreachableTactic",
+          "pos": {
+            "column": 10,
+            "line": 112
+          },
+          "severity": "warning"
+        },
+        "source_line": "      <;> aesop",
+        "start_offset": 3233,
+        "start_byte_offset": 3718,
+        "end_offset": 3238,
+        "end_byte_offset": 3723,
+        "source_text": "aesop"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 10,
+          "line": 120
+        },
+        "end_position": {
+          "column": 15,
+          "line": 120
+        },
+        "message": "this tactic is never executed\n\nNote: This linter can be disabled with `set_option linter.unreachableTactic false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "this tactic is never executed\n\nNote: This linter can be disabled with `set_option linter.unreachableTactic false`",
+          "endPos": {
+            "column": 15,
+            "line": 120
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unreachableTactic",
+          "pos": {
+            "column": 10,
+            "line": 120
+          },
+          "severity": "warning"
+        },
+        "source_line": "      <;> aesop",
+        "start_offset": 3457,
+        "start_byte_offset": 3968,
+        "end_offset": 3462,
+        "end_byte_offset": 3973,
+        "source_text": "aesop"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 10,
+          "line": 130
+        },
+        "end_position": {
+          "column": 15,
+          "line": 130
+        },
+        "message": "this tactic is never executed\n\nNote: This linter can be disabled with `set_option linter.unreachableTactic false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "this tactic is never executed\n\nNote: This linter can be disabled with `set_option linter.unreachableTactic false`",
+          "endPos": {
+            "column": 15,
+            "line": 130
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unreachableTactic",
+          "pos": {
+            "column": 10,
+            "line": 130
+          },
+          "severity": "warning"
+        },
+        "source_line": "      <;> aesop",
+        "start_offset": 3777,
+        "start_byte_offset": 4324,
+        "end_offset": 3782,
+        "end_byte_offset": 4329,
+        "source_text": "aesop"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 8,
+          "line": 134
+        },
+        "end_position": {
+          "column": 13,
+          "line": 134
+        },
+        "message": "this tactic is never executed\n\nNote: This linter can be disabled with `set_option linter.unreachableTactic false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "this tactic is never executed\n\nNote: This linter can be disabled with `set_option linter.unreachableTactic false`",
+          "endPos": {
+            "column": 13,
+            "line": 134
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unreachableTactic",
+          "pos": {
+            "column": 8,
+            "line": 134
+          },
+          "severity": "warning"
+        },
+        "source_line": "    <;> aesop",
+        "start_offset": 3864,
+        "start_byte_offset": 4419,
+        "end_offset": 3869,
+        "end_byte_offset": 4424,
+        "source_text": "aesop"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 10,
+          "line": 143
+        },
+        "end_position": {
+          "column": 15,
+          "line": 143
+        },
+        "message": "this tactic is never executed\n\nNote: This linter can be disabled with `set_option linter.unreachableTactic false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "this tactic is never executed\n\nNote: This linter can be disabled with `set_option linter.unreachableTactic false`",
+          "endPos": {
+            "column": 15,
+            "line": 143
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unreachableTactic",
+          "pos": {
+            "column": 10,
+            "line": 143
+          },
+          "severity": "warning"
+        },
+        "source_line": "      <;> tauto",
+        "start_offset": 4070,
+        "start_byte_offset": 4649,
+        "end_offset": 4075,
+        "end_byte_offset": 4654,
+        "source_text": "tauto"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 12,
+          "line": 190
+        },
+        "end_position": {
+          "column": 16,
+          "line": 193
+        },
+        "message": "this tactic is never executed\n\nNote: This linter can be disabled with `set_option linter.unreachableTactic false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "this tactic is never executed\n\nNote: This linter can be disabled with `set_option linter.unreachableTactic false`",
+          "endPos": {
+            "column": 16,
+            "line": 193
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unreachableTactic",
+          "pos": {
+            "column": 12,
+            "line": 190
+          },
+          "severity": "warning"
+        },
+        "source_line": "            (try",
+        "start_offset": 5536,
+        "start_byte_offset": 6239,
+        "end_offset": 5595,
+        "end_byte_offset": 6298,
+        "source_text": "(try\n              {\n                aesop\n              })"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 12,
+          "line": 195
+        },
+        "end_position": {
+          "column": 16,
+          "line": 198
+        },
+        "message": "this tactic is never executed\n\nNote: This linter can be disabled with `set_option linter.unreachableTactic false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "this tactic is never executed\n\nNote: This linter can be disabled with `set_option linter.unreachableTactic false`",
+          "endPos": {
+            "column": 16,
+            "line": 198
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unreachableTactic",
+          "pos": {
+            "column": 12,
+            "line": 195
+          },
+          "severity": "warning"
+        },
+        "source_line": "            (try",
+        "start_offset": 5624,
+        "start_byte_offset": 6327,
+        "end_offset": 5683,
+        "end_byte_offset": 6386,
+        "source_text": "(try\n              {\n                tauto\n              })"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 12,
+          "line": 200
+        },
+        "end_position": {
+          "column": 16,
+          "line": 207
+        },
+        "message": "this tactic is never executed\n\nNote: This linter can be disabled with `set_option linter.unreachableTactic false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "this tactic is never executed\n\nNote: This linter can be disabled with `set_option linter.unreachableTactic false`",
+          "endPos": {
+            "column": 16,
+            "line": 207
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unreachableTactic",
+          "pos": {
+            "column": 12,
+            "line": 200
+          },
+          "severity": "warning"
+        },
+        "source_line": "            (try",
+        "start_offset": 5712,
+        "start_byte_offset": 6415,
+        "end_offset": 5873,
+        "end_byte_offset": 6576,
+        "source_text": "(try\n              {\n                intros\n                <;>\n                simp_all [Set.ext_iff]\n                <;>\n                tauto\n              })"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 12,
+          "line": 209
+        },
+        "end_position": {
+          "column": 16,
+          "line": 216
+        },
+        "message": "this tactic is never executed\n\nNote: This linter can be disabled with `set_option linter.unreachableTactic false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "this tactic is never executed\n\nNote: This linter can be disabled with `set_option linter.unreachableTactic false`",
+          "endPos": {
+            "column": 16,
+            "line": 216
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unreachableTactic",
+          "pos": {
+            "column": 12,
+            "line": 209
+          },
+          "severity": "warning"
+        },
+        "source_line": "            (try",
+        "start_offset": 5902,
+        "start_byte_offset": 6605,
+        "end_offset": 6063,
+        "end_byte_offset": 6766,
+        "source_text": "(try\n              {\n                intros\n                <;>\n                simp_all [Set.ext_iff]\n                <;>\n                tauto\n              })"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 10,
+          "line": 235
+        },
+        "end_position": {
+          "column": 21,
+          "line": 235
+        },
+        "message": "this tactic is never executed\n\nNote: This linter can be disabled with `set_option linter.unreachableTactic false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "this tactic is never executed\n\nNote: This linter can be disabled with `set_option linter.unreachableTactic false`",
+          "endPos": {
+            "column": 21,
+            "line": 235
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unreachableTactic",
+          "pos": {
+            "column": 10,
+            "line": 235
+          },
+          "severity": "warning"
+        },
+        "source_line": "          (try tauto)",
+        "start_offset": 6712,
+        "start_byte_offset": 7435,
+        "end_offset": 6723,
+        "end_byte_offset": 7446,
+        "source_text": "(try tauto)"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 10,
+          "line": 237
+        },
+        "end_position": {
+          "column": 14,
+          "line": 246
+        },
+        "message": "this tactic is never executed\n\nNote: This linter can be disabled with `set_option linter.unreachableTactic false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "this tactic is never executed\n\nNote: This linter can be disabled with `set_option linter.unreachableTactic false`",
+          "endPos": {
+            "column": 14,
+            "line": 246
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unreachableTactic",
+          "pos": {
+            "column": 10,
+            "line": 237
+          },
+          "severity": "warning"
+        },
+        "source_line": "          (try",
+        "start_offset": 6748,
+        "start_byte_offset": 7471,
+        "end_offset": 7027,
+        "end_byte_offset": 7778,
+        "source_text": "(try\n            {\n              have h₇ := h_subset_or_compl A\n              cases h₇ with\n              | inl h₈ => tauto\n              | inr h₈ =>\n                have h₉ : Aᶜ ∈ P := h₈\n                have h₁₀ : A ∈ P ∨ Aᶜ ∈ P := by tauto\n                tauto\n            })"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 8,
+          "line": 257
+        },
+        "end_position": {
+          "column": 35,
+          "line": 257
+        },
+        "message": "this tactic is never executed\n\nNote: This linter can be disabled with `set_option linter.unreachableTactic false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "this tactic is never executed\n\nNote: This linter can be disabled with `set_option linter.unreachableTactic false`",
+          "endPos": {
+            "column": 35,
+            "line": 257
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unreachableTactic",
+          "pos": {
+            "column": 8,
+            "line": 257
+          },
+          "severity": "warning"
+        },
+        "source_line": "        simp_all [Fintype.card_fun]",
+        "start_offset": 7414,
+        "start_byte_offset": 8189,
+        "end_offset": 7441,
+        "end_byte_offset": 8216,
+        "source_text": "simp_all [Fintype.card_fun]"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 8,
+          "line": 259
+        },
+        "end_position": {
+          "column": 15,
+          "line": 259
+        },
+        "message": "this tactic is never executed\n\nNote: This linter can be disabled with `set_option linter.unreachableTactic false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "this tactic is never executed\n\nNote: This linter can be disabled with `set_option linter.unreachableTactic false`",
+          "endPos": {
+            "column": 15,
+            "line": 259
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unreachableTactic",
+          "pos": {
+            "column": 8,
+            "line": 259
+          },
+          "severity": "warning"
+        },
+        "source_line": "        ring_nf",
+        "start_offset": 7462,
+        "start_byte_offset": 8237,
+        "end_offset": 7469,
+        "end_byte_offset": 8244,
+        "source_text": "ring_nf"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 8,
+          "line": 261
+        },
+        "end_position": {
+          "column": 35,
+          "line": 261
+        },
+        "message": "this tactic is never executed\n\nNote: This linter can be disabled with `set_option linter.unreachableTactic false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "this tactic is never executed\n\nNote: This linter can be disabled with `set_option linter.unreachableTactic false`",
+          "endPos": {
+            "column": 35,
+            "line": 261
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unreachableTactic",
+          "pos": {
+            "column": 8,
+            "line": 261
+          },
+          "severity": "warning"
+        },
+        "source_line": "        simp_all [Fintype.card_fun]",
+        "start_offset": 7490,
+        "start_byte_offset": 8265,
+        "end_offset": 7517,
+        "end_byte_offset": 8292,
+        "source_text": "simp_all [Fintype.card_fun]"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 8,
+          "line": 263
+        },
+        "end_position": {
+          "column": 16,
+          "line": 263
+        },
+        "message": "this tactic is never executed\n\nNote: This linter can be disabled with `set_option linter.unreachableTactic false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "this tactic is never executed\n\nNote: This linter can be disabled with `set_option linter.unreachableTactic false`",
+          "endPos": {
+            "column": 16,
+            "line": 263
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unreachableTactic",
+          "pos": {
+            "column": 8,
+            "line": 263
+          },
+          "severity": "warning"
+        },
+        "source_line": "        norm_num",
+        "start_offset": 7538,
+        "start_byte_offset": 8313,
+        "end_offset": 7546,
+        "end_byte_offset": 8321,
+        "source_text": "norm_num"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 8,
+          "line": 265
+        },
+        "end_position": {
+          "column": 13,
+          "line": 265
+        },
+        "message": "this tactic is never executed\n\nNote: This linter can be disabled with `set_option linter.unreachableTactic false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "this tactic is never executed\n\nNote: This linter can be disabled with `set_option linter.unreachableTactic false`",
+          "endPos": {
+            "column": 13,
+            "line": 265
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unreachableTactic",
+          "pos": {
+            "column": 8,
+            "line": 265
+          },
+          "severity": "warning"
+        },
+        "source_line": "        aesop",
+        "start_offset": 7567,
+        "start_byte_offset": 8342,
+        "end_offset": 7572,
+        "end_byte_offset": 8347,
+        "source_text": "aesop"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 16,
+          "line": 292
+        },
+        "end_position": {
+          "column": 31,
+          "line": 292
+        },
+        "message": "this tactic is never executed\n\nNote: This linter can be disabled with `set_option linter.unreachableTactic false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "this tactic is never executed\n\nNote: This linter can be disabled with `set_option linter.unreachableTactic false`",
+          "endPos": {
+            "column": 31,
+            "line": 292
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unreachableTactic",
+          "pos": {
+            "column": 16,
+            "line": 292
+          },
+          "severity": "warning"
+        },
+        "source_line": "            <;> simp [add_comm]",
+        "start_offset": 8575,
+        "start_byte_offset": 9402,
+        "end_offset": 8590,
+        "end_byte_offset": 9417,
+        "source_text": "simp [add_comm]"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 14,
+          "line": 41
+        },
+        "end_position": {
+          "column": 17,
+          "line": 41
+        },
+        "message": "Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice\n\nNote: This linter can be disabled with `set_option linter.unnecessarySeqFocus false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice\n\nNote: This linter can be disabled with `set_option linter.unnecessarySeqFocus false`",
+          "endPos": {
+            "column": 17,
+            "line": 41
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unnecessarySeqFocus",
+          "pos": {
+            "column": 14,
+            "line": 41
+          },
+          "severity": "warning"
+        },
+        "source_line": "              <;> tauto",
+        "start_offset": 1169,
+        "start_byte_offset": 1323,
+        "end_offset": 1172,
+        "end_byte_offset": 1326,
+        "source_text": "<;>"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 14,
+          "line": 78
+        },
+        "end_position": {
+          "column": 17,
+          "line": 78
+        },
+        "message": "Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice\n\nNote: This linter can be disabled with `set_option linter.unnecessarySeqFocus false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice\n\nNote: This linter can be disabled with `set_option linter.unnecessarySeqFocus false`",
+          "endPos": {
+            "column": 17,
+            "line": 78
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unnecessarySeqFocus",
+          "pos": {
+            "column": 14,
+            "line": 78
+          },
+          "severity": "warning"
+        },
+        "source_line": "              <;> tauto",
+        "start_offset": 2303,
+        "start_byte_offset": 2647,
+        "end_offset": 2306,
+        "end_byte_offset": 2650,
+        "source_text": "<;>"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 10,
+          "line": 232
+        },
+        "end_position": {
+          "column": 13,
+          "line": 232
+        },
+        "message": "Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice\n\nNote: This linter can be disabled with `set_option linter.unnecessarySeqFocus false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice\n\nNote: This linter can be disabled with `set_option linter.unnecessarySeqFocus false`",
+          "endPos": {
+            "column": 13,
+            "line": 232
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unnecessarySeqFocus",
+          "pos": {
+            "column": 10,
+            "line": 232
+          },
+          "severity": "warning"
+        },
+        "source_line": "          <;>",
+        "start_offset": 6621,
+        "start_byte_offset": 7340,
+        "end_offset": 6624,
+        "end_byte_offset": 7343,
+        "source_text": "<;>"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 18,
+          "line": 46
+        },
+        "end_position": {
+          "column": 23,
+          "line": 46
+        },
+        "message": "'aesop' tactic does nothing\n\nNote: This linter can be disabled with `set_option linter.unusedTactic false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "'aesop' tactic does nothing\n\nNote: This linter can be disabled with `set_option linter.unusedTactic false`",
+          "endPos": {
+            "column": 23,
+            "line": 46
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unusedTactic",
+          "pos": {
+            "column": 18,
+            "line": 46
+          },
+          "severity": "warning"
+        },
+        "source_line": "              <;> aesop",
+        "start_offset": 1320,
+        "start_byte_offset": 1490,
+        "end_offset": 1325,
+        "end_byte_offset": 1495,
+        "source_text": "aesop"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 14,
+          "line": 60
+        },
+        "end_position": {
+          "column": 19,
+          "line": 60
+        },
+        "message": "'aesop' tactic does nothing\n\nNote: This linter can be disabled with `set_option linter.unusedTactic false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "'aesop' tactic does nothing\n\nNote: This linter can be disabled with `set_option linter.unusedTactic false`",
+          "endPos": {
+            "column": 19,
+            "line": 60
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unusedTactic",
+          "pos": {
+            "column": 14,
+            "line": 60
+          },
+          "severity": "warning"
+        },
+        "source_line": "          <;> aesop",
+        "start_offset": 1751,
+        "start_byte_offset": 1997,
+        "end_offset": 1756,
+        "end_byte_offset": 2002,
+        "source_text": "aesop"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 18,
+          "line": 83
+        },
+        "end_position": {
+          "column": 23,
+          "line": 83
+        },
+        "message": "'aesop' tactic does nothing\n\nNote: This linter can be disabled with `set_option linter.unusedTactic false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "'aesop' tactic does nothing\n\nNote: This linter can be disabled with `set_option linter.unusedTactic false`",
+          "endPos": {
+            "column": 23,
+            "line": 83
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unusedTactic",
+          "pos": {
+            "column": 18,
+            "line": 83
+          },
+          "severity": "warning"
+        },
+        "source_line": "              <;> aesop",
+        "start_offset": 2455,
+        "start_byte_offset": 2817,
+        "end_offset": 2460,
+        "end_byte_offset": 2822,
+        "source_text": "aesop"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 14,
+          "line": 97
+        },
+        "end_position": {
+          "column": 19,
+          "line": 97
+        },
+        "message": "'aesop' tactic does nothing\n\nNote: This linter can be disabled with `set_option linter.unusedTactic false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "'aesop' tactic does nothing\n\nNote: This linter can be disabled with `set_option linter.unusedTactic false`",
+          "endPos": {
+            "column": 19,
+            "line": 97
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unusedTactic",
+          "pos": {
+            "column": 14,
+            "line": 97
+          },
+          "severity": "warning"
+        },
+        "source_line": "          <;> aesop",
+        "start_offset": 2890,
+        "start_byte_offset": 3336,
+        "end_offset": 2895,
+        "end_byte_offset": 3341,
+        "source_text": "aesop"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 10,
+          "line": 112
+        },
+        "end_position": {
+          "column": 15,
+          "line": 112
+        },
+        "message": "'aesop' tactic does nothing\n\nNote: This linter can be disabled with `set_option linter.unusedTactic false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "'aesop' tactic does nothing\n\nNote: This linter can be disabled with `set_option linter.unusedTactic false`",
+          "endPos": {
+            "column": 15,
+            "line": 112
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unusedTactic",
+          "pos": {
+            "column": 10,
+            "line": 112
+          },
+          "severity": "warning"
+        },
+        "source_line": "      <;> aesop",
+        "start_offset": 3233,
+        "start_byte_offset": 3718,
+        "end_offset": 3238,
+        "end_byte_offset": 3723,
+        "source_text": "aesop"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 10,
+          "line": 120
+        },
+        "end_position": {
+          "column": 15,
+          "line": 120
+        },
+        "message": "'aesop' tactic does nothing\n\nNote: This linter can be disabled with `set_option linter.unusedTactic false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "'aesop' tactic does nothing\n\nNote: This linter can be disabled with `set_option linter.unusedTactic false`",
+          "endPos": {
+            "column": 15,
+            "line": 120
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unusedTactic",
+          "pos": {
+            "column": 10,
+            "line": 120
+          },
+          "severity": "warning"
+        },
+        "source_line": "      <;> aesop",
+        "start_offset": 3457,
+        "start_byte_offset": 3968,
+        "end_offset": 3462,
+        "end_byte_offset": 3973,
+        "source_text": "aesop"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 10,
+          "line": 130
+        },
+        "end_position": {
+          "column": 15,
+          "line": 130
+        },
+        "message": "'aesop' tactic does nothing\n\nNote: This linter can be disabled with `set_option linter.unusedTactic false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "'aesop' tactic does nothing\n\nNote: This linter can be disabled with `set_option linter.unusedTactic false`",
+          "endPos": {
+            "column": 15,
+            "line": 130
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unusedTactic",
+          "pos": {
+            "column": 10,
+            "line": 130
+          },
+          "severity": "warning"
+        },
+        "source_line": "      <;> aesop",
+        "start_offset": 3777,
+        "start_byte_offset": 4324,
+        "end_offset": 3782,
+        "end_byte_offset": 4329,
+        "source_text": "aesop"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 8,
+          "line": 134
+        },
+        "end_position": {
+          "column": 13,
+          "line": 134
+        },
+        "message": "'aesop' tactic does nothing\n\nNote: This linter can be disabled with `set_option linter.unusedTactic false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "'aesop' tactic does nothing\n\nNote: This linter can be disabled with `set_option linter.unusedTactic false`",
+          "endPos": {
+            "column": 13,
+            "line": 134
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unusedTactic",
+          "pos": {
+            "column": 8,
+            "line": 134
+          },
+          "severity": "warning"
+        },
+        "source_line": "    <;> aesop",
+        "start_offset": 3864,
+        "start_byte_offset": 4419,
+        "end_offset": 3869,
+        "end_byte_offset": 4424,
+        "source_text": "aesop"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 10,
+          "line": 143
+        },
+        "end_position": {
+          "column": 15,
+          "line": 143
+        },
+        "message": "'tauto' tactic does nothing\n\nNote: This linter can be disabled with `set_option linter.unusedTactic false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "'tauto' tactic does nothing\n\nNote: This linter can be disabled with `set_option linter.unusedTactic false`",
+          "endPos": {
+            "column": 15,
+            "line": 143
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unusedTactic",
+          "pos": {
+            "column": 10,
+            "line": 143
+          },
+          "severity": "warning"
+        },
+        "source_line": "      <;> tauto",
+        "start_offset": 4070,
+        "start_byte_offset": 4649,
+        "end_offset": 4075,
+        "end_byte_offset": 4654,
+        "source_text": "tauto"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 12,
+          "line": 190
+        },
+        "end_position": {
+          "column": 16,
+          "line": 193
+        },
+        "message": "'(try { aesop\n  })' tactic does nothing\n\nNote: This linter can be disabled with `set_option linter.unusedTactic false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "'(try { aesop\n  })' tactic does nothing\n\nNote: This linter can be disabled with `set_option linter.unusedTactic false`",
+          "endPos": {
+            "column": 16,
+            "line": 193
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unusedTactic",
+          "pos": {
+            "column": 12,
+            "line": 190
+          },
+          "severity": "warning"
+        },
+        "source_line": "            (try",
+        "start_offset": 5536,
+        "start_byte_offset": 6239,
+        "end_offset": 5595,
+        "end_byte_offset": 6298,
+        "source_text": "(try\n              {\n                aesop\n              })"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 12,
+          "line": 195
+        },
+        "end_position": {
+          "column": 16,
+          "line": 198
+        },
+        "message": "'(try { tauto\n  })' tactic does nothing\n\nNote: This linter can be disabled with `set_option linter.unusedTactic false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "'(try { tauto\n  })' tactic does nothing\n\nNote: This linter can be disabled with `set_option linter.unusedTactic false`",
+          "endPos": {
+            "column": 16,
+            "line": 198
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unusedTactic",
+          "pos": {
+            "column": 12,
+            "line": 195
+          },
+          "severity": "warning"
+        },
+        "source_line": "            (try",
+        "start_offset": 5624,
+        "start_byte_offset": 6327,
+        "end_offset": 5683,
+        "end_byte_offset": 6386,
+        "source_text": "(try\n              {\n                tauto\n              })"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 12,
+          "line": 200
+        },
+        "end_position": {
+          "column": 16,
+          "line": 207
+        },
+        "message": "'(try { intros <;> simp_all [Set.ext_iff] <;> tauto\n  })' tactic does nothing\n\nNote: This linter can be disabled with `set_option linter.unusedTactic false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "'(try { intros <;> simp_all [Set.ext_iff] <;> tauto\n  })' tactic does nothing\n\nNote: This linter can be disabled with `set_option linter.unusedTactic false`",
+          "endPos": {
+            "column": 16,
+            "line": 207
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unusedTactic",
+          "pos": {
+            "column": 12,
+            "line": 200
+          },
+          "severity": "warning"
+        },
+        "source_line": "            (try",
+        "start_offset": 5712,
+        "start_byte_offset": 6415,
+        "end_offset": 5873,
+        "end_byte_offset": 6576,
+        "source_text": "(try\n              {\n                intros\n                <;>\n                simp_all [Set.ext_iff]\n                <;>\n                tauto\n              })"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 12,
+          "line": 209
+        },
+        "end_position": {
+          "column": 16,
+          "line": 216
+        },
+        "message": "'(try { intros <;> simp_all [Set.ext_iff] <;> tauto\n  })' tactic does nothing\n\nNote: This linter can be disabled with `set_option linter.unusedTactic false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "'(try { intros <;> simp_all [Set.ext_iff] <;> tauto\n  })' tactic does nothing\n\nNote: This linter can be disabled with `set_option linter.unusedTactic false`",
+          "endPos": {
+            "column": 16,
+            "line": 216
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unusedTactic",
+          "pos": {
+            "column": 12,
+            "line": 209
+          },
+          "severity": "warning"
+        },
+        "source_line": "            (try",
+        "start_offset": 5902,
+        "start_byte_offset": 6605,
+        "end_offset": 6063,
+        "end_byte_offset": 6766,
+        "source_text": "(try\n              {\n                intros\n                <;>\n                simp_all [Set.ext_iff]\n                <;>\n                tauto\n              })"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 10,
+          "line": 235
+        },
+        "end_position": {
+          "column": 21,
+          "line": 235
+        },
+        "message": "'(try tauto)' tactic does nothing\n\nNote: This linter can be disabled with `set_option linter.unusedTactic false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "'(try tauto)' tactic does nothing\n\nNote: This linter can be disabled with `set_option linter.unusedTactic false`",
+          "endPos": {
+            "column": 21,
+            "line": 235
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unusedTactic",
+          "pos": {
+            "column": 10,
+            "line": 235
+          },
+          "severity": "warning"
+        },
+        "source_line": "          (try tauto)",
+        "start_offset": 6712,
+        "start_byte_offset": 7435,
+        "end_offset": 6723,
+        "end_byte_offset": 7446,
+        "source_text": "(try tauto)"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 10,
+          "line": 237
+        },
+        "end_position": {
+          "column": 14,
+          "line": 246
+        },
+        "message": "'(try {\n    have h₇ := h_subset_or_compl A\n    cases h₇ with\n    | inl h₈ => tauto\n    | inr h₈ =>\n      have h₉ : Aᶜ ∈ P := h₈\n      have h₁₀ : A ∈ P ∨ Aᶜ ∈ P := by tauto\n      tauto\n  })' tactic does nothing\n\nNote: This linter can be disabled with `set_option linter.unusedTactic false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "'(try {\n    have h₇ := h_subset_or_compl A\n    cases h₇ with\n    | inl h₈ => tauto\n    | inr h₈ =>\n      have h₉ : Aᶜ ∈ P := h₈\n      have h₁₀ : A ∈ P ∨ Aᶜ ∈ P := by tauto\n      tauto\n  })' tactic does nothing\n\nNote: This linter can be disabled with `set_option linter.unusedTactic false`",
+          "endPos": {
+            "column": 14,
+            "line": 246
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unusedTactic",
+          "pos": {
+            "column": 10,
+            "line": 237
+          },
+          "severity": "warning"
+        },
+        "source_line": "          (try",
+        "start_offset": 6748,
+        "start_byte_offset": 7471,
+        "end_offset": 7027,
+        "end_byte_offset": 7778,
+        "source_text": "(try\n            {\n              have h₇ := h_subset_or_compl A\n              cases h₇ with\n              | inl h₈ => tauto\n              | inr h₈ =>\n                have h₉ : Aᶜ ∈ P := h₈\n                have h₁₀ : A ∈ P ∨ Aᶜ ∈ P := by tauto\n                tauto\n            })"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 8,
+          "line": 257
+        },
+        "end_position": {
+          "column": 35,
+          "line": 257
+        },
+        "message": "'simp_all [Fintype.card_fun]' tactic does nothing\n\nNote: This linter can be disabled with `set_option linter.unusedTactic false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "'simp_all [Fintype.card_fun]' tactic does nothing\n\nNote: This linter can be disabled with `set_option linter.unusedTactic false`",
+          "endPos": {
+            "column": 35,
+            "line": 257
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unusedTactic",
+          "pos": {
+            "column": 8,
+            "line": 257
+          },
+          "severity": "warning"
+        },
+        "source_line": "        simp_all [Fintype.card_fun]",
+        "start_offset": 7414,
+        "start_byte_offset": 8189,
+        "end_offset": 7441,
+        "end_byte_offset": 8216,
+        "source_text": "simp_all [Fintype.card_fun]"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 8,
+          "line": 259
+        },
+        "end_position": {
+          "column": 15,
+          "line": 259
+        },
+        "message": "'ring_nf' tactic does nothing\n\nNote: This linter can be disabled with `set_option linter.unusedTactic false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "'ring_nf' tactic does nothing\n\nNote: This linter can be disabled with `set_option linter.unusedTactic false`",
+          "endPos": {
+            "column": 15,
+            "line": 259
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unusedTactic",
+          "pos": {
+            "column": 8,
+            "line": 259
+          },
+          "severity": "warning"
+        },
+        "source_line": "        ring_nf",
+        "start_offset": 7462,
+        "start_byte_offset": 8237,
+        "end_offset": 7469,
+        "end_byte_offset": 8244,
+        "source_text": "ring_nf"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 8,
+          "line": 261
+        },
+        "end_position": {
+          "column": 35,
+          "line": 261
+        },
+        "message": "'simp_all [Fintype.card_fun]' tactic does nothing\n\nNote: This linter can be disabled with `set_option linter.unusedTactic false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "'simp_all [Fintype.card_fun]' tactic does nothing\n\nNote: This linter can be disabled with `set_option linter.unusedTactic false`",
+          "endPos": {
+            "column": 35,
+            "line": 261
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unusedTactic",
+          "pos": {
+            "column": 8,
+            "line": 261
+          },
+          "severity": "warning"
+        },
+        "source_line": "        simp_all [Fintype.card_fun]",
+        "start_offset": 7490,
+        "start_byte_offset": 8265,
+        "end_offset": 7517,
+        "end_byte_offset": 8292,
+        "source_text": "simp_all [Fintype.card_fun]"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 8,
+          "line": 263
+        },
+        "end_position": {
+          "column": 16,
+          "line": 263
+        },
+        "message": "'norm_num' tactic does nothing\n\nNote: This linter can be disabled with `set_option linter.unusedTactic false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "'norm_num' tactic does nothing\n\nNote: This linter can be disabled with `set_option linter.unusedTactic false`",
+          "endPos": {
+            "column": 16,
+            "line": 263
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unusedTactic",
+          "pos": {
+            "column": 8,
+            "line": 263
+          },
+          "severity": "warning"
+        },
+        "source_line": "        norm_num",
+        "start_offset": 7538,
+        "start_byte_offset": 8313,
+        "end_offset": 7546,
+        "end_byte_offset": 8321,
+        "source_text": "norm_num"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 8,
+          "line": 265
+        },
+        "end_position": {
+          "column": 13,
+          "line": 265
+        },
+        "message": "'aesop' tactic does nothing\n\nNote: This linter can be disabled with `set_option linter.unusedTactic false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "'aesop' tactic does nothing\n\nNote: This linter can be disabled with `set_option linter.unusedTactic false`",
+          "endPos": {
+            "column": 13,
+            "line": 265
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unusedTactic",
+          "pos": {
+            "column": 8,
+            "line": 265
+          },
+          "severity": "warning"
+        },
+        "source_line": "        aesop",
+        "start_offset": 7567,
+        "start_byte_offset": 8342,
+        "end_offset": 7572,
+        "end_byte_offset": 8347,
+        "source_text": "aesop"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 16,
+          "line": 292
+        },
+        "end_position": {
+          "column": 31,
+          "line": 292
+        },
+        "message": "'simp [add_comm]' tactic does nothing\n\nNote: This linter can be disabled with `set_option linter.unusedTactic false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "'simp [add_comm]' tactic does nothing\n\nNote: This linter can be disabled with `set_option linter.unusedTactic false`",
+          "endPos": {
+            "column": 31,
+            "line": 292
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unusedTactic",
+          "pos": {
+            "column": 16,
+            "line": 292
+          },
+          "severity": "warning"
+        },
+        "source_line": "            <;> simp [add_comm]",
+        "start_offset": 8575,
+        "start_byte_offset": 9402,
+        "end_offset": 8590,
+        "end_byte_offset": 9417,
+        "source_text": "simp [add_comm]"
+      },
+      {
+        "severity": "information",
+        "position": {
+          "column": 0,
+          "line": 304
+        },
+        "end_position": {
+          "column": 6,
+          "line": 304
+        },
+        "message": "putnam_1964_b2.{u_1} (S : Type u_1) [Fintype S] [Nonempty S] (P : Finset (Set S)) (hPP : ∀ T ∈ P, ∀ U ∈ P, T ∩ U ≠ ∅)\n  (hPS : ¬∃ T ∉ P, ∀ U ∈ P, T ∩ U ≠ ∅) : P.card = 2 ^ (Fintype.card S - 1)",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "putnam_1964_b2.{u_1} (S : Type u_1) [Fintype S] [Nonempty S] (P : Finset (Set S)) (hPP : ∀ T ∈ P, ∀ U ∈ P, T ∩ U ≠ ∅)\n  (hPS : ¬∃ T ∉ P, ∀ U ∈ P, T ∩ U ≠ ∅) : P.card = 2 ^ (Fintype.card S - 1)",
+          "endPos": {
+            "column": 6,
+            "line": 304
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 0,
+            "line": 304
+          },
+          "severity": "information"
+        }
+      },
+      {
+        "severity": "information",
+        "position": {
+          "column": 0,
+          "line": 305
+        },
+        "end_position": {
+          "column": 6,
+          "line": 305
+        },
+        "message": "'putnam_1964_b2' depends on axioms: [propext, Classical.choice, Quot.sound]",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "'putnam_1964_b2' depends on axioms: [propext, Classical.choice, Quot.sound]",
+          "endPos": {
+            "column": 6,
+            "line": 305
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 0,
+            "line": 305
+          },
+          "severity": "information"
+        }
+      }
+    ],
+    "goals": null,
+    "local_context": null,
+    "sorries": [],
+    "axioms": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext"
+    ],
+    "detail": null,
+    "raw_lean_output": "{\"caption\":\"\",\"data\":\"`Set.eq_empty_of_forall_not_mem` has been deprecated: Use `Set.eq_empty_of_forall_notMem` instead\",\"endPos\":{\"column\":42,\"line\":123},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"Lean.Linter.deprecatedAttr\",\"pos\":{\"column\":12,\"line\":123},\"severity\":\"warning\"}\n{\"caption\":\"\",\"data\":\"This simp argument is unused:\\n  Set.ext_iff\\n\\nHint: Omit it from the simp argument list.\\n  simp ̵[̵S̵e̵t̵.̵e̵x̵t̵_̵i̵f̵f̵]̵\\n\\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`\",\"endPos\":{\"column\":47,\"line\":18},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"linter.unusedSimpArgs\",\"pos\":{\"column\":36,\"line\":18},\"severity\":\"warning\"}\n{\"caption\":\"\",\"data\":\"This simp argument is unused:\\n  Set.mem_inter_iff\\n\\nHint: Omit it from the simp argument list.\\n  simp ̵[̵S̵e̵t̵.̵m̵e̵m̵_̵i̵n̵t̵e̵r̵_̵i̵f̵f̵]̵\\n\\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`\",\"endPos\":{\"column\":29,\"line\":142},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"linter.unusedSimpArgs\",\"pos\":{\"column\":12,\"line\":142},\"severity\":\"warning\"}\n{\"caption\":\"\",\"data\":\"This simp argument is unused:\\n  h_subset_or_compl\\n\\nHint: Omit it from the simp argument list.\\n  simp_all ̵[̵h̵_̵s̵u̵b̵s̵e̵t̵_̵o̵r̵_̵c̵o̵m̵p̵l̵]̵\\n\\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`\",\"endPos\":{\"column\":61,\"line\":233},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"linter.unusedSimpArgs\",\"pos\":{\"column\":44,\"line\":233},\"severity\":\"warning\"}\n{\"caption\":\"\",\"data\":\"This simp argument is unused:\\n  Fintype.card_fun\\n\\nHint: Omit it from the simp argument list.\\n  simp ̵[̵F̵i̵n̵t̵y̵p̵e̵.̵c̵a̵r̵d̵_̵f̵u̵n̵]̵\\n\\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`\",\"endPos\":{\"column\":30,\"line\":255},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"linter.unusedSimpArgs\",\"pos\":{\"column\":14,\"line\":255},\"severity\":\"warning\"}\n{\"caption\":\"\",\"data\":\"this tactic is never executed\\n\\nNote: This linter can be disabled with `set_option linter.unreachableTactic false`\",\"endPos\":{\"column\":23,\"line\":46},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"linter.unreachableTactic\",\"pos\":{\"column\":18,\"line\":46},\"severity\":\"warning\"}\n{\"caption\":\"\",\"data\":\"this tactic is never executed\\n\\nNote: This linter can be disabled with `set_option linter.unreachableTactic false`\",\"endPos\":{\"column\":19,\"line\":60},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"linter.unreachableTactic\",\"pos\":{\"column\":14,\"line\":60},\"severity\":\"warning\"}\n{\"caption\":\"\",\"data\":\"this tactic is never executed\\n\\nNote: This linter can be disabled with `set_option linter.unreachableTactic false`\",\"endPos\":{\"column\":23,\"line\":83},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"linter.unreachableTactic\",\"pos\":{\"column\":18,\"line\":83},\"severity\":\"warning\"}\n{\"caption\":\"\",\"data\":\"this tactic is never executed\\n\\nNote: This linter can be disabled with `set_option linter.unreachableTactic false`\",\"endPos\":{\"column\":19,\"line\":97},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"linter.unreachableTactic\",\"pos\":{\"column\":14,\"line\":97},\"severity\":\"warning\"}\n{\"caption\":\"\",\"data\":\"this tactic is never executed\\n\\nNote: This linter can be disabled with `set_option linter.unreachableTactic false`\",\"endPos\":{\"column\":15,\"line\":112},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"linter.unreachableTactic\",\"pos\":{\"column\":10,\"line\":112},\"severity\":\"warning\"}\n{\"caption\":\"\",\"data\":\"this tactic is never executed\\n\\nNote: This linter can be disabled with `set_option linter.unreachableTactic false`\",\"endPos\":{\"column\":15,\"line\":120},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"linter.unreachableTactic\",\"pos\":{\"column\":10,\"line\":120},\"severity\":\"warning\"}\n{\"caption\":\"\",\"data\":\"this tactic is never executed\\n\\nNote: This linter can be disabled with `set_option linter.unreachableTactic false`\",\"endPos\":{\"column\":15,\"line\":130},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"linter.unreachableTactic\",\"pos\":{\"column\":10,\"line\":130},\"severity\":\"warning\"}\n{\"caption\":\"\",\"data\":\"this tactic is never executed\\n\\nNote: This linter can be disabled with `set_option linter.unreachableTactic false`\",\"endPos\":{\"column\":13,\"line\":134},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"linter.unreachableTactic\",\"pos\":{\"column\":8,\"line\":134},\"severity\":\"warning\"}\n{\"caption\":\"\",\"data\":\"this tactic is never executed\\n\\nNote: This linter can be disabled with `set_option linter.unreachableTactic false`\",\"endPos\":{\"column\":15,\"line\":143},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"linter.unreachableTactic\",\"pos\":{\"column\":10,\"line\":143},\"severity\":\"warning\"}\n{\"caption\":\"\",\"data\":\"this tactic is never executed\\n\\nNote: This linter can be disabled with `set_option linter.unreachableTactic false`\",\"endPos\":{\"column\":16,\"line\":193},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"linter.unreachableTactic\",\"pos\":{\"column\":12,\"line\":190},\"severity\":\"warning\"}\n{\"caption\":\"\",\"data\":\"this tactic is never executed\\n\\nNote: This linter can be disabled with `set_option linter.unreachableTactic false`\",\"endPos\":{\"column\":16,\"line\":198},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"linter.unreachableTactic\",\"pos\":{\"column\":12,\"line\":195},\"severity\":\"warning\"}\n{\"caption\":\"\",\"data\":\"this tactic is never executed\\n\\nNote: This linter can be disabled with `set_option linter.unreachableTactic false`\",\"endPos\":{\"column\":16,\"line\":207},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"linter.unreachableTactic\",\"pos\":{\"column\":12,\"line\":200},\"severity\":\"warning\"}\n{\"caption\":\"\",\"data\":\"this tactic is never executed\\n\\nNote: This linter can be disabled with `set_option linter.unreachableTactic false`\",\"endPos\":{\"column\":16,\"line\":216},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"linter.unreachableTactic\",\"pos\":{\"column\":12,\"line\":209},\"severity\":\"warning\"}\n{\"caption\":\"\",\"data\":\"this tactic is never executed\\n\\nNote: This linter can be disabled with `set_option linter.unreachableTactic false`\",\"endPos\":{\"column\":21,\"line\":235},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"linter.unreachableTactic\",\"pos\":{\"column\":10,\"line\":235},\"severity\":\"warning\"}\n{\"caption\":\"\",\"data\":\"this tactic is never executed\\n\\nNote: This linter can be disabled with `set_option linter.unreachableTactic false`\",\"endPos\":{\"column\":14,\"line\":246},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"linter.unreachableTactic\",\"pos\":{\"column\":10,\"line\":237},\"severity\":\"warning\"}\n{\"caption\":\"\",\"data\":\"this tactic is never executed\\n\\nNote: This linter can be disabled with `set_option linter.unreachableTactic false`\",\"endPos\":{\"column\":35,\"line\":257},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"linter.unreachableTactic\",\"pos\":{\"column\":8,\"line\":257},\"severity\":\"warning\"}\n{\"caption\":\"\",\"data\":\"this tactic is never executed\\n\\nNote: This linter can be disabled with `set_option linter.unreachableTactic false`\",\"endPos\":{\"column\":15,\"line\":259},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"linter.unreachableTactic\",\"pos\":{\"column\":8,\"line\":259},\"severity\":\"warning\"}\n{\"caption\":\"\",\"data\":\"this tactic is never executed\\n\\nNote: This linter can be disabled with `set_option linter.unreachableTactic false`\",\"endPos\":{\"column\":35,\"line\":261},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"linter.unreachableTactic\",\"pos\":{\"column\":8,\"line\":261},\"severity\":\"warning\"}\n{\"caption\":\"\",\"data\":\"this tactic is never executed\\n\\nNote: This linter can be disabled with `set_option linter.unreachableTactic false`\",\"endPos\":{\"column\":16,\"line\":263},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"linter.unreachableTactic\",\"pos\":{\"column\":8,\"line\":263},\"severity\":\"warning\"}\n{\"caption\":\"\",\"data\":\"this tactic is never executed\\n\\nNote: This linter can be disabled with `set_option linter.unreachableTactic false`\",\"endPos\":{\"column\":13,\"line\":265},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"linter.unreachableTactic\",\"pos\":{\"column\":8,\"line\":265},\"severity\":\"warning\"}\n{\"caption\":\"\",\"data\":\"this tactic is never executed\\n\\nNote: This linter can be disabled with `set_option linter.unreachableTactic false`\",\"endPos\":{\"column\":31,\"line\":292},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"linter.unreachableTactic\",\"pos\":{\"column\":16,\"line\":292},\"severity\":\"warning\"}\n{\"caption\":\"\",\"data\":\"Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice\\n\\nNote: This linter can be disabled with `set_option linter.unnecessarySeqFocus false`\",\"endPos\":{\"column\":17,\"line\":41},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"linter.unnecessarySeqFocus\",\"pos\":{\"column\":14,\"line\":41},\"severity\":\"warning\"}\n{\"caption\":\"\",\"data\":\"Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice\\n\\nNote: This linter can be disabled with `set_option linter.unnecessarySeqFocus false`\",\"endPos\":{\"column\":17,\"line\":78},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"linter.unnecessarySeqFocus\",\"pos\":{\"column\":14,\"line\":78},\"severity\":\"warning\"}\n{\"caption\":\"\",\"data\":\"Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice\\n\\nNote: This linter can be disabled with `set_option linter.unnecessarySeqFocus false`\",\"endPos\":{\"column\":13,\"line\":232},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"linter.unnecessarySeqFocus\",\"pos\":{\"column\":10,\"line\":232},\"severity\":\"warning\"}\n{\"caption\":\"\",\"data\":\"'aesop' tactic does nothing\\n\\nNote: This linter can be disabled with `set_option linter.unusedTactic false`\",\"endPos\":{\"column\":23,\"line\":46},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"linter.unusedTactic\",\"pos\":{\"column\":18,\"line\":46},\"severity\":\"warning\"}\n{\"caption\":\"\",\"data\":\"'aesop' tactic does nothing\\n\\nNote: This linter can be disabled with `set_option linter.unusedTactic false`\",\"endPos\":{\"column\":19,\"line\":60},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"linter.unusedTactic\",\"pos\":{\"column\":14,\"line\":60},\"severity\":\"warning\"}\n{\"caption\":\"\",\"data\":\"'aesop' tactic does nothing\\n\\nNote: This linter can be disabled with `set_option linter.unusedTactic false`\",\"endPos\":{\"column\":23,\"line\":83},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"linter.unusedTactic\",\"pos\":{\"column\":18,\"line\":83},\"severity\":\"warning\"}\n{\"caption\":\"\",\"data\":\"'aesop' tactic does nothing\\n\\nNote: This linter can be disabled with `set_option linter.unusedTactic false`\",\"endPos\":{\"column\":19,\"line\":97},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"linter.unusedTactic\",\"pos\":{\"column\":14,\"line\":97},\"severity\":\"warning\"}\n{\"caption\":\"\",\"data\":\"'aesop' tactic does nothing\\n\\nNote: This linter can be disabled with `set_option linter.unusedTactic false`\",\"endPos\":{\"column\":15,\"line\":112},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"linter.unusedTactic\",\"pos\":{\"column\":10,\"line\":112},\"severity\":\"warning\"}\n{\"caption\":\"\",\"data\":\"'aesop' tactic does nothing\\n\\nNote: This linter can be disabled with `set_option linter.unusedTactic false`\",\"endPos\":{\"column\":15,\"line\":120},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"linter.unusedTactic\",\"pos\":{\"column\":10,\"line\":120},\"severity\":\"warning\"}\n{\"caption\":\"\",\"data\":\"'aesop' tactic does nothing\\n\\nNote: This linter can be disabled with `set_option linter.unusedTactic false`\",\"endPos\":{\"column\":15,\"line\":130},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"linter.unusedTactic\",\"pos\":{\"column\":10,\"line\":130},\"severity\":\"warning\"}\n{\"caption\":\"\",\"data\":\"'aesop' tactic does nothing\\n\\nNote: This linter can be disabled with `set_option linter.unusedTactic false`\",\"endPos\":{\"column\":13,\"line\":134},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"linter.unusedTactic\",\"pos\":{\"column\":8,\"line\":134},\"severity\":\"warning\"}\n{\"caption\":\"\",\"data\":\"'tauto' tactic does nothing\\n\\nNote: This linter can be disabled with `set_option linter.unusedTactic false`\",\"endPos\":{\"column\":15,\"line\":143},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"linter.unusedTactic\",\"pos\":{\"column\":10,\"line\":143},\"severity\":\"warning\"}\n{\"caption\":\"\",\"data\":\"'(try { aesop\\n  })' tactic does nothing\\n\\nNote: This linter can be disabled with `set_option linter.unusedTactic false`\",\"endPos\":{\"column\":16,\"line\":193},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"linter.unusedTactic\",\"pos\":{\"column\":12,\"line\":190},\"severity\":\"warning\"}\n{\"caption\":\"\",\"data\":\"'(try { tauto\\n  })' tactic does nothing\\n\\nNote: This linter can be disabled with `set_option linter.unusedTactic false`\",\"endPos\":{\"column\":16,\"line\":198},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"linter.unusedTactic\",\"pos\":{\"column\":12,\"line\":195},\"severity\":\"warning\"}\n{\"caption\":\"\",\"data\":\"'(try { intros <;> simp_all [Set.ext_iff] <;> tauto\\n  })' tactic does nothing\\n\\nNote: This linter can be disabled with `set_option linter.unusedTactic false`\",\"endPos\":{\"column\":16,\"line\":207},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"linter.unusedTactic\",\"pos\":{\"column\":12,\"line\":200},\"severity\":\"warning\"}\n{\"caption\":\"\",\"data\":\"'(try { intros <;> simp_all [Set.ext_iff] <;> tauto\\n  })' tactic does nothing\\n\\nNote: This linter can be disabled with `set_option linter.unusedTactic false`\",\"endPos\":{\"column\":16,\"line\":216},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"linter.unusedTactic\",\"pos\":{\"column\":12,\"line\":209},\"severity\":\"warning\"}\n{\"caption\":\"\",\"data\":\"'(try tauto)' tactic does nothing\\n\\nNote: This linter can be disabled with `set_option linter.unusedTactic false`\",\"endPos\":{\"column\":21,\"line\":235},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"linter.unusedTactic\",\"pos\":{\"column\":10,\"line\":235},\"severity\":\"warning\"}\n{\"caption\":\"\",\"data\":\"'(try {\\n    have h₇ := h_subset_or_compl A\\n    cases h₇ with\\n    | inl h₈ => tauto\\n    | inr h₈ =>\\n      have h₉ : Aᶜ ∈ P := h₈\\n      have h₁₀ : A ∈ P ∨ Aᶜ ∈ P := by tauto\\n      tauto\\n  })' tactic does nothing\\n\\nNote: This linter can be disabled with `set_option linter.unusedTactic false`\",\"endPos\":{\"column\":14,\"line\":246},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"linter.unusedTactic\",\"pos\":{\"column\":10,\"line\":237},\"severity\":\"warning\"}\n{\"caption\":\"\",\"data\":\"'simp_all [Fintype.card_fun]' tactic does nothing\\n\\nNote: This linter can be disabled with `set_option linter.unusedTactic false`\",\"endPos\":{\"column\":35,\"line\":257},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"linter.unusedTactic\",\"pos\":{\"column\":8,\"line\":257},\"severity\":\"warning\"}\n{\"caption\":\"\",\"data\":\"'ring_nf' tactic does nothing\\n\\nNote: This linter can be disabled with `set_option linter.unusedTactic false`\",\"endPos\":{\"column\":15,\"line\":259},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"linter.unusedTactic\",\"pos\":{\"column\":8,\"line\":259},\"severity\":\"warning\"}\n{\"caption\":\"\",\"data\":\"'simp_all [Fintype.card_fun]' tactic does nothing\\n\\nNote: This linter can be disabled with `set_option linter.unusedTactic false`\",\"endPos\":{\"column\":35,\"line\":261},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"linter.unusedTactic\",\"pos\":{\"column\":8,\"line\":261},\"severity\":\"warning\"}\n{\"caption\":\"\",\"data\":\"'norm_num' tactic does nothing\\n\\nNote: This linter can be disabled with `set_option linter.unusedTactic false`\",\"endPos\":{\"column\":16,\"line\":263},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"linter.unusedTactic\",\"pos\":{\"column\":8,\"line\":263},\"severity\":\"warning\"}\n{\"caption\":\"\",\"data\":\"'aesop' tactic does nothing\\n\\nNote: This linter can be disabled with `set_option linter.unusedTactic false`\",\"endPos\":{\"column\":13,\"line\":265},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"linter.unusedTactic\",\"pos\":{\"column\":8,\"line\":265},\"severity\":\"warning\"}\n{\"caption\":\"\",\"data\":\"'simp [add_comm]' tactic does nothing\\n\\nNote: This linter can be disabled with `set_option linter.unusedTactic false`\",\"endPos\":{\"column\":31,\"line\":292},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"linter.unusedTactic\",\"pos\":{\"column\":16,\"line\":292},\"severity\":\"warning\"}\n{\"caption\":\"\",\"data\":\"putnam_1964_b2.{u_1} (S : Type u_1) [Fintype S] [Nonempty S] (P : Finset (Set S)) (hPP : ∀ T ∈ P, ∀ U ∈ P, T ∩ U ≠ ∅)\\n  (hPS : ¬∃ T ∉ P, ∀ U ∈ P, T ∩ U ≠ ∅) : P.card = 2 ^ (Fintype.card S - 1)\",\"endPos\":{\"column\":6,\"line\":304},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"[anonymous]\",\"pos\":{\"column\":0,\"line\":304},\"severity\":\"information\"}\n{\"caption\":\"\",\"data\":\"'putnam_1964_b2' depends on axioms: [propext, Classical.choice, Quot.sound]\",\"endPos\":{\"column\":6,\"line\":305},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"[anonymous]\",\"pos\":{\"column\":0,\"line\":305},\"severity\":\"information\"}\n"
+  },
+  "diagnosis": "The sole proof hole is converting `h₁ : T ≠ ∅` into `T.Nonempty`. This is exactly the reverse direction of `Set.nonempty_iff_ne_empty`.",
+  "duplicate_cache": false,
+  "available_at": 1792772121.231213,
+  "cumulative_calls": 1,
+  "cumulative_tokens": 20451,
+  "api_spend_usd": null
+}

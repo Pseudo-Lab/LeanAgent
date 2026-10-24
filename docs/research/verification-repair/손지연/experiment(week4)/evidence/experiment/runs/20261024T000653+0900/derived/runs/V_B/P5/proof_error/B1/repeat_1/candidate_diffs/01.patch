@@ -1,0 +1,19 @@
+--- initial.proof.lean
++++ candidate_01.proof.lean
+@@ -44,7 +44,7 @@
+       congr
+       funext k
+       rw [Space.time_deriv_comm_space_deriv]
+-      exact experiment_missing_lemma
++      apply magneticFieldMatrix_contDiff
+       apply hA.of_le (right_eq_inf.mp rfl)
+     _ = 1 / (𝓕.μ₀ * 𝓕.ε₀) *(∑ j, ∂[j] (fun x => ∂[j] (A.electricField 𝓕.c t · i) x -
+         ∂[i] (A.electricField 𝓕.c t · j) x)) x -
+@@ -93,7 +93,6 @@
+           1 / 𝓕.ε₀ * ∂ₜ (J.currentDensity 𝓕.c · x i) t := by
+         congr 2
+         rw [isExtrema_iff_gauss_ampere_magneticFieldMatrix] at h
+-
+         conv_lhs =>
+           enter [2, 2, x]
+           rw [(h t x).1]

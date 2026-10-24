@@ -1,0 +1,21 @@
+--- candidate_02.proof.lean
++++ candidate_03.proof.lean
+@@ -26,13 +26,13 @@
+     _ = 1 / (𝓕.μ₀ * 𝓕.ε₀) * ∂ₜ
+         (fun t => ∑ j, ∂[j] (A.magneticFieldMatrix 𝓕.c t · (j, i)) x) t -
+       1 / 𝓕.ε₀ * ∂ₜ (J.currentDensity 𝓕.c · x i) t := by
+-      rw [Time.deriv_eq, fderiv_fun_sub]
+-      simp only [one_div, mul_inv_rev, FunLike.coe_sub, Pi.sub_apply]
+-      rw [fderiv_const_mul (Differentiable.fun_sum fun j _ => hBt j).differentiableAt,
++      rw [Time.deriv_eq,
++        fderiv_fun_sub
++          ((Differentiable.fun_sum fun j _ => hBt j).const_mul _).differentiableAt
++          (hJt.const_mul _).differentiableAt,
++        fderiv_const_mul (Differentiable.fun_sum fun j _ => hBt j).differentiableAt,
+         fderiv_const_mul hJt.differentiableAt]
+       simp [Time.deriv_eq]
+-      · exact ((Differentiable.fun_sum fun j _ => hBt j).const_mul _).differentiableAt
+-      · exact hJt.differentiableAt.const_mul _
+     _ = 1 / (𝓕.μ₀ * 𝓕.ε₀) *
+         (∑ j, ∂ₜ (fun t => ∂[j] (A.magneticFieldMatrix 𝓕.c t · (j, i)) x) t) -
+       1 / 𝓕.ε₀ * ∂ₜ (J.currentDensity 𝓕.c · x i) t := by

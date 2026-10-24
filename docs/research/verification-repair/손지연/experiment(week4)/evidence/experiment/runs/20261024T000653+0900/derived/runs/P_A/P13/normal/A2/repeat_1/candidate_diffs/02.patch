@@ -1,0 +1,13 @@
+--- candidate_01.proof.lean
++++ candidate_02.proof.lean
+@@ -72,4 +72,7 @@
+             exact_mod_cast hr
+   refine ⟨i, j - i, by omega, ?_⟩
+   intro n hn
+-  convert (hseq (n - i)).symm using 1 <;> omega
+\ No newline at end of file
++  calc
++    u (n + (j - i)) = u (j + (n - i)) := congrArg u (by omega)
++    _ = u (i + (n - i)) := (hseq (n - i)).symm
++    _ = u n := congrArg u (by omega)
+\ No newline at end of file

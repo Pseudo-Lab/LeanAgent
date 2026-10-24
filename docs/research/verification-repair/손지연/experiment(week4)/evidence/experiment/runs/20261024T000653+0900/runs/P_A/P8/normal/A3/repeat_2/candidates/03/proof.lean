@@ -1,0 +1,45 @@
+by
+  intro a a₁ a₂ h₁ h₂
+  cases h₁
+  case refl => exact ⟨_, h₂, .refl _⟩
+  case par a a' b b' ha' hb' =>
+    cases h₂
+    case refl => exact ⟨_, .refl _, .par ha' hb'⟩
+    case par a'' b'' ha'' hb'' =>
+      let ⟨_, ha₁, ha₂⟩ := parallelReduction_diamond ha' ha''
+      let ⟨_, hb₁, hb₂⟩ := parallelReduction_diamond hb' hb''
+      exact ⟨_, .par ha₁ hb₁, .par ha₂ hb₂⟩
+    case red_I =>
+      rw [I_irreducible a' ha']
+      exact ⟨_, .red_I b', hb'⟩
+    case red_K =>
+      let ⟨a₂', ha₂', heq⟩ := Ka_irreducible a₂ a' ha'
+      rw [heq]
+      exact ⟨_, .red_K a₂' b', ha₂'⟩
+    case red_S a c =>
+      let ⟨_, _, ha, hc, heq⟩ := Sab_irreducible a c a' ha'
+      rw [heq]
+      exact ⟨_, .red_S .., .par (.par ha hb') (.par hc hb')⟩
+  case red_I =>
+    cases h₂
+    case refl => exact ⟨_, .refl _, .red_I _⟩
+    case par c a₁' hc ha =>
+      rw [I_irreducible c hc]
+      exact ⟨_, ha, .red_I _⟩
+    case red_I => exact ⟨_, .refl _, .refl _⟩
+  case red_K c =>
+    cases h₂
+    case refl => exact ⟨_, .refl _, .red_K _ c⟩
+    case par a' c' ha hc =>
+      let ⟨a₁', ha₁', heq⟩ := Ka_irreducible a₁ a' ha
+      rw [heq]
+      exact ⟨_, ha₁', .red_K a₁' c'⟩
+    case red_K => exact ⟨_, .refl _, .refl _⟩
+  case red_S a b c =>
+    cases h₂
+    case refl => exact ⟨_, .refl _, .red_S ..⟩
+    case par d c' hd hc =>
+      let ⟨_, _, ha, hb, heq⟩ := Sab_irreducible a b d hd
+      rw [heq]
+      exact ⟨_, .par (.par ha hc) (.par hb hc), .red_S ..⟩
+    case red_S => exact ⟨_, .refl _, .refl _⟩

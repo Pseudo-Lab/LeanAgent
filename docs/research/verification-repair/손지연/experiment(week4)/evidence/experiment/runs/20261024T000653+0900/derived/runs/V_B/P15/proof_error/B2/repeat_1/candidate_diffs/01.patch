@@ -1,0 +1,236 @@
+--- initial.proof.lean
++++ candidate_01.proof.lean
+@@ -1,15 +1,14 @@
+-by 
++by
+   have h_main : ∀ (d e f : (Fin 9 → ℤ)), ((relation d e) ∧ (relation e f)) → (∀ i : Fin 9, 7 ∣ d i - f i) := by
+     intro d e f h
+     have h₁ : relation d e := h.1
+     have h₂ : relation e f := h.2
+     have h₃ : ∀ (i : Fin 9), 7 ∣ (digits_to_num (fun j : Fin 9 => if j = i then e j else d j)) := by
+       have h₄ : (∀ i : Fin 9, 7 ∣ (digits_to_num (fun j : Fin 9 => if j = i then e j else d j))) := (hrelation d e).mp h₁ |>.2
+-      exact experiment_missing_lemma
++      exact h₄
+     have h₄ : ∀ (i : Fin 9), 7 ∣ (digits_to_num (fun j : Fin 9 => if j = i then f j else e j)) := by
+       have h₅ : (∀ i : Fin 9, 7 ∣ (digits_to_num (fun j : Fin 9 => if j = i then f j else e j))) := (hrelation e f).mp h₂ |>.2
+       exact h₅
+-    
+     have h₅ : ∀ (i : Fin 9), 7 ∣ (e i - d i) * (10 : ℤ) ^ (i : ℕ) + digits_to_num d := by
+       intro i
+       have h₆ : 7 ∣ (digits_to_num (fun j : Fin 9 => if j = i then e j else d j)) := h₃ i
+@@ -17,8 +16,7 @@
+         calc
+           (digits_to_num (fun j : Fin 9 => if j = i then e j else d j)) = ∑ j : Fin 9, (if j = i then e j else d j) * (10 : ℤ) ^ (j : ℕ) := by
+             simp [hdigits_to_num]
+-            <;>
+-            rfl
++            <;> rfl
+           _ = ∑ j : Fin 9, (if j = i then e j else d j) * (10 : ℤ) ^ (j : ℕ) := rfl
+           _ = (∑ j : Fin 9, d j * (10 : ℤ) ^ (j : ℕ)) + (e i - d i) * (10 : ℤ) ^ (i : ℕ) := by
+             calc
+@@ -37,28 +35,22 @@
+                   calc
+                     _ = ∑ j : Fin 9, (if j = i then (e j - d j) else 0) * (10 : ℤ) ^ (j : ℕ) := rfl
+                     _ = (if i = i then (e i - d i) else 0) * (10 : ℤ) ^ (i : ℕ) := by
+-                      
+                       simp [Finset.sum_ite_eq', Finset.mem_univ, i.is_lt]
+                     _ = (e i - d i) * (10 : ℤ) ^ (i : ℕ) := by simp
+                 rw [h₈]
+                 <;> simp [hdigits_to_num]
+-                <;>
+-                rfl
++                <;> rfl
+           _ = digits_to_num d + (e i - d i) * (10 : ℤ) ^ (i : ℕ) := by
+             simp [hdigits_to_num]
+-            <;>
+-            rfl
++            <;> rfl
+       have h₈ : 7 ∣ digits_to_num d + (e i - d i) * (10 : ℤ) ^ (i : ℕ) := by
+         rw [h₇] at h₆
+         exact h₆
+-      
+       have h₉ : 7 ∣ (e i - d i) * (10 : ℤ) ^ (i : ℕ) + digits_to_num d := by
+-        
+         have h₁₀ : (e i - d i) * (10 : ℤ) ^ (i : ℕ) + digits_to_num d = digits_to_num d + (e i - d i) * (10 : ℤ) ^ (i : ℕ) := by ring
+         rw [h₁₀]
+         exact h₈
+       exact h₉
+-    
+     have h₆ : ∀ (i : Fin 9), 7 ∣ (f i - e i) * (10 : ℤ) ^ (i : ℕ) + digits_to_num e := by
+       intro i
+       have h₇ : 7 ∣ (digits_to_num (fun j : Fin 9 => if j = i then f j else e j)) := h₄ i
+@@ -66,8 +58,7 @@
+         calc
+           (digits_to_num (fun j : Fin 9 => if j = i then f j else e j)) = ∑ j : Fin 9, (if j = i then f j else e j) * (10 : ℤ) ^ (j : ℕ) := by
+             simp [hdigits_to_num]
+-            <;>
+-            rfl
++            <;> rfl
+           _ = ∑ j : Fin 9, (if j = i then f j else e j) * (10 : ℤ) ^ (j : ℕ) := rfl
+           _ = (∑ j : Fin 9, e j * (10 : ℤ) ^ (j : ℕ)) + (f i - e i) * (10 : ℤ) ^ (i : ℕ) := by
+             calc
+@@ -86,28 +77,22 @@
+                   calc
+                     _ = ∑ j : Fin 9, (if j = i then (f j - e j) else 0) * (10 : ℤ) ^ (j : ℕ) := rfl
+                     _ = (if i = i then (f i - e i) else 0) * (10 : ℤ) ^ (i : ℕ) := by
+-                      
+                       simp [Finset.sum_ite_eq', Finset.mem_univ, i.is_lt]
+                     _ = (f i - e i) * (10 : ℤ) ^ (i : ℕ) := by simp
+                 rw [h₉]
+                 <;> simp [hdigits_to_num]
+-                <;>
+-                rfl
++                <;> rfl
+           _ = digits_to_num e + (f i - e i) * (10 : ℤ) ^ (i : ℕ) := by
+             simp [hdigits_to_num]
+-            <;>
+-            rfl
++            <;> rfl
+       have h₉ : 7 ∣ digits_to_num e + (f i - e i) * (10 : ℤ) ^ (i : ℕ) := by
+         rw [h₈] at h₇
+         exact h₇
+-      
+       have h₁₀ : 7 ∣ (f i - e i) * (10 : ℤ) ^ (i : ℕ) + digits_to_num e := by
+-        
+         have h₁₁ : (f i - e i) * (10 : ℤ) ^ (i : ℕ) + digits_to_num e = digits_to_num e + (f i - e i) * (10 : ℤ) ^ (i : ℕ) := by ring
+         rw [h₁₁]
+         exact h₉
+       exact h₁₀
+-    
+     have h₇ : 7 ∣ digits_to_num e + digits_to_num d := by
+       have h₈ : digits_to_num e = digits_to_num d + ∑ i : Fin 9, (e i - d i) * (10 : ℤ) ^ (i : ℕ) := by
+         calc
+@@ -124,8 +109,7 @@
+             rw [Finset.sum_add_distrib]
+           _ = digits_to_num d + ∑ i : Fin 9, (e i - d i) * (10 : ℤ) ^ (i : ℕ) := by
+             simp [hdigits_to_num]
+-            <;>
+-            rfl
++            <;> rfl
+       have h₉ : ∀ i : Fin 9, 7 ∣ (e i - d i) * (10 : ℤ) ^ (i : ℕ) + digits_to_num d := h₅
+       have h₁₀ : 7 ∣ ∑ i : Fin 9, ((e i - d i) * (10 : ℤ) ^ (i : ℕ) + digits_to_num d) := by
+         apply Finset.dvd_sum
+@@ -149,32 +133,19 @@
+         have h₁₅ : 7 ∣ 2 * digits_to_num d + ∑ i : Fin 9, (e i - d i) * (10 : ℤ) ^ (i : ℕ) := by
+           have h₁₆ : 7 ∣ ∑ i : Fin 9, (e i - d i) * (10 : ℤ) ^ (i : ℕ) + 9 * digits_to_num d := h₁₂
+           have h₁₇ : 7 ∣ 2 * digits_to_num d + ∑ i : Fin 9, (e i - d i) * (10 : ℤ) ^ (i : ℕ) := by
+-            
+             have h₁₈ : (∑ i : Fin 9, (e i - d i) * (10 : ℤ) ^ (i : ℕ) + 9 * digits_to_num d) = (∑ i : Fin 9, (e i - d i) * (10 : ℤ) ^ (i : ℕ)) + 9 * digits_to_num d := by ring
+             rw [h₁₈] at h₁₆
+-            
+-            
+-            
+-            
+-            
+-            
+             have h₁₉ : 7 ∣ (∑ i : Fin 9, (e i - d i) * (10 : ℤ) ^ (i : ℕ)) + 2 * digits_to_num d := by
+-              
+-              
+-              
+               have h₂₀ : 7 ∣ (∑ i : Fin 9, (e i - d i) * (10 : ℤ) ^ (i : ℕ)) + 9 * digits_to_num d := h₁₆
+               have h₂₁ : 7 ∣ 7 * digits_to_num d := by
+                 use digits_to_num d
+                 <;> ring
+               have h₂₂ : 7 ∣ (∑ i : Fin 9, (e i - d i) * (10 : ℤ) ^ (i : ℕ)) + 2 * digits_to_num d := by
+-                
+                 have h₂₃ : (∑ i : Fin 9, (e i - d i) * (10 : ℤ) ^ (i : ℕ)) + 2 * digits_to_num d = ((∑ i : Fin 9, (e i - d i) * (10 : ℤ) ^ (i : ℕ)) + 9 * digits_to_num d) - 7 * digits_to_num d := by ring
+                 rw [h₂₃]
+                 exact dvd_sub h₂₀ h₂₁
+               exact h₂₂
+-            
+             have h₂₀ : 7 ∣ 2 * digits_to_num d + ∑ i : Fin 9, (e i - d i) * (10 : ℤ) ^ (i : ℕ) := by
+-              
+               have h₂₁ : 2 * digits_to_num d + ∑ i : Fin 9, (e i - d i) * (10 : ℤ) ^ (i : ℕ) = (∑ i : Fin 9, (e i - d i) * (10 : ℤ) ^ (i : ℕ)) + 2 * digits_to_num d := by ring
+               rw [h₂₁]
+               exact h₁₉
+@@ -182,74 +153,54 @@
+           exact h₁₇
+         exact h₁₅
+       exact h₁₃
+-    
+     have h₈ : ∀ (i : Fin 9), 7 ∣ (f i - d i) * (10 : ℤ) ^ (i : ℕ) := by
+       intro i
+       have h₉ : 7 ∣ (f i - e i) * (10 : ℤ) ^ (i : ℕ) + digits_to_num e := h₆ i
+       have h₁₀ : 7 ∣ (e i - d i) * (10 : ℤ) ^ (i : ℕ) + digits_to_num d := h₅ i
+       have h₁₁ : 7 ∣ digits_to_num e + digits_to_num d := h₇
+-      
+       have h₁₂ : 7 ∣ (f i - e i) * (10 : ℤ) ^ (i : ℕ) - digits_to_num d := by
+-        
+-        
+         have h₁₃ : 7 ∣ (f i - e i) * (10 : ℤ) ^ (i : ℕ) + digits_to_num e := h₆ i
+         have h₁₄ : 7 ∣ digits_to_num e + digits_to_num d := h₇
+-        
+         have h₁₅ : 7 ∣ ((f i - e i) * (10 : ℤ) ^ (i : ℕ) + digits_to_num e) - (digits_to_num e + digits_to_num d) := by
+           exact dvd_sub h₁₃ h₁₄
+-        
+         have h₁₆ : ((f i - e i) * (10 : ℤ) ^ (i : ℕ) + digits_to_num e) - (digits_to_num e + digits_to_num d) = (f i - e i) * (10 : ℤ) ^ (i : ℕ) - digits_to_num d := by
+           ring
+         rw [h₁₆] at h₁₅
+         exact h₁₅
+-      
+       have h₁₃ : 7 ∣ (f i - d i) * (10 : ℤ) ^ (i : ℕ) := by
+         have h₁₄ : 7 ∣ (f i - e i) * (10 : ℤ) ^ (i : ℕ) - digits_to_num d := h₁₂
+         have h₁₅ : 7 ∣ (e i - d i) * (10 : ℤ) ^ (i : ℕ) + digits_to_num d := h₅ i
+-        
+         have h₁₆ : 7 ∣ ((f i - e i) * (10 : ℤ) ^ (i : ℕ) - digits_to_num d) + ((e i - d i) * (10 : ℤ) ^ (i : ℕ) + digits_to_num d) := by
+           exact dvd_add h₁₄ h₁₅
+-        
+         have h₁₇ : ((f i - e i) * (10 : ℤ) ^ (i : ℕ) - digits_to_num d) + ((e i - d i) * (10 : ℤ) ^ (i : ℕ) + digits_to_num d) = (f i - d i) * (10 : ℤ) ^ (i : ℕ) := by
+           ring
+         rw [h₁₇] at h₁₆
+         exact h₁₆
+       exact h₁₃
+-    
+     have h₉ : ∀ (i : Fin 9), 7 ∣ d i - f i := by
+       intro i
+       have h₁₀ : 7 ∣ (f i - d i) * (10 : ℤ) ^ (i : ℕ) := h₈ i
+       have h₁₁ : 7 ∣ (f i - d i) := by
+-        
+         have h₁₂ : (7 : ℤ) ∣ (f i - d i) * (10 : ℤ) ^ (i : ℕ) := h₁₀
+-        
+         have h₁₃ : (7 : ℕ).Prime := by decide
+         have h₁₄ : ¬(7 : ℤ) ∣ (10 : ℤ) ^ (i : ℕ) := by
+-          
+           intro h
+           have h₁₅ : (7 : ℕ) ∣ (10 : ℕ) ^ (i : ℕ) := by
+             norm_cast at h ⊢
+             <;> simpa [Int.coe_nat_dvd_left] using h
+           have h₁₆ : (7 : ℕ) ∣ 10 := by
+-            
+             exact Nat.Prime.dvd_of_dvd_pow h₁₃ h₁₅
+           norm_num at h₁₆
+           <;> contradiction
+-        
+         have h₁₅ : (7 : ℤ) ∣ (f i - d i) := by
+-          
+           have h₁₆ : (7 : ℤ) ∣ (f i - d i) * (10 : ℤ) ^ (i : ℕ) := h₁₂
+           have h₁₇ : ¬(7 : ℤ) ∣ (10 : ℤ) ^ (i : ℕ) := h₁₄
+-          
+           have h₁₈ : (7 : ℤ) ∣ (f i - d i) := by
+-            
+             have h₁₉ : (7 : ℤ) ∣ (f i - d i) * (10 : ℤ) ^ (i : ℕ) := h₁₂
+             have h₂₀ : (7 : ℕ).Prime := by decide
+             have h₂₁ : (7 : ℤ) ∣ (f i - d i) ∨ (7 : ℤ) ∣ (10 : ℤ) ^ (i : ℕ) := by
+-              
+               have h₂₂ : (7 : ℤ) ∣ (f i - d i) * (10 : ℤ) ^ (i : ℕ) := h₁₂
+               have h₂₃ : (7 : ℤ) ∣ (f i - d i) ∨ (7 : ℤ) ∣ (10 : ℤ) ^ (i : ℕ) := by
+-                
+                 apply (Int.prime_iff_natAbs_prime.mpr (by decide)).dvd_mul.mp
+                 exact h₂₂
+               exact h₂₃
+@@ -261,7 +212,6 @@
+               exact h₁₄ h₂₁
+           exact h₁₈
+         exact h₁₅
+-      
+       have h₁₂ : 7 ∣ d i - f i := by
+         have h₁₃ : 7 ∣ (f i - d i) := h₁₁
+         have h₁₄ : 7 ∣ -(f i - d i) := by
+@@ -270,7 +220,6 @@
+         rw [h₁₅] at h₁₄
+         exact h₁₄
+       exact h₁₂
+-    
+     intro i
+     have h₁₀ : 7 ∣ d i - f i := h₉ i
+     exact h₁₀

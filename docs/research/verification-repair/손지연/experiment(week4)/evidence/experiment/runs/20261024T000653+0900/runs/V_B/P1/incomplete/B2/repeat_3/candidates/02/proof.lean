@@ -1,0 +1,37 @@
+by
+  intro x Hin
+  induction post
+  case const | op | bvar | fvar =>
+    simp_all [OldExpressions.substOld,
+      Imperative.HasVarsPure.getVars,
+      Lambda.LExpr.LExpr.getVars]
+  case abs ih =>
+    simp [OldExpressions.substOld,
+      Imperative.HasVarsPure.getVars,
+      Lambda.LExpr.LExpr.getVars] at Hin ⊢
+    exact ih Hin
+  case quant trih eih =>
+    simp [OldExpressions.substOld,
+      Imperative.HasVarsPure.getVars,
+      Lambda.LExpr.LExpr.getVars] at Hin ⊢
+    grind
+  case app fn e fn_ih e_ih =>
+    unfold OldExpressions.substOld at Hin
+    split at Hin
+    · split at Hin <;>
+        simp_all [Imperative.HasVarsPure.getVars,
+          Lambda.LExpr.LExpr.getVars] <;>
+        grind
+    · simp [Imperative.HasVarsPure.getVars,
+        Lambda.LExpr.LExpr.getVars] at Hin ⊢
+      grind
+  case ite cih tih eih =>
+    simp [OldExpressions.substOld,
+      Imperative.HasVarsPure.getVars,
+      Lambda.LExpr.LExpr.getVars] at Hin ⊢
+    grind
+  case eq e1ih e2ih =>
+    simp [OldExpressions.substOld,
+      Imperative.HasVarsPure.getVars,
+      Lambda.LExpr.LExpr.getVars] at Hin ⊢
+    grind

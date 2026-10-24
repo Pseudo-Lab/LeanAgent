@@ -1,0 +1,24 @@
+--- candidate_01.proof.lean
++++ candidate_02.proof.lean
+@@ -46,17 +46,17 @@
+       simp
+       ring
+     rw [heq] at hs
+-    have hseven : 7 ∣ 7 * digits_to_num a := ⟨digits_to_num a, rfl⟩
+-    convert dvd_sub hs hseven using 1 <;> ring
++    exact (dvd_sub hs ⟨digits_to_num a, rfl⟩ :
++      7 ∣ digits_to_num a + digits_to_num b)
+   have hp : 7 ∣ (f i - d i) * (10 : ℤ) ^ (i : ℕ) := by
+     have hs := dvd_sub
+       (dvd_add (hrepdvd d e h.1 i) (hrepdvd e f h.2 i))
+       (hsum d e h.1)
+     convert hs using 1 <;> ring
+-  have hprime : (7 : ℤ).Prime :=
++  have hprime : Prime (7 : ℤ) :=
+     Int.prime_iff_natAbs_prime.mpr (by decide)
+   rcases hprime.dvd_mul.mp hp with hfd | hpow
+-  · simpa only [neg_sub] using (dvd_neg.mpr hfd)
++  · simpa only [neg_sub] using dvd_neg.mpr hfd
+   · exfalso
+     have hpow' : (7 : ℕ) ∣ 10 ^ (i : ℕ) := by
+       norm_cast at hpow ⊢

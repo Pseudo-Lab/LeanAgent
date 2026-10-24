@@ -1,0 +1,11 @@
+--- candidate_02.proof.lean
++++ candidate_03.proof.lean
+@@ -10,7 +10,7 @@
+             if j = k then (y j - x j) * (10 : ℤ) ^ (j : ℕ) else 0) := by
+         apply Finset.sum_congr rfl
+         intro j _
+-        by_cases hj : j = k <;> (simp [hj]; ring)
++        by_cases hj : j = k <;> simp [hj]
+       _ = (∑ j : Fin 9, x j * (10 : ℤ) ^ (j : ℕ)) +
+           (y k - x k) * (10 : ℤ) ^ (k : ℕ) := by
+         rw [Finset.sum_add_distrib]

@@ -1,0 +1,67 @@
+--- initial.proof.lean
++++ candidate_01.proof.lean
+@@ -1,2 +1,61 @@
+ by
+-  skip
+\ No newline at end of file
++  intro a b c hab hac
++  induction hab generalizing c with
++  | refl =>
++      exact ⟨c, hac, .refl c⟩
++  | red_I =>
++      cases hac with
++      | refl =>
++          exact ⟨_, .refl _, .red_I _⟩
++      | red_I =>
++          exact ⟨_, .refl _, .refl _⟩
++      | par i' a' hi ha =>
++          have hi' : i' = I := I_irreducible i' hi
++          subst i'
++          exact ⟨a', ha, .red_I a'⟩
++  | red_K _ =>
++      cases hac with
++      | refl =>
++          exact ⟨_, .refl _, .red_K _ _⟩
++      | red_K =>
++          exact ⟨_, .refl _, .refl _⟩
++      | par k' b' hk hb =>
++          obtain ⟨x, hx, hk'⟩ := Ka_irreducible _ k' hk
++          subst k'
++          exact ⟨x, hx, .red_K x b'⟩
++  | red_S _ _ _ =>
++      cases hac with
++      | refl =>
++          exact ⟨_, .refl _, .red_S _ _ _⟩
++      | red_S =>
++          exact ⟨_, .refl _, .refl _⟩
++      | par s' c' hs hc =>
++          obtain ⟨x, y, hx, hy, hs'⟩ := Sab_irreducible _ _ s' hs
++          subst s'
++          exact
++            ⟨x ⬝ c' ⬝ (y ⬝ c'),
++              .par (.par hx hc) (.par hy hc),
++              .red_S x y c'⟩
++  | par a a' b b' ha hb iha ihb =>
++      cases hac with
++      | refl =>
++          exact ⟨a' ⬝ b', .refl _, .par ha hb⟩
++      | red_I =>
++          have ha' : a' = I := I_irreducible a' ha
++          subst a'
++          exact ⟨b', .red_I b', hb⟩
++      | red_K =>
++          obtain ⟨x, hx, ha'⟩ := Ka_irreducible _ a' ha
++          subst a'
++          exact ⟨x, .red_K x b', hx⟩
++      | red_S _ _ =>
++          obtain ⟨x, y, hx, hy, ha'⟩ := Sab_irreducible _ _ a' ha
++          subst a'
++          exact
++            ⟨x ⬝ b' ⬝ (y ⬝ b'),
++              .red_S x y b',
++              .par (.par hx hb) (.par hy hb)⟩
++      | par c' d' hc hd =>
++          obtain ⟨x, hx₁, hx₂⟩ := iha hc
++          obtain ⟨y, hy₁, hy₂⟩ := ihb hd
++          exact ⟨x ⬝ y, .par hx₁ hy₁, .par hx₂ hy₂⟩
+\ No newline at end of file

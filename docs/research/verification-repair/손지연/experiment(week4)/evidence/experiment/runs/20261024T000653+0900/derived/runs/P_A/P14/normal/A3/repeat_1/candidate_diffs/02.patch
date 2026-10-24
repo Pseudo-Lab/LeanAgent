@@ -1,0 +1,57 @@
+--- candidate_01.proof.lean
++++ candidate_02.proof.lean
+@@ -2,15 +2,15 @@
+   classical
+   have hmiss : ∀ A : Set S, A ∉ P → ∃ U ∈ P, A ∩ U = ∅ := by
+     intro A hA
+-    by_contra! h
+-    exact hPS ⟨A, hA, h⟩
++    by_contra h
++    exact hPS ⟨A, hA, fun U hU hAU => h ⟨U, hU, hAU⟩⟩
+   have hcover : ∀ A : Set S, A ∈ P ∨ Aᶜ ∈ P := by
+     intro A
+     by_contra! h
+     obtain ⟨U, hU, hAU⟩ := hmiss A h.1
+     obtain ⟨V, hV, hAV⟩ := hmiss Aᶜ h.2
+     apply hPP U hU V hV
+-    rw [Set.eq_empty_iff_forall_not_mem] at hAU hAV ⊢
++    rw [Set.eq_empty_iff_forall_notMem] at hAU hAV ⊢
+     intro x hx
+     by_cases hxA : x ∈ A
+     · exact hAU x ⟨hxA, hx.1⟩
+@@ -31,18 +31,16 @@
+     exact (hone A).1 hA
+   have hg : ∀ A ∈ Q, Aᶜ ∈ P := by
+     intro A hA
+-    have hn : A ∉ P := by
+-      simpa only [Q, Finset.mem_sdiff, Finset.mem_univ, true_and] using hA
+     apply (hone Aᶜ).2
+-    simpa using hn
++    simpa [Q] using hA
+   have hc : P.card = Q.card := by
+     apply Finset.card_bij' (fun A _ => Aᶜ) (fun A _ => Aᶜ)
+-    · exact hf
+-    · exact hg
+     · intro A hA
+       simp
+     · intro A hA
+       simp
++    · exact hf
++    · exact hg
+   have hu : P ∪ Q = (Finset.univ : Finset (Set S)) := by
+     ext A
+     simp [Q]
+@@ -56,10 +54,8 @@
+       _ = 2 ^ Fintype.card S := by rw [hu, hi]; simp
+   have hd : P.card * 2 = 2 ^ Fintype.card S := by omega
+   have hs : Fintype.card S - 1 + 1 = Fintype.card S := by
+-    have : 0 < Fintype.card S := Fintype.card_pos
++    have := Fintype.card_pos (α := S)
+     omega
+   have he : 2 ^ (Fintype.card S - 1) * 2 = 2 ^ Fintype.card S := by
+-    calc
+-      2 ^ (Fintype.card S - 1) * 2 = 2 ^ (Fintype.card S - 1 + 1) := by rw [pow_succ]
+-      _ = 2 ^ Fintype.card S := by rw [hs]
++    rw [← hs, pow_succ]
+   omega
+\ No newline at end of file

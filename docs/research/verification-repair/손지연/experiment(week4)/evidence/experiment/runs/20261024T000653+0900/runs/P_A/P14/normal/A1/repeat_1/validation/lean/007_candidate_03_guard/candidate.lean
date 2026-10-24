@@ -1,0 +1,178 @@
+import Mathlib
+import Aesop
+
+import Lean
+
+meta section
+set_option maxHeartbeats 0
+
+/-!
+Small evaluator instrumentation. The Python runner inlines this after the source
+imports, preserving the project's parser environment at the target declaration.
+
+`#repair_guard "by\n  ..."` parses exactly one complete `by` term as data, counts
+its native Lean lexer tokens, and rejects selected executable/incomplete-proof
+syntax before candidate elaboration. Project tactics and notation are allowed.
+This denylist is a boundary check for trusted local projects, not a sandbox for
+hostile Lean or a proof of semantic preservation. Imported macros/tactics remain
+trusted. The runner also fixes the surrounding source and checks actual axioms.
+
+`#repair_measure <command>` measures only the wrapped command's elaboration in
+raw allocation heartbeats. Run with `-DElab.async=false`; otherwise theorem work
+may occur on another thread. Raw heartbeats are 1000 times maxHeartbeats units.
+The runner enforces the limit independently, including source-local options.
+
+`#repair_context <command>` is a diagnostic-only replay. It records native tactic
+InfoTree states (including nested/multiline tactics, bullets and case blocks), not
+states inferred by editing individual tactic lines. Ranges are UTF-8 byte offsets
+in this instrumented file; the Python adapter maps them to the original source.
+-/
+
+namespace LeanRepairSupport
+
+open Lean Elab Command
+
+private def blockedWords : Array String := #[
+  "sorry", "sorryAx", "admit", "axiom", "unsafe", "implemented_by", "extern",
+  "run_tac", "run_elab", "run_meta", "run_io", "by_elab", "elab", "elab_rules",
+  "macro", "macro_rules", "initialize", "builtin_initialize", "native_decide",
+  "eval", "eval%", "eval_expr", "set_option", "trustCompiler", "ofReduceBool"
+]
+
+private def blockedName (name : String) : Bool :=
+  (name.splitOn ".").any (fun p => blockedWords.contains p && p != "eval") ||
+  name == "IO" || name.startsWith "IO." ||
+  name == "System" || name.startsWith "System." ||
+  name == "Lean" || name.startsWith "Lean."
+
+private partial def forbidden? : Syntax → Option String
+  | .atom _ value =>
+      if blockedWords.contains value || (value.startsWith "#" && value != "#") then some value else none
+  | .ident _ raw name _ =>
+      if blockedName name.toString || blockedName raw.toString then some raw.toString else none
+  | .node _ kind args =>
+      if kind.toString.startsWith "Lean.Parser.Command." then some kind.toString
+      else args.foldl (fun found arg => found.orElse (fun _ => forbidden? arg)) none
+  | .missing => none
+
+/-- Count the actual lexer token stream; whitespace and comments are skipped. -/
+private def countTokens (env : Environment) (body : String) : Except String Nat := Id.run do
+  let input := Parser.mkInputContext body "<repair_body>"
+  let moduleCtx : Parser.ParserModuleContext := { env, options := {} }
+  let tokens := Parser.getTokenTable env
+  let mut state := Parser.whitespace.run input moduleCtx tokens (Parser.mkParserState body)
+  let mut count := 0
+  while !input.atEnd state.pos do
+    let previous := state.pos
+    state := (Parser.tokenFn []).run input moduleCtx tokens state
+    if state.hasError then return .error (state.toErrorMsg input)
+    if state.pos == previous then return .error "Lean lexer made no progress"
+    count := count + 1
+    state := { state with stxStack := .empty }
+  return .ok count
+
+elab "#repair_guard " text:str : command => do
+  let body := text.getString
+  let env ← getEnv
+  let parsed ← match Parser.runParserCategory env `term body "<repair_body>" with
+    | .error message => throwError "repair guard: {message}"
+    | .ok parsedSyntax => pure parsedSyntax
+  unless parsed.getKind == ``Lean.Parser.Term.byTactic do
+    throwError "repair guard: proof body must be one complete `by` term"
+  if let some blocked := forbidden? parsed then
+    throwError "repair guard: forbidden syntax or identifier `{blocked}`"
+  let count ← match countTokens env body with
+    | .error message => throwError "repair lexer: {message}"
+    | .ok count => pure count
+  logInfo m!"REPAIR_GUARD|{count}"
+
+elab "#repair_measure " cmd:command : command => do
+  let started ← IO.getNumHeartbeats
+  try
+    elabCommand cmd
+  finally
+    let finished ← IO.getNumHeartbeats
+    logInfo m!"REPAIR_HEARTBEATS|{finished - started}"
+
+private def sourceRange (stx : Syntax) : List (String × Json) :=
+  match stx.getPos?, stx.getTailPos? with
+  | some first, some last => [("start", toJson first.byteIdx), ("end", toJson last.byteIdx)]
+  | _, _ => []
+
+private partial def sorryRanges (stx : Syntax) : Array Json := Id.run do
+  match stx with
+  | .atom _ value =>
+    if value == "sorry" || value == "admit" then
+      return #[Json.mkObj (("kind", .str "explicit_sorry") :: sourceRange stx)]
+    return #[]
+  | .node _ _ args => return args.foldl (fun found arg => found ++ sorryRanges arg) #[]
+  | _ => return #[]
+
+private partial def tacticStates (tree : InfoTree) (outer? : Option ContextInfo := none)
+    (depth : Nat := 0) : IO (Array Json) := do
+  match tree with
+  | .context context tree => tacticStates tree (context.mergeIntoOuter? outer?) depth
+  | .node info children =>
+    let mut result := #[]
+    if let .ofTacticInfo tactic := info then
+      if let some context := outer? then
+        let context := { context with mctx := tactic.mctxBefore }
+        let states ← tactic.goalsBefore.toArray.mapM fun goal =>
+          context.runMetaM {} do return (← Meta.ppGoal goal).pretty
+        let afterContext := { context with mctx := tactic.mctxAfter }
+        let after ← tactic.goalsAfter.toArray.mapM fun goal =>
+          afterContext.runMetaM {} do return (← Meta.ppGoal goal).pretty
+        result := result.push <| Json.mkObj <| sourceRange tactic.stx ++ [
+          ("kind", .str "tactic"), ("depth", toJson depth),
+          ("goals_before", toJson states), ("goals_after", toJson after)]
+    for child in children do
+      result := result ++ (← tacticStates child outer? (depth + 1))
+    return result
+  | .hole _ => return #[]
+
+elab "#repair_context " cmd:command : command => do
+  let saved ← getResetInfoTrees
+  try
+    try
+      withEnableInfoTree true <| elabCommand cmd
+    finally
+      let info ← getInfoState
+      let mut records := sorryRanges cmd
+      for tree in info.trees do
+        let tree := tree.substitute info.assignment
+        records := records ++ (← liftIO <| tacticStates tree)
+      logInfo m!"REPAIR_CONTEXT|{(Json.arr records).compress}"
+  finally
+    let current ← getInfoState
+    modifyInfoState fun state => { state with trees := saved.append current.trees }
+
+elab "#repair_axioms " target:ident : command => do
+  let names ← liftCoreM <| realizeGlobalConstWithInfos target
+  unless names.length == 1 do
+    throwError "repair axiom audit: target must resolve to one declaration"
+  let name := names[0]!
+  let axioms ← collectAxioms name
+  let result := Json.mkObj [
+    ("target", .str name.toString),
+    ("axioms", .arr ((axioms.qsort Name.lt).map (fun n => .str n.toString)))
+  ]
+  logInfo m!"REPAIR_AXIOMS|{result.compress}"
+
+end LeanRepairSupport
+
+end
+
+set_option maxHeartbeats 0
+
+open Set Function Filter Topology
+
+
+#repair_guard "by\n  classical\n  have hmax (T : Set S) (hT : T ∉ P) : ∃ U ∈ P, T ∩ U = ∅ := by\n    by_contra h\n    push_neg at h\n    exact hPS ⟨T, hT, h⟩\n\n  have hexact (T : Set S) : T ∈ P ↔ Tᶜ ∉ P := by\n    constructor\n    · intro hT hTc\n      exact (hPP T hT Tᶜ hTc) (by ext x; simp)\n    · intro hTc\n      by_contra hT\n      obtain ⟨U, hU, hTU⟩ := hmax T hT\n      obtain ⟨V, hV, hTV⟩ := hmax Tᶜ hTc\n      have hUV : U ∩ V = ∅ := by\n        apply Set.eq_empty_of_forall_not_mem\n        intro x hx\n        have hxU : x ∈ U := Set.mem_of_mem_inter_left hx\n        have hxV : x ∈ V := Set.mem_of_mem_inter_right hx\n        have hxnot : x ∉ T := by\n          intro hxT\n          have hx' : x ∈ T ∩ U := ⟨hxT, hxU⟩\n          rw [hTU] at hx'\n          exact hx'\n        have hxT : x ∈ T := by\n          by_contra hxT\n          have hxc : x ∈ Tᶜ := by simpa using hxT\n          have hx' : x ∈ Tᶜ ∩ V := ⟨hxc, hxV⟩\n          rw [hTV] at hx'\n          exact hx'\n        exact hxnot hxT\n      exact (hPP U hU V hV) hUV\n\n  let Q : Finset (Set S) := Finset.univ \\ P\n  have htoQ (A : Set S) (hA : A ∈ P) : Aᶜ ∈ Q := by\n    simp only [Q, Finset.mem_sdiff, Finset.mem_univ, true_and]\n    exact (hexact A).mp hA\n  have htoP (A : Set S) (hA : A ∈ Q) : Aᶜ ∈ P := by\n    have hnA : A ∉ P := by\n      simpa only [Q, Finset.mem_sdiff, Finset.mem_univ, true_and] using hA\n    apply (hexact Aᶜ).mpr\n    simpa using hnA\n  have hcardeq : P.card = Q.card := by\n    refine Finset.card_bij' (fun A _ => Aᶜ) (fun A _ => Aᶜ) ?_ ?_ ?_ ?_\n    · intro A hA\n      exact htoQ A hA\n    · intro A hA\n      exact htoP A hA\n    · intro A hA\n      simp\n    · intro A hA\n      simp\n\n  have hdis : Disjoint P Q := by\n    rw [Finset.disjoint_left]\n    intro A hA hAQ\n    simp [Q, hA] at hAQ\n  have hunion : P ∪ Q = (Finset.univ : Finset (Set S)) := by\n    ext A\n    simp [Q]\n  have htotal : P.card + Q.card = 2 ^ Fintype.card S := by\n    calc\n      P.card + Q.card = (P ∪ Q).card := by\n        rw [← Finset.card_union_add_card_inter]\n        rw [Finset.disjoint_iff_inter_eq_empty.mp hdis]\n        simp\n      _ = (Finset.univ : Finset (Set S)).card := by rw [hunion]\n      _ = 2 ^ Fintype.card S := by simp [Fintype.card_fun]\n  have hdouble : P.card * 2 = 2 ^ Fintype.card S := by\n    omega\n  have hpos : 0 < Fintype.card S :=\n    Fintype.card_pos_iff.mpr inferInstance\n  have hn : Fintype.card S = Fintype.card S - 1 + 1 := by\n    omega\n  rw [hn, pow_succ] at hdouble\n  omega"
+theorem putnam_1964_b2
+(S : Type*) [Fintype S] [Nonempty S]
+(P : Finset (Set S))
+(hPP : ∀ T ∈ P, ∀ U ∈ P, T ∩ U ≠ ∅)
+(hPS : ¬∃ T : Set S, T ∉ P ∧ (∀ U ∈ P, T ∩ U ≠ ∅))
+: (P.card = 2 ^ (Fintype.card S - 1)) := by
+  sorry
+

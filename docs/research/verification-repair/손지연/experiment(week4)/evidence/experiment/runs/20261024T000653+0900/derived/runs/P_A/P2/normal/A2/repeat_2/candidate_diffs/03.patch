@@ -1,0 +1,41 @@
+--- candidate_02.proof.lean
++++ candidate_03.proof.lean
+@@ -1,13 +1,5 @@
+ by
+   intros Hnorm
+-  have appendSubset {a b c d : List Expression.Ident}
+-      (h₁ : a.Subset b) (h₂ : c.Subset d) :
+-      (a ++ c).Subset (b ++ d) := by
+-    intro x hx
+-    simp only [List.mem_append] at hx ⊢
+-    cases hx with
+-    | inl hx => exact Or.inl (h₁ hx)
+-    | inr hx => exact Or.inr (h₂ hx)
+   induction post <;>
+     simp [Imperative.HasVarsPure.getVars, extractOldExprVars,
+           Lambda.LExpr.LExpr.getVars] at * <;>
+@@ -28,17 +20,17 @@
+         rfl
+     · cases Hnorm with
+       | app H1 H2 Hn =>
+-        exact appendSubset (fn_ih H1) (e_ih H2)
++        exact List.Subset.app (fn_ih H1) (e_ih H2)
+   case abs ih =>
+     cases Hnorm
+     apply ih <;> assumption
+   case quant trih eih =>
+     cases Hnorm
+-    exact appendSubset (trih (by assumption)) (eih (by assumption))
++    exact List.Subset.app (trih (by assumption)) (eih (by assumption))
+   case ite cih tih eih =>
+     cases Hnorm
+-    exact appendSubset (cih (by assumption))
+-      (appendSubset (tih (by assumption)) (eih (by assumption)))
++    exact List.Subset.app (cih (by assumption))
++      (List.Subset.app (tih (by assumption)) (eih (by assumption)))
+   case eq ih1 ih2 =>
+     cases Hnorm
+-    exact appendSubset (ih1 (by assumption)) (ih2 (by assumption))
+\ No newline at end of file
++    exact List.Subset.app (ih1 (by assumption)) (ih2 (by assumption))
+\ No newline at end of file

@@ -1,0 +1,106 @@
+by
+  have hA2 : ContDiff ℝ 2 A := hA.of_le (by simp)
+  have hJ' : Differentiable ℝ J := hJ.differentiable (by simp)
+  have hEs : ∀ j, ContDiff ℝ 2 (fun y => A.electricField 𝓕.c t y j) :=
+    fun j => electricField_apply_contDiff_space (i := j) hA2 t
+  have hEd : ∀ j k, Differentiable ℝ (∂[k] (fun y => A.electricField 𝓕.c t y j)) :=
+    fun j k => Space.deriv_differentiable (hEs j) k
+  have hBt : ∀ j, Differentiable ℝ
+      (fun s => ∂[j] (fun y => A.magneticFieldMatrix 𝓕.c s y (j, i)) x) :=
+    fun j => Space.space_deriv_differentiable_time (i := j)
+      (magneticFieldMatrix_contDiff _ hA2 (j, i)) x
+  have hJt : Differentiable ℝ (fun s => J.currentDensity 𝓕.c s x i) :=
+    LorentzCurrentDensity.currentDensity_apply_differentiable_time hJ' x i
+  have hg := (isExtrema_iff_gauss_ampere_magneticFieldMatrix hA J hJ).mp h
+  calc _
+    _ = ∂ₜ (fun t =>
+      1 / (𝓕.μ₀ * 𝓕.ε₀) * ∑ j, ∂[j] (A.magneticFieldMatrix 𝓕.c t · (j, i)) x -
+      1 / 𝓕.ε₀ * J.currentDensity 𝓕.c t x i) t := by
+        conv_lhs =>
+          enter [1]
+          change fun t => ∂ₜ (A.electricField 𝓕.c · x i) t
+          enter [t]
+          rw [Time.deriv_euclid (electricField_differentiable_time hA2 _),
+            time_deriv_electricField_of_isExtrema hA J hJ h]
+    _ = 1 / (𝓕.μ₀ * 𝓕.ε₀) *
+        (∑ j, ∂[j] (fun x => ∂[j] (A.electricField 𝓕.c t · i) x -
+          ∂[i] (A.electricField 𝓕.c t · j) x) x) -
+        1 / 𝓕.ε₀ * ∂ₜ (J.currentDensity 𝓕.c · x i) t := by
+      rw [Time.deriv_eq]
+      rw [fderiv_fun_sub
+        ((Differentiable.fun_sum fun j _ => hBt j).const_mul _).differentiableAt
+        (hJt.const_mul _).differentiableAt]
+      simp only [one_div, mul_inv_rev, FunLike.coe_sub, Pi.sub_apply]
+      rw [fderiv_const_mul (Differentiable.fun_sum fun j _ => hBt j).differentiableAt,
+        fderiv_const_mul hJt.differentiableAt,
+        fderiv_fun_sum fun j _ => (hBt j).differentiableAt]
+      simp [Time.deriv_eq]
+      congr
+      funext j
+      rw [Space.time_deriv_comm_space_deriv]
+      · congr
+        funext y
+        rw [time_deriv_magneticFieldMatrix _ hA2]
+      · exact magneticFieldMatrix_contDiff _ hA2 (j, i)
+    _ = 1 / (𝓕.μ₀ * 𝓕.ε₀) *
+        ∑ j, (∂[j] (fun x => ∂[j] (A.electricField 𝓕.c t · i) x) x -
+          ∂[j] (fun x => ∂[i] (A.electricField 𝓕.c t · j) x) x) -
+        1 / 𝓕.ε₀ * ∂ₜ (J.currentDensity 𝓕.c · x i) t := by
+      congr
+      funext j
+      rw [Space.deriv_eq_fderiv_basis]
+      rw [fderiv_fun_sub (hEd _ _).differentiableAt (hEd _ _).differentiableAt]
+      simp [← Space.deriv_eq_fderiv_basis]
+    _ = 1 / (𝓕.μ₀ * 𝓕.ε₀) *
+        ∑ j, ∂[j] (∂[j] (A.electricField 𝓕.c t · i)) x -
+        1 / (𝓕.μ₀ * 𝓕.ε₀) *
+          ∑ j, ∂[j] (fun x => ∂[i] (A.electricField 𝓕.c t · j) x) x -
+        1 / 𝓕.ε₀ * ∂ₜ (J.currentDensity 𝓕.c · x i) t := by
+      simp [mul_sub]
+    _ = 1 / (𝓕.μ₀ * 𝓕.ε₀) *
+        ∑ j, ∂[j] (∂[j] (A.electricField 𝓕.c t · i)) x -
+        1 / (𝓕.μ₀ * 𝓕.ε₀) *
+          ∑ j, ∂[i] (fun x => ∂[j] (A.electricField 𝓕.c t · j) x) x -
+        1 / 𝓕.ε₀ * ∂ₜ (J.currentDensity 𝓕.c · x i) t := by
+      congr
+      funext j
+      rw [Space.deriv_commute _ (hEs _), Space.deriv_eq_fderiv_basis]
+    _ = 1 / (𝓕.μ₀ * 𝓕.ε₀) *
+        ∑ j, ∂[j] (∂[j] (A.electricField 𝓕.c t · i)) x -
+        1 / (𝓕.μ₀ * 𝓕.ε₀) *
+          ∂[i] (fun x => ∑ j, ∂[j] (A.electricField 𝓕.c t · j) x) x -
+        1 / 𝓕.ε₀ * ∂ₜ (J.currentDensity 𝓕.c · x i) t := by
+      congr
+      rw [Space.deriv_eq_fderiv_basis]
+      rw [fderiv_fun_sum]
+      simp [← Space.deriv_eq_fderiv_basis]
+      intro j _
+      exact (hEd j j).differentiableAt
+    _ = 1 / (𝓕.μ₀ * 𝓕.ε₀) *
+        ∑ j, ∂[j] (∂[j] (A.electricField 𝓕.c t · i)) x -
+        1 / (𝓕.μ₀ * 𝓕.ε₀) *
+          ∂[i] (fun x => (∇ ⬝ A.electricField 𝓕.c t) x) x -
+        1 / 𝓕.ε₀ * ∂ₜ (J.currentDensity 𝓕.c · x i) t := by rfl
+    _ = 1 / (𝓕.μ₀ * 𝓕.ε₀) *
+        ∑ j, ∂[j] (∂[j] (A.electricField 𝓕.c t · i)) x -
+        1 / (𝓕.μ₀ * 𝓕.ε₀ ^ 2) * ∂[i] (J.chargeDensity 𝓕.c t ·) x -
+        1 / 𝓕.ε₀ * ∂ₜ (J.currentDensity 𝓕.c · x i) t := by
+      congr 2
+      conv_lhs =>
+        enter [2, 2, y]
+        rw [(hg t y).1]
+      trans 1 / (𝓕.μ₀ * 𝓕.ε₀) *
+          ∂[i] (fun y => (1 / 𝓕.ε₀) * J.chargeDensity 𝓕.c t y) x
+      · congr
+        funext y
+        ring
+      · rw [Space.deriv_eq_fderiv_basis]
+        rw [fderiv_const_mul]
+        simp [← Space.deriv_eq_fderiv_basis]
+        field_simp
+        exact (LorentzCurrentDensity.chargeDensity_differentiable_space hJ' t).differentiableAt
+    _ = 𝓕.c ^ 2 * ∑ j, ∂[j] (∂[j] (A.electricField 𝓕.c t · i)) x -
+        𝓕.c ^ 2 / 𝓕.ε₀ * ∂[i] (J.chargeDensity 𝓕.c t ·) x -
+        𝓕.c ^ 2 * 𝓕.μ₀ * ∂ₜ (J.currentDensity 𝓕.c · x i) t := by
+      simp [FreeSpace.c_sq]
+      field_simp
