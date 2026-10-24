@@ -1,0 +1,51 @@
+{
+  "run_id": "20261024T000653+0900",
+  "updated_at": 1792772966.326486,
+  "authorization": "Existing GPT subscription only; user explicitly approved clean proofs and public context to OpenAI Codex/ChatGPT. No paid API or purchased-credit fallback.",
+  "target": {
+    "P_A_histories": 180,
+    "V_A_cases": 90,
+    "V_B_histories": 180,
+    "P_B_policies_per_P_history": 4,
+    "mode": "H",
+    "model": "gpt-5.6-sol",
+    "reasoning": "high"
+  },
+  "completed_fixed_stages": {
+    "base_problem_references": 15,
+    "holdout_problem_environment_references": 21,
+    "ready_environments": 15,
+    "V_A_cases": 90,
+    "control_paths_passed": 9,
+    "module_indirect_sorry_audit_versions": 2
+  },
+  "active_logs": [
+    "P_A.log",
+    "P_A-extra.log",
+    "P_A-extra2.log",
+    "V_B.log",
+    "V_B-extra.log",
+    "V_B-extra2.log",
+    "compatibility-second.log",
+    "revalidation.log",
+    "pipeline.log"
+  ],
+  "postprocessing": "finish.py waits for P_A=180, then all-candidate holdout (4 workers), V_B=180, replay/controls, all unique saved candidate/environment revalidations (4 workers, retries missing locked jobs), audit/analysis/figures and completion.json.",
+  "remaining": "Continue monitoring all authorised inference and complete holdout/revalidation coverage. Can add 4 locked revalidation workers when the final pipeline reaches that stage; no duplicate calls due per-candidate locks. Rerun analyze.py after completion.json, because the running watcher was started before its final refresh line was added.",
+  "key_notes": [
+    "P10 initial parser-breaking error injection was archived in preflight_rejected and corrected before any V_B model call; both conditions use corrected immutable proof_error_v2 via canonical task config. All 90 current V_A cases now have intended error categories except deliberately preserved direct-sorry policy label difference.",
+    "V_A: A1/A2 false accepts 38 each; A3 false accepts/rejects 0 in 90 controlled cases.",
+    "Older Strata module #print axioms issue fixed via compiling unchanged module objects and auditing from separate nonmodule imports; indirect sorryAx tests passed for Lean 4.27 and 4.29.1.",
+    "Pure replay uses effective_runner supplements parsed from worker logs and saved initial/clarified engine snapshots. Only repeat-at-last-call stop_reason precedence differs; candidate admission/selection is unchanged.",
+    "Revalidation summary must use optional comparisons: two missing metrics are unavailable, not a measured equality. --summarize-only recomputes old raw records without changing them.",
+    "Subscription USD/official scores/USD3 strict compliance remain null; local proof-token counts differ from dataset proof_length for some rows; reductions use measured native baselines.",
+    "Original verification-repair package and historical experiment-v0/v1 artifacts are preserved. No collaboration subagents spawned."
+  ],
+  "commands": {
+    "status": "python3 week4/experiment/follow.py",
+    "analysis": "python3 week4/experiment/analyze.py",
+    "audit": "python3 week4/experiment/audit.py",
+    "replay": "python3 week4/experiment/replay.py",
+    "revalidation_summary": "python3 week4/experiment/revalidate.py --summarize-only"
+  }
+}

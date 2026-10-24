@@ -3,6 +3,7 @@
 대회 문제의 명제 해석, 참조 증명 분석, 개선 시도, 검증 결과와 발표자료를 세트별로 모읍니다.
 
 - [Warm-up 15문제](warmup/README.md): Week 2 담당자별 자료.
+- [Week 4 검증·수리 통합 실험](warmup/손지연/verification-repair-experiment.html): 손지연의 P1–P15 리팩터링·오류 수리 실험. 기존 P7·P12 자료와 별도로 보관하며 [구현 보고서](../verifier-guided-agent/손지연/report.md)와 연결합니다.
 - [Arena 개발·실험·운영 가이드(HTML)](arena-guide.html): 에이전트 개발 개요, 문제별 환경 고정 가안·2문제·4환경 파일럿 검증, 대시보드 사용·데이터 갱신·배포, 6개 데이터 출처·후보군 분석, 서브에이전트 effort 비교·재현성 실험. 구현 코드는 별도 `LeanAgent-LeanRefactorArena` 리포에서 관리합니다.
 - [수집 코퍼스](corpus/README.md): 출처별 수집 범위·증명 통계와 후속 실험 표본 분석.
 - [폴더·파일명 지침](../../STRUCTURE.md).

@@ -1,0 +1,156 @@
+{
+  "family": "V_B",
+  "problem": 15,
+  "condition": "B1",
+  "repeat": 3,
+  "error_category": "incomplete",
+  "max_calls": 4,
+  "target": "putnam_1995_a3",
+  "prefix": "import Mathlib\nimport Aesop\n\nset_option maxHeartbeats 0\n\nopen Filter Topology Real\n\n\ntheorem putnam_1995_a3\n(relation : (Fin 9 → ℤ) → (Fin 9 → ℤ) → Prop)\n(digits_to_num : (Fin 9 → ℤ) → ℤ)\n(hdigits_to_num : digits_to_num = fun dig => ∑ i : Fin 9, (dig i) * 10^i.1)\n(hrelation : ∀ d e : (Fin 9 → ℤ), relation d e ↔ (∀ i : Fin 9, d i < 10 ∧ d i ≥ 0 ∧ e i < 10 ∧ e i ≥ 0) ∧ (∀ i : Fin 9, 7 ∣ (digits_to_num (fun j : Fin 9 => if j = i then e j else d j))))\n: ∀ d e f : (Fin 9 → ℤ), ((relation d e) ∧ (relation e f)) → (∀ i : Fin 9, 7 ∣ d i - f i) := ",
+  "suffix": "\n",
+  "original_body": null,
+  "initial_body": "by\n  skip",
+  "initial_status": "incomplete",
+  "initial_facts": {
+    "diagnostics": [
+      {
+        "severity": "error",
+        "position": {
+          "column": 93,
+          "line": 14
+        },
+        "end_position": {
+          "column": 6,
+          "line": 15
+        },
+        "message": "unsolved goals\nrelation : (Fin 9 → ℤ) → (Fin 9 → ℤ) → Prop\ndigits_to_num : (Fin 9 → ℤ) → ℤ\nhdigits_to_num : digits_to_num = fun dig => ∑ i, dig i * 10 ^ ↑i\nhrelation :\n  ∀ (d e : Fin 9 → ℤ),\n    relation d e ↔\n      (∀ (i : Fin 9), d i < 10 ∧ d i ≥ 0 ∧ e i < 10 ∧ e i ≥ 0) ∧\n        ∀ (i : Fin 9), 7 ∣ digits_to_num fun j => if j = i then e j else d j\n⊢ ∀ (d e f : Fin 9 → ℤ), relation d e ∧ relation e f → ∀ (i : Fin 9), 7 ∣ d i - f i",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "unsolved goals\nrelation : (Fin 9 → ℤ) → (Fin 9 → ℤ) → Prop\ndigits_to_num : (Fin 9 → ℤ) → ℤ\nhdigits_to_num : digits_to_num = fun dig => ∑ i, dig i * 10 ^ ↑i\nhrelation :\n  ∀ (d e : Fin 9 → ℤ),\n    relation d e ↔\n      (∀ (i : Fin 9), d i < 10 ∧ d i ≥ 0 ∧ e i < 10 ∧ e i ≥ 0) ∧\n        ∀ (i : Fin 9), 7 ∣ digits_to_num fun j => if j = i then e j else d j\n⊢ ∀ (d e f : Fin 9 → ℤ), relation d e ∧ relation e f → ∀ (i : Fin 9), 7 ∣ d i - f i",
+          "endPos": {
+            "column": 6,
+            "line": 15
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "Tactic.unsolvedGoals",
+          "pos": {
+            "column": 93,
+            "line": 14
+          },
+          "severity": "error"
+        },
+        "source_line": ": ∀ d e f : (Fin 9 → ℤ), ((relation d e) ∧ (relation e f)) → (∀ i : Fin 9, 7 ∣ d i - f i) := by",
+        "start_offset": 545,
+        "start_byte_offset": 607,
+        "end_offset": 554,
+        "end_byte_offset": 616,
+        "source_text": "by\n  skip",
+        "goals": [
+          "∀ (d e f : Fin 9 → ℤ), relation d e ∧ relation e f → ∀ (i : Fin 9), 7 ∣ d i - f i"
+        ],
+        "local_context": [
+          "relation : (Fin 9 → ℤ) → (Fin 9 → ℤ) → Prop\ndigits_to_num : (Fin 9 → ℤ) → ℤ\nhdigits_to_num : digits_to_num = fun dig => ∑ i, dig i * 10 ^ ↑i\nhrelation :\n  ∀ (d e : Fin 9 → ℤ),\n    relation d e ↔\n      (∀ (i : Fin 9), d i < 10 ∧ d i ≥ 0 ∧ e i < 10 ∧ e i ≥ 0) ∧\n        ∀ (i : Fin 9), 7 ∣ digits_to_num fun j => if j = i then e j else d j"
+        ],
+        "proof_state_source": "unsolved_goals_diagnostic"
+      },
+      {
+        "severity": "information",
+        "position": {
+          "column": 0,
+          "line": 17
+        },
+        "end_position": {
+          "column": 6,
+          "line": 17
+        },
+        "message": "putnam_1995_a3 (relation : (Fin 9 → ℤ) → (Fin 9 → ℤ) → Prop) (digits_to_num : (Fin 9 → ℤ) → ℤ)\n  (hdigits_to_num : digits_to_num = fun dig => ∑ i, dig i * 10 ^ ↑i)\n  (hrelation :\n    ∀ (d e : Fin 9 → ℤ),\n      relation d e ↔\n        (∀ (i : Fin 9), d i < 10 ∧ d i ≥ 0 ∧ e i < 10 ∧ e i ≥ 0) ∧\n          ∀ (i : Fin 9), 7 ∣ digits_to_num fun j => if j = i then e j else d j)\n  (d e f : Fin 9 → ℤ) : relation d e ∧ relation e f → ∀ (i : Fin 9), 7 ∣ d i - f i",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "putnam_1995_a3 (relation : (Fin 9 → ℤ) → (Fin 9 → ℤ) → Prop) (digits_to_num : (Fin 9 → ℤ) → ℤ)\n  (hdigits_to_num : digits_to_num = fun dig => ∑ i, dig i * 10 ^ ↑i)\n  (hrelation :\n    ∀ (d e : Fin 9 → ℤ),\n      relation d e ↔\n        (∀ (i : Fin 9), d i < 10 ∧ d i ≥ 0 ∧ e i < 10 ∧ e i ≥ 0) ∧\n          ∀ (i : Fin 9), 7 ∣ digits_to_num fun j => if j = i then e j else d j)\n  (d e f : Fin 9 → ℤ) : relation d e ∧ relation e f → ∀ (i : Fin 9), 7 ∣ d i - f i",
+          "endPos": {
+            "column": 6,
+            "line": 17
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 0,
+            "line": 17
+          },
+          "severity": "information"
+        }
+      },
+      {
+        "severity": "information",
+        "position": {
+          "column": 0,
+          "line": 18
+        },
+        "end_position": {
+          "column": 6,
+          "line": 18
+        },
+        "message": "'putnam_1995_a3' depends on axioms: [propext, sorryAx, Classical.choice, Quot.sound]",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "'putnam_1995_a3' depends on axioms: [propext, sorryAx, Classical.choice, Quot.sound]",
+          "endPos": {
+            "column": 6,
+            "line": 18
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 0,
+            "line": 18
+          },
+          "severity": "information"
+        }
+      }
+    ],
+    "goals": [
+      "∀ (d e f : Fin 9 → ℤ), relation d e ∧ relation e f → ∀ (i : Fin 9), 7 ∣ d i - f i"
+    ],
+    "local_context": [
+      "relation : (Fin 9 → ℤ) → (Fin 9 → ℤ) → Prop\ndigits_to_num : (Fin 9 → ℤ) → ℤ\nhdigits_to_num : digits_to_num = fun dig => ∑ i, dig i * 10 ^ ↑i\nhrelation :\n  ∀ (d e : Fin 9 → ℤ),\n    relation d e ↔\n      (∀ (i : Fin 9), d i < 10 ∧ d i ≥ 0 ∧ e i < 10 ∧ e i ≥ 0) ∧\n        ∀ (i : Fin 9), 7 ∣ digits_to_num fun j => if j = i then e j else d j"
+    ],
+    "sorries": [
+      {
+        "kind": "transitive_dependency",
+        "axiom": "sorryAx",
+        "position": null,
+        "end_position": null
+      }
+    ],
+    "axioms": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext",
+      "sorryAx"
+    ],
+    "detail": null,
+    "raw_lean_output": "{\"caption\":\"\",\"data\":\"unsolved goals\\nrelation : (Fin 9 → ℤ) → (Fin 9 → ℤ) → Prop\\ndigits_to_num : (Fin 9 → ℤ) → ℤ\\nhdigits_to_num : digits_to_num = fun dig => ∑ i, dig i * 10 ^ ↑i\\nhrelation :\\n  ∀ (d e : Fin 9 → ℤ),\\n    relation d e ↔\\n      (∀ (i : Fin 9), d i < 10 ∧ d i ≥ 0 ∧ e i < 10 ∧ e i ≥ 0) ∧\\n        ∀ (i : Fin 9), 7 ∣ digits_to_num fun j => if j = i then e j else d j\\n⊢ ∀ (d e f : Fin 9 → ℤ), relation d e ∧ relation e f → ∀ (i : Fin 9), 7 ∣ d i - f i\",\"endPos\":{\"column\":6,\"line\":15},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"Tactic.unsolvedGoals\",\"pos\":{\"column\":93,\"line\":14},\"severity\":\"error\"}\n{\"caption\":\"\",\"data\":\"putnam_1995_a3 (relation : (Fin 9 → ℤ) → (Fin 9 → ℤ) → Prop) (digits_to_num : (Fin 9 → ℤ) → ℤ)\\n  (hdigits_to_num : digits_to_num = fun dig => ∑ i, dig i * 10 ^ ↑i)\\n  (hrelation :\\n    ∀ (d e : Fin 9 → ℤ),\\n      relation d e ↔\\n        (∀ (i : Fin 9), d i < 10 ∧ d i ≥ 0 ∧ e i < 10 ∧ e i ≥ 0) ∧\\n          ∀ (i : Fin 9), 7 ∣ digits_to_num fun j => if j = i then e j else d j)\\n  (d e f : Fin 9 → ℤ) : relation d e ∧ relation e f → ∀ (i : Fin 9), 7 ∣ d i - f i\",\"endPos\":{\"column\":6,\"line\":17},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"[anonymous]\",\"pos\":{\"column\":0,\"line\":17},\"severity\":\"information\"}\n{\"caption\":\"\",\"data\":\"'putnam_1995_a3' depends on axioms: [propext, sorryAx, Classical.choice, Quot.sound]\",\"endPos\":{\"column\":6,\"line\":18},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"[anonymous]\",\"pos\":{\"column\":0,\"line\":18},\"severity\":\"information\"}\n"
+  },
+  "baseline_metrics": {
+    "proof_tokens": 4092,
+    "raw_heartbeats": 14547627,
+    "heartbeats": 14547
+  },
+  "initial_measurement": {
+    "proof_tokens": 2,
+    "raw_heartbeats": null,
+    "token_reduction_pct": 99.95112414467253,
+    "heartbeat_reduction_pct": null,
+    "search_score": null
+  },
+  "original_candidate": null
+}

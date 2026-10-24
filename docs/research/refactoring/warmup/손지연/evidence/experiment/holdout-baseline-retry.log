@@ -1,0 +1,38 @@
+{"event": "holdout_baseline", "problem": 3, "environment": "strata-v4.29.1", "status": "invalid_candidate"}
+{"event": "holdout_baseline", "problem": 3, "environment": "strata-v4.27.0", "status": "invalid_candidate"}
+{"event": "holdout_baseline", "problem": 11, "environment": "arklib-v4.30.0", "status": "candidate_pass"}
+{"event": "holdout_baseline", "problem": 10, "environment": "arklib-v4.30.0", "status": "candidate_pass"}
+{"event": "holdout_baseline", "problem": 10, "environment": "arklib-v4.29.0", "status": "candidate_pass"}
+{"event": "holdout_baseline", "problem": 12, "environment": "arklib-v4.30.0", "status": "candidate_pass"}
+{"event": "holdout_baseline", "problem": 11, "environment": "arklib-v4.29.0", "status": "candidate_pass"}
+{"event": "holdout_exception", "job": [10, {"id": "arklib-v4.28.0", "family": "arklib", "version": "v4.28.0", "commit": "673fa440714eb1949b8b50a28f2a4f52b1837e9b", "url": "https://github.com/Verified-zkEVM/ArkLib.git", "project": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/envs/arklib-v4.28.0", "problems": [10]}], "error": "[Errno 17] File exists: '/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/inputs/P10/arklib-v4.28.0/main'"}
+{"event": "holdout_baseline", "problem": 12, "environment": "arklib-v4.29.0", "status": "candidate_pass"}
+{"event": "holdout_baseline", "problem": 13, "environment": "mathlib-v4.25.0", "status": "candidate_pass"}
+{"event": "holdout_baseline", "problem": 14, "environment": "mathlib-v4.25.0", "status": "candidate_pass"}
+{"event": "holdout_baseline", "problem": 15, "environment": "mathlib-v4.25.0", "status": "candidate_pass"}
+{"event": "holdout_baseline", "problem": 13, "environment": "mathlib-v4.27.0", "status": "candidate_pass"}
+{"event": "holdout_baseline", "problem": 15, "environment": "mathlib-v4.27.0", "status": "candidate_pass"}
+Traceback (most recent call last):
+  File "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/holdout.py", line 87, in <module>
+    with ThreadPoolExecutor(max_workers=args.workers) as pool:
+                        ^^^^^^
+  File "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/holdout.py", line 84, in main
+    candidates=collect();write(run_dir()/'analysis/holdout_candidate_index.json',[dict(problem=p,proof_sha256=h,origins=v['origins']) for (p,h),v in candidates.items()])
+            ^^^^^^^^^^^^^^^
+  File "/opt/homebrew/anaconda3/lib/python3.12/concurrent/futures/_base.py", line 449, in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/anaconda3/lib/python3.12/concurrent/futures/_base.py", line 401, in __get_result
+    raise self._exception
+  File "/opt/homebrew/anaconda3/lib/python3.12/concurrent/futures/thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/holdout.py", line 19, in calibrate
+    if path.exists():
+      ^^^^^^^^^^^
+  File "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/tasks.py", line 48, in make
+    folder=run_dir()/'inputs'/f'P{p}'/env['id']/name
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/anaconda3/lib/python3.12/pathlib.py", line 1311, in mkdir
+    os.mkdir(self, mode)
+FileExistsError: [Errno 17] File exists: '/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/inputs/P10/arklib-v4.28.0/main'
