@@ -4,6 +4,7 @@
 
 자료 위치는 `docs/research/verification-repair/손지연/experiment(week4)/`입니다. 구현 검증 기록은 2026-10-22, 실제 15문제 실험은 2026-10-24 실행 ID `20261024T000653+0900`을 따릅니다.
 
+- [발표자료 · HTML](presentation.html): 본 발표 20장과 질의응답 부록 6장. 발표 모드·방향키 탐색·발표자 노트·목차·인쇄를 지원합니다.
 - [통합 보고서 · HTML](report.html) / [Markdown](report.md): 연구 질문 → 구현·결과 계약 → 실험 설계 → 판정·복구·리팩터링 결과 → 한계·재현 방법.
 - [통합 측정 요약](metrics.json): `implementation`은 구현 시험, `experiment`는 실제 15문제 실험 기록입니다.
 - [검증 근거와 재현](evidence/README.md): 구현 코드·시험, 실험 데이터·로그, 기록 재생 명령.
@@ -20,6 +21,7 @@
 ```text
 experiment(week4)/
 ├── README.md
+├── presentation.html
 ├── report.md
 ├── report.html
 ├── metrics.json

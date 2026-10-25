@@ -8,7 +8,7 @@ Lean Refactor Arena Warm-up 15문제의 Week 2 공유 자료와 후속 실험입
 | 권주원 | 3·6·13 | [발표·학습 자료](권주원/presentation.html) | [안내](권주원/README.md) |
 | 정소미 | 4·9 | [Week 3 발표자료](정소미/evaluation.html) · [Week 3 보고서](정소미/reproducibility.md) · [Week 2 발표자료](정소미/presentation.html) · [Week 2 보고서](정소미/report.md) | [안내](정소미/README.md) |
 | 박성호 | 5·10 | [보고서](박성호/report.md) | [안내](박성호/README.md) |
-| 손지연 | 담당 7·12; Week 4 통합 실험 P1–P15 | [Week 2 발표자료](손지연/presentation.html) · [Week 2 보고서](손지연/report.md) · [Week 4 통합 실험](<../../verification-repair/손지연/experiment(week4)/report.html>) | [안내](손지연/README.md) |
+| 손지연 | 담당 7·12; Week 4 통합 실험 P1–P15 | [Week 2 발표자료](손지연/presentation.html) · [Week 2 보고서](손지연/report.md) · [Week 4 발표자료](<../../verification-repair/손지연/experiment(week4)/presentation.html>) | [안내](손지연/README.md) |
 | 박선영 | 8·11 | [발표자료](박선영/presentation.html) · [실측·후보 보고서](박선영/report.md) | [안내](박선영/README.md) |
 | 박채원 | 14·15 | [발표자료](박채원/presentation.html) · [보고서](박채원/report.md) · [로컬 측정](박채원/local-measurement.md) | [안내](박채원/README.md) |
 

@@ -217,13 +217,35 @@ A0는 한 번만 호출하므로 다른 조건보다 실제 소비량이 작다.
 
 P의 같은 최종 proof에는 원본 fallback도 포함된다. 같은 선택 결과나 높은 재생 일치율은 모델 생성의 결정성을 보장하지 않는다.
 
-V-C 기록 재생: 360/360 이력 일치. 추가 모델 0회, Lean 0회.
+<a id="vc-results"></a>
+#### V-C 재현성 검증 결과 요약
 
-V-C 실제 Lean 재검증: 1212/1213 판정·해시·환경 및 관측된 공리 비교 일치. 항목별 일치 수: {"status": 1212, "proof_sha256": 1213, "axioms": 1176, "diagnostics_exact": 3, "diagnostic_messages": 1211, "proof_tokens": 1179, "raw_heartbeats": 59, "environment_id": 1213}.
+V-C는 저장된 이력과 proof를 다시 확인하는 재현성 검증이다. 새 모델로 proof를 생성하는 P-A·V-B의 독립 반복과 구분한다.
+
+| 검사 | 대상·단위 | 결과 | 새 모델 호출 | 근거 |
+| --- | --- | --- | ---: | --- |
+| 기록 재생 | 저장된 360이력의 요청·상태·후보 선택·종료·예산 계산 | **360/360 이력 일치** | 0회 | [record_replay.json](evidence/experiment/runs/20261024T000653+0900/analysis/record_replay.json) |
+| fresh Lean 재검증 | 저장된 proof의 1,213검증 단위 | **주요 비교 1,212/1,213 일치**, 판정 불일치 1건 | 0회 | [lean_revalidation.json](evidence/experiment/runs/20261024T000653+0900/analysis/lean_revalidation.json) |
+| 검증 경로 대조 | 수락·선택·중단·예산·환경·출력 처리의 9개 검사 경로 | **9/9 경로 통과** | 0회 | [control_checks.json](evidence/experiment/runs/20261024T000653+0900/analysis/control_checks.json) |
+
+기록 재생은 Lean도 새로 실행하지 않는다. fresh Lean 재검증은 실제 Lean 프로세스를 다시 실행했다. 위 주요 비교는 **판정·proof 해시·환경 및 양쪽에서 관측한 공리의 일치**이며, 모든 진단·계측값의 완전 일치를 뜻하지 않는다. 이 결과는 원래 실험에서 수행한 재현성 검증 기록이다. 이후 자료 정리에서는 360이력 기록 재생을 재실행했으며, 1,213건의 fresh Lean 검사를 다시 수행한 것은 아니다.
+
+#### V-C 항목별 Lean 재검증 결과
+
+| 비교 항목 | 일치 / 비교 가능 | 불일치 | 비교 불가 | 해석 |
+| --- | ---: | ---: | ---: | --- |
+| 판정 `status` | 1,212 / 1,213 | 1 | 0 | P13 한 건이 `timeout`에서 `verified`로 변경 |
+| proof SHA-256 | 1,213 / 1,213 | 0 | 0 | 동일 proof bytes 보존 |
+| 환경 식별자 | 1,213 / 1,213 | 0 | 0 | 동일 고정 환경 확인 |
+| 전이 공리 | 1,176 / 1,176 | 0 | 37 | 양쪽에서 관측한 공리만 값 비교 |
+| 진단 원문 전체 | 3 / 1,213 | 1,210 | 0 | 임시 파일 경로 등을 포함한 원문 완전 일치 |
+| 진단 메시지 | 1,211 / 1,213 | 2 | 0 | 진단 원문과 메시지 내용의 일치를 구분 |
+| proof token | 1,179 / 1,179 | 0 | 34 | 양쪽에서 계측 가능한 proof 길이 비교 |
+| raw heartbeat | 59 / 754 | 695 | 459 | 수치의 완전 일치 수이며, 증명 수락 실패 수가 아님 |
 
 재검증 단위는 문제·proof SHA·환경·check_kind다. 같은 proof의 candidate/final 판정은 별도 비교하며, check_kind를 합친 문제·proof·환경 조합은 1037개다. 이를 새 모델 독립 실행 수에 더하지 않는다.
 
-위 항목별 비교 가능 분모: {"status": 1213, "proof_sha256": 1213, "axioms": 1176, "diagnostics_exact": 1213, "diagnostic_messages": 1213, "proof_tokens": 1179, "raw_heartbeats": 754, "environment_id": 1213}. 한쪽이라도 미측정인 token/HB/공리는 값 비교에서 제외한다.
+비교 불가는 1,213검증 단위 중 양쪽의 값을 대조할 수 없는 항목 수다. 한쪽이라도 미측정인 token/HB/공리는 값 비교에서 제외하며, 미측정을 일치나 불일치로 임의 처리하지 않는다.
 
 미측정 ↔ 관측으로 바뀐 항목 수: {"axioms": 1, "proof_tokens": 1, "raw_heartbeats": 1}. 관측 유무의 변화와 실제 측정값 차이는 분리했다.
 
@@ -237,7 +259,21 @@ diagnostic_messages 불일치 2건. 첫 사례: P12 / arklib-v4.31.0, resource_l
 
 timeout → verified 관측 1건은 자원·시간 판정의 불일치다. 같은 proof와 환경 해시는 보존됐으며, 최초 호환성·주 점수의 미확정 기록은 유지한다. 뒤의 성공을 최초 실행 결과로 소급하지 않았다.
 
-V-C 대조: 9/9 경로 통과. 15문제 전체 V-A fixture 참조 완료 여부: True. 실제 timeout·환경 검사와 synthetic 모델/정책 검사를 구분했다.
+#### V-C 대조 검사 결과
+
+| 검사 경로 | 검사 범위 | 방법 | 결과 |
+| --- | --- | --- | --- |
+| 직접 sorry 거절 | 15문제 | 기존 V-A의 실제 Lean·명제 보존 검사 결과 참조 | 통과 |
+| 간접 sorry 거절 | 15문제 | 기존 V-A의 실제 Lean·명제 보존 검사 결과 참조 | 통과 |
+| 변경된 명제 거절 | 15문제 | 기존 V-A의 실제 Lean·명제 보존 검사 결과 참조 | 통과 |
+| 유효 후보 뒤 무효 후보 | 1사례 | 통제된 측정값으로 실제 best selector 검사 | 통과 |
+| 반복 후보 중단 | 1사례 | 통제된 해시 순서로 실제 중단 조건 검사 | 통과 |
+| 예산 예약 경계 | 3사례 | 정확한 token 경계·1 token 초과·호출 상한 검사 | 통과 |
+| 실제 프로세스 timeout | 1사례 | 고정 Lean subprocess에 시작 시간을 포함한 50ms 한도 적용 | 통과 |
+| 환경 실패 | 1사례 | 의도적으로 잘못된 toolchain pin의 환경 검사 | 통과 |
+| 잘못된 모델 출력 | 3사례 | 실제 adapter에 모의 프로세스·사용량 반환을 주입 | 통과 |
+
+15문제 전체 V-A fixture 참조를 완료했다. 이 표의 9는 검사 경로 수이며, 범위 열의 사례 수나 새로운 독립 모델 실행 수와 다르다. 실제 timeout·환경 검사, 기존 V-A 근거 재사용, 모의 모델·정책 검사를 구분한다. 공급자의 실제 오류율이나 모델의 일반적인 수리 성능을 측정한 결과는 아니다. 상세 조건은 [대조 검사 원문](evidence/experiment/runs/20261024T000653+0900/analysis/control_checks.json)을 따른다.
 
 완료된 실제 Lean subprocess 기록은 8,476건이다. 한 후보 검증은 guard·컴파일·계측·InfoTree/공리 검사 등 여러 subprocess를 사용할 수 있어 후보 수와 다르다. 의존성 build/cache와 진행 중 프로세스는 이 수에 넣지 않는다. 영역별 수: {"baseline": 60, "V_A": 400, "runs": 3149, "holdout_baseline": 142, "holdout_checks": 1040, "revalidation": 3661, "controls": 13, "module_audit_probe": 2, "module_audit_probe_retry2": 2, "module_audit_probe_retry3": 7}.
 
