@@ -1,0 +1,1880 @@
+{
+  "schemaVersion": 1,
+  "id": "warmup-team-results",
+  "label": "웜업 · 증명 개선 실험",
+  "dataset": "warmup",
+  "measuredAt": "2026-10-25T22:59:21.036939+00:00",
+  "releaseDate": null,
+  "provenance": "2026-10-26 갱신. 고정 PR3 평가기와 명제·원문 전체 문맥 검증. P01·P02·P05·P07·P08·P09는 이번 macOS arm64 측정, P10·P11·P13·P14·P15는 이번 Linux x86_64 지정 핀 재검증. 나머지는 보관된 공통 평가 결과 유지 또는 개별 실험 기록 참조. 토큰·HB 평균으로 대표 재선정. Track1 API·공식 점수 아님. 모델 호출 비용은 미계측이므로 문제당$3 적합성은 확인되지 않았습니다. P12는 고정 명제·전체 문맥을 확인한 Somi full-source v2의 별도 검증 결과이며 공통 점수 평균에는 미포함.",
+  "problems": [
+    {
+      "id": 1,
+      "name": "CallElimCorrect.substOldPostSubset",
+      "source": "strata",
+      "status": "measured",
+      "baseline": {
+        "tokens": 313,
+        "heartbeats": 5173
+      },
+      "candidate": {
+        "tokens": 39,
+        "heartbeats": 1269
+      },
+      "versions": [
+        {
+          "version": "v4.26.0",
+          "revision": "451e5f047bafa010d178856db76c00029bfa4d7f",
+          "status": "pass"
+        }
+      ],
+      "environment": "v4.26.0 · macOS arm64 · scaled heartbeat · 독립 프로세스3회 중앙값 · lean-source-anchored-v1",
+      "candidateHash": "94fa7cf232cd193d79d60bd114a21b9070699481c1a21bbc32862b43bf097248",
+      "note": "기존43토큰 후보의 정규화·마무리는 유지하고 수동 귀납·분기를 함수 귀납으로 바꿨습니다. 원본·시작·수정본 각각3회 검증했으며39토큰/HB1269를 확인했습니다. 출발 후보 대비 추가 개선은+6.9506점입니다.",
+      "baselineCompatibility": 100,
+      "evidence": [
+        "dashboard/public/research/warmup15/verification.json",
+        "dashboard/public/research/warmup15/P01-improved.lean"
+      ],
+      "selectedCandidateId": "정소미-team-methods-20261026-P01",
+      "selectionReason": "검증된 후보의 원본 대비 토큰·HB 감소율 평균 최대. 지정 버전 미완료는 호환성 대기로 표시. 기존 담당자 최종본과 모든 후보는 보존.",
+      "teamResults": [
+        {
+          "id": "남성우-final",
+          "author": "남성우",
+          "proof": "open OldExpressions in\ntheorem substOldPostSubset:\n  (Imperative.HasVarsPure.getVars (P:=Expression)\n    (substOld h2 (Lambda.LExpr.fvar m h1 ty) post)).Subset\n    (Imperative.HasVarsPure.getVars (P:=Expression) post ++ [h1]) := by\n  induction post <;> unfold substOld <;> (try split <;> try split) <;>\n    simp_all [Imperative.HasVarsPure.getVars, Lambda.LExpr.LExpr.getVars] <;>\n    (repeat' apply List.Subset.app) <;> (try (apply List.Subset.trans; assumption)) <;>\n    simp +contextual [List.Subset, or_imp]\n",
+          "sourcePath": "docs/research/refactoring/warmup/남성우/report.html",
+          "sourceCommit": "5eb5a8c61350d59f1c2f0655c18387abb58cafe4",
+          "sourceState": "committed",
+          "candidateHash": "2861c028472142b869a9e2df832101f14b32381f61d35cbaf62aff9e5a1870d8",
+          "status": "measured",
+          "baseline": {
+            "tokens": 313,
+            "heartbeats": 5173
+          },
+          "candidate": {
+            "tokens": 46,
+            "heartbeats": 4660
+          },
+          "versions": [
+            {
+              "version": "v4.26.0",
+              "revision": "451e5f047bafa010d178856db76c00029bfa4d7f",
+              "status": "pass"
+            }
+          ],
+          "environment": "v4.26.0 · scaled heartbeat · 독립 프로세스 3회 중앙값 · lean-source-anchored-v1",
+          "note": "지정 환경의 원본과 후보를 재검증했습니다."
+        },
+        {
+          "id": "권주원-20261016",
+          "author": "권주원",
+          "proof": "open OldExpressions in\ntheorem substOldPostSubset:\n  (Imperative.HasVarsPure.getVars (P:=Expression)\n    (substOld h2 (Lambda.LExpr.fvar m h1 ty) post)).Subset\n    (Imperative.HasVarsPure.getVars (P:=Expression) post ++ [h1]) := by\n  intro x\n  simp only [Imperative.HasVarsPure.getVars, List.mem_append, List.mem_singleton]\n  induction post <;> simp only [substOld]\n  case' app => split <;> try split\n  all_goals\n    simp only [Lambda.LExpr.LExpr.getVars, List.mem_append,\n      List.mem_singleton, List.not_mem_nil]\n    grind only []\n",
+          "sourcePath": "docs/research/refactoring/warmup/권주원/evidence/2026-10-16-warmup15-xhigh/P01/best.lean",
+          "sourceCommit": "5eb5a8c61350d59f1c2f0655c18387abb58cafe4",
+          "sourceState": "working-tree-snapshot",
+          "candidateHash": "cc73db173674dcc8d83fe66dd1a945403d247539a66d7413fe06bf575abdfba5",
+          "status": "measured",
+          "baseline": {
+            "tokens": 313,
+            "heartbeats": 5173
+          },
+          "candidate": {
+            "tokens": 43,
+            "heartbeats": 1922
+          },
+          "versions": [
+            {
+              "version": "v4.26.0",
+              "revision": "451e5f047bafa010d178856db76c00029bfa4d7f",
+              "status": "pass"
+            }
+          ],
+          "environment": "v4.26.0 · scaled heartbeat · 독립 프로세스 3회 중앙값 · lean-source-anchored-v1",
+          "note": "보관된 best.json의 후보. 2026-10-26 대표 선정은 토큰·HB 감소율 평균을 따릅니다."
+        },
+        {
+          "id": "정소미-team-methods-20261026-P01",
+          "author": "정소미",
+          "proof": "open OldExpressions in\ntheorem substOldPostSubset:\n  (Imperative.HasVarsPure.getVars (P:=Expression)\n    (substOld h2 (Lambda.LExpr.fvar m h1 ty) post)).Subset\n    (Imperative.HasVarsPure.getVars (P:=Expression) post ++ [h1]) := by\n  intro x\n  simp only [Imperative.HasVarsPure.getVars, List.mem_append, List.mem_singleton]\n  fun_induction substOld h2 (Lambda.LExpr.fvar m h1 ty) post <;>\n    simp only [Lambda.LExpr.LExpr.getVars, List.mem_append,\n      List.mem_singleton, List.not_mem_nil] <;>\n    grind only []\n",
+          "sourcePath": "dashboard/public/research/warmup15/P01-improved.lean",
+          "sourceCommit": "75efae19aab99406bba2d6eb33b547884513f091",
+          "sourceState": "working-tree-snapshot",
+          "candidateHash": "94fa7cf232cd193d79d60bd114a21b9070699481c1a21bbc32862b43bf097248",
+          "status": "measured",
+          "baseline": {
+            "tokens": 313,
+            "heartbeats": 5173
+          },
+          "candidate": {
+            "tokens": 39,
+            "heartbeats": 1269
+          },
+          "versions": [
+            {
+              "version": "v4.26.0",
+              "revision": "451e5f047bafa010d178856db76c00029bfa4d7f",
+              "status": "pass"
+            }
+          ],
+          "environment": "v4.26.0 · macOS arm64 · scaled heartbeat · 독립 프로세스3회 중앙값 · lean-source-anchored-v1",
+          "note": "기존43토큰 후보의 정규화·마무리는 유지하고 수동 귀납·분기를 함수 귀납으로 바꿨습니다. 원본·시작·수정본 각각3회 검증했으며39토큰/HB1269를 확인했습니다. 출발 후보 대비 추가 개선은+6.9506점입니다."
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "CallElimCorrect.extractedOldExprInVars",
+      "source": "strata",
+      "status": "measured",
+      "baseline": {
+        "tokens": 222,
+        "heartbeats": 2694
+      },
+      "candidate": {
+        "tokens": 20,
+        "heartbeats": 329
+      },
+      "versions": [
+        {
+          "version": "v4.26.0",
+          "revision": "451e5f047bafa010d178856db76c00029bfa4d7f",
+          "status": "pass"
+        }
+      ],
+      "environment": "v4.26.0 · macOS arm64 · scaled heartbeat · 독립 프로세스3회 중앙값 · lean-source-anchored-v1",
+      "candidateHash": "bf7a6f7ff9c0b76d903beb2e011ed3758fab790de2d88116607d197278a9aa05",
+      "note": "기존27토큰 후보에 함수 귀납 구조를 적용했습니다. 원본·시작·수정본 모두 같은 전체 문맥에서3회 검증해20토큰/HB329를 확인했습니다.",
+      "baselineCompatibility": 100,
+      "evidence": [
+        "dashboard/public/research/warmup15/verification.json",
+        "dashboard/public/research/warmup15/P02-improved.lean"
+      ],
+      "selectedCandidateId": "정소미-team-methods-20261026-P02",
+      "selectionReason": "검증된 후보의 원본 대비 토큰·HB 감소율 평균 최대. 지정 버전 미완료는 호환성 대기로 표시. 기존 담당자 최종본과 모든 후보는 보존.",
+      "teamResults": [
+        {
+          "id": "남성우-final",
+          "author": "남성우",
+          "proof": "open OldExpressions in\ntheorem extractedOldExprInVars :\n  NormalizedOldExpr post →\n  (extractOldExprVars post).Subset\n  (Imperative.HasVarsPure.getVars post) := by\n  intro h\n  induction h <;> unfold extractOldExprVars <;> (try split) <;>\n    simp_all [Imperative.HasVarsPure.getVars, Lambda.LExpr.LExpr.getVars] <;>\n    (repeat' apply List.Subset.app) <;> (try (apply List.Subset.trans; assumption)) <;>\n    simp +contextual [List.Subset]\n",
+          "sourcePath": "docs/research/refactoring/warmup/남성우/report.html",
+          "sourceCommit": "5eb5a8c61350d59f1c2f0655c18387abb58cafe4",
+          "sourceState": "committed",
+          "candidateHash": "2bd0d1e1a5b75be5f48049b853bba5925c7788e86b3fb47285bbcde86c71d2e4",
+          "status": "measured",
+          "baseline": {
+            "tokens": 222,
+            "heartbeats": 2695
+          },
+          "candidate": {
+            "tokens": 43,
+            "heartbeats": 2497
+          },
+          "versions": [
+            {
+              "version": "v4.26.0",
+              "revision": "451e5f047bafa010d178856db76c00029bfa4d7f",
+              "status": "pass"
+            }
+          ],
+          "environment": "v4.26.0 · scaled heartbeat · 독립 프로세스 3회 중앙값 · lean-source-anchored-v1",
+          "note": "지정 환경의 원본과 후보를 재검증했습니다."
+        },
+        {
+          "id": "권주원-20261016",
+          "author": "권주원",
+          "proof": "open OldExpressions in\ntheorem extractedOldExprInVars :\n  NormalizedOldExpr post →\n  (extractOldExprVars post).Subset\n  (Imperative.HasVarsPure.getVars post) := by\n  rintro -\n  refine List.Sublist.subset ?_\n  induction post\n  case' app => unfold extractOldExprVars; split\n  all_goals apply_rules only [*, List.nil_sublist, List.Sublist.append, List.Sublist.refl]\n",
+          "sourcePath": "docs/research/refactoring/warmup/권주원/evidence/2026-10-16-warmup15-xhigh/P02/best.lean",
+          "sourceCommit": "5eb5a8c61350d59f1c2f0655c18387abb58cafe4",
+          "sourceState": "working-tree-snapshot",
+          "candidateHash": "c3ed9c81e93a619c9015a1acd2dd485a28f7ac7bac30d4b3d41d1b30da694405",
+          "status": "measured",
+          "baseline": {
+            "tokens": 222,
+            "heartbeats": 2695
+          },
+          "candidate": {
+            "tokens": 27,
+            "heartbeats": 481
+          },
+          "versions": [
+            {
+              "version": "v4.26.0",
+              "revision": "451e5f047bafa010d178856db76c00029bfa4d7f",
+              "status": "pass"
+            }
+          ],
+          "environment": "v4.26.0 · scaled heartbeat · 독립 프로세스 3회 중앙값 · lean-source-anchored-v1",
+          "note": "보관된 best.json의 후보. 2026-10-26 대표 선정은 토큰·HB 감소율 평균을 따릅니다."
+        },
+        {
+          "id": "정소미-team-methods-20261026-P02",
+          "author": "정소미",
+          "proof": "open OldExpressions in\ntheorem extractedOldExprInVars :\n  NormalizedOldExpr post →\n  (extractOldExprVars post).Subset\n  (Imperative.HasVarsPure.getVars post) := by\n  rintro -\n  apply List.Sublist.subset\n  fun_induction extractOldExprVars post <;>\n    apply_rules only [*, List.nil_sublist, List.Sublist.append, List.Sublist.refl]\n",
+          "sourcePath": "dashboard/public/research/warmup15/P02-improved.lean",
+          "sourceCommit": "75efae19aab99406bba2d6eb33b547884513f091",
+          "sourceState": "working-tree-snapshot",
+          "candidateHash": "bf7a6f7ff9c0b76d903beb2e011ed3758fab790de2d88116607d197278a9aa05",
+          "status": "measured",
+          "baseline": {
+            "tokens": 222,
+            "heartbeats": 2694
+          },
+          "candidate": {
+            "tokens": 20,
+            "heartbeats": 329
+          },
+          "versions": [
+            {
+              "version": "v4.26.0",
+              "revision": "451e5f047bafa010d178856db76c00029bfa4d7f",
+              "status": "pass"
+            }
+          ],
+          "environment": "v4.26.0 · macOS arm64 · scaled heartbeat · 독립 프로세스3회 중앙값 · lean-source-anchored-v1",
+          "note": "기존27토큰 후보에 함수 귀납 구조를 적용했습니다. 원본·시작·수정본 모두 같은 전체 문맥에서3회 검증해20토큰/HB329를 확인했습니다."
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "name": "Core.InitsUpdatesComm",
+      "source": "strata",
+      "status": "measured",
+      "baseline": {
+        "tokens": 224,
+        "heartbeats": 4671
+      },
+      "candidate": {
+        "tokens": 80,
+        "heartbeats": 230
+      },
+      "versions": [
+        {
+          "version": "v4.29.1",
+          "revision": "384e22374e0872095ad9c6f74c5998c09cfd93a9",
+          "status": "pass"
+        },
+        {
+          "version": "v4.27.0",
+          "revision": "4348c65a93a3b57b1a4541991ed2d2fcdd9fa35d",
+          "status": "pass"
+        },
+        {
+          "version": "v4.26.0",
+          "revision": "451e5f047bafa010d178856db76c00029bfa4d7f",
+          "status": "pass"
+        }
+      ],
+      "environment": "v4.26.0 · scaled heartbeat · 독립 프로세스 3회 중앙값 · lean-source-anchored-v1",
+      "candidateHash": "af9eeefe9c65365b6b5f4dbc1e0a4fcebfa3f33cebc644f5803e021491da298d",
+      "note": "기존80토큰/HB230의4.26주측정은 보존. 2026-10-26 남은4.27·4.29.1에서 원본·동일후보각3회 전체소스 검증. module환경의 공리검사는 컴파일된 원문을 별도파일에서 import해 감사했습니다.",
+      "baselineCompatibility": 100,
+      "evidence": [
+        "dashboard/public/research/warmup15/verification.json",
+        "submissions/warmup/best/P03.lean"
+      ],
+      "selectedCandidateId": "권주원-20261016",
+      "selectionReason": "검증된 후보의 원본 대비 토큰·HB 감소율 평균 최대. 지정 버전 미완료는 호환성 대기로 표시. 기존 담당자 최종본과 모든 후보는 보존.",
+      "teamResults": [
+        {
+          "id": "권주원-final",
+          "author": "권주원",
+          "proof": "theorem InitsUpdatesComm\n  {P : PureExpr} {σ σ' σ'' : SemanticStore P}\n  {ks ks' : List P.Ident} {vs vs' : List P.Expr} :\n  UpdateStates σ ks vs σ' →\n  InitStates σ' ks' vs' σ'' →\n  ∃ σ₁,\n    σ₁ = (updatedStates σ ks' vs') ∧\n    InitStates σ ks' vs' σ₁ ∧\n    UpdateStates σ₁ ks vs σ'' := by\n  intro h g\n  have f := UpdateStatesNotDefMonotone' (InitStatesNotDefined g) h\n  refine ⟨_, rfl, updatedStatesInit (InitStatesLength g) f (InitStatesNodup g), ?_⟩\n  rw [InitStatesUpdated g, UpdateStatesUpdated h]\n  unfold updatedStates\n  rw [updatedStatesComm]\n  · exact updatedStatesUpdate (UpdateStatesLength h)\n      (updatedStatesDefMonotone (UpdateStatesDefined' h))\n  · rw [List.unzip_zip (UpdateStatesLength h), List.unzip_zip (InitStatesLength g)]\n    intro x a b\n    simpa [f x b] using UpdateStatesDefined' h x a\n",
+          "sourcePath": "docs/research/refactoring/warmup/권주원/presentation.html",
+          "sourceCommit": "5eb5a8c61350d59f1c2f0655c18387abb58cafe4",
+          "sourceState": "committed",
+          "candidateHash": "b26ec6c9d391fec384f763798852cb9a77a82e277061ec5728c49427c9f74fc2",
+          "status": "partial",
+          "baseline": {
+            "tokens": 224,
+            "heartbeats": 4671
+          },
+          "candidate": {
+            "tokens": 90,
+            "heartbeats": 162
+          },
+          "versions": [
+            {
+              "version": "v4.29.1",
+              "revision": "384e22374e0872095ad9c6f74c5998c09cfd93a9",
+              "status": "pending"
+            },
+            {
+              "version": "v4.27.0",
+              "revision": "4348c65a93a3b57b1a4541991ed2d2fcdd9fa35d",
+              "status": "pending"
+            },
+            {
+              "version": "v4.26.0",
+              "revision": "451e5f047bafa010d178856db76c00029bfa4d7f",
+              "status": "pass"
+            }
+          ],
+          "environment": "v4.26.0 · scaled heartbeat · 독립 프로세스 3회 중앙값 · lean-source-anchored-v1",
+          "note": "담당자 발표의 최종 수정본. 지역 이름 단축을 포함한 마지막 코드 블록. v4.29.1: 컴파일러·의존성 준비 필요 v4.27.0: 컴파일러·의존성 준비 필요"
+        },
+        {
+          "id": "권주원-20261016",
+          "author": "권주원",
+          "proof": "theorem InitsUpdatesComm\n  {P : PureExpr} {σ σ' σ'' : SemanticStore P}\n  {ks ks' : List P.Ident} {vs vs' : List P.Expr} :\n  UpdateStates σ ks vs σ' →\n  InitStates σ' ks' vs' σ'' →\n  ∃ σ₁,\n    σ₁ = (updatedStates σ ks' vs') ∧\n    InitStates σ ks' vs' σ₁ ∧\n    UpdateStates σ₁ ks vs σ'' := by\n  intro hup hi\n  have lu := UpdateStatesLength hup\n  have li := InitStatesLength hi\n  refine ⟨_, rfl, updatedStatesInit li (UpdateStatesNotDefMonotone' (InitStatesNotDefined hi) hup) (InitStatesNodup hi), ?_⟩\n  cases InitStatesUpdated hi\n  cases UpdateStatesUpdated hup\n  unfold updatedStates\n  rw [updatedStatesComm]\n  · apply updatedStatesUpdate lu\n    apply updatedStatesDefMonotone\n    exact UpdateStatesDefined' hup\n  · simp_all only [List.unzip_zip]\n    intro k hk hk'\n    simpa [InitStatesNotDefined hi k hk'] using UpdateStatesDefined hup k hk\n",
+          "sourcePath": "docs/research/refactoring/warmup/권주원/evidence/2026-10-16-warmup15-xhigh/P03/best.lean",
+          "sourceCommit": "5eb5a8c61350d59f1c2f0655c18387abb58cafe4",
+          "sourceState": "working-tree-snapshot",
+          "candidateHash": "af9eeefe9c65365b6b5f4dbc1e0a4fcebfa3f33cebc644f5803e021491da298d",
+          "status": "measured",
+          "baseline": {
+            "tokens": 224,
+            "heartbeats": 4671
+          },
+          "candidate": {
+            "tokens": 80,
+            "heartbeats": 230
+          },
+          "versions": [
+            {
+              "version": "v4.29.1",
+              "revision": "384e22374e0872095ad9c6f74c5998c09cfd93a9",
+              "status": "pass"
+            },
+            {
+              "version": "v4.27.0",
+              "revision": "4348c65a93a3b57b1a4541991ed2d2fcdd9fa35d",
+              "status": "pass"
+            },
+            {
+              "version": "v4.26.0",
+              "revision": "451e5f047bafa010d178856db76c00029bfa4d7f",
+              "status": "pass"
+            }
+          ],
+          "environment": "v4.26.0 · scaled heartbeat · 독립 프로세스 3회 중앙값 · lean-source-anchored-v1",
+          "note": "기존80토큰/HB230의4.26주측정은 보존. 2026-10-26 남은4.27·4.29.1에서 원본·동일후보각3회 전체소스 검증. module환경의 공리검사는 컴파일된 원문을 별도파일에서 import해 감사했습니다."
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "name": "fundamental_theorem_of_variational_calculus'",
+      "source": "physlib",
+      "status": "measured",
+      "baseline": {
+        "tokens": 851,
+        "heartbeats": 11943
+      },
+      "candidate": {
+        "tokens": 123,
+        "heartbeats": 1384
+      },
+      "versions": [
+        {
+          "version": "v4.32.0",
+          "revision": "c48433678e8fb6306ebcd48453300c8e16058a62",
+          "status": "pass"
+        }
+      ],
+      "environment": "v4.32.0 · scaled heartbeat · 독립 프로세스 3회 중앙값 · lean-source-anchored-v1",
+      "candidateHash": "b9350a3add1ed182b93fc4731c657a971caa1412c0690fb942af26aa14c469a9",
+      "note": "보관된 best.json의 후보. 2026-10-26 대표 선정은 토큰·HB 감소율 평균을 따릅니다.",
+      "baselineCompatibility": 100,
+      "evidence": [
+        "submissions/warmup/manifest.json",
+        "submissions/warmup/best/P04.lean"
+      ],
+      "selectedCandidateId": "권주원-20261016",
+      "selectionReason": "검증된 후보의 원본 대비 토큰·HB 감소율 평균 최대. 지정 버전 미완료는 호환성 대기로 표시. 기존 담당자 최종본과 모든 후보는 보존.",
+      "teamResults": [
+        {
+          "id": "정소미-final",
+          "author": "정소미",
+          "proof": "lemma fundamental_theorem_of_variational_calculus' {f : Y → V}\n    (μ : Measure Y) [IsFiniteMeasureOnCompacts μ] [μ.IsOpenPosMeasure]\n    [OpensMeasurableSpace Y]\n    (hf : Continuous f) (hg : ∀ g, IsTestFunction g → ∫ x, ⟪f x, g x⟫_ℝ ∂μ = 0) :\n    f = 0 := by\n  funext x\n  have hle := ‹OpensMeasurableSpace Y›.borel_le\n  have hc : Continuous fun y => ⟪f y, f x⟫_ℝ := by fun_prop\n  refine inner_self_eq_zero'.1 (congrFun ((hc.ae_eq_iff_eq μ continuous_zero).1\n    (ae_eq_of_ae_eq_trim (hm := hle) ?_)) x)\n  letI := borel Y\n  haveI : BorelSpace Y := ⟨rfl⟩\n  haveI : IsFiniteMeasureOnCompacts (μ.trim hle) := ⟨fun K hK =>\n    trim_measurableSet_eq hle hK.measurableSet ▸ hK.measure_lt_top⟩\n  exact ae_eq_zero_of_integral_contDiff_smul_eq_zero hc.locallyIntegrable fun g hgs hgc =>\n    (integral_trim hle (hgs.continuous.mul hc).stronglyMeasurable).symm.trans\n      (by simpa only [inner_smul_right', Pi.mul_apply] using\n        hg _ (.smul_right ⟨hgs, hgc⟩ contDiff_const))\n",
+          "sourcePath": "docs/research/refactoring/warmup/정소미/evidence/P4/final.lean",
+          "sourceCommit": "5eb5a8c61350d59f1c2f0655c18387abb58cafe4",
+          "sourceState": "committed",
+          "candidateHash": "534b3f8929bc01e93d50fe36133ffc14ac729ff0eee74cacbc8cb03fe5ac0eb8",
+          "status": "measured",
+          "baseline": {
+            "tokens": 851,
+            "heartbeats": 11943
+          },
+          "candidate": {
+            "tokens": 123,
+            "heartbeats": 1406
+          },
+          "versions": [
+            {
+              "version": "v4.32.0",
+              "revision": "c48433678e8fb6306ebcd48453300c8e16058a62",
+              "status": "pass"
+            }
+          ],
+          "environment": "v4.32.0 · scaled heartbeat · 독립 프로세스 3회 중앙값 · lean-source-anchored-v1",
+          "note": "지정 환경의 원본과 후보를 재검증했습니다."
+        },
+        {
+          "id": "권주원-20261016",
+          "author": "권주원",
+          "proof": "lemma fundamental_theorem_of_variational_calculus' {f : Y → V}\n    (μ : Measure Y) [IsFiniteMeasureOnCompacts μ] [μ.IsOpenPosMeasure]\n    [OpensMeasurableSpace Y]\n    (hf : Continuous f) (hg : ∀ g, IsTestFunction g → ∫ x, ⟪f x, g x⟫_ℝ ∂μ = 0) :\n    f = 0 := by\n  funext x\n  have hle := ‹OpensMeasurableSpace Y›.borel_le\n  have hc := hf.inner' (𝕜 := ℝ) f (fun _ => f x) continuous_const\n  refine inner_self_eq_zero'.1 (congrFun ((hc.ae_eq_iff_eq μ continuous_zero).1\n    (ae_eq_of_ae_eq_trim (hm := hle) ?_)) x)\n  letI := borel Y\n  haveI : BorelSpace Y := ⟨rfl⟩\n  haveI : IsFiniteMeasureOnCompacts (μ.trim hle) := ⟨fun K hK =>\n    trim_measurableSet_eq hle hK.measurableSet ▸ hK.measure_lt_top⟩\n  exact ae_eq_zero_of_integral_contDiff_smul_eq_zero hc.locallyIntegrable fun g hgs hgc =>\n    (integral_trim hle (hgs.continuous.mul hc).stronglyMeasurable).symm.trans\n      (by simpa only [inner_smul_right', Pi.mul_apply] using\n        hg _ (.smul_right ⟨hgs, hgc⟩ contDiff_const))\n",
+          "sourcePath": "docs/research/refactoring/warmup/권주원/evidence/2026-10-16-warmup15-xhigh/P04/best.lean",
+          "sourceCommit": "5eb5a8c61350d59f1c2f0655c18387abb58cafe4",
+          "sourceState": "working-tree-snapshot",
+          "candidateHash": "b9350a3add1ed182b93fc4731c657a971caa1412c0690fb942af26aa14c469a9",
+          "status": "measured",
+          "baseline": {
+            "tokens": 851,
+            "heartbeats": 11943
+          },
+          "candidate": {
+            "tokens": 123,
+            "heartbeats": 1384
+          },
+          "versions": [
+            {
+              "version": "v4.32.0",
+              "revision": "c48433678e8fb6306ebcd48453300c8e16058a62",
+              "status": "pass"
+            }
+          ],
+          "environment": "v4.32.0 · scaled heartbeat · 독립 프로세스 3회 중앙값 · lean-source-anchored-v1",
+          "note": "보관된 best.json의 후보. 2026-10-26 대표 선정은 토큰·HB 감소율 평균을 따릅니다."
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "name": "Electromagnetism.ElectromagneticPotential.time_deriv_time_deriv_electricField_of_isExtrema",
+      "source": "physlib",
+      "status": "measured",
+      "baseline": {
+        "tokens": 1372,
+        "heartbeats": 26982
+      },
+      "candidate": {
+        "tokens": 528,
+        "heartbeats": 9465
+      },
+      "versions": [
+        {
+          "version": "v4.32.0",
+          "revision": "c48433678e8fb6306ebcd48453300c8e16058a62",
+          "status": "pass"
+        }
+      ],
+      "environment": "v4.32.0 · macOS arm64 · scaled heartbeat · 독립 프로세스3회 중앙값 · lean-source-anchored-v1",
+      "candidateHash": "fcbba98915d7e303b859b5d985aa14aa6c40698d68645fb9f9489184721428c9",
+      "note": "기존527토큰 후보의 정규성 사실을 공유하고 오류가 난 목표를 수정했습니다. 원본·시작·수정본 각각3회 확인.1토큰 증가·HB약26감소의 미세 절충으로 추가 점수는 약+0.012점입니다.",
+      "baselineCompatibility": 100,
+      "evidence": [
+        "dashboard/public/research/warmup15/verification.json",
+        "dashboard/public/research/warmup15/P05-improved.lean"
+      ],
+      "selectedCandidateId": "정소미-team-methods-20261026-P05",
+      "selectionReason": "검증된 후보의 원본 대비 토큰·HB 감소율 평균 최대. 지정 버전 미완료는 호환성 대기로 표시. 기존 담당자 최종본과 모든 후보는 보존.",
+      "teamResults": [
+        {
+          "id": "박성호-final",
+          "author": "박성호",
+          "proof": "lemma time_deriv_time_deriv_electricField_of_isExtrema {A : ElectromagneticPotential d}\n    {𝓕 : FreeSpace}\n    (hA : ContDiff ℝ ∞ A) (J : LorentzCurrentDensity d)\n    (hJ : ContDiff ℝ ∞ J) (h : IsExtrema 𝓕 A J)\n    (t : Time) (x : Space d) (i : Fin d) :\n    ∂ₜ (∂ₜ (A.electricField 𝓕.c · x i)) t =\n      𝓕.c ^ 2 * ∑ j, (∂[j] (∂[j] (A.electricField 𝓕.c t · i)) x) -\n      𝓕.c ^ 2 / 𝓕.ε₀ * ∂[i] (J.chargeDensity 𝓕.c t ·) x -\n      𝓕.c ^ 2 * 𝓕.μ₀ * ∂ₜ (J.currentDensity 𝓕.c · x i) t := by\n  have hEs : ∀ j, ContDiff ℝ 2 (fun y => A.electricField 𝓕.c t y j) :=\n    fun j => electricField_apply_contDiff_space (i := j) (hA.of_le (right_eq_inf.mp rfl)) t\n  have hEd : ∀ j k, Differentiable ℝ (∂[k] (fun y => A.electricField 𝓕.c t y j)) :=\n    fun j k => Space.deriv_differentiable (hEs j) k\n  have hBt : ∀ j, Differentiable ℝ\n      (fun s => ∂[j] (fun y => A.magneticFieldMatrix 𝓕.c s y (j, i)) x) :=\n    fun j => Space.space_deriv_differentiable_time (i := j)\n      (magneticFieldMatrix_contDiff _ (hA.of_le (right_eq_inf.mp rfl)) (j, i)) x\n  have hJt : Differentiable ℝ (fun s => J.currentDensity 𝓕.c s x i) :=\n    LorentzCurrentDensity.currentDensity_apply_differentiable_time (hJ.differentiable (by decide)) x i\n  calc _\n    _ = 1 / (𝓕.μ₀ * 𝓕.ε₀) * ∑ j, (∂[j] (fun x => ∂[j] (A.electricField 𝓕.c t · i) x) x) -\n        1 / (𝓕.μ₀ * 𝓕.ε₀) * ∑ j, (∂[i] (fun x => ∂[j] (A.electricField 𝓕.c t · j) x) x) -\n        1 / 𝓕.ε₀ * ∂ₜ (J.currentDensity 𝓕.c · x i) t := by\n        conv_lhs =>\n          enter [1]\n          change fun t => ∂ₜ (A.electricField 𝓕.c · x i) t\n          enter [t]\n          rw [Time.deriv_euclid (electricField_differentiable_time\n            (hA.of_le (right_eq_inf.mp rfl)) _),\n            time_deriv_electricField_of_isExtrema hA J hJ h]\n        rw [Time.deriv_eq, fderiv_fun_sub ((Differentiable.fun_sum fun j _ => hBt j).const_mul _).differentiableAt\n          (hJt.differentiableAt.const_mul _), fderiv_const_mul\n          (Differentiable.fun_sum fun j _ => hBt j).differentiableAt, fderiv_const_mul hJt.differentiableAt]\n        simp only [FunLike.coe_sub, Pi.sub_apply, _root_.smul_apply, smul_eq_mul, ← Time.deriv_eq]\n        rw [Time.deriv_fun_sum _ _ fun i _ => (hBt i).differentiableAt]\n        simp only [Space.time_deriv_comm_space_deriv\n          (magneticFieldMatrix_contDiff _ (hA.of_le (right_eq_inf.mp rfl)) _),\n          time_deriv_magneticFieldMatrix _ (hA.of_le ENat.LEInfty.out), ← mul_sub, ← Finset.sum_sub_distrib]\n        congr 3\n        funext j\n        rw [Space.deriv_eq_fderiv_basis, fderiv_fun_sub (hEd _ _).differentiableAt (hEd _ _).differentiableAt]\n        simp only [_root_.sub_apply, ← deriv_eq_fderiv_basis, sub_right_inj]\n        rw [Space.deriv_commute _ (hEs _), Space.deriv_eq_fderiv_basis]\n      _ = 1 / (𝓕.μ₀ * 𝓕.ε₀) * ∑ j, (∂[j] (∂[j] (A.electricField 𝓕.c t · i)) x) -\n          1 / (𝓕.μ₀ * 𝓕.ε₀ ^ 2) * ∂[i] (J.chargeDensity 𝓕.c t ·) x -\n          1 / 𝓕.ε₀ * ∂ₜ (J.currentDensity 𝓕.c · x i) t := by\n        congr 2\n        rw [isExtrema_iff_gauss_ampere_magneticFieldMatrix hA J hJ] at h\n        trans 1 / (𝓕.μ₀ * 𝓕.ε₀) * ∂[i] (fun x => ∑ j, ∂[j] (A.electricField 𝓕.c t · j) x) x\n        · rw [Space.deriv_eq_fderiv_basis, fderiv_fun_sum fun j _ => (hEd j j).differentiableAt]\n          simp only [_root_.sum_apply, ← deriv_eq_fderiv_basis]\n        change _ * ∂[i] (fun x => (∇ ⬝ (A.electricField 𝓕.c t)) x) x = _\n        simp only [(h t _).1, div_eq_inv_mul, Space.deriv_eq_fderiv_basis, fderiv_const_mul\n          ((LorentzCurrentDensity.chargeDensity_differentiable_space (hJ.differentiable (by decide)) t) _)]\n        simp only [_root_.smul_apply, smul_eq_mul, ← Space.deriv_eq_fderiv_basis]\n        ring\n      _ = 𝓕.c ^ 2 * ∑ j, (∂[j] (∂[j] (A.electricField 𝓕.c t · i)) x) -\n            𝓕.c ^ 2 / 𝓕.ε₀ * ∂[i] (J.chargeDensity 𝓕.c t ·) x -\n            𝓕.c ^ 2 * 𝓕.μ₀ * ∂ₜ (J.currentDensity 𝓕.c · x i) t := by\n          simp only [one_div, mul_inv_rev, FreeSpace.c_sq]\n          field_simp",
+          "sourcePath": "docs/research/refactoring/warmup/박성호/evidence/P05.lean",
+          "sourceCommit": "5eb5a8c61350d59f1c2f0655c18387abb58cafe4",
+          "sourceState": "committed",
+          "candidateHash": "294ddf305dee94ccf19c3974265b59ab5e4e354b48383555134f5e4e6b0a729c",
+          "status": "measured",
+          "baseline": {
+            "tokens": 1372,
+            "heartbeats": 26982
+          },
+          "candidate": {
+            "tokens": 721,
+            "heartbeats": 11318
+          },
+          "versions": [
+            {
+              "version": "v4.32.0",
+              "revision": "c48433678e8fb6306ebcd48453300c8e16058a62",
+              "status": "pass"
+            }
+          ],
+          "environment": "v4.32.0 · scaled heartbeat · 독립 프로세스 3회 중앙값 · lean-source-anchored-v1",
+          "note": "지정 환경의 원본과 후보를 재검증했습니다."
+        },
+        {
+          "id": "권주원-20261016",
+          "author": "권주원",
+          "proof": "lemma time_deriv_time_deriv_electricField_of_isExtrema {A : ElectromagneticPotential d}\n    {𝓕 : FreeSpace}\n    (hA : ContDiff ℝ ∞ A) (J : LorentzCurrentDensity d)\n    (hJ : ContDiff ℝ ∞ J) (h : IsExtrema 𝓕 A J)\n    (t : Time) (x : Space d) (i : Fin d) :\n    ∂ₜ (∂ₜ (A.electricField 𝓕.c · x i)) t =\n      𝓕.c ^ 2 * ∑ j, (∂[j] (∂[j] (A.electricField 𝓕.c t · i)) x) -\n      𝓕.c ^ 2 / 𝓕.ε₀ * ∂[i] (J.chargeDensity 𝓕.c t ·) x -\n      𝓕.c ^ 2 * 𝓕.μ₀ * ∂ₜ (J.currentDensity 𝓕.c · x i) t := by\n  let k := 1 / (𝓕.μ₀ * 𝓕.ε₀)\n  have hA₂ : ContDiff ℝ 2 A := hA.of_le (by decide)\n  have hEs := fun j => electricField_apply_contDiff_space (n := 2) (c := 𝓕.c) (i := j) (hA.of_le (by decide)) t\n  have hEd := fun j => Space.deriv_differentiable (hEs j)\n  have hBs := magneticFieldMatrix_contDiff (n := 2) (c := 𝓕.c) A (hA.of_le (by decide))\n  have hBt := fun j => Space.space_deriv_differentiable_time (i := j) (hBs (j, i)) x\n  have hSum := Differentiable.fun_sum (u := Finset.univ) fun j _ => hBt j\n  have hJd := hJ.differentiable (by decide)\n  have hJt := LorentzCurrentDensity.currentDensity_apply_differentiable_time (c := 𝓕.c) hJd x i\n  calc\n    _ = k * ∑ j, (∂[j] (fun x => ∂[j] (A.electricField 𝓕.c t · i) x) x) -\n        k * ∑ j, (∂[i] (fun x => ∂[j] (A.electricField 𝓕.c t · j) x) x) -\n        1 / 𝓕.ε₀ * ∂ₜ (J.currentDensity 𝓕.c · x i) t := by\n        conv_lhs =>\n          enter [1, t]\n          rw [Time.deriv_euclid (electricField_differentiable_time hA₂ _),\n            time_deriv_electricField_of_isExtrema hA J hJ h]\n        rw [Time.deriv_eq, fderiv_fun_sub (hSum.differentiableAt.const_mul k)\n          (hJt.differentiableAt.const_mul _), fderiv_const_mul\n          hSum.differentiableAt, fderiv_const_mul hJt.differentiableAt]\n        simp only [FunLike.coe_sub, Pi.sub_apply, _root_.smul_apply, smul_eq_mul, ← Time.deriv_eq]\n        rw [Time.deriv_fun_sum _ _ fun i _ => (hBt i).differentiableAt]\n        simp only [Space.time_deriv_comm_space_deriv (hBs _),\n          time_deriv_magneticFieldMatrix _ hA₂, ← mul_sub, ← Finset.sum_sub_distrib]\n        congr 3\n        funext j\n        rw [Space.fun_deriv_sub _ _ (hEd _ _) (hEd _ _)]\n        simp only [Pi.sub_apply, sub_right_inj]\n        rw [Space.deriv_commute _ (hEs _)]\n      _ = _ - 1 / (𝓕.μ₀ * 𝓕.ε₀ ^ 2) * ∂[i] (J.chargeDensity 𝓕.c t ·) x - _ := by\n        congr 2\n        rw [isExtrema_iff_gauss_ampere_magneticFieldMatrix hA J hJ] at h\n        trans k * ∂[i] (fun x => ∑ j, ∂[j] (A.electricField 𝓕.c t · j) x) x\n        · rw [Space.deriv_eq_fderiv_basis, fderiv_fun_sum fun j _ => (hEd j j).differentiableAt]\n          simp only [_root_.sum_apply, ← deriv_eq_fderiv_basis]\n        change _ * ∂[i] (fun x => (∇ ⬝ (A.electricField 𝓕.c t)) x) x = _\n        simp only [k, (h t _).1, div_eq_inv_mul, Space.deriv_eq_fderiv_basis, fderiv_const_mul\n          ((LorentzCurrentDensity.chargeDensity_differentiable_space hJd t) _)]\n        simp only [_root_.smul_apply, smul_eq_mul, ← Space.deriv_eq_fderiv_basis]\n        ring1\n      _ = _ := by\n          rw [FreeSpace.c_sq]\n          simp [k, div_eq_mul_inv, pow_two,\n            mul_assoc, mul_left_comm, mul_comm]\n",
+          "sourcePath": "docs/research/refactoring/warmup/권주원/evidence/2026-10-16-warmup15-xhigh/P05/best.lean",
+          "sourceCommit": "5eb5a8c61350d59f1c2f0655c18387abb58cafe4",
+          "sourceState": "working-tree-snapshot",
+          "candidateHash": "06735ecd70cb47863403131a0a482604cee76669a19d55439c88c6855ac77fc5",
+          "status": "measured",
+          "baseline": {
+            "tokens": 1372,
+            "heartbeats": 26982
+          },
+          "candidate": {
+            "tokens": 527,
+            "heartbeats": 9490
+          },
+          "versions": [
+            {
+              "version": "v4.32.0",
+              "revision": "c48433678e8fb6306ebcd48453300c8e16058a62",
+              "status": "pass"
+            }
+          ],
+          "environment": "v4.32.0 · scaled heartbeat · 독립 프로세스 3회 중앙값 · lean-source-anchored-v1",
+          "note": "보관된 best.json의 후보. 2026-10-26 대표 선정은 토큰·HB 감소율 평균을 따릅니다."
+        },
+        {
+          "id": "정소미-team-methods-20261026-P05",
+          "author": "정소미",
+          "proof": "lemma time_deriv_time_deriv_electricField_of_isExtrema {A : ElectromagneticPotential d}\n    {𝓕 : FreeSpace}\n    (hA : ContDiff ℝ ∞ A) (J : LorentzCurrentDensity d)\n    (hJ : ContDiff ℝ ∞ J) (h : IsExtrema 𝓕 A J)\n    (t : Time) (x : Space d) (i : Fin d) :\n    ∂ₜ (∂ₜ (A.electricField 𝓕.c · x i)) t =\n      𝓕.c ^ 2 * ∑ j, (∂[j] (∂[j] (A.electricField 𝓕.c t · i)) x) -\n      𝓕.c ^ 2 / 𝓕.ε₀ * ∂[i] (J.chargeDensity 𝓕.c t ·) x -\n      𝓕.c ^ 2 * 𝓕.μ₀ * ∂ₜ (J.currentDensity 𝓕.c · x i) t := by\n  let k := 1 / (𝓕.μ₀ * 𝓕.ε₀)\n  have hA₂ : ContDiff ℝ 2 A := hA.of_le (by decide)\n  have hA₃ : ContDiff ℝ 3 A := hA.of_le (by decide)\n  have hEs := fun j => electricField_apply_contDiff_space (n := 2) (c := 𝓕.c) (i := j) hA₃ t\n  have hEd := fun j => Space.deriv_differentiable (hEs j)\n  have hBs := magneticFieldMatrix_contDiff (n := 2) (c := 𝓕.c) A hA₃\n  have hBt := fun j => Space.space_deriv_differentiable_time (i := j) (hBs (j, i)) x\n  have hSum := Differentiable.fun_sum (u := Finset.univ) fun j _ => hBt j\n  have hJd := hJ.differentiable (by decide)\n  have hJt := LorentzCurrentDensity.currentDensity_apply_differentiable_time (c := 𝓕.c) hJd x i\n  calc\n    _ = k * ∑ j, (∂[j] (fun x => ∂[j] (A.electricField 𝓕.c t · i) x) x) -\n        k * ∑ j, (∂[i] (fun x => ∂[j] (A.electricField 𝓕.c t · j) x) x) -\n        1 / 𝓕.ε₀ * ∂ₜ (J.currentDensity 𝓕.c · x i) t := by\n        conv_lhs =>\n          enter [1, t]\n          rw [Time.deriv_euclid (electricField_differentiable_time hA₂ _),\n            time_deriv_electricField_of_isExtrema hA J hJ h]\n        rw [Time.deriv_eq, fderiv_fun_sub (hSum.differentiableAt.const_mul k)\n          (hJt.differentiableAt.const_mul _), fderiv_const_mul\n          hSum.differentiableAt, fderiv_const_mul hJt.differentiableAt]\n        simp only [FunLike.coe_sub, Pi.sub_apply, _root_.smul_apply, smul_eq_mul, ← Time.deriv_eq]\n        rw [Time.deriv_fun_sum _ _ fun i _ => (hBt i).differentiableAt]\n        simp only [Space.time_deriv_comm_space_deriv (hBs _),\n          time_deriv_magneticFieldMatrix _ hA₂, ← mul_sub, ← Finset.sum_sub_distrib]\n        congr 3\n        funext j\n        rw [Space.fun_deriv_sub _ _ (hEd _ _) (hEd _ _)]\n        simp only [Pi.sub_apply, sub_right_inj]\n        rw [Space.deriv_commute _ (hEs _)]\n      _ = _ - 1 / (𝓕.μ₀ * 𝓕.ε₀ ^ 2) * ∂[i] (J.chargeDensity 𝓕.c t ·) x - _ := by\n        congr 2\n        rw [isExtrema_iff_gauss_ampere_magneticFieldMatrix hA J hJ] at h\n        trans k * ∂[i] (fun x => ∑ j, ∂[j] (A.electricField 𝓕.c t · j) x) x\n        · rw [Space.deriv_eq_fderiv_basis, fderiv_fun_sum fun j _ => (hEd j j).differentiableAt]\n          simp only [_root_.sum_apply, ← deriv_eq_fderiv_basis]\n        change _ * ∂[i] (fun x => (∇ ⬝ (A.electricField 𝓕.c t)) x) x = _\n        simp only [k, (h t _).1, div_eq_inv_mul, Space.deriv_eq_fderiv_basis, fderiv_const_mul\n          ((LorentzCurrentDensity.chargeDensity_differentiable_space hJd t) _)]\n        simp only [_root_.smul_apply, smul_eq_mul, ← Space.deriv_eq_fderiv_basis]\n        ring1\n      _ = _ := by\n          rw [FreeSpace.c_sq]\n          simp [k, div_eq_mul_inv, pow_two,\n            mul_assoc, mul_left_comm, mul_comm]\n",
+          "sourcePath": "dashboard/public/research/warmup15/P05-improved.lean",
+          "sourceCommit": "75efae19aab99406bba2d6eb33b547884513f091",
+          "sourceState": "working-tree-snapshot",
+          "candidateHash": "fcbba98915d7e303b859b5d985aa14aa6c40698d68645fb9f9489184721428c9",
+          "status": "measured",
+          "baseline": {
+            "tokens": 1372,
+            "heartbeats": 26982
+          },
+          "candidate": {
+            "tokens": 528,
+            "heartbeats": 9465
+          },
+          "versions": [
+            {
+              "version": "v4.32.0",
+              "revision": "c48433678e8fb6306ebcd48453300c8e16058a62",
+              "status": "pass"
+            }
+          ],
+          "environment": "v4.32.0 · macOS arm64 · scaled heartbeat · 독립 프로세스3회 중앙값 · lean-source-anchored-v1",
+          "note": "기존527토큰 후보의 정규성 사실을 공유하고 오류가 난 목표를 수정했습니다. 원본·시작·수정본 각각3회 확인.1토큰 증가·HB약26감소의 미세 절충으로 추가 점수는 약+0.012점입니다."
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "name": "FieldSpecification.WickAlgebra.ι_timeOrderF_superCommuteF_eq_time",
+      "source": "physlib",
+      "status": "measured",
+      "baseline": {
+        "tokens": 1217,
+        "heartbeats": 42028
+      },
+      "candidate": {
+        "tokens": 450,
+        "heartbeats": 14127
+      },
+      "versions": [
+        {
+          "version": "v4.32.0",
+          "revision": "c48433678e8fb6306ebcd48453300c8e16058a62",
+          "status": "pass"
+        }
+      ],
+      "environment": "v4.32.0 · scaled heartbeat · 독립 프로세스 3회 중앙값 · lean-source-anchored-v1",
+      "candidateHash": "13fa4d936f31ad00fb889421ab5d7c9ad3fdd602e5a2c7e9f28282d5253875f1",
+      "note": "담당자 발표의 최종 수정본. 지역 이름 단축을 포함한 마지막 코드 블록.",
+      "baselineCompatibility": 100,
+      "evidence": [
+        "submissions/warmup/manifest.json",
+        "submissions/warmup/best/P06.lean"
+      ],
+      "selectedCandidateId": "권주원-final",
+      "selectionReason": "검증된 후보의 원본 대비 토큰·HB 감소율 평균 최대. 지정 버전 미완료는 호환성 대기로 표시. 기존 담당자 최종본과 모든 후보는 보존.",
+      "teamResults": [
+        {
+          "id": "권주원-final",
+          "author": "권주원",
+          "proof": "lemma ι_timeOrderF_superCommuteF_eq_time {φ ψ : 𝓕.CrAnFieldOp}\n    (hφψ : crAnTimeOrderRel φ ψ) (hψφ : crAnTimeOrderRel ψ φ) (a b : 𝓕.FieldOpFreeAlgebra) :\n    ι 𝓣ᶠ(a * [ofCrAnOpF φ, ofCrAnOpF ψ]ₛF * b) =\n    ι ([ofCrAnOpF φ, ofCrAnOpF ψ]ₛF * 𝓣ᶠ(a * b)) := by\n  induction Basis.mem_span ofCrAnListFBasis a, Basis.mem_span ofCrAnListFBasis b using\n    Submodule.span_induction₂\n  · rename_i h g\n    rcases h with ⟨x, rfl⟩\n    rcases g with ⟨y, rfl⟩\n    simp only [ofListBasis_eq_ofList, map_mul]\n    let t := List.insertionSort crAnTimeOrderRel (x ++ y)\n    let e := fun c => decide (crAnTimeOrderRel φ c ∧ crAnTimeOrderRel c φ)\n    let l := t.takeWhile (fun c => ¬crAnTimeOrderRel φ c) ++ x.filter e\n    let r := y.filter e ++ t.filter (fun c => crAnTimeOrderRel φ c ∧ ¬crAnTimeOrderRel c φ)\n    have f (z : _) (h : ∀ c ∈ z, crAnTimeOrderRel φ c ∧ crAnTimeOrderRel c φ) :\n        ι (ofCrAnListF (crAnTimeOrderList (x ++ z ++ y))) =\n          ι (ofCrAnListF l) * ι (ofCrAnListF z) * ι (ofCrAnListF r) := by\n      rw [crAnTimeOrderList, insertionSort_of_eq_list _ _ _ _ _ h]\n      simp only [l, r, t, e, ofCrAnListF_append, map_mul, mul_assoc]\n    trans crAnTimeOrderSign (x ++ φ :: ψ :: y) •\n      (ι (ofCrAnListF l) * ι [ofCrAnOpF φ, ofCrAnOpF ψ]ₛF * ι (ofCrAnListF r))\n    · rw [superCommuteF_ofCrAnOpF_ofCrAnOpF]\n      simp only [mul_sub, sub_mul, Algebra.mul_smul_comm, Algebra.smul_mul_assoc,\n        map_sub, map_smul, ← ofCrAnListF_singleton, ← ofCrAnListF_append,\n        timeOrderF_ofCrAnListF]\n      simp only [List.append_assoc, List.cons_append, List.nil_append]\n      rw [crAnTimeOrderSign_swap_eq_time hφψ hψφ]\n      have s := f [φ, ψ] (by simp [hφψ, hψφ])\n      have v := f [ψ, φ] (by simp [hφψ, hψφ])\n      simp only [List.append_assoc, List.cons_append, List.nil_append] at s v\n      rw [s, v, smul_sub, smul_comm]\n    rw [Subalgebra.mem_center_iff.mp (ι_superCommuteF_ofCrAnOpF_ofCrAnOpF_mem_center φ ψ),\n      mul_assoc]\n    have w := f [] (List.forall_mem_nil _)\n    simp only [List.append_nil, ofCrAnListF_nil, map_one, mul_one] at w\n    rw [← w]\n    by_cases q : (𝓕 |>ₛ φ) ≠ (𝓕 |>ₛ ψ)\n    · simp only [ι_superCommuteF_of_diff_statistic q, zero_mul, smul_zero]\n    · rw [crAnTimeOrderSign, Wick.koszulSign_eq_rel_eq_stat _ _ hφψ hψφ (not_ne_iff.mp q).symm,\n        ← crAnTimeOrderSign, ← ofCrAnListF_append, timeOrderF_ofCrAnListF]\n      simp only [map_smul, Algebra.mul_smul_comm]\n  all_goals simp_all only [add_mul, mul_add, map_add, map_smul, zero_mul,\n    mul_zero, map_zero, Algebra.smul_mul_assoc, Algebra.mul_smul_comm]\n",
+          "sourcePath": "docs/research/refactoring/warmup/권주원/presentation.html",
+          "sourceCommit": "5eb5a8c61350d59f1c2f0655c18387abb58cafe4",
+          "sourceState": "committed",
+          "candidateHash": "13fa4d936f31ad00fb889421ab5d7c9ad3fdd602e5a2c7e9f28282d5253875f1",
+          "status": "measured",
+          "baseline": {
+            "tokens": 1217,
+            "heartbeats": 42028
+          },
+          "candidate": {
+            "tokens": 450,
+            "heartbeats": 14127
+          },
+          "versions": [
+            {
+              "version": "v4.32.0",
+              "revision": "c48433678e8fb6306ebcd48453300c8e16058a62",
+              "status": "pass"
+            }
+          ],
+          "environment": "v4.32.0 · scaled heartbeat · 독립 프로세스 3회 중앙값 · lean-source-anchored-v1",
+          "note": "담당자 발표의 최종 수정본. 지역 이름 단축을 포함한 마지막 코드 블록."
+        },
+        {
+          "id": "권주원-20261016",
+          "author": "권주원",
+          "proof": "lemma ι_timeOrderF_superCommuteF_eq_time {φ ψ : 𝓕.CrAnFieldOp}\n    (hφψ : crAnTimeOrderRel φ ψ) (hψφ : crAnTimeOrderRel ψ φ) (a b : 𝓕.FieldOpFreeAlgebra) :\n    ι 𝓣ᶠ(a * [ofCrAnOpF φ, ofCrAnOpF ψ]ₛF * b) =\n    ι ([ofCrAnOpF φ, ofCrAnOpF ψ]ₛF * 𝓣ᶠ(a * b)) := by\n  induction ofCrAnListFBasis.mem_span a, ofCrAnListFBasis.mem_span b\n    using Submodule.span_induction₂\n  case mem_mem hx hy =>\n    rcases hx with ⟨φs', rfl⟩\n    rcases hy with ⟨φs, rfl⟩\n    simp only [ofListBasis_eq_ofList, map_mul]\n    let l := List.takeWhile (fun c => ¬crAnTimeOrderRel φ c)\n      (List.insertionSort crAnTimeOrderRel (φs' ++ φs)) ++\n      List.filter (fun c => crAnTimeOrderRel φ c ∧ crAnTimeOrderRel c φ) φs'\n    let r := List.filter (fun c => crAnTimeOrderRel φ c ∧ crAnTimeOrderRel c φ) φs ++\n      List.filter (fun c => crAnTimeOrderRel φ c ∧ ¬crAnTimeOrderRel c φ)\n        (List.insertionSort crAnTimeOrderRel (φs' ++ φs))\n    let P (xs : List 𝓕.CrAnFieldOp) := ι (ofCrAnListF xs)\n    have hblock (v w : 𝓕.CrAnFieldOp)\n        (hv : ∀ c ∈ [v, w], crAnTimeOrderRel φ c ∧ crAnTimeOrderRel c φ) :\n        P (crAnTimeOrderList (φs' ++ v :: w :: φs)) =\n          P l * P [v, w] * P r := by\n      erw [crAnTimeOrderList,\n        ← List.append_assoc φs' [v, w] φs,\n        insertionSort_of_eq_list 𝓕.crAnTimeOrderRel φ φs' [v, w] φs hv]\n      simp only [P, ofCrAnListF_append, map_mul, l, r, mul_assoc]\n    calc\n      _ = crAnTimeOrderSign (φs' ++ φ :: ψ :: φs) •\n        (P (crAnTimeOrderList (φs' ++ φ :: ψ :: φs)) -\n        𝓢(𝓕.crAnStatistics φ, 𝓕.crAnStatistics ψ) •\n          P (crAnTimeOrderList (φs' ++ ψ :: φ :: φs))) := by\n        conv_lhs =>\n          rw [← ofCrAnListF_singleton, ← ofCrAnListF_singleton,\n            superCommuteF_ofCrAnListF_ofCrAnListF]\n          simp only [List.cons_append, List.nil_append, ofList_singleton, mul_sub, ← ofCrAnListF_append, Algebra.mul_smul_comm, sub_mul, List.append_assoc, Algebra.smul_mul_assoc, map_sub, map_smul]\n          rw [timeOrderF_ofCrAnListF, timeOrderF_ofCrAnListF]\n        rw [crAnTimeOrderSign_swap_eq_time hφψ hψφ]\n        simp only [P, map_smul, smul_sub, sub_right_inj]\n        exact smul_comm _ _ _\n      _ = _ •\n          (P l * ι [ofCrAnOpF φ, ofCrAnOpF ψ]ₛF * P r) := by\n        rw [hblock φ ψ (by simp [*]), hblock ψ φ (by simp [*])]\n        simp only [P, ofCrAnListF_cons, ofCrAnListF_nil, mul_one,\n          superCommuteF_ofCrAnOpF_ofCrAnOpF, map_sub, map_smul, map_mul,\n          mul_sub, Algebra.mul_smul_comm, sub_mul, Algebra.smul_mul_assoc]\n        rfl\n    rw [Subalgebra.mem_center_iff.mp (ι_superCommuteF_ofCrAnOpF_ofCrAnOpF_mem_center φ ψ)]\n    simp only [P, mul_assoc]\n    rw [← map_mul, ← ofCrAnListF_append]\n    dsimp only [l, r]\n    rw [← List.append_assoc, ← insertionSort_of_takeWhile_filter 𝓕.crAnTimeOrderRel φ φs' φs, ← crAnTimeOrderList]\n    by_cases hq : (𝓕 |>ₛ φ) = (𝓕 |>ₛ ψ)\n    · rw [crAnTimeOrderSign, Wick.koszulSign_eq_rel_eq_stat _ _ hφψ hψφ hq.symm,\n        ← crAnTimeOrderSign, ← ofCrAnListF_append, timeOrderF_ofCrAnListF]\n      simp only [map_smul, Algebra.mul_smul_comm]\n    · simp only [ι_superCommuteF_of_diff_statistic hq, zero_mul, smul_zero]\n  all_goals\n    simp_all only [map_mul, zero_mul, map_zero, mul_zero, add_mul, map_add,\n      mul_add, Algebra.smul_mul_assoc, map_smul, Algebra.mul_smul_comm]\n",
+          "sourcePath": "docs/research/refactoring/warmup/권주원/evidence/2026-10-16-warmup15-xhigh/P06/best.lean",
+          "sourceCommit": "5eb5a8c61350d59f1c2f0655c18387abb58cafe4",
+          "sourceState": "working-tree-snapshot",
+          "candidateHash": "ec4cc5592472da208e8cf57ab24462e2ff491987b0b20ef83c1290c4a3724350",
+          "status": "measured",
+          "baseline": {
+            "tokens": 1217,
+            "heartbeats": 42028
+          },
+          "candidate": {
+            "tokens": 556,
+            "heartbeats": 20611
+          },
+          "versions": [
+            {
+              "version": "v4.32.0",
+              "revision": "c48433678e8fb6306ebcd48453300c8e16058a62",
+              "status": "pass"
+            }
+          ],
+          "environment": "v4.32.0 · scaled heartbeat · 독립 프로세스 3회 중앙값 · lean-source-anchored-v1",
+          "note": "보관된 best.json의 후보. 2026-10-26 대표 선정은 토큰·HB 감소율 평균을 따릅니다."
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "name": "Cslib.LambdaCalculus.LocallyNameless.Fsub.Typing.progress",
+      "source": "cslib",
+      "status": "measured",
+      "baseline": {
+        "tokens": 408,
+        "heartbeats": 61944
+      },
+      "candidate": {
+        "tokens": 293,
+        "heartbeats": 1543
+      },
+      "versions": [
+        {
+          "version": "v4.33.0-rc2",
+          "revision": "3aa9d4416c185e0b9faeb72bbd65abe85b95dbcc",
+          "status": "pass"
+        },
+        {
+          "version": "v4.32.0",
+          "revision": "197a7be621263b84c67ca4f803f69205b36d06df",
+          "status": "pass"
+        },
+        {
+          "version": "v4.31.0",
+          "revision": "8ea71c8df91acd63285515a04da952b23b78d266",
+          "status": "pass"
+        }
+      ],
+      "environment": "v4.32.0 · macOS arm64 · scaled heartbeat · 독립 프로세스3회 중앙값 · lean-source-anchored-v1",
+      "candidateHash": "a399f146582a9b68ce9cd3f020993d293a3a030fe6657cf10a76485ea7b7d919",
+      "note": "보관된 best.json의 후보. 2026-10-26 대표 선정은 토큰·HB 감소율 평균을 따릅니다. v4.33.0-rc2: 컴파일러·의존성 준비 필요 2026-10-26 원본·후보 전체 문맥 재검증 및 모든 지정 버전 통과 확인.",
+      "baselineCompatibility": 100,
+      "evidence": [
+        "submissions/warmup/manifest.json",
+        "submissions/warmup/best/P07.lean"
+      ],
+      "selectedCandidateId": "권주원-20261016",
+      "selectionReason": "검증된 후보의 원본 대비 토큰·HB 감소율 평균 최대. 지정 버전 미완료는 호환성 대기로 표시. 기존 담당자 최종본과 모든 후보는 보존.",
+      "teamResults": [
+        {
+          "id": "손지연-final",
+          "author": "손지연",
+          "proof": "lemma Typing.progress (der : Typing [] t τ) : t.Value ∨ ∃ t', t ⭢βᵛ t' := by\n  generalize eq : [] = Γ at der\n  -- Retain the typing derivation to recover local closure after induction.\n  have wholeTyped : Typing Γ t τ := der\n  induction der <;> subst eq\n  case var => grind\n  case app t₁ _ _ t₂ leftTyped rightTyped ihLeft ihRight =>\n    right\n    rcases ihLeft rfl leftTyped with leftValue | ⟨t₁', step⟩\n    · rcases ihRight rfl rightTyped with rightValue | ⟨t₂', step⟩\n      · obtain ⟨σ, body, rfl⟩ := leftTyped.canonical_form_abs leftValue\n        exact ⟨_, Red.abs leftValue.lc rightValue⟩\n      · exact ⟨_, Red.appᵣ leftValue step⟩\n    · exact ⟨_, Red.appₗ rightTyped.wf.2.1 step⟩\n  case tapp σ' typed _ ih =>\n    right\n    rcases ih rfl typed with value | ⟨t', step⟩\n    · obtain ⟨_, body, eq⟩ := typed.canonical_form_tabs value\n      exists body ^ᵗᵞ σ'\n      grind\n    · exists .tapp t' σ'\n      grind\n  case let' t₁ σ t₂ τ L typed _ ih _ =>\n    right\n    rcases ih rfl typed with value | ⟨t₁', step⟩\n    · exists t₂ ^ᵗᵗ t₁\n      grind\n    · exists t₁'.let' t₂\n      grind\n  case inl typed _ ih | inr typed _ ih =>\n    -- The two injections share the same value and congruence-step argument.\n    rcases ih rfl typed with value | ⟨t', step⟩\n    · left\n      constructor\n      exact value\n    · right\n      exact ⟨_, by constructor; exact step⟩\n  case case t₁ _ _ t₂ _ t₃ _ typed _ _ ih _ _ =>\n    right\n    rcases ih rfl typed with value | ⟨t₁', step⟩\n    · obtain ⟨t₁, side⟩ := typed.canonical_form_sum value\n      cases side <;> [exists t₂ ^ᵗᵗ t₁; exists t₃ ^ᵗᵗ t₁] <;> grind\n    · exists t₁'.case t₂ t₃\n      grind\n  case sub => grind\n  case abs | tabs =>\n    left\n    constructor\n    exact wholeTyped.wf.2.1\n",
+          "sourcePath": "docs/research/refactoring/warmup/손지연/report.md",
+          "sourceCommit": "5eb5a8c61350d59f1c2f0655c18387abb58cafe4",
+          "sourceState": "committed",
+          "candidateHash": "66c1018745361d88bb74dc092d2bc48bc32d5c8140f3c2b31b5bc994953cf194",
+          "status": "partial",
+          "baseline": {
+            "tokens": 408,
+            "heartbeats": 61948
+          },
+          "candidate": {
+            "tokens": 300,
+            "heartbeats": 45378
+          },
+          "versions": [
+            {
+              "version": "v4.33.0-rc2",
+              "revision": "3aa9d4416c185e0b9faeb72bbd65abe85b95dbcc",
+              "status": "pending"
+            },
+            {
+              "version": "v4.32.0",
+              "revision": "197a7be621263b84c67ca4f803f69205b36d06df",
+              "status": "pass"
+            },
+            {
+              "version": "v4.31.0",
+              "revision": "8ea71c8df91acd63285515a04da952b23b78d266",
+              "status": "pass"
+            }
+          ],
+          "environment": "v4.32.0 · scaled heartbeat · 독립 프로세스 3회 중앙값 · lean-source-anchored-v1",
+          "note": "v4.33.0-rc2: 컴파일러·의존성 준비 필요"
+        },
+        {
+          "id": "권주원-20261016",
+          "author": "권주원",
+          "proof": "lemma Typing.progress (der : Typing [] t τ) : t.Value ∨ ∃ t', t ⭢βᵛ t' := by\n  generalize eq : [] = Γ at der\n  let lc := der.wf.2.1\n  induction der <;> subst eq\n  case var mem => simp at mem\n  case app l r il ir =>\n    right\n    rcases il rfl with vl | ⟨t', hl⟩\n    · rcases ir rfl with vr | ⟨t', hr⟩\n      · obtain ⟨_, _, rfl⟩ := l.canonical_form_abs vl\n        exact ⟨_, .abs vl.lc vr⟩\n      · exact ⟨_, .appᵣ vl hr⟩\n    · exact ⟨_, .appₗ r.wf.2.1 hl⟩\n  case tapp der sub ih =>\n    right\n    rcases ih rfl with v | ⟨t', h⟩\n    · obtain ⟨_, _, rfl⟩ := der.canonical_form_tabs v\n      exact ⟨_, .tabs v.lc sub.wf.2.1.lc⟩\n    · exact ⟨_, .tapp sub.wf.2.1.lc h⟩\n  case let' ih _ =>\n    right\n    have hb := (body_let.mp lc).2\n    rcases ih rfl with v | ⟨t', h⟩ <;>\n      solve_by_elim [Exists.intro, Red.let_body, Red.let_bind]\n  case inl ih | inr ih =>\n    rcases ih rfl with v | ⟨_, h⟩ <;>\n      solve_by_elim [Or.inl, Or.inr, Exists.intro, Value.inl, Value.inr, Red.inl, Red.inr]\n  case case der _ _ ih _ _ =>\n    right\n    obtain ⟨_, hb₂, hb₃⟩ := body_case.mp lc\n    rcases ih rfl with v | ⟨t', h⟩\n    · obtain ⟨t', rfl | rfl⟩ := der.canonical_form_sum v\n      all_goals cases v\n      all_goals apply_rules [Exists.intro, Term.Red.case_inl, Term.Red.case_inr]\n    · exact ⟨_, .case h hb₂ hb₃⟩\n  all_goals first\n  | left; constructor; exact lc\n  | rename_i ih; exact ih rfl\n",
+          "sourcePath": "docs/research/refactoring/warmup/권주원/evidence/2026-10-16-warmup15-xhigh/P07/best.lean",
+          "sourceCommit": "5eb5a8c61350d59f1c2f0655c18387abb58cafe4",
+          "sourceState": "working-tree-snapshot",
+          "candidateHash": "a399f146582a9b68ce9cd3f020993d293a3a030fe6657cf10a76485ea7b7d919",
+          "status": "measured",
+          "baseline": {
+            "tokens": 408,
+            "heartbeats": 61944
+          },
+          "candidate": {
+            "tokens": 293,
+            "heartbeats": 1543
+          },
+          "versions": [
+            {
+              "version": "v4.33.0-rc2",
+              "revision": "3aa9d4416c185e0b9faeb72bbd65abe85b95dbcc",
+              "status": "pass"
+            },
+            {
+              "version": "v4.32.0",
+              "revision": "197a7be621263b84c67ca4f803f69205b36d06df",
+              "status": "pass"
+            },
+            {
+              "version": "v4.31.0",
+              "revision": "8ea71c8df91acd63285515a04da952b23b78d266",
+              "status": "pass"
+            }
+          ],
+          "environment": "v4.32.0 · macOS arm64 · scaled heartbeat · 독립 프로세스3회 중앙값 · lean-source-anchored-v1",
+          "note": "보관된 best.json의 후보. 2026-10-26 대표 선정은 토큰·HB 감소율 평균을 따릅니다. v4.33.0-rc2: 컴파일러·의존성 준비 필요 2026-10-26 원본·후보 전체 문맥 재검증 및 모든 지정 버전 통과 확인."
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "name": "Cslib.SKI.parallelReduction_diamond",
+      "source": "cslib",
+      "status": "measured",
+      "baseline": {
+        "tokens": 407,
+        "heartbeats": 1380
+      },
+      "candidate": {
+        "tokens": 210,
+        "heartbeats": 434
+      },
+      "versions": [
+        {
+          "version": "v4.33.0-rc2",
+          "revision": "3aa9d4416c185e0b9faeb72bbd65abe85b95dbcc",
+          "status": "pass"
+        },
+        {
+          "version": "v4.32.0",
+          "revision": "197a7be621263b84c67ca4f803f69205b36d06df",
+          "status": "pass"
+        },
+        {
+          "version": "v4.31.0",
+          "revision": "8ea71c8df91acd63285515a04da952b23b78d266",
+          "status": "pass"
+        },
+        {
+          "version": "v4.30.0",
+          "revision": "c7944a9fb44c3298f1a960a5e574ab23a6ab8ed5",
+          "status": "pass"
+        }
+      ],
+      "environment": "v4.32.0 · macOS arm64 · scaled heartbeat · 독립 프로세스3회 중앙값 · lean-source-anchored-v1",
+      "candidateHash": "0c537d3538abe01527c7e76b96b1924a4e124f22c12f602b6eacdc29ec161db5",
+      "note": "기존221토큰 후보의 K분기에 직접 생성자·refine와 표기 축약을 적용했습니다. 원본·시작·수정본 각각3회 확인하고 지정4버전에서 통과해210토큰/HB434를 채택했습니다.",
+      "baselineCompatibility": 100,
+      "evidence": [
+        "dashboard/public/research/warmup15/verification.json",
+        "dashboard/public/research/warmup15/P08-improved.lean"
+      ],
+      "selectedCandidateId": "정소미-team-methods-20261026-P08",
+      "selectionReason": "검증된 후보의 원본 대비 토큰·HB 감소율 평균 최대. 지정 버전 미완료는 호환성 대기로 표시. 기존 담당자 최종본과 모든 후보는 보존.",
+      "teamResults": [
+        {
+          "id": "박선영-final",
+          "author": "박선영",
+          "proof": "theorem parallelReduction_diamond : Diamond ParallelReduction := by\n  intro a a₁ a₂ h₁ h₂\n  cases h₁\n  case refl => exact ⟨a₂, h₂, .refl a₂⟩\n  case par a a' b b' ha' hb' =>\n    cases h₂\n    case refl =>\n      use a' ⬝ b'\n      exact ⟨.refl (a' ⬝ b'), .par ha' hb'⟩\n    case par a'' b'' ha'' hb'' =>\n      let ⟨a₃, ha⟩ := parallelReduction_diamond ha' ha''\n      let ⟨b₃, hb⟩ := parallelReduction_diamond hb' hb''\n      use a₃ ⬝ b₃\n      constructor\n      · exact .par ha.1 hb.1\n      · exact .par ha.2 hb.2\n    case red_I =>\n      rw [I_irreducible a' ha']\n      use b', .red_I b'\n    case red_K =>\n      let ⟨a₂', ha₂'⟩ := Ka_irreducible a₂ a' ha'\n      rw [ha₂'.2]\n      use a₂'\n      exact ⟨.red_K a₂' b', ha₂'.1⟩\n    case red_S a c =>\n      let ⟨a'', c', h⟩ := Sab_irreducible a c a' ha'\n      rw [h.2.2]\n      use a'' ⬝ b' ⬝ (c' ⬝ b'), .red_S a'' c' b'\n      exact .par (.par h.1 hb') (.par h.2.1 hb')\n  case red_I =>\n    cases h₂\n    case refl => use a₁; exact ⟨.refl a₁, .red_I a₁⟩\n    case par c a₁' hc ha =>\n      rw [I_irreducible c hc]\n      use a₁'\n      exact ⟨ha, .red_I a₁'⟩\n    case red_I => use a₁; exact ⟨.refl a₁, .refl a₁⟩\n  case red_K c =>\n    cases h₂\n    case refl => use a₁; exact ⟨.refl a₁, .red_K a₁ c⟩\n    case par a' c' ha hc =>\n      let ⟨a₁', h'⟩ := Ka_irreducible a₁ a' ha\n      rw [h'.2]\n      use a₁'\n      exact ⟨h'.1, .red_K a₁' c'⟩\n    case red_K =>\n      use a₁; exact ⟨.refl a₁, .refl a₁⟩\n  case red_S a b c =>\n    cases h₂\n    case refl =>\n      use a ⬝ c ⬝ (b ⬝ c)\n      exact ⟨.refl _, .red_S ..⟩\n    case par d c' hd hc =>\n      let ⟨a', b', h⟩ := Sab_irreducible a b d hd\n      rw [h.2.2]\n      use a' ⬝ c' ⬝ (b' ⬝ c')\n      constructor\n      · apply ParallelReduction.par\n        · exact .par h.left hc\n        · exact .par h.2.1 hc\n      · exact .red_S ..\n    case red_S => exact ⟨a ⬝ c ⬝ (b ⬝ c), .refl _, .refl _,⟩\n",
+          "sourcePath": "docs/research/refactoring/warmup/박선영/evidence/P8/selected.lean",
+          "sourceCommit": "5eb5a8c61350d59f1c2f0655c18387abb58cafe4",
+          "sourceState": "committed",
+          "candidateHash": "56b6f27c11c9f36d561362f3a2abb4265c407bd0f44603959d6781a5215e4ec6",
+          "status": "partial",
+          "baseline": {
+            "tokens": 407,
+            "heartbeats": 1380
+          },
+          "candidate": {
+            "tokens": 412,
+            "heartbeats": 1318
+          },
+          "versions": [
+            {
+              "version": "v4.33.0-rc2",
+              "revision": "3aa9d4416c185e0b9faeb72bbd65abe85b95dbcc",
+              "status": "pending"
+            },
+            {
+              "version": "v4.32.0",
+              "revision": "197a7be621263b84c67ca4f803f69205b36d06df",
+              "status": "pass"
+            },
+            {
+              "version": "v4.31.0",
+              "revision": "8ea71c8df91acd63285515a04da952b23b78d266",
+              "status": "pass"
+            },
+            {
+              "version": "v4.30.0",
+              "revision": "c7944a9fb44c3298f1a960a5e574ab23a6ab8ed5",
+              "status": "pending"
+            }
+          ],
+          "environment": "v4.32.0 · scaled heartbeat · 독립 프로세스 3회 중앙값 · lean-source-anchored-v1",
+          "note": "담당자가 명시적으로 선택한 후보. 후속 세션 best와 구분. v4.33.0-rc2: 컴파일러·의존성 준비 필요 v4.30.0: 컴파일러·의존성 준비 필요"
+        },
+        {
+          "id": "권주원-20261016",
+          "author": "권주원",
+          "proof": "theorem parallelReduction_diamond : Diamond ParallelReduction := by\n  intro a a₁ a₂ h₁ h₂\n  induction h₁ generalizing a₂\n  case refl => use a₂, h₂, .refl a₂\n  all_goals cases h₂\n  case' par.par iha ihb _ _ ha'' hb'' =>\n    rcases iha ha'', ihb hb'' with ⟨⟨_, ha⟩, ⟨_, hb⟩⟩\n    exact ⟨_, .par ha.1 hb.1, .par ha.2 hb.2⟩\n  case' par.red_I b' _ _ ha' _ =>\n    cases I_irreducible _ ha'\n    use b', .red_I b'\n  case' par.red_K ha' _ | red_K.par ha' _ =>\n    obtain ⟨k, h, rfl⟩ := Ka_irreducible _ _ ha'\n    first\n    | exact ⟨k, h, .red_K ..⟩\n    | exact ⟨k, .red_K .., h⟩\n  case' par.red_S hb' _ _ _ ha' _ | red_S.par ha' hb' =>\n    obtain ⟨_, _, ha, hc, rfl⟩ := Sab_irreducible _ _ _ ha'\n    have hj := ParallelReduction.par (ParallelReduction.par ha hb')\n      (ParallelReduction.par hc hb')\n    first\n    | exact ⟨_, hj, .red_S ..⟩\n    | exact ⟨_, .red_S .., hj⟩\n  case' red_I.par a₁' hc ha =>\n    cases I_irreducible _ hc\n    use a₁', ha, .red_I _\n  all_goals exact ⟨_, .refl _, by constructor <;> assumption⟩\n",
+          "sourcePath": "docs/research/refactoring/warmup/권주원/evidence/2026-10-16-warmup15-xhigh/P08/best.lean",
+          "sourceCommit": "5eb5a8c61350d59f1c2f0655c18387abb58cafe4",
+          "sourceState": "working-tree-snapshot",
+          "candidateHash": "54cf769c3d3ab519f5a599656d533b2e6f4d198fb96cdbc37cb2e3be3d881372",
+          "status": "partial",
+          "baseline": {
+            "tokens": 407,
+            "heartbeats": 1380
+          },
+          "candidate": {
+            "tokens": 221,
+            "heartbeats": 451
+          },
+          "versions": [
+            {
+              "version": "v4.33.0-rc2",
+              "revision": "3aa9d4416c185e0b9faeb72bbd65abe85b95dbcc",
+              "status": "pending"
+            },
+            {
+              "version": "v4.32.0",
+              "revision": "197a7be621263b84c67ca4f803f69205b36d06df",
+              "status": "pass"
+            },
+            {
+              "version": "v4.31.0",
+              "revision": "8ea71c8df91acd63285515a04da952b23b78d266",
+              "status": "pass"
+            },
+            {
+              "version": "v4.30.0",
+              "revision": "c7944a9fb44c3298f1a960a5e574ab23a6ab8ed5",
+              "status": "pending"
+            }
+          ],
+          "environment": "v4.32.0 · scaled heartbeat · 독립 프로세스 3회 중앙값 · lean-source-anchored-v1",
+          "note": "보관된 best.json의 후보. 2026-10-26 대표 선정은 토큰·HB 감소율 평균을 따릅니다. v4.33.0-rc2: 컴파일러·의존성 준비 필요 v4.30.0: 컴파일러·의존성 준비 필요"
+        },
+        {
+          "id": "정소미-team-methods-20261026-P08",
+          "author": "정소미",
+          "proof": "theorem parallelReduction_diamond : Diamond ParallelReduction := by\n  intro a a₁ a₂ h₁ h₂\n  induction h₁ generalizing a₂\n  case refl => use a₂, h₂, .refl a₂\n  all_goals cases h₂\n  case' par.par iha ihb _ _ ha'' hb'' =>\n    rcases iha ha'', ihb hb'' with ⟨⟨_, ha⟩, ⟨_, hb⟩⟩\n    exact ⟨_, ha.1.par hb.1, ha.2.par hb.2⟩\n  case' par.red_I b' _ _ ha' _ =>\n    cases I_irreducible _ ha'\n    use b', .red_I b'\n  case' par.red_K ha' _ | red_K.par ha' _ =>\n    obtain ⟨k, h, rfl⟩ := Ka_irreducible _ _ ha'\n    refine ⟨k, ?_, ?_⟩ <;> first | assumption | constructor\n  case' par.red_S hb' _ _ _ ha' _ | red_S.par ha' hb' =>\n    obtain ⟨_, _, ha, hc, rfl⟩ := Sab_irreducible _ _ _ ha'\n    have hj := (ha.par hb').par (hc.par hb')\n    first\n    | exact ⟨_, hj, .red_S ..⟩\n    | exact ⟨_, .red_S .., hj⟩\n  case' red_I.par a₁' hc ha =>\n    cases I_irreducible _ hc\n    use a₁', ha, .red_I _\n  all_goals exact ⟨_, .refl _, by constructor <;> assumption⟩\n",
+          "sourcePath": "dashboard/public/research/warmup15/P08-improved.lean",
+          "sourceCommit": "75efae19aab99406bba2d6eb33b547884513f091",
+          "sourceState": "working-tree-snapshot",
+          "candidateHash": "0c537d3538abe01527c7e76b96b1924a4e124f22c12f602b6eacdc29ec161db5",
+          "status": "measured",
+          "baseline": {
+            "tokens": 407,
+            "heartbeats": 1380
+          },
+          "candidate": {
+            "tokens": 210,
+            "heartbeats": 434
+          },
+          "versions": [
+            {
+              "version": "v4.33.0-rc2",
+              "revision": "3aa9d4416c185e0b9faeb72bbd65abe85b95dbcc",
+              "status": "pass"
+            },
+            {
+              "version": "v4.32.0",
+              "revision": "197a7be621263b84c67ca4f803f69205b36d06df",
+              "status": "pass"
+            },
+            {
+              "version": "v4.31.0",
+              "revision": "8ea71c8df91acd63285515a04da952b23b78d266",
+              "status": "pass"
+            },
+            {
+              "version": "v4.30.0",
+              "revision": "c7944a9fb44c3298f1a960a5e574ab23a6ab8ed5",
+              "status": "pass"
+            }
+          ],
+          "environment": "v4.32.0 · macOS arm64 · scaled heartbeat · 독립 프로세스3회 중앙값 · lean-source-anchored-v1",
+          "note": "기존221토큰 후보의 K분기에 직접 생성자·refine와 표기 축약을 적용했습니다. 원본·시작·수정본 각각3회 확인하고 지정4버전에서 통과해210토큰/HB434를 채택했습니다."
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "name": "Cslib.CCS.bisimilarity_congr_choice",
+      "source": "cslib",
+      "status": "measured",
+      "baseline": {
+        "tokens": 251,
+        "heartbeats": 3854
+      },
+      "candidate": {
+        "tokens": 79,
+        "heartbeats": 512
+      },
+      "versions": [
+        {
+          "version": "v4.33.0-rc2",
+          "revision": "3aa9d4416c185e0b9faeb72bbd65abe85b95dbcc",
+          "status": "pass"
+        },
+        {
+          "version": "v4.32.0",
+          "revision": "197a7be621263b84c67ca4f803f69205b36d06df",
+          "status": "pass"
+        },
+        {
+          "version": "v4.31.0",
+          "revision": "8ea71c8df91acd63285515a04da952b23b78d266",
+          "status": "pass"
+        }
+      ],
+      "environment": "v4.32.0 · macOS arm64 · scaled heartbeat · 독립 프로세스3회 중앙값 · lean-source-anchored-v1",
+      "candidateHash": "12c49a5118cd4a455ecbc9c793284fe24bb4123803196cf73139ba254aad7f7a",
+      "note": "2026-10-26: 동일한 후보·명제를 지정된 세 커밋과 고정 의존성에서 각각 3회 전체 파일 검증해 모두 통과했습니다. 호환성만 보완했으며 기존 v4.32.0 토큰·HB 측정값은 유지합니다. 2026-10-26 원본·후보 전체 문맥 재검증 및 모든 지정 버전 통과 확인.",
+      "baselineCompatibility": 100,
+      "evidence": [
+        "submissions/warmup/manifest.json",
+        "submissions/warmup/best/P09.lean",
+        "research/p09/experiment.json · full-source-local-2026-10-26 · 호환성 보완"
+      ],
+      "selectedCandidateId": "정소미-final",
+      "selectionReason": "검증된 후보의 원본 대비 토큰·HB 감소율 평균 최대. 지정 버전 미완료는 호환성 대기로 표시. 기존 담당자 최종본과 모든 후보는 보존.",
+      "teamResults": [
+        {
+          "id": "정소미-final",
+          "author": "정소미",
+          "proof": "theorem bisimilarity_congr_choice :\n    (p ~[lts (defs := defs)] q) → (choice p r) ~[lts (defs := defs)] (choice q r) := by\n  intro h\n  exists ChoiceBisim, ChoiceBisim.choice h\n  rintro _ _ (h | h) μ <;> apply (Bisimilarity.isBisimulation _ _ h μ).imp <;> intro f s t <;>\n    repeat' first\n    | exact (f _ ‹_›).imp fun _ => And.imp (by first | exact id | exact Tr.choiceL) ChoiceBisim.bisim\n    | exact ⟨s, Tr.choiceR ‹_›, ChoiceBisim.bisim (HomBisimilarity.refl _)⟩\n    | cases t\n",
+          "sourcePath": "docs/research/refactoring/warmup/정소미/evidence/P9/final.lean",
+          "sourceCommit": "5eb5a8c61350d59f1c2f0655c18387abb58cafe4",
+          "sourceState": "committed",
+          "candidateHash": "12c49a5118cd4a455ecbc9c793284fe24bb4123803196cf73139ba254aad7f7a",
+          "status": "measured",
+          "baseline": {
+            "tokens": 251,
+            "heartbeats": 3854
+          },
+          "candidate": {
+            "tokens": 79,
+            "heartbeats": 512
+          },
+          "versions": [
+            {
+              "version": "v4.33.0-rc2",
+              "revision": "3aa9d4416c185e0b9faeb72bbd65abe85b95dbcc",
+              "status": "pass"
+            },
+            {
+              "version": "v4.32.0",
+              "revision": "197a7be621263b84c67ca4f803f69205b36d06df",
+              "status": "pass"
+            },
+            {
+              "version": "v4.31.0",
+              "revision": "8ea71c8df91acd63285515a04da952b23b78d266",
+              "status": "pass"
+            }
+          ],
+          "environment": "v4.32.0 · macOS arm64 · scaled heartbeat · 독립 프로세스3회 중앙값 · lean-source-anchored-v1",
+          "note": "2026-10-26: 동일한 후보·명제를 지정된 세 커밋과 고정 의존성에서 각각 3회 전체 파일 검증해 모두 통과했습니다. 호환성만 보완했으며 기존 v4.32.0 토큰·HB 측정값은 유지합니다. 2026-10-26 원본·후보 전체 문맥 재검증 및 모든 지정 버전 통과 확인."
+        },
+        {
+          "id": "권주원-20261016",
+          "author": "권주원",
+          "proof": "theorem bisimilarity_congr_choice :\n    (p ~[lts (defs := defs)] q) → (choice p r) ~[lts (defs := defs)] (choice q r) := by\n  intro h\n  exists ChoiceBisim, ChoiceBisim.choice h\n  rintro _ _ (h | h) μ <;> apply (Bisimilarity.isBisimulation _ _ h μ).imp <;> intro f s t <;>\n    repeat' first\n    | exact (f _ ‹_›).imp fun _ => And.imp (by first | exact id | exact Tr.choiceL) ChoiceBisim.bisim\n    | exact ⟨s, Tr.choiceR ‹_›, ChoiceBisim.bisim (HomBisimilarity.refl _)⟩\n    | cases t\n",
+          "sourcePath": "docs/research/refactoring/warmup/권주원/evidence/2026-10-16-warmup15-xhigh/P09/best.lean",
+          "sourceCommit": "5eb5a8c61350d59f1c2f0655c18387abb58cafe4",
+          "sourceState": "working-tree-snapshot",
+          "candidateHash": "12c49a5118cd4a455ecbc9c793284fe24bb4123803196cf73139ba254aad7f7a",
+          "status": "measured",
+          "baseline": {
+            "tokens": 251,
+            "heartbeats": 3854
+          },
+          "candidate": {
+            "tokens": 79,
+            "heartbeats": 512
+          },
+          "versions": [
+            {
+              "version": "v4.33.0-rc2",
+              "revision": "3aa9d4416c185e0b9faeb72bbd65abe85b95dbcc",
+              "status": "pass"
+            },
+            {
+              "version": "v4.32.0",
+              "revision": "197a7be621263b84c67ca4f803f69205b36d06df",
+              "status": "pass"
+            },
+            {
+              "version": "v4.31.0",
+              "revision": "8ea71c8df91acd63285515a04da952b23b78d266",
+              "status": "pass"
+            }
+          ],
+          "environment": "v4.32.0 · macOS arm64 · scaled heartbeat · 독립 프로세스3회 중앙값 · lean-source-anchored-v1",
+          "note": "2026-10-26: 동일한 후보·명제를 지정된 세 커밋과 고정 의존성에서 각각 3회 전체 파일 검증해 모두 통과했습니다. 호환성만 보완했으며 기존 v4.32.0 토큰·HB 측정값은 유지합니다. 2026-10-26 원본·후보 전체 문맥 재검증 및 모든 지정 버전 통과 확인."
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "name": "Binius.BinaryBasefold.fiberwise_dist_lt_imp_dist_lt_unique_decoding_radius",
+      "source": "arklib",
+      "status": "measured",
+      "baseline": {
+        "tokens": 1463,
+        "heartbeats": 15908
+      },
+      "candidate": {
+        "tokens": 484,
+        "heartbeats": 8807
+      },
+      "versions": [
+        {
+          "version": "v4.31.0",
+          "revision": "c1712f6c496d0aef04f09bae42aec13811b3273f",
+          "status": "pass"
+        },
+        {
+          "version": "v4.30.0",
+          "revision": "e6d77b18ca1334a91faf4d1ccf9f96d854d58ba4",
+          "status": "pass"
+        },
+        {
+          "version": "v4.29.0",
+          "revision": "de71a9dfd2f5a343e8895517b7efe857d9f1ce5c",
+          "status": "pass"
+        },
+        {
+          "version": "v4.28.0",
+          "revision": "673fa440714eb1949b8b50a28f2a4f52b1837e9b",
+          "status": "pass"
+        }
+      ],
+      "environment": "v4.31.0 · Linux x86_64 · scaled heartbeat · 독립 프로세스3회 중앙값 · lean-source-anchored-v1",
+      "candidateHash": "73cd94253cff6e1ccc075c49eccb86e828df51fe7dd7bc91f8b732a5ef3c02ed",
+      "note": "고정 커밋의 의존성을 복원하여 원본·후보를 모든 지정 버전에서 재검증했습니다.",
+      "baselineCompatibility": 100,
+      "evidence": [
+        "dashboard/public/research/warmup15/verification.json",
+        "docs/research/refactoring/warmup/박성호/evidence/P10.lean"
+      ],
+      "selectedCandidateId": "박성호-final",
+      "selectionReason": "검증된 후보의 원본 대비 토큰·HB 감소율 평균 최대. 지정 버전 미완료는 호환성 대기로 표시. 기존 담당자 최종본과 모든 후보는 보존.",
+      "teamResults": [
+        {
+          "id": "박성호-final",
+          "author": "박성호",
+          "proof": "theorem fiberwise_dist_lt_imp_dist_lt_unique_decoding_radius (i : Fin ℓ) (steps : ℕ)\n    [NeZero steps] (h_i_add_steps : i.val + steps ≤ ℓ)\n    (f : OracleFunction 𝔽q β (h_ℓ_add_R_rate := h_ℓ_add_R_rate) ⟨i, by omega⟩)\n  (h_fw_dist_lt : fiberwiseClose 𝔽q β (h_ℓ_add_R_rate := h_ℓ_add_R_rate)\n    (i := i) (steps := steps) (h_i_add_steps := h_i_add_steps) (f := f)) :\n  hammingClose 𝔽q β (h_ℓ_add_R_rate := h_ℓ_add_R_rate) ⟨i, by omega⟩ f := by\n  let d_fw := fiberwiseDistance 𝔽q β (i := i) steps h_i_add_steps f\n  let C_i := (BBF_Code 𝔽q β (h_ℓ_add_R_rate := h_ℓ_add_R_rate) ⟨i, by omega⟩)\n  obtain ⟨g', h_g'_mem, h_g'_min_card⟩ : ∃ g' ∈ C_i, d_fw\n    = (fiberwiseDisagreementSet 𝔽q β i steps h_i_add_steps f g').ncard := by\n    obtain ⟨g, _, h_eq⟩ := Nat.sInf_mem (Set.univ_nonempty.image fun (g : C_i) =>\n      (fiberwiseDisagreementSet 𝔽q β i steps h_i_add_steps f g).ncard)\n    exact ⟨g, g.2, h_eq.symm⟩\n  have hΔ : hammingDist f g' ≤ d_fw * 2 ^ steps := by\n    rw [h_g'_min_card]\n    have := Fintype.ofFinite (fiberwiseDisagreementSet 𝔽q β i steps h_i_add_steps f g')\n    refine (Finset.card_le_card (t := (fiberwiseDisagreementSet 𝔽q β i steps h_i_add_steps f\n      g').toFinset.biUnion fun y => ((qMap_total_fiber 𝔽q β (i := ⟨i, by omega⟩) (steps := steps)\n          (h_i_add_steps := lt_add_of_pos_right_of_le _ _ _ h_i_add_steps) (y := y)) ''\n          (Finset.univ : Finset (Fin (2 ^ steps)))).toFinset) fun x hx => Finset.mem_biUnion.2\n        ⟨iteratedQuotientMap 𝔽q β h_ℓ_add_R_rate i steps h_i_add_steps x, ?_, ?_⟩).trans\n      ((Finset.card_biUnion_le_card_mul _ _ (2 ^ steps) fun y _ => ?_).trans ?_)\n    · simp only [fiberwiseDisagreementSet, iteratedQuotientMap, ne_eq, Subtype.exists,\n        Set.toFinset_setOf, mem_filter, mem_univ, true_and]\n      exact ⟨x.val, x.2, rfl, by simpa using hx⟩\n    · simp only [coe_univ, Set.image_univ, Set.toFinset_range, mem_image, mem_univ, true_and]\n      exact ⟨_, (is_fiber_iff_generates_quotient_point 𝔽q β i steps h_i_add_steps x _).mp rfl⟩\n    · simp only [coe_univ, Set.image_univ, Set.toFinset_range]\n      exact Finset.card_image_le.trans (by simp)\n    · rw [Set.ncard_eq_toFinset_card']\n  have h3 := Nat.mul_le_mul_right (2 ^ steps) (Nat.le_of_lt_succ (WithTop.coe_lt_coe.1 h_fw_dist_lt) :\n    2 * d_fw ≤ BBF_CodeDistance ℓ 𝓡 ⟨i + steps, by omega⟩ - 1)\n  simp only [BBF_CodeDistance, Nat.add_sub_cancel, Nat.sub_mul, ← Nat.pow_add, Nat.mul_assoc,\n    show ℓ + 𝓡 - (↑i + steps) + steps = ℓ + 𝓡 - i by omega,\n    show ℓ - (↑i + steps) + steps = ℓ - i by omega] at h3\n  exact (mul_le_mul_left' (le_trans (sInf_le ⟨g', h_g'_mem, le_rfl⟩) (ENat.coe_le_coe.2 hΔ) :\n    Code.distFromCode f C_i ≤ _) 2).trans_lt (mod_cast (show 2 * (d_fw * 2 ^ steps) <\n      BBF_CodeDistance ℓ 𝓡 ⟨i, by omega⟩ by simp only [BBF_CodeDistance]; omega))",
+          "sourcePath": "docs/research/refactoring/warmup/박성호/evidence/P10.lean",
+          "sourceCommit": "5eb5a8c61350d59f1c2f0655c18387abb58cafe4",
+          "sourceState": "committed",
+          "candidateHash": "73cd94253cff6e1ccc075c49eccb86e828df51fe7dd7bc91f8b732a5ef3c02ed",
+          "status": "measured",
+          "baseline": {
+            "tokens": 1463,
+            "heartbeats": 15908
+          },
+          "candidate": {
+            "tokens": 484,
+            "heartbeats": 8807
+          },
+          "versions": [
+            {
+              "version": "v4.31.0",
+              "revision": "c1712f6c496d0aef04f09bae42aec13811b3273f",
+              "status": "pass"
+            },
+            {
+              "version": "v4.30.0",
+              "revision": "e6d77b18ca1334a91faf4d1ccf9f96d854d58ba4",
+              "status": "pass"
+            },
+            {
+              "version": "v4.29.0",
+              "revision": "de71a9dfd2f5a343e8895517b7efe857d9f1ce5c",
+              "status": "pass"
+            },
+            {
+              "version": "v4.28.0",
+              "revision": "673fa440714eb1949b8b50a28f2a4f52b1837e9b",
+              "status": "pass"
+            }
+          ],
+          "environment": "v4.31.0 · Linux x86_64 · scaled heartbeat · 독립 프로세스3회 중앙값 · lean-source-anchored-v1",
+          "note": "고정 커밋의 의존성을 복원하여 원본·후보를 모든 지정 버전에서 재검증했습니다."
+        },
+        {
+          "id": "정소미-team-methods-20261026-P10",
+          "author": "정소미",
+          "proof": "theorem fiberwise_dist_lt_imp_dist_lt_unique_decoding_radius (i : Fin ℓ) (steps : ℕ)\n    [NeZero steps] (h_i_add_steps : i.val + steps ≤ ℓ)\n    (f : OracleFunction 𝔽q β (h_ℓ_add_R_rate := h_ℓ_add_R_rate) ⟨i, by omega⟩)\n  (h_fw_dist_lt : fiberwiseClose 𝔽q β (h_ℓ_add_R_rate := h_ℓ_add_R_rate)\n    (i := i) (steps := steps) (h_i_add_steps := h_i_add_steps) (f := f)) :\n  hammingClose 𝔽q β (h_ℓ_add_R_rate := h_ℓ_add_R_rate) ⟨i, by omega⟩ f := by\n  let d_fw := fiberwiseDistance 𝔽q β (i := i) steps h_i_add_steps f\n  let C_i := (BBF_Code 𝔽q β (h_ℓ_add_R_rate := h_ℓ_add_R_rate) ⟨i, by omega⟩)\n  obtain ⟨g', h_g'_mem, h_g'_min_card⟩ : ∃ g' ∈ C_i, d_fw\n    = (fiberwiseDisagreementSet 𝔽q β i steps h_i_add_steps f g').ncard := by\n    obtain ⟨g, _, h_eq⟩ := Nat.sInf_mem (Set.univ_nonempty.image fun (g : C_i) =>\n      (fiberwiseDisagreementSet 𝔽q β i steps h_i_add_steps f g).ncard)\n    exact ⟨g, g.2, h_eq.symm⟩\n  have hΔ : hammingDist f g' ≤ d_fw * 2 ^ steps := by\n    rw [h_g'_min_card]\n    have := Fintype.ofFinite (fiberwiseDisagreementSet 𝔽q β i steps h_i_add_steps f g')\n    refine (Finset.card_le_card (t := (fiberwiseDisagreementSet 𝔽q β i steps h_i_add_steps f\n      g').toFinset.biUnion fun y => ((qMap_total_fiber 𝔽q β (i := ⟨i, by omega⟩) (steps := steps)\n          (h_i_add_steps := lt_add_of_pos_right_of_le _ _ _ h_i_add_steps) (y := y)) ''\n          (Finset.univ : Finset (Fin (2 ^ steps)))).toFinset) fun x hx => Finset.mem_biUnion.2\n        ⟨iteratedQuotientMap 𝔽q β h_ℓ_add_R_rate i steps h_i_add_steps x, ?_, ?_⟩).trans\n      ((Finset.card_biUnion_le_card_mul _ _ (2 ^ steps) fun y _ => ?_).trans ?_)\n    · simp only [fiberwiseDisagreementSet, iteratedQuotientMap, ne_eq, Subtype.exists,\n        Set.toFinset_setOf, mem_filter, mem_univ, true_and]\n      exact ⟨x.val, x.2, rfl, by simpa using hx⟩\n    · simp only [coe_univ, Set.image_univ, Set.toFinset_range, mem_image, mem_univ, true_and]\n      exact ⟨_, (is_fiber_iff_generates_quotient_point 𝔽q β i steps h_i_add_steps x _).mp rfl⟩\n    · simp only [coe_univ, Set.image_univ, Set.toFinset_range]\n      simpa using Finset.card_image_le\n    · rw [Set.ncard_eq_toFinset_card']\n  have h3 := Nat.mul_le_mul_right (2 ^ steps) (Nat.le_of_lt_succ (WithTop.coe_lt_coe.1 h_fw_dist_lt) :\n    2 * d_fw ≤ BBF_CodeDistance ℓ 𝓡 ⟨i + steps, by omega⟩ - 1)\n  simp only [BBF_CodeDistance, Nat.add_sub_cancel, Nat.sub_mul, ← Nat.pow_add, Nat.mul_assoc,\n    show ℓ + 𝓡 - (↑i + steps) + steps = ℓ + 𝓡 - i by omega,\n    show ℓ - (↑i + steps) + steps = ℓ - i by omega] at h3\n  exact (mul_le_mul_left' (le_trans (sInf_le ⟨g', h_g'_mem, le_rfl⟩) (ENat.coe_le_coe.2 hΔ) :\n    Code.distFromCode f C_i ≤ _) 2).trans_lt (mod_cast (show 2 * (d_fw * 2 ^ steps) <\n      BBF_CodeDistance ℓ 𝓡 ⟨i, by omega⟩ by simp only [BBF_CodeDistance]; omega))",
+          "sourcePath": "dashboard/public/research/warmup15/P10-card-simpa.lean",
+          "sourceCommit": "7cd5301fd0ad4e49883f29b0646380047ca45f6d",
+          "sourceState": "working-tree-snapshot",
+          "candidateHash": "e0b1d54956a39ab2ac17fff544c1f0c059f3bce80e08e4419dfe67dceca88cca",
+          "status": "proof_failed",
+          "baseline": null,
+          "candidate": null,
+          "versions": [
+            {
+              "version": "v4.31.0",
+              "revision": "c1712f6c496d0aef04f09bae42aec13811b3273f",
+              "status": "fail"
+            },
+            {
+              "version": "v4.30.0",
+              "revision": "e6d77b18ca1334a91faf4d1ccf9f96d854d58ba4",
+              "status": "fail"
+            },
+            {
+              "version": "v4.29.0",
+              "revision": "de71a9dfd2f5a343e8895517b7efe857d9f1ce5c",
+              "status": "fail"
+            },
+            {
+              "version": "v4.28.0",
+              "revision": "673fa440714eb1949b8b50a28f2a4f52b1837e9b",
+              "status": "fail"
+            }
+          ],
+          "environment": "v4.31.0 · Linux x86_64 · scaled heartbeat · 독립 프로세스3회 중앙값 · lean-source-anchored-v1",
+          "note": "481토큰 최소화는 네 지정 버전에서 DecidableEq 타입 추론 오류로 실패했습니다. 원본과 기존484토큰 증명은 모두 통과했습니다."
+        }
+      ]
+    },
+    {
+      "id": 11,
+      "name": "Binius.BinaryBasefold.fold_advances_evaluation_poly",
+      "source": "arklib",
+      "status": "measured",
+      "baseline": {
+        "tokens": 1906,
+        "heartbeats": 45535
+      },
+      "candidate": {
+        "tokens": 891,
+        "heartbeats": 20696
+      },
+      "versions": [
+        {
+          "version": "v4.31.0",
+          "revision": "c1712f6c496d0aef04f09bae42aec13811b3273f",
+          "status": "pass"
+        },
+        {
+          "version": "v4.30.0",
+          "revision": "e6d77b18ca1334a91faf4d1ccf9f96d854d58ba4",
+          "status": "pass"
+        },
+        {
+          "version": "v4.29.0",
+          "revision": "de71a9dfd2f5a343e8895517b7efe857d9f1ce5c",
+          "status": "pass"
+        }
+      ],
+      "environment": "v4.31.0 · Linux x86_64 · scaled heartbeat · 독립 프로세스3회 중앙값 · lean-source-anchored-v1",
+      "candidateHash": "1947d44782d33fe4dc34df3afff34c46005505c22dfc7fdc5f97064431f67f1c",
+      "note": "구조 변경 후보966토큰/HB21003에서 중간 등식을 정의상 같은 식의 rfl로 대체했습니다. 세 지정 버전에서 원본·출발·수정본 각각3회 통과. 주 환경은891토큰/HB20696이며 출발 후보 대비+2.3046점입니다.",
+      "baselineCompatibility": 100,
+      "evidence": [
+        "dashboard/public/research/warmup15/verification.json",
+        "dashboard/public/research/warmup15/P11-pr30-defeq.lean"
+      ],
+      "selectedCandidateId": "정소미-team-methods-20261026-P11",
+      "selectionReason": "검증된 후보의 원본 대비 토큰·HB 감소율 평균 최대. 지정 버전 미완료는 호환성 대기로 표시. 기존 담당자 최종본과 모든 후보는 보존.",
+      "teamResults": [
+        {
+          "id": "박선영-final",
+          "author": "박선영",
+          "proof": "theorem fold_advances_evaluation_poly\n  (i : Fin (ℓ)) (h_i_succ_lt : i + 1 < ℓ + 𝓡)\n  (coeffs : Fin (2 ^ (ℓ - ↑i)) → L) (r_chal : L) :\n  let P_i : L[X] := intermediateEvaluationPoly 𝔽q β h_ℓ_add_R_rate (i := ⟨i, by\n    exact Nat.lt_trans (n := i) (k := ℓ+1) (m := ℓ) (h₁ := i.isLt) (by exact Nat.lt_add_one ℓ)\n  ⟩) coeffs\n  let f_i := fun (x : (sDomain 𝔽q β h_ℓ_add_R_rate)\n      ⟨i, by exact Nat.lt_trans (n := i) (k := r) (m := ℓ) (h₁ := by omega) (by omega)⟩) =>\n    P_i.eval (x.val : L)\n  let f_i_plus_1 := fold (i := ⟨i, by omega⟩) (h_i := by omega) (f := f_i) (r_chal := r_chal)\n  let new_coeffs := fun j : Fin (2^(ℓ - (i + 1))) =>\n    (1 - r_chal) * (coeffs ⟨j.val * 2, by\n      rw [←Nat.add_zero (j.val * 2)]\n      apply mul_two_add_bit_lt_two_pow (c := ℓ - i) (a := j) (b := ℓ - (↑i + 1))\n        (i := 0) (by omega) (by omega)\n    ⟩) +\n    r_chal * (coeffs ⟨j.val * 2 + 1, by\n      apply mul_two_add_bit_lt_two_pow (c := ℓ - i) (a := j) (b := ℓ - (↑i + 1))\n        (i := 1) (by omega) (by omega)\n    ⟩)\n  let P_i_plus_1 :=\n    intermediateEvaluationPoly 𝔽q β h_ℓ_add_R_rate (i := ⟨i+1, by omega⟩) new_coeffs\n  ∀ (y : (sDomain 𝔽q β h_ℓ_add_R_rate)\n    ⟨i+1, by omega⟩), f_i_plus_1 y = P_i_plus_1.eval y.val := by\n  simp only\n  intro y\n  set fiberMap := qMap_total_fiber 𝔽q β (i := ⟨i, by omega⟩) (steps := 1)\n    (h_i_add_steps := by simp only; omega) (y := y)\n  set x₀ := fiberMap 0\n  set x₁ := fiberMap 1\n  set P_i := intermediateEvaluationPoly 𝔽q β h_ℓ_add_R_rate (i := ⟨i, by omega⟩) coeffs\n  set new_coeffs := fun j : Fin (2^(ℓ - (i + 1))) =>\n    (1 - r_chal) * (coeffs ⟨j.val * 2, by\n      have h : j.val * 2 < 2^(ℓ - (i + 1)) * 2 := by omega\n      have h2 : 2^(ℓ - i) = 2^(ℓ - (i + 1)) * 2 := by\n        conv_rhs => enter[2]; rw [←Nat.pow_one 2]\n        rw [←pow_add]; congr\n        rw [Nat.sub_add_eq_sub_sub_rev (h1 := by omega) (h2 := by omega)]\n        -- ⊢ ℓ - ↑i = ℓ - (↑i + 1 - 1)\n        rw [Nat.add_sub_cancel (n := i) (m := 1)]\n      omega\n    ⟩) +\n    r_chal * (coeffs ⟨j.val * 2 + 1, by\n      apply mul_two_add_bit_lt_two_pow (c := ℓ - i) (a := j) (b := ℓ - (↑i + 1)) (i := 1)\n      · omega\n      · omega\n    ⟩)\n  have h_eval_qMap_x₀ : (AdditiveNTT.qMap 𝔽q β ⟨i, by omega⟩).eval x₀.val = y := by\n    have h := iteratedQuotientMap_k_eq_1_is_qMap 𝔽q β h_ℓ_add_R_rate i (by omega) x₀\n    simp only [Subtype.eq_iff] at h\n    rw [h.symm]\n    have h_res := is_fiber_iff_generates_quotient_point 𝔽q β i (steps := 1) (by omega)\n      (x := x₀) (y := y).mpr (by rw [pointToIterateQuotientIndex_qMap_total_fiber_eq_self])\n    rw [h_res]\n    -- exact qMap_eval_fiber_eq_self ⟦L⟧ ⟨i + 1, by omega⟩ (by simp only; omega) h_i_succ_lt y 0\n  have h_eval_qMap_x₁ : (AdditiveNTT.qMap 𝔽q β ⟨i, by omega⟩).eval x₁.val = y := by\n    have h := iteratedQuotientMap_k_eq_1_is_qMap 𝔽q β h_ℓ_add_R_rate i (by omega) x₁\n    simp only [Subtype.eq_iff] at h\n    rw [h.symm]\n    have h_res := is_fiber_iff_generates_quotient_point 𝔽q β i (steps := 1) (by omega)\n      (x := x₁) (y := y).mpr (by rw [pointToIterateQuotientIndex_qMap_total_fiber_eq_self])\n    rw [h_res]\n  have hx₀ := qMap_total_fiber_basis_sum_repr 𝔽q β i (steps := 1)\n    (h_i_add_steps := by omega) y 0\n  have hx₁ := qMap_total_fiber_basis_sum_repr 𝔽q β i (steps := 1)\n    (h_i_add_steps := by omega) y 1\n  simp only [Fin.isValue] at hx₀ hx₁\n\n  have h_fiber_diff : x₁.val - x₀.val = 1 := by\n    simp only [Fin.isValue, x₁, x₀, fiberMap]\n    rw [hx₁, hx₀]\n    simp only [Fin.isValue, AddSubmonoidClass.coe_finset_sum, SetLike.val_smul]\n    have h_index : ℓ + 𝓡 - i = (ℓ + 𝓡 - (i.val + 1)) + 1 := by omega\n    rw! (castMode := .all) [h_index]\n    rw [Fin.sum_univ_succ, Fin.sum_univ_succ] -- (free_term + y_repr) - (free_term + y_repr) = 1\n    -- First, simplify the free terms\n    simp only [fiber_coeff, eqRec_eq_cast, lt_one_iff, reducePow, Fin.isValue,\n      Fin.coe_ofNat_eq_mod, mod_succ, dite_smul, ite_smul, zero_smul, one_smul, zero_mod]\n    have h_cast_0 :\n        (cast (Eq.symm h_index ▸ rfl : Fin (ℓ + 𝓡 - (↑i + 1) + 1) = Fin (ℓ + 𝓡 - ↑i)) 0).val =\n        0 := by\n      rw [←Fin.cast_eq_cast (h := by omega)]\n      rw [Fin.cast_val_eq_val (h_eq := by omega)]\n      simp only [Fin.coe_ofNat_eq_mod, mod_succ_eq_iff_lt, succ_eq_add_one, lt_add_iff_pos_left]\n      omega\n    have h_cast_1 :\n        (cast (Eq.symm h_index ▸ rfl : Fin (ℓ + 𝓡 - (↑i + 1) + 1) = Fin (ℓ + 𝓡 - ↑i)) 1).val =\n        1 := by\n      rw [←Fin.cast_eq_cast (h := by omega)]\n      rw [Fin.cast_val_eq_val (h_eq := by omega)]\n      simp only [Fin.coe_ofNat_eq_mod, mod_succ_eq_iff_lt, succ_eq_add_one,\n        lt_add_iff_pos_left, tsub_pos_iff_lt]\n      omega\n    simp only [h_cast_0, ↓reduceDIte]\n    have h_getBit_0_of_0 : Nat.getBit (k := 0) (n := 0) = 0 := by\n      simp only [getBit, shiftRight_zero, and_one_is_mod, zero_mod]\n    have h_getBit_0_of_1 : Nat.getBit (k := 0) (n := 1) = 1 := by\n      simp only [getBit, shiftRight_zero, Nat.and_self]\n    simp only [h_getBit_0_of_1, one_ne_zero, ↓reduceIte, h_getBit_0_of_0, zero_add]\n    rw! (castMode := .all) [←h_index]\n    rw [cast_eq]\n    simp only [get_sDomain_basis, Fin.coe_ofNat_eq_mod, zero_mod, add_zero, cast_eq]\n    rw [normalizedWᵢ_eval_βᵢ_eq_1 𝔽q β]\n    ring_nf\n    conv_rhs => rw [←add_zero (a := 1)]\n    rw [add_sub_assoc]\n    congr 1\n    rw [sub_eq_zero]\n    apply Finset.sum_congr (h := by rfl)\n    simp only [mem_univ, congr_eqRec, Fin.val_succ, Nat.add_eq_zero, one_ne_zero, and_false,\n      ↓reduceDIte, add_tsub_cancel_right, Fin.eta, imp_self, implies_true]\n  set P_i_plus_1 :=\n    intermediateEvaluationPoly 𝔽q β h_ℓ_add_R_rate (i := ⟨i+1, by omega⟩) new_coeffs\n  set P₀ := evenRefinement 𝔽q β h_ℓ_add_R_rate i coeffs\n  set P₁ := oddRefinement 𝔽q β h_ℓ_add_R_rate i coeffs\n  have h_P_i_eval := evaluation_poly_split_identity 𝔽q β h_ℓ_add_R_rate ⟨i, by omega⟩ coeffs\n  -- Equation 39 : P^(i)(X) = P₀^(i+1)(q^(i)(X)) + X · P₁^(i+1)(q^(i)(X))\n  have h_equation_39_x₀ : P_i.eval x₀.val = P₀.eval y.val + x₀.val * P₁.eval y.val := by\n    simp only [h_P_i_eval, Fin.eta, Polynomial.eval_add, eval_comp,\n      h_eval_qMap_x₀, Polynomial.eval_mul, Polynomial.eval_X, P_i, P₀, P₁]\n  have h_equation_39_x₁ : P_i.eval x₁.val = P₀.eval y.val + x₁.val * P₁.eval y.val := by\n    simp only [h_P_i_eval, Fin.eta, Polynomial.eval_add, eval_comp,\n      h_eval_qMap_x₁, Polynomial.eval_mul, Polynomial.eval_X, P_i, P₀, P₁]\n  set f_i := fun (x : (sDomain 𝔽q β h_ℓ_add_R_rate) ⟨i, by omega⟩) => P_i.eval (x.val : L)\n  set f_i_plus_1 := fold (i := ⟨i, by omega⟩) (h_i := by omega) (f := f_i) (r_chal := r_chal)\n  -- Unfold the definition of f_i_plus_1 using the fold function\n  have h_fold_def : f_i_plus_1 y =\n      f_i x₀ * ((1 - r_chal) * x₁.val - r_chal) +\n      f_i x₁ * (r_chal - (1 - r_chal) * x₀.val) := rfl\n  -- Main calculation following the outline\n  calc f_i_plus_1 y\n    = f_i x₀ * ((1 - r_chal) * x₁.val - r_chal) +\n        f_i x₁ * (r_chal - (1 - r_chal) * x₀.val) := h_fold_def\n    _ = P_i.eval x₀.val * ((1 - r_chal) * x₁.val - r_chal) +\n        P_i.eval x₁.val * (r_chal - (1 - r_chal) * x₀.val) := by simp only [f_i]\n    _ = (P₀.eval y.val + x₀.val * P₁.eval y.val) * ((1 - r_chal) * x₁.val - r_chal) +\n        (P₀.eval y.val + x₁.val * P₁.eval y.val) * (r_chal - (1 - r_chal) * x₀.val) := by\n      rw [h_equation_39_x₀, h_equation_39_x₁]\n    _ = P₀.eval y.val * ((1 - r_chal) * x₁.val - r_chal + r_chal - (1 - r_chal) * x₀.val) +\n        P₁.eval y.val * (x₀.val * ((1 - r_chal) * x₁.val - r_chal) +\n          x₁.val * (r_chal - (1 - r_chal) * x₀.val)) := by ring\n    _ = P₀.eval y.val * ((1 - r_chal) * (x₁.val - x₀.val)) +\n        P₁.eval y.val * ((x₁.val - x₀.val) * r_chal) := by ring\n    _ = P₀.eval y.val * (1 - r_chal) + P₁.eval y.val * r_chal := by rw [h_fiber_diff]; ring\n    _ = P_i_plus_1.eval y.val := by\n      simp only [P_i_plus_1, P₀, P₁, new_coeffs, evenRefinement, oddRefinement,\n        intermediateEvaluationPoly]\n      conv_lhs => enter [1]; rw [mul_comm, ←Polynomial.eval_C_mul]\n      conv_lhs => enter [2]; rw [mul_comm, ←Polynomial.eval_C_mul]\n      -- ⊢ eval y (C (1-r) * ∑...) + eval y (C r * ∑...) = eval y (∑...)\n      rw [←Polynomial.eval_add]\n      -- ⊢ poly_left.eval y = poly_right.eval y\n      congr\n      simp_rw [mul_sum, ←Finset.sum_add_distrib]\n      -- We now prove that the terms inside the sums are equal for each index.\n      apply Finset.sum_congr rfl\n      intro j hj\n      have h_j_lt : j.val < 2 ^ (ℓ - (↑i + 1)) := by\n        rw [Nat.sub_add_eq]\n        omega\n      conv_lhs => enter [1]; rw [mul_comm (a := Polynomial.C (coeffs ⟨j.val * 2, by\n        rw [←Nat.add_zero (j.val * 2)]\n        apply mul_two_add_bit_lt_two_pow (c := ℓ - i) (a := j) (b := ℓ - (↑i + 1))\n          (i := 0) (by omega) (by omega)⟩)), ←mul_assoc,\n        mul_comm (a := Polynomial.C (1 - r_chal))]; rw [mul_assoc]\n      conv_lhs => enter [2]; rw [mul_comm (a := Polynomial.C (coeffs ⟨j.val * 2 + 1, by\n        apply mul_two_add_bit_lt_two_pow (c := ℓ - i) (a := j) (b := ℓ - (↑i + 1))\n          (i := 1) (by omega) (by omega)⟩)), ←mul_assoc,\n        mul_comm (a := Polynomial.C r_chal)]; rw [mul_assoc]\n      conv_rhs => rw [mul_comm]\n      rw [←mul_add]\n      congr\n      simp only [←Polynomial.C_mul, ←Polynomial.C_add]\n",
+          "sourcePath": "docs/research/refactoring/warmup/박선영/evidence/P11/selected.lean",
+          "sourceCommit": "5eb5a8c61350d59f1c2f0655c18387abb58cafe4",
+          "sourceState": "committed",
+          "candidateHash": "06afddcc6cdeaaba9efc456f5ef500b2f37c9e2eb180cc665056d85e4d342d4f",
+          "status": "measured",
+          "baseline": {
+            "tokens": 1906,
+            "heartbeats": 45535
+          },
+          "candidate": {
+            "tokens": 1656,
+            "heartbeats": 41620
+          },
+          "versions": [
+            {
+              "version": "v4.31.0",
+              "revision": "c1712f6c496d0aef04f09bae42aec13811b3273f",
+              "status": "pass"
+            },
+            {
+              "version": "v4.30.0",
+              "revision": "e6d77b18ca1334a91faf4d1ccf9f96d854d58ba4",
+              "status": "pass"
+            },
+            {
+              "version": "v4.29.0",
+              "revision": "de71a9dfd2f5a343e8895517b7efe857d9f1ce5c",
+              "status": "pass"
+            }
+          ],
+          "environment": "v4.31.0 · Linux x86_64 · scaled heartbeat · 독립 프로세스3회 중앙값 · lean-source-anchored-v1",
+          "note": "담당자가 명시적으로 선택한 후보. 후속 세션 best와 구분. 고정 커밋의 의존성을 복원하여 원본·후보를 모든 지정 버전에서 재검증했습니다."
+        },
+        {
+          "id": "박선영-PR30-c002",
+          "author": "박선영",
+          "proof": "theorem fold_advances_evaluation_poly\n  (i : Fin (ℓ)) (h_i_succ_lt : i + 1 < ℓ + 𝓡)\n  (coeffs : Fin (2 ^ (ℓ - ↑i)) → L) (r_chal : L) :\n  let P_i : L[X] := intermediateEvaluationPoly 𝔽q β h_ℓ_add_R_rate (i := ⟨i, by\n    exact Nat.lt_trans (n := i) (k := ℓ+1) (m := ℓ) (h₁ := i.isLt) (by exact Nat.lt_add_one ℓ)\n  ⟩) coeffs\n  let f_i := fun (x : (sDomain 𝔽q β h_ℓ_add_R_rate)\n      ⟨i, by exact Nat.lt_trans (n := i) (k := r) (m := ℓ) (h₁ := by omega) (by omega)⟩) =>\n    P_i.eval (x.val : L)\n  let f_i_plus_1 := fold (i := ⟨i, by omega⟩) (h_i := by omega) (f := f_i) (r_chal := r_chal)\n  let new_coeffs := fun j : Fin (2^(ℓ - (i + 1))) =>\n    (1 - r_chal) * (coeffs ⟨j.val * 2, by\n      rw [←Nat.add_zero (j.val * 2)]\n      apply mul_two_add_bit_lt_two_pow (c := ℓ - i) (a := j) (b := ℓ - (↑i + 1))\n        (i := 0) (by omega) (by omega)\n    ⟩) +\n    r_chal * (coeffs ⟨j.val * 2 + 1, by\n      apply mul_two_add_bit_lt_two_pow (c := ℓ - i) (a := j) (b := ℓ - (↑i + 1))\n        (i := 1) (by omega) (by omega)\n    ⟩)\n  let P_i_plus_1 :=\n    intermediateEvaluationPoly 𝔽q β h_ℓ_add_R_rate (i := ⟨i+1, by omega⟩) new_coeffs\n  ∀ (y : (sDomain 𝔽q β h_ℓ_add_R_rate)\n    ⟨i+1, by omega⟩), f_i_plus_1 y = P_i_plus_1.eval y.val := by\n  simp only\n  intro y\n  set fiberMap := qMap_total_fiber 𝔽q β (i := ⟨i, by omega⟩) (steps := 1)\n    (h_i_add_steps := by simp only; omega) (y := y)\n  set x₀ := fiberMap 0\n  set x₁ := fiberMap 1\n  set P_i := intermediateEvaluationPoly 𝔽q β h_ℓ_add_R_rate (i := ⟨i, by omega⟩) coeffs\n  set new_coeffs := fun j : Fin (2^(ℓ - (i + 1))) =>\n    (1 - r_chal) * (coeffs ⟨j.val * 2, by\n      have h : j.val * 2 < 2^(ℓ - (i + 1)) * 2 := by omega\n      have h2 : 2^(ℓ - i) = 2^(ℓ - (i + 1)) * 2 := by\n        conv_rhs => enter[2]; rw [←Nat.pow_one 2]\n        rw [←pow_add]; congr\n        rw [Nat.sub_add_eq_sub_sub_rev (h1 := by omega) (h2 := by omega)]\n        -- ⊢ ℓ - ↑i = ℓ - (↑i + 1 - 1)\n        rw [Nat.add_sub_cancel (n := i) (m := 1)]\n      omega\n    ⟩) +\n    r_chal * (coeffs ⟨j.val * 2 + 1, by\n      apply mul_two_add_bit_lt_two_pow (c := ℓ - i) (a := j) (b := ℓ - (↑i + 1)) (i := 1)\n      · omega\n      · omega\n    ⟩)\n  have h_eval_qMap_x₀ : (AdditiveNTT.qMap 𝔽q β ⟨i, by omega⟩).eval x₀.val = y := by\n    have h := iteratedQuotientMap_k_eq_1_is_qMap 𝔽q β h_ℓ_add_R_rate i (by omega) x₀\n    simp only [Subtype.eq_iff] at h\n    rw [h.symm]\n    have h_res := is_fiber_iff_generates_quotient_point 𝔽q β i (steps := 1) (by omega)\n      (x := x₀) (y := y).mpr (by rw [pointToIterateQuotientIndex_qMap_total_fiber_eq_self])\n    rw [h_res]\n    -- exact qMap_eval_fiber_eq_self ⟦L⟧ ⟨i + 1, by omega⟩ (by simp only; omega) h_i_succ_lt y 0\n  have h_eval_qMap_x₁ : (AdditiveNTT.qMap 𝔽q β ⟨i, by omega⟩).eval x₁.val = y := by\n    have h := iteratedQuotientMap_k_eq_1_is_qMap 𝔽q β h_ℓ_add_R_rate i (by omega) x₁\n    simp only [Subtype.eq_iff] at h\n    rw [h.symm]\n    have h_res := is_fiber_iff_generates_quotient_point 𝔽q β i (steps := 1) (by omega)\n      (x := x₁) (y := y).mpr (by rw [pointToIterateQuotientIndex_qMap_total_fiber_eq_self])\n    rw [h_res]\n  have h_fiber_diff : x₁.val - x₀.val = 1 := by\n    have h0 := qMap_total_fiber_one_level_eq 𝔽q β i (by omega) y 0\n    have h1 := qMap_total_fiber_one_level_eq 𝔽q β i (by omega) y 1\n    simp [Fin2ToF2] at h0 h1\n    dsimp only [x₀, x₁, fiberMap]\n    rw [h1, h0]\n    simp [Submodule.coe_add, get_sDomain_first_basis_eq_1]\n  set P_i_plus_1 :=\n    intermediateEvaluationPoly 𝔽q β h_ℓ_add_R_rate (i := ⟨i+1, by omega⟩) new_coeffs\n  set P₀ := evenRefinement 𝔽q β h_ℓ_add_R_rate i coeffs\n  set P₁ := oddRefinement 𝔽q β h_ℓ_add_R_rate i coeffs\n  have h_P_i_eval := evaluation_poly_split_identity 𝔽q β h_ℓ_add_R_rate ⟨i, by omega⟩ coeffs\n  -- Equation 39 : P^(i)(X) = P₀^(i+1)(q^(i)(X)) + X · P₁^(i+1)(q^(i)(X))\n  have h_equation_39_x₀ : P_i.eval x₀.val = P₀.eval y.val + x₀.val * P₁.eval y.val := by\n    simp only [h_P_i_eval, Fin.eta, Polynomial.eval_add, eval_comp,\n      h_eval_qMap_x₀, Polynomial.eval_mul, Polynomial.eval_X, P_i, P₀, P₁]\n  have h_equation_39_x₁ : P_i.eval x₁.val = P₀.eval y.val + x₁.val * P₁.eval y.val := by\n    simp only [h_P_i_eval, Fin.eta, Polynomial.eval_add, eval_comp,\n      h_eval_qMap_x₁, Polynomial.eval_mul, Polynomial.eval_X, P_i, P₀, P₁]\n  set f_i := fun (x : (sDomain 𝔽q β h_ℓ_add_R_rate) ⟨i, by omega⟩) => P_i.eval (x.val : L)\n  set f_i_plus_1 := fold (i := ⟨i, by omega⟩) (h_i := by omega) (f := f_i) (r_chal := r_chal)\n  -- Unfold the definition of f_i_plus_1 using the fold function\n  have h_fold_def : f_i_plus_1 y =\n      f_i x₀ * ((1 - r_chal) * x₁.val - r_chal) +\n      f_i x₁ * (r_chal - (1 - r_chal) * x₀.val) := rfl\n  -- Main calculation following the outline\n  calc f_i_plus_1 y\n    = f_i x₀ * ((1 - r_chal) * x₁.val - r_chal) +\n        f_i x₁ * (r_chal - (1 - r_chal) * x₀.val) := h_fold_def\n    _ = P_i.eval x₀.val * ((1 - r_chal) * x₁.val - r_chal) +\n        P_i.eval x₁.val * (r_chal - (1 - r_chal) * x₀.val) := by simp only [f_i]\n    _ = (P₀.eval y.val + x₀.val * P₁.eval y.val) * ((1 - r_chal) * x₁.val - r_chal) +\n        (P₀.eval y.val + x₁.val * P₁.eval y.val) * (r_chal - (1 - r_chal) * x₀.val) := by\n      rw [h_equation_39_x₀, h_equation_39_x₁]\n    _ = P₀.eval y.val * ((1 - r_chal) * (x₁.val - x₀.val)) +\n        P₁.eval y.val * ((x₁.val - x₀.val) * r_chal) := by ring\n    _ = P₀.eval y.val * (1 - r_chal) + P₁.eval y.val * r_chal := by rw [h_fiber_diff]; ring\n    _ = P_i_plus_1.eval y.val := by\n      simp only [P_i_plus_1, P₀, P₁, new_coeffs, evenRefinement, oddRefinement,\n        intermediateEvaluationPoly]\n      conv_lhs => enter [1]; rw [mul_comm, ←Polynomial.eval_C_mul]\n      conv_lhs => enter [2]; rw [mul_comm, ←Polynomial.eval_C_mul]\n      -- ⊢ eval y (C (1-r) * ∑...) + eval y (C r * ∑...) = eval y (∑...)\n      rw [←Polynomial.eval_add]\n      -- ⊢ poly_left.eval y = poly_right.eval y\n      congr\n      simp_rw [mul_sum, ←Finset.sum_add_distrib]\n      -- We now prove that the terms inside the sums are equal for each index.\n      apply Finset.sum_congr rfl\n      intro j hj\n      simp only [Polynomial.C_add, Polynomial.C_mul]\n      ring\n",
+          "sourcePath": "docs/research/refactoring/warmup/박선영/evidence/performance-search-2026-10-25/P11/c002/candidate.lean",
+          "sourceCommit": "ee6aa88a3365df502a14c32cf06087464b5f7cb8",
+          "sourceState": "committed",
+          "candidateHash": "4dba964e5f3e2eb94a7af92d235d09dcc0257479ed16625e07f8f81eb54cea0a",
+          "status": "measured",
+          "baseline": {
+            "tokens": 1906,
+            "heartbeats": 45535
+          },
+          "candidate": {
+            "tokens": 966,
+            "heartbeats": 21003
+          },
+          "versions": [
+            {
+              "version": "v4.31.0",
+              "revision": "c1712f6c496d0aef04f09bae42aec13811b3273f",
+              "status": "pass"
+            },
+            {
+              "version": "v4.30.0",
+              "revision": "e6d77b18ca1334a91faf4d1ccf9f96d854d58ba4",
+              "status": "pass"
+            },
+            {
+              "version": "v4.29.0",
+              "revision": "de71a9dfd2f5a343e8895517b7efe857d9f1ce5c",
+              "status": "pass"
+            }
+          ],
+          "environment": "v4.31.0 · Linux x86_64 · scaled heartbeat · 독립 프로세스3회 중앙값 · lean-source-anchored-v1",
+          "note": "박선영 PR30 c002 구조 변경의 원문을 정확한 세 지정 핀에서 원본·후보각3회 재검증. 주4.31에서966토큰/HB21003. 원문 저장소architectyou/LeanAgent, head ee6aa88a3365df502a14c32cf06087464b5f7cb8."
+        },
+        {
+          "id": "정소미-team-methods-20261026-P11",
+          "author": "정소미",
+          "proof": "theorem fold_advances_evaluation_poly\n  (i : Fin (ℓ)) (h_i_succ_lt : i + 1 < ℓ + 𝓡)\n  (coeffs : Fin (2 ^ (ℓ - ↑i)) → L) (r_chal : L) :\n  let P_i : L[X] := intermediateEvaluationPoly 𝔽q β h_ℓ_add_R_rate (i := ⟨i, by\n    exact Nat.lt_trans (n := i) (k := ℓ+1) (m := ℓ) (h₁ := i.isLt) (by exact Nat.lt_add_one ℓ)\n  ⟩) coeffs\n  let f_i := fun (x : (sDomain 𝔽q β h_ℓ_add_R_rate)\n      ⟨i, by exact Nat.lt_trans (n := i) (k := r) (m := ℓ) (h₁ := by omega) (by omega)⟩) =>\n    P_i.eval (x.val : L)\n  let f_i_plus_1 := fold (i := ⟨i, by omega⟩) (h_i := by omega) (f := f_i) (r_chal := r_chal)\n  let new_coeffs := fun j : Fin (2^(ℓ - (i + 1))) =>\n    (1 - r_chal) * (coeffs ⟨j.val * 2, by\n      rw [←Nat.add_zero (j.val * 2)]\n      apply mul_two_add_bit_lt_two_pow (c := ℓ - i) (a := j) (b := ℓ - (↑i + 1))\n        (i := 0) (by omega) (by omega)\n    ⟩) +\n    r_chal * (coeffs ⟨j.val * 2 + 1, by\n      apply mul_two_add_bit_lt_two_pow (c := ℓ - i) (a := j) (b := ℓ - (↑i + 1))\n        (i := 1) (by omega) (by omega)\n    ⟩)\n  let P_i_plus_1 :=\n    intermediateEvaluationPoly 𝔽q β h_ℓ_add_R_rate (i := ⟨i+1, by omega⟩) new_coeffs\n  ∀ (y : (sDomain 𝔽q β h_ℓ_add_R_rate)\n    ⟨i+1, by omega⟩), f_i_plus_1 y = P_i_plus_1.eval y.val := by\n  simp only\n  intro y\n  set fiberMap := qMap_total_fiber 𝔽q β (i := ⟨i, by omega⟩) (steps := 1)\n    (h_i_add_steps := by simp only; omega) (y := y)\n  set x₀ := fiberMap 0\n  set x₁ := fiberMap 1\n  set P_i := intermediateEvaluationPoly 𝔽q β h_ℓ_add_R_rate (i := ⟨i, by omega⟩) coeffs\n  set new_coeffs := fun j : Fin (2^(ℓ - (i + 1))) =>\n    (1 - r_chal) * (coeffs ⟨j.val * 2, by\n      have h : j.val * 2 < 2^(ℓ - (i + 1)) * 2 := by omega\n      have h2 : 2^(ℓ - i) = 2^(ℓ - (i + 1)) * 2 := by\n        conv_rhs => enter[2]; rw [←Nat.pow_one 2]\n        rw [←pow_add]; congr\n        rw [Nat.sub_add_eq_sub_sub_rev (h1 := by omega) (h2 := by omega)]\n        -- ⊢ ℓ - ↑i = ℓ - (↑i + 1 - 1)\n        rw [Nat.add_sub_cancel (n := i) (m := 1)]\n      omega\n    ⟩) +\n    r_chal * (coeffs ⟨j.val * 2 + 1, by\n      apply mul_two_add_bit_lt_two_pow (c := ℓ - i) (a := j) (b := ℓ - (↑i + 1)) (i := 1)\n      · omega\n      · omega\n    ⟩)\n  have h_eval_qMap_x₀ : (AdditiveNTT.qMap 𝔽q β ⟨i, by omega⟩).eval x₀.val = y := by\n    have h := iteratedQuotientMap_k_eq_1_is_qMap 𝔽q β h_ℓ_add_R_rate i (by omega) x₀\n    simp only [Subtype.eq_iff] at h\n    rw [h.symm]\n    have h_res := is_fiber_iff_generates_quotient_point 𝔽q β i (steps := 1) (by omega)\n      (x := x₀) (y := y).mpr (by rw [pointToIterateQuotientIndex_qMap_total_fiber_eq_self])\n    rw [h_res]\n    -- exact qMap_eval_fiber_eq_self ⟦L⟧ ⟨i + 1, by omega⟩ (by simp only; omega) h_i_succ_lt y 0\n  have h_eval_qMap_x₁ : (AdditiveNTT.qMap 𝔽q β ⟨i, by omega⟩).eval x₁.val = y := by\n    have h := iteratedQuotientMap_k_eq_1_is_qMap 𝔽q β h_ℓ_add_R_rate i (by omega) x₁\n    simp only [Subtype.eq_iff] at h\n    rw [h.symm]\n    have h_res := is_fiber_iff_generates_quotient_point 𝔽q β i (steps := 1) (by omega)\n      (x := x₁) (y := y).mpr (by rw [pointToIterateQuotientIndex_qMap_total_fiber_eq_self])\n    rw [h_res]\n  have h_fiber_diff : x₁.val - x₀.val = 1 := by\n    have h0 := qMap_total_fiber_one_level_eq 𝔽q β i (by omega) y 0\n    have h1 := qMap_total_fiber_one_level_eq 𝔽q β i (by omega) y 1\n    simp [Fin2ToF2] at h0 h1\n    dsimp only [x₀, x₁, fiberMap]\n    rw [h1, h0]\n    simp [Submodule.coe_add, get_sDomain_first_basis_eq_1]\n  set P_i_plus_1 :=\n    intermediateEvaluationPoly 𝔽q β h_ℓ_add_R_rate (i := ⟨i+1, by omega⟩) new_coeffs\n  set P₀ := evenRefinement 𝔽q β h_ℓ_add_R_rate i coeffs\n  set P₁ := oddRefinement 𝔽q β h_ℓ_add_R_rate i coeffs\n  have h_P_i_eval := evaluation_poly_split_identity 𝔽q β h_ℓ_add_R_rate ⟨i, by omega⟩ coeffs\n  -- Equation 39 : P^(i)(X) = P₀^(i+1)(q^(i)(X)) + X · P₁^(i+1)(q^(i)(X))\n  have h_equation_39_x₀ : P_i.eval x₀.val = P₀.eval y.val + x₀.val * P₁.eval y.val := by\n    simp only [h_P_i_eval, Fin.eta, Polynomial.eval_add, eval_comp,\n      h_eval_qMap_x₀, Polynomial.eval_mul, Polynomial.eval_X, P_i, P₀, P₁]\n  have h_equation_39_x₁ : P_i.eval x₁.val = P₀.eval y.val + x₁.val * P₁.eval y.val := by\n    simp only [h_P_i_eval, Fin.eta, Polynomial.eval_add, eval_comp,\n      h_eval_qMap_x₁, Polynomial.eval_mul, Polynomial.eval_X, P_i, P₀, P₁]\n  set f_i := fun (x : (sDomain 𝔽q β h_ℓ_add_R_rate) ⟨i, by omega⟩) => P_i.eval (x.val : L)\n  set f_i_plus_1 := fold (i := ⟨i, by omega⟩) (h_i := by omega) (f := f_i) (r_chal := r_chal)\n  calc f_i_plus_1 y\n    = P_i.eval x₀.val * ((1 - r_chal) * x₁.val - r_chal) +\n        P_i.eval x₁.val * (r_chal - (1 - r_chal) * x₀.val) := rfl\n    _ = (P₀.eval y.val + x₀.val * P₁.eval y.val) * ((1 - r_chal) * x₁.val - r_chal) +\n        (P₀.eval y.val + x₁.val * P₁.eval y.val) * (r_chal - (1 - r_chal) * x₀.val) := by\n      rw [h_equation_39_x₀, h_equation_39_x₁]\n    _ = P₀.eval y.val * ((1 - r_chal) * (x₁.val - x₀.val)) +\n        P₁.eval y.val * ((x₁.val - x₀.val) * r_chal) := by ring\n    _ = P₀.eval y.val * (1 - r_chal) + P₁.eval y.val * r_chal := by rw [h_fiber_diff]; ring\n    _ = P_i_plus_1.eval y.val := by\n      simp only [P_i_plus_1, P₀, P₁, new_coeffs, evenRefinement, oddRefinement,\n        intermediateEvaluationPoly]\n      conv_lhs => enter [1]; rw [mul_comm, ←Polynomial.eval_C_mul]\n      conv_lhs => enter [2]; rw [mul_comm, ←Polynomial.eval_C_mul]\n      -- ⊢ eval y (C (1-r) * ∑...) + eval y (C r * ∑...) = eval y (∑...)\n      rw [←Polynomial.eval_add]\n      -- ⊢ poly_left.eval y = poly_right.eval y\n      congr\n      simp_rw [mul_sum, ←Finset.sum_add_distrib]\n      -- We now prove that the terms inside the sums are equal for each index.\n      apply Finset.sum_congr rfl\n      intro j hj\n      simp only [Polynomial.C_add, Polynomial.C_mul]\n      ring\n",
+          "sourcePath": "dashboard/public/research/warmup15/P11-pr30-defeq.lean",
+          "sourceCommit": "7cd5301fd0ad4e49883f29b0646380047ca45f6d",
+          "sourceState": "working-tree-snapshot",
+          "candidateHash": "1947d44782d33fe4dc34df3afff34c46005505c22dfc7fdc5f97064431f67f1c",
+          "status": "measured",
+          "baseline": {
+            "tokens": 1906,
+            "heartbeats": 45535
+          },
+          "candidate": {
+            "tokens": 891,
+            "heartbeats": 20696
+          },
+          "versions": [
+            {
+              "version": "v4.31.0",
+              "revision": "c1712f6c496d0aef04f09bae42aec13811b3273f",
+              "status": "pass"
+            },
+            {
+              "version": "v4.30.0",
+              "revision": "e6d77b18ca1334a91faf4d1ccf9f96d854d58ba4",
+              "status": "pass"
+            },
+            {
+              "version": "v4.29.0",
+              "revision": "de71a9dfd2f5a343e8895517b7efe857d9f1ce5c",
+              "status": "pass"
+            }
+          ],
+          "environment": "v4.31.0 · Linux x86_64 · scaled heartbeat · 독립 프로세스3회 중앙값 · lean-source-anchored-v1",
+          "note": "구조 변경 후보966토큰/HB21003에서 중간 등식을 정의상 같은 식의 rfl로 대체했습니다. 세 지정 버전에서 원본·출발·수정본 각각3회 통과. 주 환경은891토큰/HB20696이며 출발 후보 대비+2.3046점입니다."
+        }
+      ]
+    },
+    {
+      "id": 12,
+      "name": "interleaved_affine_gaps_imply_tensor_gaps",
+      "source": "arklib",
+      "status": "separate_verified",
+      "baseline": {
+        "tokens": 1353,
+        "heartbeats": 9198
+      },
+      "candidate": {
+        "tokens": 886,
+        "heartbeats": 6575
+      },
+      "versions": [
+        {
+          "version": "v4.31.0",
+          "revision": "c1712f6c496d0aef04f09bae42aec13811b3273f",
+          "status": "pass"
+        },
+        {
+          "version": "v4.30.0",
+          "revision": "e6d77b18ca1334a91faf4d1ccf9f96d854d58ba4",
+          "status": "pass"
+        },
+        {
+          "version": "v4.29.0",
+          "revision": "de71a9dfd2f5a343e8895517b7efe857d9f1ce5c",
+          "status": "pass"
+        }
+      ],
+      "environment": "v4.31.0 · macOS arm64 · Somi full-source v2 · scaled heartbeat · 독립 프로세스3회 중앙값 · 별도 검증",
+      "candidateHash": "be1118ac252a8eecb4a94b4788dd981dba9c21bc8214ad8478e5a0d1e7a0acc8",
+      "note": "단일 선언 후보의 고정 명제·전체 문맥·허용 공리를 독립 검증했습니다. v4.31.0, v4.30.0, v4.29.0에서 원본과 후보 각각3회 통과했습니다. 지정 세 버전 확인을 완료했습니다. 정상 기수 표기를 허용한 별도 경로의 측정이므로 공통 점수·평균에는 합산하지 않습니다.",
+      "baselineCompatibility": null,
+      "evidence": [
+        "dashboard/public/research/warmup15/p12-v2.json",
+        "dashboard/public/research/warmup15/P12-pr27-single.lean"
+      ],
+      "selectedCandidateId": "independent-P12-20261026",
+      "selectionReason": "고정 명제와 전체 문맥의 독립 검증을 통과한 단일 선언을 선택했습니다. 별도 경로의 검증 결과는 표시하되 공통 점수·평균에는 합산하지 않습니다.",
+      "teamResults": [
+        {
+          "id": "손지연-final",
+          "author": "손지연",
+          "proof": "-- The helpers below expose the sampling and induction interfaces explicitly.\nomit [DecidableEq F] [NoZeroDivisors F] [Fintype A] [Module.Free F A] [Nontrivial ↥MC]\n\nomit [Nonempty ι] [DecidableEq ι] in\n/-- Split the last coordinate once, keeping all probability coercions behind an equality. -/\nprivate lemma tensor_success_split {n : ℕ}\n    (u : WordStack A (Fin (2 ^ (n + 1))) ι) :\n    Pr_{let r ← $ᵖ (Fin (n + 1) → F)}[Δ₀(multilinearCombine u r, MC) ≤ e] =\n    Pr_{let r_last ← $ᵖ F; let r_init ← $ᵖ (Fin n → F)}[\n      multilinearCombine_affineComb_split_last_close (MC := MC) u e r_last r_init] := by\n  classical\n  have fold (r : Fin (n + 1) → F) :\n      (Δ₀(multilinearCombine u r, MC) ≤ e) =\n        multilinearCombine_affineComb_split_last_close (MC := MC) u e\n          (r (Fin.last n)) (fun i => r i.castSucc) := by\n    unfold multilinearCombine_affineComb_split_last_close\n    rw [multilinearCombine_recursive_form]\n    rfl\n  simp_rw [fold]\n  exact prob_split_last_uniform_sampling_of_finFun _\n\n/-- The one-coordinate tensor statement is exactly the affine-line statement. -/\nprivate lemma tensor_gap_one\n    (hC : e_ε_correlatedAgreementAffineLinesNat (F := F) (A := A) (ι := ι) (C := MC) e ε) :\n    δ_ε_multilinearCorrelatedAgreement_Nat (F := F) (A := A) (ι := ι) (C := MC) 1 e ε := by\n  classical\n  intro u hprob\n  simp_rw [multilinearCombine₁_eq_affineLineEvaluation (F := F) (u := u)] at hprob\n  simp_rw [prob_uniform_singleton_finFun_eq (F := F)\n    (P := fun r => Δ₀(affineLineEvaluation (u 0) (u 1) r, MC) ≤ e),\n    Nat.cast_one, ENNReal.coe_one, one_mul] at hprob\n  have hCA := hC (u 0) (u 1) hprob\n  have hu : u = finMapTwoWords (u 0) (u 1) := by\n    funext i\n    fin_cases i <;> rfl\n  simpa only [jointProximityNat₂, ← hu] using hCA\n\n/-- Lift the tensor statement by one coordinate via the good-parameter set R*. -/\nprivate lemma tensor_gap_succ {n : ℕ}\n    (ih : δ_ε_multilinearCorrelatedAgreement_Nat (F := F) (A := A) (ι := ι) (C := MC) n e ε)\n    (hGaps : ∀ m : ℕ, m ≥ 1 → e_ε_correlatedAgreementAffineLinesNat (F := F)\n      (A := InterleavedSymbol A (Fin m)) (ι := ι) (C := MC ^⋈ (Fin m)) e ε) :\n    δ_ε_multilinearCorrelatedAgreement_Nat (F := F) (A := A) (ι := ι) (C := MC) (n + 1) e ε := by\n  classical\n  intro u hprob\n  let U₀ := (splitHalfRowWiseInterleavedWords (ϑ := n) u).1\n  let U₁ := (splitHalfRowWiseInterleavedWords (ϑ := n) u).2\n  let good := R_star_tensor MC (m := n) (e := e) (ε := ε) U₀ U₁\n  have hgood : Pr_{let r ← $ᵖ F}[r ∈ good] >\n      (ε : ENNReal) / (Fintype.card F : ENNReal) := by\n    apply prob_R_star_gt_threshold (MC := MC) (u := u) (e := e)\n    rwa [← tensor_success_split (MC := MC) (u := u)]\n  have hclose : ∀ r : F, r ∈ good →\n      Δ₀(affineLineEvaluation (⋈|U₀) (⋈|U₁) r, MC ^⋈ (Fin (2 ^ n))) ≤ e := by\n    intro r hr\n    exact correlatedAgreement_of_mem_R_star_tensor (MC := MC) (ih := ih) (u := u) ⟨r, hr⟩\n  apply CA_split_rowwise_implies_CA (C := MC) (u := u) (e := e)\n  apply hGaps (2 ^ n) Nat.one_le_two_pow (⋈|U₀) (⋈|U₁)\n  exact lt_of_lt_of_le hgood (Pr_le_Pr_of_implies (D := $ᵖ F) (h_imp := hclose))\n\ntheorem interleaved_affine_gaps_imply_tensor_gaps\n    (hC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat\n      (F := F) (A := A) (ι := ι) (C := MC) (e := e) (ε := ε))\n    (h_interleaved_gaps : ∀ m : ℕ, m ≥ 1 →\n      e_ε_correlatedAgreementAffineLinesNat (F := F)\n        (A := InterleavedSymbol A (Fin m)) (ι := ι) (C := MC ^⋈ (Fin m)) e ε) :\n    ∀ (ϑ : ℕ), (hϑ_gt_0 : ϑ > 0) → δ_ε_multilinearCorrelatedAgreement_Nat (F := F) (A := A)\n      (ι := ι) (C := MC) (ϑ := ϑ) (e := e) (ε := ε) := by\n  intro ϑ\n  induction ϑ with\n  | zero => intro h; omega\n  | succ n ih =>\n    cases n with\n    | zero => intro _; exact tensor_gap_one (MC := MC) hC_proximityGapAffineLines\n    | succ n =>\n      intro _\n      exact tensor_gap_succ (MC := MC) (ih (Nat.succ_pos n)) h_interleaved_gaps\n",
+          "sourcePath": "docs/research/refactoring/warmup/손지연/report.md",
+          "sourceCommit": "5eb5a8c61350d59f1c2f0655c18387abb58cafe4",
+          "sourceState": "committed",
+          "candidateHash": "0b696bdf18421ecfda5f0d12ced0dffe9e1090d01f6f7a6d2f34b385aecd3b85",
+          "status": "unsupported",
+          "baseline": null,
+          "candidate": null,
+          "versions": [
+            {
+              "version": "v4.31.0",
+              "revision": "c1712f6c496d0aef04f09bae42aec13811b3273f",
+              "status": "pending"
+            },
+            {
+              "version": "v4.30.0",
+              "revision": "e6d77b18ca1334a91faf4d1ccf9f96d854d58ba4",
+              "status": "pending"
+            },
+            {
+              "version": "v4.29.0",
+              "revision": "de71a9dfd2f5a343e8895517b7efe857d9f1ce5c",
+              "status": "pending"
+            }
+          ],
+          "environment": "v4.31.0 · scaled heartbeat · 독립 프로세스 3회 중앙값 · lean-source-anchored-v1",
+          "note": "보조정리 전체를 보존. 단일 선언만 받는 PR3 평가기에서는 지원 범위 확인 필요. PR3 단일 선언 검증 규약에서 처리하지 못함: The theorem statement must be preserved byte-for-byte v4.31.0: 컴파일러·의존성 준비 필요 v4.30.0: 컴파일러·의존성 준비 필요 v4.29.0: 컴파일러·의존성 준비 필요"
+        },
+        {
+          "id": "independent-P12-20261026",
+          "author": "손지연",
+          "proof": "theorem interleaved_affine_gaps_imply_tensor_gaps\n    (hC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat\n      (F := F) (A := A) (ι := ι) (C := MC) (e := e) (ε := ε))\n    (h_interleaved_gaps : ∀ m : ℕ, m ≥ 1 →\n      e_ε_correlatedAgreementAffineLinesNat (F := F)\n        (A := InterleavedSymbol A (Fin m)) (ι := ι) (C := MC ^⋈ (Fin m)) e ε) :\n    ∀ (ϑ : ℕ), (hϑ_gt_0 : ϑ > 0) → δ_ε_multilinearCorrelatedAgreement_Nat (F := F) (A := A)\n      (ι := ι) (C := MC) (ϑ := ϑ) (e := e) (ε := ε) := by\n  classical\n  intro ϑ\n  induction ϑ with\n  | zero =>\n      intro h\n      omega\n  | succ n ih =>\n      cases n with\n      | zero =>\n          simp only [zero_add, gt_iff_lt, zero_lt_one, ModuleCode, forall_const]\n          intro u hprob\n          let h_aff := multilinearCombine₁_eq_affineLineEvaluation (F := F) (u := u)\n          simp_rw [h_aff] at hprob\n          let h_single := prob_uniform_singleton_finFun_eq (F := F)\n            (P := fun r => Δ₀(affineLineEvaluation (u 0) (u 1) r, MC) ≤ e)\n          simp_rw [h_single, Nat.cast_one, ENNReal.coe_one, one_mul] at hprob\n          have h := hC_proximityGapAffineLines (u 0) (u 1) hprob\n          simp only [jointProximityNat₂, Fin.isValue] at h\n          have hu : u = finMapTwoWords (u 0) (u 1) := by\n            funext i\n            match i with\n            | 0 => rfl\n            | 1 => rfl\n          rw [hu.symm] at h\n          exact h\n      | succ k =>\n          intro _ u hprob\n          set U₀ : Fin (2 ^ (k + 1)) → Word A ι :=\n            (splitHalfRowWiseInterleavedWords (ϑ := k + 1) u).1\n          set U₁ : Fin (2 ^ (k + 1)) → Word A ι :=\n            (splitHalfRowWiseInterleavedWords (ϑ := k + 1) u).2\n          unfold jointProximityNat\n          simp only\n          have h_snoc : ∀ r : Fin (k + 1 + 1) → F,\n              Fin.snoc (fun i : Fin (k + 1) => r i.castSucc)\n                (r (Fin.last (k + 1))) = r := fun r => by\n            funext i\n            by_cases h : i = Fin.last (k + 1)\n            · simp only [h, Fin.snoc_last]\n            · have hv : i.val ≠ Fin.last (k + 1) := by omega\n              rw [Fin.val_last] at hv\n              have hi : i.val < k + 1 := by omega\n              simp only [Fin.snoc, Fin.castSucc_castLT, cast_eq, dite_eq_ite,\n                ite_eq_left_iff, not_lt]\n              simp only [isEmpty_Prop, not_le, hi, IsEmpty.forall_iff]\n          let P : F → (Fin (k + 1) → F) → Prop := fun r_last r_init =>\n            Δ₀(multilinearCombine (u := u) (r := Fin.snoc r_init r_last), MC) ≤ e\n          let h_split := prob_split_last_uniform_sampling_of_finFun\n            (ϑ := k + 1) (F := F) (P := P)\n          unfold P at h_split\n          simp_rw [h_snoc] at h_split\n          rw [h_split] at hprob\n          have h_rec (r_init : Fin (k + 1) → F) (r_last : F) :\n              multilinearCombine u (Fin.snoc r_init r_last) =\n                multilinearCombine (affineLineEvaluation U₀ U₁ r_last) r_init := by\n            rw [multilinearCombine_recursive_form]\n            simp only [Fin.snoc_last, Fin.init_snoc]\n            rfl\n          simp_rw [h_rec] at hprob\n          let R := R_star_tensor MC (m := k + 1) (e := e) (ε := ε) U₀ U₁\n          have hR : Pr_{let r ← $ᵖ F}[r ∈ R] >\n              (↑ε : ENNReal) / (Fintype.card F : ENNReal) := by\n            exact prob_R_star_gt_threshold (MC := MC) (ε := ε) (ϑ := k + 1)\n              (u := u) (e := e) hprob\n          have hclose : ∀ r : R,\n              jointProximityNat (u := affineLineEvaluation U₀ U₁ r.val)\n                (e := e) (C := MC) := by\n            intro r\n            apply correlatedAgreement_of_mem_R_star_tensor\n              (ih := fun u' => ih (by omega) u') (u := u)\n          have hline :\n              Pr_{let r ← $ᵖ F}[\n                Δ₀(affineLineEvaluation\n                    (u₀ := ⋈|(show WordStack A (Fin (2 ^ (k + 1))) ι from U₀))\n                    (u₁ := ⋈|(show WordStack A (Fin (2 ^ (k + 1))) ι from U₁)) r,\n                  MC ^⋈ (Fin (2 ^ (k + 1)))) ≤ e] >\n                (↑ε : ENNReal) / (Fintype.card F : ENNReal) := by\n            apply lt_of_le_of_lt' _ hR\n            apply Pr_le_Pr_of_implies\n            intro r hr\n            have h := hclose ⟨r, hr⟩\n            unfold jointProximityNat at h\n            exact h\n          have hfinal : jointProximityNat₂\n              (u₀ := ⋈|(show WordStack A (Fin (2 ^ (k + 1))) ι from U₀))\n              (u₁ := ⋈|(show WordStack A (Fin (2 ^ (k + 1))) ι from U₁))\n              (e := e) (C := MC ^⋈ (Fin (2 ^ (k + 1)))) := by\n            apply h_interleaved_gaps (2 ^ (k + 1)) Nat.one_le_two_pow\n            exact hline\n          exact CA_split_rowwise_implies_CA (MC : Set (Word A ι))\n            (u := u) (e := e) hfinal",
+          "sourcePath": "dashboard/public/research/warmup15/P12-pr27-single.lean",
+          "sourceCommit": "66286ca8d39adb3f2d931bdf134fa86be79b8f28",
+          "sourceState": "committed",
+          "candidateHash": "be1118ac252a8eecb4a94b4788dd981dba9c21bc8214ad8478e5a0d1e7a0acc8",
+          "status": "separate_verified",
+          "baseline": {
+            "tokens": 1353,
+            "heartbeats": 9198
+          },
+          "candidate": {
+            "tokens": 886,
+            "heartbeats": 6575
+          },
+          "versions": [
+            {
+              "version": "v4.31.0",
+              "revision": "c1712f6c496d0aef04f09bae42aec13811b3273f",
+              "status": "pass"
+            },
+            {
+              "version": "v4.30.0",
+              "revision": "e6d77b18ca1334a91faf4d1ccf9f96d854d58ba4",
+              "status": "pass"
+            },
+            {
+              "version": "v4.29.0",
+              "revision": "de71a9dfd2f5a343e8895517b7efe857d9f1ce5c",
+              "status": "pass"
+            }
+          ],
+          "environment": "v4.31.0 · macOS arm64 · Somi full-source v2 · scaled heartbeat · 독립 프로세스3회 중앙값 · 별도 검증",
+          "note": "단일 선언 후보의 고정 명제·전체 문맥·허용 공리를 독립 검증했습니다. v4.31.0, v4.30.0, v4.29.0에서 원본과 후보 각각3회 통과했습니다. 지정 세 버전 확인을 완료했습니다. 정상 기수 표기를 허용한 별도 경로의 측정이므로 공통 점수·평균에는 합산하지 않습니다."
+        }
+      ]
+    },
+    {
+      "id": 13,
+      "name": "putnam_1964_a4",
+      "source": "putnambench",
+      "status": "measured",
+      "baseline": {
+        "tokens": 1769,
+        "heartbeats": 115674
+      },
+      "candidate": {
+        "tokens": 183,
+        "heartbeats": 2996
+      },
+      "versions": [
+        {
+          "version": "v4.25.0",
+          "revision": "1ccd71f89cbbd82ae7d097723ce1722ca7b01c33",
+          "status": "pass"
+        },
+        {
+          "version": "v4.26.0",
+          "revision": "2df2f0150c275ad53cb3c90f7c98ec15a56a1a67",
+          "status": "pass"
+        },
+        {
+          "version": "v4.27.0",
+          "revision": "a3a10db0e9d66acbebf76c5e6a135066525ac900",
+          "status": "pass"
+        }
+      ],
+      "environment": "v4.26.0 · Linux x86_64 · scaled heartbeat · 독립 프로세스3회 중앙값 · lean-source-anchored-v1",
+      "candidateHash": "639587d781669920f53805ab49450d40002e358e33cff361e679bcbbb1f09348",
+      "note": "추가 import를 사용한 개발 후보. 지정 환경에서 별도 재검증 필요. 고정 커밋의 의존성을 복원하여 원본·후보를 모든 지정 버전에서 재검증했습니다.",
+      "baselineCompatibility": 100,
+      "evidence": [
+        "submissions/warmup/verification-results.json",
+        "submissions/warmup/best/P13.lean"
+      ],
+      "selectedCandidateId": "권주원-development",
+      "selectionReason": "검증된 후보의 원본 대비 토큰·HB 감소율 평균 최대. 지정 버전 미완료는 호환성 대기로 표시. 기존 담당자 최종본과 모든 후보는 보존.",
+      "teamResults": [
+        {
+          "id": "권주원-final",
+          "author": "권주원",
+          "proof": "theorem putnam_1964_a4\n(u : ℕ → ℤ)\n(boundedu : ∃ B T : ℤ, ∀ n : ℕ, B ≤ u n ∧ u n ≤ T)\n(hu : ∀ n ≥ 4, u n = ((u (n - 1) + u (n - 2) + u (n - 3) * u (n - 4)) : ℝ) / (u (n - 1) * u (n - 2) + u (n - 3) + u (n - 4)) ∧ (u (n - 1) * u (n - 2) + u (n - 3) + u (n - 4)) ≠ 0)\n: (∃ N c : ℕ, c > 0 ∧ ∀ n ≥ N, u (n + c) = u n) := by\n  obtain ⟨B, T, hB⟩ := boundedu\n  let f : ℕ → (Fin 4 → Set.Icc B T) := fun n k => ⟨u (n + k), hB (n + k)⟩\n  obtain ⟨i, j, hij, he⟩ := Set.finite_univ.exists_lt_map_eq_of_forall_mem\n    (f := f) (fun _ => Set.mem_univ _)\n  have hp (m : ℕ) : u (i + m) = u (j + m) := by\n    induction m using Nat.strong_induction_on with\n    | h m ih =>\n      by_cases hm : m < 4\n      · exact congrArg Subtype.val (congrFun he ⟨m, hm⟩)\n      · have hprev (k : ℕ) (hk : 0 < k ∧ k ≤ m) :\n            u (i + m - k) = u (j + m - k) := by\n          simpa only [Nat.add_sub_assoc hk.2] using ih (m - k) (by omega)\n        apply @Int.cast_injective ℝ _ _\n        rw [(hu (i + m) (by omega)).1, (hu (j + m) (by omega)).1,\n          hprev 1, hprev 2, hprev 3, hprev 4] <;> omega\n  refine ⟨i, j - i, by omega, ?_⟩\n  intro n hn\n  convert (hp (n - i)).symm using 1 <;> congr 1 <;> omega\n",
+          "sourcePath": "docs/research/refactoring/warmup/권주원/presentation.html",
+          "sourceCommit": "5eb5a8c61350d59f1c2f0655c18387abb58cafe4",
+          "sourceState": "committed",
+          "candidateHash": "6bf40078bbbbbafe922d313feb4228bc8c6262269d3a13231482b25c001feda9",
+          "status": "measured",
+          "baseline": {
+            "tokens": 1769,
+            "heartbeats": 115674
+          },
+          "candidate": {
+            "tokens": 259,
+            "heartbeats": 2931
+          },
+          "versions": [
+            {
+              "version": "v4.25.0",
+              "revision": "1ccd71f89cbbd82ae7d097723ce1722ca7b01c33",
+              "status": "pass"
+            },
+            {
+              "version": "v4.26.0",
+              "revision": "2df2f0150c275ad53cb3c90f7c98ec15a56a1a67",
+              "status": "pass"
+            },
+            {
+              "version": "v4.27.0",
+              "revision": "a3a10db0e9d66acbebf76c5e6a135066525ac900",
+              "status": "pass"
+            }
+          ],
+          "environment": "v4.26.0 · Linux x86_64 · scaled heartbeat · 독립 프로세스3회 중앙값 · lean-source-anchored-v1",
+          "note": "담당자 발표의 최종 수정본. 지역 이름 단축을 포함한 마지막 코드 블록. 고정 커밋의 의존성을 복원하여 원본·후보를 모든 지정 버전에서 재검증했습니다."
+        },
+        {
+          "id": "권주원-development",
+          "author": "권주원",
+          "proof": "theorem putnam_1964_a4\n(u : ℕ → ℤ)\n(boundedu : ∃ B T : ℤ, ∀ n : ℕ, B ≤ u n ∧ u n ≤ T)\n(hu : ∀ n ≥ 4, u n = ((u (n - 1) + u (n - 2) + u (n - 3) * u (n - 4)) : ℝ) / (u (n - 1) * u (n - 2) + u (n - 3) + u (n - 4)) ∧ (u (n - 1) * u (n - 2) + u (n - 3) + u (n - 4)) ≠ 0)\n: (∃ N c : ℕ, c > 0 ∧ ∀ n ≥ N, u (n + c) = u n) := by\n  obtain ⟨B, T, hB⟩ := boundedu\n  let f n (k : Fin 4) : Icc B T := ⟨u (n+k), hB _⟩\n  obtain ⟨a, b, hab, he⟩ := Set.finite_univ.exists_lt_map_eq_of_forall_mem\n    (f := f) (by simp)\n  have hp m : u (a + m) = u (b + m) := by\n    induction m using Nat.strong_induction_on with\n    | h m ih =>\n      by_cases hm : m < 4\n      · exact congrArg Subtype.val (congrFun he ⟨m, hm⟩)\n      · apply @Int.cast_injective ℝ\n        rw [(hu (a+m) (by omega)).1, (hu (b+m) (by omega)).1]\n        simp (disch := omega) only [Nat.add_sub_assoc, ih]\n  refine ⟨a, b-a, Nat.sub_pos_of_lt hab, fun n hn => ?_⟩\n  convert (hp (n-a)).symm using 2 <;> omega\n",
+          "sourcePath": "docs/research/refactoring/warmup/권주원/evidence/2026-10-16-warmup15-xhigh/P13/development-best.lean",
+          "sourceCommit": "5eb5a8c61350d59f1c2f0655c18387abb58cafe4",
+          "sourceState": "working-tree-snapshot",
+          "candidateHash": "639587d781669920f53805ab49450d40002e358e33cff361e679bcbbb1f09348",
+          "status": "measured",
+          "baseline": {
+            "tokens": 1769,
+            "heartbeats": 115674
+          },
+          "candidate": {
+            "tokens": 183,
+            "heartbeats": 2996
+          },
+          "versions": [
+            {
+              "version": "v4.25.0",
+              "revision": "1ccd71f89cbbd82ae7d097723ce1722ca7b01c33",
+              "status": "pass"
+            },
+            {
+              "version": "v4.26.0",
+              "revision": "2df2f0150c275ad53cb3c90f7c98ec15a56a1a67",
+              "status": "pass"
+            },
+            {
+              "version": "v4.27.0",
+              "revision": "a3a10db0e9d66acbebf76c5e6a135066525ac900",
+              "status": "pass"
+            }
+          ],
+          "environment": "v4.26.0 · Linux x86_64 · scaled heartbeat · 독립 프로세스3회 중앙값 · lean-source-anchored-v1",
+          "note": "추가 import를 사용한 개발 후보. 지정 환경에서 별도 재검증 필요. 고정 커밋의 의존성을 복원하여 원본·후보를 모든 지정 버전에서 재검증했습니다."
+        }
+      ]
+    },
+    {
+      "id": 14,
+      "name": "putnam_1964_b2",
+      "source": "putnambench",
+      "status": "measured",
+      "baseline": {
+        "tokens": 1754,
+        "heartbeats": 134471
+      },
+      "candidate": {
+        "tokens": 105,
+        "heartbeats": 2433
+      },
+      "versions": [
+        {
+          "version": "v4.25.0",
+          "revision": "1ccd71f89cbbd82ae7d097723ce1722ca7b01c33",
+          "status": "pass"
+        },
+        {
+          "version": "v4.26.0",
+          "revision": "2df2f0150c275ad53cb3c90f7c98ec15a56a1a67",
+          "status": "pass"
+        }
+      ],
+      "environment": "v4.26.0 · Linux x86_64 · scaled heartbeat · 독립 프로세스3회 중앙값 · lean-source-anchored-v1",
+      "candidateHash": "e00f8c3bd53b158a79d09d1a568dea9f9812e6b81a3c9c2c6620dff6c3b460ab",
+      "note": "박채원 기존 증명을 출발점으로 Set.Intersecting.is_max_iff_card_eq 정리 재사용. 정확한 두 지정 버전의 원본 전체 문맥에서 원본·기존·새 후보 각3회 통과. 주 측정은4.26,4.25결과는 호환성 근거로 별도 보존.",
+      "baselineCompatibility": 100,
+      "evidence": [
+        "dashboard/public/research/warmup15/verification.json",
+        "dashboard/public/research/warmup15/P14-lemma-maximal.lean"
+      ],
+      "selectedCandidateId": "정소미-team-methods-20261026-P14",
+      "selectionReason": "검증된 후보의 원본 대비 토큰·HB 감소율 평균 최대. 지정 버전 미완료는 호환성 대기로 표시. 기존 담당자 최종본과 모든 후보는 보존.",
+      "teamResults": [
+        {
+          "id": "박채원-local-v426",
+          "author": "박채원",
+          "proof": "theorem putnam_1964_b2\n(S : Type*) [Fintype S] [Nonempty S]\n(P : Finset (Set S))\n(hPP : ∀ T ∈ P, ∀ U ∈ P, T ∩ U ≠ ∅)\n(hPS : ¬∃ T : Set S, T ∉ P ∧ (∀ U ∈ P, T ∩ U ≠ ∅))\n: (P.card = 2 ^ (Fintype.card S - 1)) := by\n  classical\n  -- [핵심] 모든 T 에 대해 \"T ∈ P ↔ Tᶜ ∉ P\" : 짝 (T, Tᶜ) 마다 정확히 하나\n  have key : ∀ T : Set S, T ∈ P ↔ Tᶜ ∉ P := by\n    intro T\n    constructor\n    -- [해설 2] 짝마다 최대 하나: T ∩ Tᶜ = ∅ 이라 둘 다 있으면 교차 조건(hPP)에 모순\n    · intro hT hTc\n      exact hPP T hT Tᶜ hTc (Set.inter_compl_self T)\n    -- [해설 3] 짝마다 최소 하나: T, Tᶜ 가 둘 다 없다고 가정 (귀류법)\n    · intro hTc\n      by_contra hT\n      -- 극대 조건(hPS): T 를 넣을 수 없으니 T 와 겹치지 않는 U ∈ P 가 있음 (U = 해설의 Y)\n      obtain ⟨U, hU, hTU⟩ : ∃ U ∈ P, T ∩ U = ∅ := by\n        by_contra h\n        exact hPS ⟨T, hT, fun U hU hTU => h ⟨U, hU, hTU⟩⟩\n      -- Tᶜ 도 넣을 수 없으니 Tᶜ 와 겹치지 않는 V ∈ P 가 있음 (V = 해설의 Z)\n      obtain ⟨V, hV, hTV⟩ : ∃ V ∈ P, Tᶜ ∩ V = ∅ := by\n        by_contra h\n        exact hPS ⟨Tᶜ, hTc, fun V hV hTV => h ⟨V, hV, hTV⟩⟩\n      -- U ∩ V = ∅ 을 보이면 교차 조건(hPP)에 모순\n      apply hPP U hU V hV\n      ext x\n      simp only [Set.mem_inter_iff, Set.mem_empty_iff_false, iff_false, not_and]\n      intro hxU hxV\n      by_cases hx : x ∈ T\n      · -- x ∈ T 이면 x ∈ T ∩ U = ∅ : 모순 (U ⊆ Tᶜ)\n        have : x ∈ T ∩ U := ⟨hx, hxU⟩\n        rw [hTU] at this\n        exact this\n      · -- x ∉ T 이면 x ∈ Tᶜ ∩ V = ∅ : 모순 (V ⊆ T)\n        have : x ∈ Tᶜ ∩ V := ⟨hx, hxV⟩\n        rw [hTV] at this\n        exact this\n  -- [해설 4] 개수 세기: P 와 {Tᶜ | T ∈ P} 는 겹치지 않고, 합치면 전체 부분집합\n  have hdisj : Disjoint P (P.image compl) := by\n    rw [Finset.disjoint_left]\n    intro T hT hT'\n    obtain ⟨U, hU, rfl⟩ := Finset.mem_image.mp hT'\n    exact (key U).mp hU hT\n  have hunion : P ∪ P.image compl = Finset.univ := by\n    ext T\n    simp only [Finset.mem_union, Finset.mem_image, Finset.mem_univ, iff_true]\n    by_cases hT : T ∈ P\n    · exact Or.inl hT\n    · refine Or.inr ⟨Tᶜ, ?_, compl_compl T⟩\n      by_contra h\n      exact hT ((key T).mpr h)\n  -- |P| + |P| = 2ⁿ (여집합을 취해도 개수는 같음)\n  have hcard : P.card + P.card = 2 ^ Fintype.card S := by\n    have h := Finset.card_union_of_disjoint hdisj\n    rw [hunion, Finset.card_image_of_injective _ compl_injective, Finset.card_univ,\n      Fintype.card_set] at h\n    omega\n  -- n ≥ 1 (Nonempty) 이므로 n = m + 1 로 쓰고 2·|P| = 2^(m+1) → |P| = 2^m\n  obtain ⟨n, hn⟩ : ∃ n, Fintype.card S = n + 1 :=\n    Nat.exists_eq_succ_of_ne_zero Fintype.card_ne_zero\n  rw [hn, pow_succ] at hcard\n  rw [hn, Nat.add_sub_cancel]\n  omega\n",
+          "sourcePath": "docs/research/refactoring/warmup/박채원/evidence/local-v4.26/P14_mine.lean",
+          "sourceCommit": "5eb5a8c61350d59f1c2f0655c18387abb58cafe4",
+          "sourceState": "committed",
+          "candidateHash": "cfc6d844740f6ec56444dc84842227f9c831c834eb049ae44334354607d30a54",
+          "status": "measured",
+          "baseline": {
+            "tokens": 1754,
+            "heartbeats": 134471
+          },
+          "candidate": {
+            "tokens": 364,
+            "heartbeats": 1699
+          },
+          "versions": [
+            {
+              "version": "v4.25.0",
+              "revision": "1ccd71f89cbbd82ae7d097723ce1722ca7b01c33",
+              "status": "pass"
+            },
+            {
+              "version": "v4.26.0",
+              "revision": "2df2f0150c275ad53cb3c90f7c98ec15a56a1a67",
+              "status": "pass"
+            }
+          ],
+          "environment": "v4.26.0 · Linux x86_64 · scaled heartbeat · 독립 프로세스3회 중앙값 · lean-source-anchored-v1",
+          "note": "담당자 측정 파일에서 선언 추출. 계측용 앞뒤 명령은 원본 및 별도 파일에 보존. 고정 커밋의 의존성을 복원하여 원본·후보를 모든 지정 버전에서 재검증했습니다."
+        },
+        {
+          "id": "박채원-final",
+          "author": "박채원",
+          "proof": "theorem putnam_1964_b2\n(S : Type*) [Fintype S] [Nonempty S]\n(P : Finset (Set S))\n(hPP : ∀ T ∈ P, ∀ U ∈ P, T ∩ U ≠ ∅)\n(hPS : ¬∃ T : Set S, T ∉ P ∧ (∀ U ∈ P, T ∩ U ≠ ∅))\n: (P.card = 2 ^ (Fintype.card S - 1)) := by\n  classical\n  -- [핵심] 모든 T 에 대해 \"T ∈ P ↔ Tᶜ ∉ P\" : 짝 (T, Tᶜ) 마다 정확히 하나\n  have key : ∀ T : Set S, T ∈ P ↔ Tᶜ ∉ P := by\n    intro T\n    constructor\n    -- [해설 2] 짝마다 최대 하나: T ∩ Tᶜ = ∅ 이라 둘 다 있으면 교차 조건(hPP)에 모순\n    · intro hT hTc\n      exact hPP T hT Tᶜ hTc (Set.inter_compl_self T)\n    -- [해설 3] 짝마다 최소 하나: T, Tᶜ 가 둘 다 없다고 가정 (귀류법)\n    · intro hTc\n      by_contra hT\n      -- 극대 조건(hPS): T 를 넣을 수 없으니 T 와 겹치지 않는 U ∈ P 가 있음 (U = 해설의 Y)\n      obtain ⟨U, hU, hTU⟩ : ∃ U ∈ P, T ∩ U = ∅ := by\n        by_contra h\n        exact hPS ⟨T, hT, fun U hU hTU => h ⟨U, hU, hTU⟩⟩\n      -- Tᶜ 도 넣을 수 없으니 Tᶜ 와 겹치지 않는 V ∈ P 가 있음 (V = 해설의 Z)\n      obtain ⟨V, hV, hTV⟩ : ∃ V ∈ P, Tᶜ ∩ V = ∅ := by\n        by_contra h\n        exact hPS ⟨Tᶜ, hTc, fun V hV hTV => h ⟨V, hV, hTV⟩⟩\n      -- U ∩ V = ∅ 을 보이면 교차 조건(hPP)에 모순\n      apply hPP U hU V hV\n      ext x\n      simp only [Set.mem_inter_iff, Set.mem_empty_iff_false, iff_false, not_and]\n      intro hxU hxV\n      by_cases hx : x ∈ T\n      · -- x ∈ T 이면 x ∈ T ∩ U = ∅ : 모순 (U ⊆ Tᶜ)\n        have : x ∈ T ∩ U := ⟨hx, hxU⟩\n        rw [hTU] at this\n        exact this\n      · -- x ∉ T 이면 x ∈ Tᶜ ∩ V = ∅ : 모순 (V ⊆ T)\n        have : x ∈ Tᶜ ∩ V := ⟨hx, hxV⟩\n        rw [hTV] at this\n        exact this\n  -- [해설 4] 개수 세기: P 와 {Tᶜ | T ∈ P} 는 겹치지 않고, 합치면 전체 부분집합\n  have hdisj : Disjoint P (P.image compl) := by\n    rw [Finset.disjoint_left]\n    intro T hT hT'\n    obtain ⟨U, hU, rfl⟩ := Finset.mem_image.mp hT'\n    exact (key U).mp hU hT\n  have hunion : P ∪ P.image compl = Finset.univ := by\n    ext T\n    simp only [Finset.mem_union, Finset.mem_image, Finset.mem_univ, iff_true]\n    by_cases hT : T ∈ P\n    · exact Or.inl hT\n    · refine Or.inr ⟨Tᶜ, ?_, compl_compl T⟩\n      by_contra h\n      exact hT ((key T).mpr h)\n  -- |P| + |P| = 2ⁿ (여집합을 취해도 개수는 같음)\n  have hcard : P.card + P.card = 2 ^ Fintype.card S := by\n    have h := Finset.card_union_of_disjoint hdisj\n    rw [hunion, Finset.card_image_of_injective _ compl_injective, Finset.card_univ,\n      Fintype.card_set] at h\n    omega\n  -- n ≥ 1 (Nonempty) 이므로 n = m + 1 로 쓰고 2·|P| = 2^(m+1) → |P| = 2^m\n  obtain ⟨n, hn⟩ : ∃ n, Fintype.card S = n + 1 :=\n    Nat.exists_eq_succ_of_ne_zero Fintype.card_ne_zero\n  rw [hn, pow_succ] at hcard\n  rw [hn, Nat.add_sub_cancel]\n  omega\n",
+          "sourcePath": "docs/research/refactoring/warmup/박채원/report.md",
+          "sourceCommit": "5eb5a8c61350d59f1c2f0655c18387abb58cafe4",
+          "sourceState": "committed",
+          "candidateHash": "cfc6d844740f6ec56444dc84842227f9c831c834eb049ae44334354607d30a54",
+          "status": "measured",
+          "baseline": {
+            "tokens": 1754,
+            "heartbeats": 134471
+          },
+          "candidate": {
+            "tokens": 364,
+            "heartbeats": 1699
+          },
+          "versions": [
+            {
+              "version": "v4.25.0",
+              "revision": "1ccd71f89cbbd82ae7d097723ce1722ca7b01c33",
+              "status": "pass"
+            },
+            {
+              "version": "v4.26.0",
+              "revision": "2df2f0150c275ad53cb3c90f7c98ec15a56a1a67",
+              "status": "pass"
+            }
+          ],
+          "environment": "v4.26.0 · Linux x86_64 · scaled heartbeat · 독립 프로세스3회 중앙값 · lean-source-anchored-v1",
+          "note": "고정 커밋의 의존성을 복원하여 원본·후보를 모든 지정 버전에서 재검증했습니다."
+        },
+        {
+          "id": "정소미-team-methods-20261026-P14",
+          "author": "정소미",
+          "proof": "theorem putnam_1964_b2\n(S : Type*) [Fintype S] [Nonempty S]\n(P : Finset (Set S))\n(hPP : ∀ T ∈ P, ∀ U ∈ P, T ∩ U ≠ ∅)\n(hPS : ¬∃ T : Set S, T ∉ P ∧ (∀ U ∈ P, T ∩ U ≠ ∅))\n: (P.card = 2 ^ (Fintype.card S - 1)) := by\n  classical\n  have hP : (P : Set (Set S)).Intersecting := by\n    simpa [Set.Intersecting, Set.disjoint_iff_inter_eq_empty] using hPP\n  have hcard := hP.is_max_iff_card_eq.mp (by\n    intro Q hQ hPQ\n    apply Finset.Subset.antisymm hPQ\n    intro T hT\n    by_contra hT'\n    exact hPS ⟨T, hT', fun U hU => by\n      simpa [Set.disjoint_iff_inter_eq_empty] using hQ hT (hPQ hU)⟩)\n  rw [Fintype.card_set] at hcard\n  have hn := Fintype.card_pos (α := S)\n  rw [show Fintype.card S = (Fintype.card S - 1) + 1 by omega, pow_succ] at hcard\n  omega\n",
+          "sourcePath": "dashboard/public/research/warmup15/P14-lemma-maximal.lean",
+          "sourceCommit": "456dbc4823dd5dbbdb86b173beaee6f7949167be",
+          "sourceState": "working-tree-snapshot",
+          "candidateHash": "e00f8c3bd53b158a79d09d1a568dea9f9812e6b81a3c9c2c6620dff6c3b460ab",
+          "status": "measured",
+          "baseline": {
+            "tokens": 1754,
+            "heartbeats": 134471
+          },
+          "candidate": {
+            "tokens": 105,
+            "heartbeats": 2433
+          },
+          "versions": [
+            {
+              "version": "v4.25.0",
+              "revision": "1ccd71f89cbbd82ae7d097723ce1722ca7b01c33",
+              "status": "pass"
+            },
+            {
+              "version": "v4.26.0",
+              "revision": "2df2f0150c275ad53cb3c90f7c98ec15a56a1a67",
+              "status": "pass"
+            }
+          ],
+          "environment": "v4.26.0 · Linux x86_64 · scaled heartbeat · 독립 프로세스3회 중앙값 · lean-source-anchored-v1",
+          "note": "박채원 기존 증명을 출발점으로 Set.Intersecting.is_max_iff_card_eq 정리 재사용. 정확한 두 지정 버전의 원본 전체 문맥에서 원본·기존·새 후보 각3회 통과. 주 측정은4.26,4.25결과는 호환성 근거로 별도 보존."
+        }
+      ]
+    },
+    {
+      "id": 15,
+      "name": "putnam_1995_a3",
+      "source": "putnambench",
+      "status": "measured",
+      "baseline": {
+        "tokens": 4085,
+        "heartbeats": 14303
+      },
+      "candidate": {
+        "tokens": 281,
+        "heartbeats": 2015
+      },
+      "versions": [
+        {
+          "version": "v4.25.0",
+          "revision": "1ccd71f89cbbd82ae7d097723ce1722ca7b01c33",
+          "status": "pass"
+        },
+        {
+          "version": "v4.26.0",
+          "revision": "2df2f0150c275ad53cb3c90f7c98ec15a56a1a67",
+          "status": "pass"
+        },
+        {
+          "version": "v4.27.0",
+          "revision": "a3a10db0e9d66acbebf76c5e6a135066525ac900",
+          "status": "pass"
+        }
+      ],
+      "environment": "v4.26.0 · Linux x86_64 · scaled heartbeat · 독립 프로세스3회 중앙값 · lean-source-anchored-v1",
+      "candidateHash": "6c1c3db0a58692ae2d9fd86c4dca851b76e23119d425c0c884d1abfda73051c3",
+      "note": "기존283토큰 후보의 convert는 유지하고 중복 push_cast만 제거했습니다. 세 지정 버전에서 원본·기존·수정본 각각3회 확인. 주 환경에서281토큰/HB2015이며 이전 버전의 전술 미지원으로 실패한 후보도 보존했습니다.",
+      "baselineCompatibility": 100,
+      "evidence": [
+        "dashboard/public/research/warmup15/verification.json",
+        "dashboard/public/research/warmup15/P15-drop-cast.lean"
+      ],
+      "selectedCandidateId": "정소미-team-methods-20261026-P15-compat",
+      "selectionReason": "검증된 후보의 원본 대비 토큰·HB 감소율 평균 최대. 지정 버전 미완료는 호환성 대기로 표시. 기존 담당자 최종본과 모든 후보는 보존.",
+      "teamResults": [
+        {
+          "id": "박채원-local-v426",
+          "author": "박채원",
+          "proof": "theorem putnam_1995_a3\n(relation : (Fin 9 → ℤ) → (Fin 9 → ℤ) → Prop)\n(digits_to_num : (Fin 9 → ℤ) → ℤ)\n(hdigits_to_num : digits_to_num = fun dig => ∑ i : Fin 9, (dig i) * 10^i.1)\n(hrelation : ∀ d e : (Fin 9 → ℤ), relation d e ↔ (∀ i : Fin 9, d i < 10 ∧ d i ≥ 0 ∧ e i < 10 ∧ e i ≥ 0) ∧ (∀ i : Fin 9, 7 ∣ (digits_to_num (fun j : Fin 9 => if j = i then e j else d j))))\n: ∀ d e f : (Fin 9 → ℤ), ((relation d e) ∧ (relation e f)) → (∀ i : Fin 9, 7 ∣ d i - f i) := by\n  intro d e f ⟨hde, hef⟩ i\n  -- \"자리 하나 바꾼 수 9개가 7의 배수\" 조건만 꺼냄 (0~9 범위 조건은 안 씀)\n  obtain ⟨-, h1⟩ := (hrelation d e).mp hde\n  obtain ⟨-, h2⟩ := (hrelation e f).mp hef\n  subst hdigits_to_num\n  -- [1단계] i번째 자리만 바꾼 수 = 원래 수 + (바뀐 숫자 − 원래 숫자) × 10^i\n  have key : ∀ (x y : Fin 9 → ℤ) i, ∑ j, (if j = i then y j else x j) * 10 ^ j.1\n      = ∑ j, x j * 10 ^ j.1 + (y i - x i) * 10 ^ i.1 := fun x y i => by\n    rw [show (y i - x i) * 10 ^ i.1 = ∑ j, if j = i then (y j - x j) * 10 ^ j.1 else 0 by simp,\n      ← Finset.sum_add_distrib]\n    exact Finset.sum_congr rfl fun j _ => by split_ifs with h <;> [(subst h; ring); simp]\n  simp only [key] at h1 h2\n  -- [2단계] A 9개를 모두 더함: 7 ∣ 9D + (E − D)\n  have hS := Finset.dvd_sum (s := .univ) fun j _ => h1 j\n  simp only [Finset.sum_add_distrib, sub_mul, Finset.sum_sub_distrib, Finset.sum_const,\n    Finset.card_univ, Fintype.card_fin, nsmul_eq_mul] at hS\n  -- [3단계] (fᵢ − dᵢ)·10^i = Aᵢ + Bᵢ − (9D + E − D) + 7D 는 7의 배수\n  have h3 : 7 ∣ (f i - d i) * 10 ^ i.1 := by\n    convert dvd_add (dvd_sub (dvd_add (h1 i) (h2 i)) hS) (dvd_mul_right 7 (∑ j, d j * 10 ^ j.1)) using 1\n    push_cast; ring\n  -- [4단계] 7 과 10^i 는 서로소 (7·3 + 10·(−2) = 1) → 10^i 를 떼어냄\n  exact dvd_sub_comm.mp ((IsCoprime.pow_right ⟨3, -2, by norm_num⟩).dvd_of_dvd_mul_right h3)\n",
+          "sourcePath": "docs/research/refactoring/warmup/박채원/evidence/local-v4.26/P15_mine.lean",
+          "sourceCommit": "5eb5a8c61350d59f1c2f0655c18387abb58cafe4",
+          "sourceState": "committed",
+          "candidateHash": "df3d7440b9e416612f6ad85bb1311171baa6746aef7ad7d7951177254eed19dd",
+          "status": "measured",
+          "baseline": {
+            "tokens": 4085,
+            "heartbeats": 14303
+          },
+          "candidate": {
+            "tokens": 283,
+            "heartbeats": 2107
+          },
+          "versions": [
+            {
+              "version": "v4.25.0",
+              "revision": "1ccd71f89cbbd82ae7d097723ce1722ca7b01c33",
+              "status": "pass"
+            },
+            {
+              "version": "v4.26.0",
+              "revision": "2df2f0150c275ad53cb3c90f7c98ec15a56a1a67",
+              "status": "pass"
+            },
+            {
+              "version": "v4.27.0",
+              "revision": "a3a10db0e9d66acbebf76c5e6a135066525ac900",
+              "status": "pass"
+            }
+          ],
+          "environment": "v4.26.0 · Linux x86_64 · scaled heartbeat · 독립 프로세스3회 중앙값 · lean-source-anchored-v1",
+          "note": "담당자 측정 파일에서 선언 추출. 계측용 앞뒤 명령은 원본 및 별도 파일에 보존. 고정 커밋의 의존성을 복원하여 원본·후보를 모든 지정 버전에서 재검증했습니다."
+        },
+        {
+          "id": "박채원-final",
+          "author": "박채원",
+          "proof": "theorem putnam_1995_a3\n(relation : (Fin 9 → ℤ) → (Fin 9 → ℤ) → Prop)\n(digits_to_num : (Fin 9 → ℤ) → ℤ)\n(hdigits_to_num : digits_to_num = fun dig => ∑ i : Fin 9, (dig i) * 10^i.1)\n(hrelation : ∀ d e : (Fin 9 → ℤ), relation d e ↔ (∀ i : Fin 9, d i < 10 ∧ d i ≥ 0 ∧ e i < 10 ∧ e i ≥ 0) ∧ (∀ i : Fin 9, 7 ∣ (digits_to_num (fun j : Fin 9 => if j = i then e j else d j))))\n: ∀ d e f : (Fin 9 → ℤ), ((relation d e) ∧ (relation e f)) → (∀ i : Fin 9, 7 ∣ d i - f i) := by\n  intro d e f ⟨hde, hef⟩ i\n  -- \"자리 하나 바꾼 수 9개가 7의 배수\" 조건만 꺼냄 (0~9 범위 조건은 안 씀)\n  obtain ⟨-, h1⟩ := (hrelation d e).mp hde\n  obtain ⟨-, h2⟩ := (hrelation e f).mp hef\n  subst hdigits_to_num\n  -- [1단계] i번째 자리만 바꾼 수 = 원래 수 + (바뀐 숫자 − 원래 숫자) × 10^i\n  have key : ∀ (x y : Fin 9 → ℤ) i, ∑ j, (if j = i then y j else x j) * 10 ^ j.1\n      = ∑ j, x j * 10 ^ j.1 + (y i - x i) * 10 ^ i.1 := fun x y i => by\n    rw [show (y i - x i) * 10 ^ i.1 = ∑ j, if j = i then (y j - x j) * 10 ^ j.1 else 0 by simp,\n      ← Finset.sum_add_distrib]\n    exact Finset.sum_congr rfl fun j _ => by split_ifs with h <;> [(subst h; ring); simp]\n  simp only [key] at h1 h2\n  -- [2단계] A 9개를 모두 더함: 7 ∣ 9D + (E − D)\n  have hS := Finset.dvd_sum (s := .univ) fun j _ => h1 j\n  simp only [Finset.sum_add_distrib, sub_mul, Finset.sum_sub_distrib, Finset.sum_const,\n    Finset.card_univ, Fintype.card_fin, nsmul_eq_mul] at hS\n  -- [3단계] (fᵢ − dᵢ)·10^i = Aᵢ + Bᵢ − (9D + E − D) + 7D 는 7의 배수\n  have h3 : 7 ∣ (f i - d i) * 10 ^ i.1 := by\n    convert dvd_add (dvd_sub (dvd_add (h1 i) (h2 i)) hS) (dvd_mul_right 7 (∑ j, d j * 10 ^ j.1)) using 1\n    push_cast; ring\n  -- [4단계] 7 과 10^i 는 서로소 (7·3 + 10·(−2) = 1) → 10^i 를 떼어냄\n  exact dvd_sub_comm.mp ((IsCoprime.pow_right ⟨3, -2, by norm_num⟩).dvd_of_dvd_mul_right h3)\n",
+          "sourcePath": "docs/research/refactoring/warmup/박채원/report.md",
+          "sourceCommit": "5eb5a8c61350d59f1c2f0655c18387abb58cafe4",
+          "sourceState": "committed",
+          "candidateHash": "df3d7440b9e416612f6ad85bb1311171baa6746aef7ad7d7951177254eed19dd",
+          "status": "measured",
+          "baseline": {
+            "tokens": 4085,
+            "heartbeats": 14303
+          },
+          "candidate": {
+            "tokens": 283,
+            "heartbeats": 2107
+          },
+          "versions": [
+            {
+              "version": "v4.25.0",
+              "revision": "1ccd71f89cbbd82ae7d097723ce1722ca7b01c33",
+              "status": "pass"
+            },
+            {
+              "version": "v4.26.0",
+              "revision": "2df2f0150c275ad53cb3c90f7c98ec15a56a1a67",
+              "status": "pass"
+            },
+            {
+              "version": "v4.27.0",
+              "revision": "a3a10db0e9d66acbebf76c5e6a135066525ac900",
+              "status": "pass"
+            }
+          ],
+          "environment": "v4.26.0 · Linux x86_64 · scaled heartbeat · 독립 프로세스3회 중앙값 · lean-source-anchored-v1",
+          "note": "고정 커밋의 의존성을 복원하여 원본·후보를 모든 지정 버전에서 재검증했습니다."
+        },
+        {
+          "id": "정소미-team-methods-20261026-P15",
+          "author": "정소미",
+          "proof": "theorem putnam_1995_a3\n(relation : (Fin 9 → ℤ) → (Fin 9 → ℤ) → Prop)\n(digits_to_num : (Fin 9 → ℤ) → ℤ)\n(hdigits_to_num : digits_to_num = fun dig => ∑ i : Fin 9, (dig i) * 10^i.1)\n(hrelation : ∀ d e : (Fin 9 → ℤ), relation d e ↔ (∀ i : Fin 9, d i < 10 ∧ d i ≥ 0 ∧ e i < 10 ∧ e i ≥ 0) ∧ (∀ i : Fin 9, 7 ∣ (digits_to_num (fun j : Fin 9 => if j = i then e j else d j))))\n: ∀ d e f : (Fin 9 → ℤ), ((relation d e) ∧ (relation e f)) → (∀ i : Fin 9, 7 ∣ d i - f i) := by\n  intro d e f ⟨hde, hef⟩ i\n  -- \"자리 하나 바꾼 수 9개가 7의 배수\" 조건만 꺼냄 (0~9 범위 조건은 안 씀)\n  obtain ⟨-, h1⟩ := (hrelation d e).mp hde\n  obtain ⟨-, h2⟩ := (hrelation e f).mp hef\n  subst hdigits_to_num\n  -- [1단계] i번째 자리만 바꾼 수 = 원래 수 + (바뀐 숫자 − 원래 숫자) × 10^i\n  have key : ∀ (x y : Fin 9 → ℤ) i, ∑ j, (if j = i then y j else x j) * 10 ^ j.1\n      = ∑ j, x j * 10 ^ j.1 + (y i - x i) * 10 ^ i.1 := fun x y i => by\n    rw [show (y i - x i) * 10 ^ i.1 = ∑ j, if j = i then (y j - x j) * 10 ^ j.1 else 0 by simp,\n      ← Finset.sum_add_distrib]\n    exact Finset.sum_congr rfl fun j _ => by split_ifs with h <;> [(subst h; ring); simp]\n  simp only [key] at h1 h2\n  -- [2단계] A 9개를 모두 더함: 7 ∣ 9D + (E − D)\n  have hS := Finset.dvd_sum (s := .univ) fun j _ => h1 j\n  simp only [Finset.sum_add_distrib, sub_mul, Finset.sum_sub_distrib, Finset.sum_const,\n    Finset.card_univ, Fintype.card_fin, nsmul_eq_mul] at hS\n  -- [3단계] (fᵢ − dᵢ)·10^i = Aᵢ + Bᵢ − (9D + E − D) + 7D 는 7의 배수\n  have h3 : 7 ∣ (f i - d i) * 10 ^ i.1 := by\n    convert! dvd_add (dvd_sub (dvd_add (h1 i) (h2 i)) hS) (dvd_mul_right 7 (∑ j, d j * 10 ^ j.1)) using 1\n    ring\n  -- [4단계] 7 과 10^i 는 서로소 (7·3 + 10·(−2) = 1) → 10^i 를 떼어냄\n  exact dvd_sub_comm.mp ((IsCoprime.pow_right ⟨3, -2, by norm_num⟩).dvd_of_dvd_mul_right h3)\n",
+          "sourcePath": "dashboard/public/research/warmup15/P15-cast-ring-repair.lean",
+          "sourceCommit": "73751b6e04674cb8a3a04ed28dae15e0f4437f8a",
+          "sourceState": "working-tree-snapshot",
+          "candidateHash": "5374438fff6ceacbb7b8dfdbed055e89fa3a891e223c6463359386c58499eb56",
+          "status": "proof_failed",
+          "baseline": null,
+          "candidate": null,
+          "versions": [
+            {
+              "version": "v4.25.0",
+              "revision": "1ccd71f89cbbd82ae7d097723ce1722ca7b01c33",
+              "status": "fail"
+            },
+            {
+              "version": "v4.26.0",
+              "revision": "2df2f0150c275ad53cb3c90f7c98ec15a56a1a67",
+              "status": "fail"
+            },
+            {
+              "version": "v4.27.0",
+              "revision": "a3a10db0e9d66acbebf76c5e6a135066525ac900",
+              "status": "fail"
+            }
+          ],
+          "environment": "지정 버전·원본 전체 import 문맥에서 검증 대기",
+          "note": "축소4.31 진단에서는 통과했지만 지정된4.25·4.26·4.27 전체 문맥에서는 convert! 전술 미지원으로 실패. 실패 후보로 보존하며 대표 점수에 포함하지 않습니다."
+        },
+        {
+          "id": "정소미-team-methods-20261026-P15-compat",
+          "author": "정소미",
+          "proof": "theorem putnam_1995_a3\n(relation : (Fin 9 → ℤ) → (Fin 9 → ℤ) → Prop)\n(digits_to_num : (Fin 9 → ℤ) → ℤ)\n(hdigits_to_num : digits_to_num = fun dig => ∑ i : Fin 9, (dig i) * 10^i.1)\n(hrelation : ∀ d e : (Fin 9 → ℤ), relation d e ↔ (∀ i : Fin 9, d i < 10 ∧ d i ≥ 0 ∧ e i < 10 ∧ e i ≥ 0) ∧ (∀ i : Fin 9, 7 ∣ (digits_to_num (fun j : Fin 9 => if j = i then e j else d j))))\n: ∀ d e f : (Fin 9 → ℤ), ((relation d e) ∧ (relation e f)) → (∀ i : Fin 9, 7 ∣ d i - f i) := by\n  intro d e f ⟨hde, hef⟩ i\n  -- \"자리 하나 바꾼 수 9개가 7의 배수\" 조건만 꺼냄 (0~9 범위 조건은 안 씀)\n  obtain ⟨-, h1⟩ := (hrelation d e).mp hde\n  obtain ⟨-, h2⟩ := (hrelation e f).mp hef\n  subst hdigits_to_num\n  -- [1단계] i번째 자리만 바꾼 수 = 원래 수 + (바뀐 숫자 − 원래 숫자) × 10^i\n  have key : ∀ (x y : Fin 9 → ℤ) i, ∑ j, (if j = i then y j else x j) * 10 ^ j.1\n      = ∑ j, x j * 10 ^ j.1 + (y i - x i) * 10 ^ i.1 := fun x y i => by\n    rw [show (y i - x i) * 10 ^ i.1 = ∑ j, if j = i then (y j - x j) * 10 ^ j.1 else 0 by simp,\n      ← Finset.sum_add_distrib]\n    exact Finset.sum_congr rfl fun j _ => by split_ifs with h <;> [(subst h; ring); simp]\n  simp only [key] at h1 h2\n  -- [2단계] A 9개를 모두 더함: 7 ∣ 9D + (E − D)\n  have hS := Finset.dvd_sum (s := .univ) fun j _ => h1 j\n  simp only [Finset.sum_add_distrib, sub_mul, Finset.sum_sub_distrib, Finset.sum_const,\n    Finset.card_univ, Fintype.card_fin, nsmul_eq_mul] at hS\n  -- [3단계] (fᵢ − dᵢ)·10^i = Aᵢ + Bᵢ − (9D + E − D) + 7D 는 7의 배수\n  have h3 : 7 ∣ (f i - d i) * 10 ^ i.1 := by\n    convert dvd_add (dvd_sub (dvd_add (h1 i) (h2 i)) hS) (dvd_mul_right 7 (∑ j, d j * 10 ^ j.1)) using 1\n    ring\n  -- [4단계] 7 과 10^i 는 서로소 (7·3 + 10·(−2) = 1) → 10^i 를 떼어냄\n  exact dvd_sub_comm.mp ((IsCoprime.pow_right ⟨3, -2, by norm_num⟩).dvd_of_dvd_mul_right h3)\n",
+          "sourcePath": "dashboard/public/research/warmup15/P15-drop-cast.lean",
+          "sourceCommit": "75efae19aab99406bba2d6eb33b547884513f091",
+          "sourceState": "working-tree-snapshot",
+          "candidateHash": "6c1c3db0a58692ae2d9fd86c4dca851b76e23119d425c0c884d1abfda73051c3",
+          "status": "measured",
+          "baseline": {
+            "tokens": 4085,
+            "heartbeats": 14303
+          },
+          "candidate": {
+            "tokens": 281,
+            "heartbeats": 2015
+          },
+          "versions": [
+            {
+              "version": "v4.25.0",
+              "revision": "1ccd71f89cbbd82ae7d097723ce1722ca7b01c33",
+              "status": "pass"
+            },
+            {
+              "version": "v4.26.0",
+              "revision": "2df2f0150c275ad53cb3c90f7c98ec15a56a1a67",
+              "status": "pass"
+            },
+            {
+              "version": "v4.27.0",
+              "revision": "a3a10db0e9d66acbebf76c5e6a135066525ac900",
+              "status": "pass"
+            }
+          ],
+          "environment": "v4.26.0 · Linux x86_64 · scaled heartbeat · 독립 프로세스3회 중앙값 · lean-source-anchored-v1",
+          "note": "기존283토큰 후보의 convert는 유지하고 중복 push_cast만 제거했습니다. 세 지정 버전에서 원본·기존·수정본 각각3회 확인. 주 환경에서281토큰/HB2015이며 이전 버전의 전술 미지원으로 실패한 후보도 보존했습니다."
+        }
+      ]
+    }
+  ]
+}
