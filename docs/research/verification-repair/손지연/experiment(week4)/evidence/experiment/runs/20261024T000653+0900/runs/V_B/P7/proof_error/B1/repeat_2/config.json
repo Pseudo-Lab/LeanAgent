@@ -1,0 +1,183 @@
+{
+  "family": "V_B",
+  "problem": 7,
+  "condition": "B1",
+  "repeat": 2,
+  "error_category": "proof_error",
+  "max_calls": 4,
+  "target": "Cslib.LambdaCalculus.LocallyNameless.Fsub.Typing.progress",
+  "prefix": "/-\nCopyright (c) 2025 Chris Henson. All rights reserved.\nReleased under Apache 2.0 license as described in the file LICENSE.\nAuthors: Chris Henson\n-/\n\nmodule\n\npublic import Cslib.Languages.LambdaCalculus.LocallyNameless.Fsub.Typing\n\n/-! # λ-calculus\n\nThe λ-calculus with polymorphism and subtyping, with a locally nameless representation of syntax.\nThis file proves type safety.\n\n## References\n\n* [A. Chargueraud, *The Locally Nameless Representation*][Chargueraud2012]\n* See also <https://www.cis.upenn.edu/~plclub/popl08-tutorial/code/>, from which\n  this is adapted\n\n-/\n\npublic section\n\nnamespace Cslib\n\nvariable {Var : Type*} [HasFresh Var] [DecidableEq Var]\n\nnamespace LambdaCalculus.LocallyNameless.Fsub\n\nopen Context List Env.Wf Term Ty\n\nvariable {t : Term Var}\n\n/-- Any reduction step preserves typing. -/\nlemma Typing.preservation (der : Typing Γ t τ) (step : t ⭢βᵛ t') : Typing Γ t' τ := by\n  induction der generalizing t'\n  case app Γ _ σ τ _ _ _ _ _ =>\n    cases step\n    case appₗ | appᵣ => grind\n    case abs der _ _ =>\n      have sub : Sub Γ (σ.arrow τ) (σ.arrow τ) := by grind [Sub.refl]\n      have ⟨_, _, ⟨_, _⟩⟩ := der.abs_inv sub\n      grind [fresh_exists <| free_union [fvTm] Var, openTm_substTm_intro, subst_tm, Sub.weaken]\n  case tapp Γ _ σ τ σ' _ _ _ =>\n    cases step\n    case tabs der _ _ =>\n      have sub : Sub Γ (σ.all τ) (σ.all τ) := by grind [Sub.refl]\n      have ⟨_, _, ⟨_, _⟩⟩ := der.tabs_inv sub\n      have ⟨X, mem⟩ := fresh_exists <| free_union [Ty.fv, fvTy] Var\n      simp at mem\n      have : Γ = (Context.mapVal (·[X := σ']) []) ++ Γ := by grind\n      rw [openTy_substTy_intro (X := X), open_subst_intro (X := X)] <;> grind [subst_ty]\n    case tapp => grind\n  case let' Γ _ _ _ _ L der _ ih₁ _ =>\n    cases step\n    case let_bind red₁ _ => apply Typing.let' L (ih₁ red₁); grind\n    case let_body =>\n      grind [fresh_exists <| free_union [fvTm] Var, openTm_substTm_intro, subst_tm]\n  case case Γ _ σ τ _ _ _ L _ _ _ ih₁ _ _ =>\n    have sub : Sub Γ (σ.sum τ) (σ.sum τ) := by grind [Sub.refl]\n    have : Γ = [] ++ Γ := by rfl\n    cases step\n    case «case» red₁ _ _ => apply Typing.case L (ih₁ red₁) <;> grind\n    case case_inl der _ _ =>\n      have ⟨_, ⟨_, _⟩⟩ := der.inl_inv sub\n      grind [fresh_exists <| free_union [fvTm] Var, openTm_substTm_intro, subst_tm]\n    case case_inr der _ _ =>\n      have ⟨_, ⟨_, _⟩⟩ := der.inr_inv sub\n      grind [fresh_exists <| free_union [fvTm] Var, openTm_substTm_intro, subst_tm]\n  all_goals grind [cases Red]\n\nset_option linter.tacticAnalysis.verifyGrindOnly false in\n/-- Any typable term either has a reduction step or is a value. -/\nlemma Typing.progress (der : Typing [] t τ) : t.Value ∨ ∃ t', t ⭢βᵛ t' := ",
+  "suffix": "\n\nend LambdaCalculus.LocallyNameless.Fsub\n\nend Cslib\n",
+  "original_body": null,
+  "initial_body": "by\n  generalize eq : [] = Γ at der\n  have der' : Typing Γ t τ := der\n  induction der <;> subst eq\n  case var mem => grind\n  case app t₁ _ _ t₂ l r ih_l ih_r =>\n    right\n    cases ih_l rfl der' with\n    | inl val_l =>\n        cases ih_r rfl r with\n        | inl val_r =>\n            have ⟨σ, t₁, eq⟩ := l.canonical_form_abs val_l\n            exists t₁ ^ᵗᵗ t₂\n            grind\n        | inr red_r =>\n            obtain ⟨t₂', _⟩ := red_r\n            exists t₁.app t₂'\n            grind\n    | inr red_l =>\n        obtain ⟨t₁', _⟩ := red_l\n        exists t₁'.app t₂\n        grind\n  case tapp σ' der _ ih =>\n    right\n    specialize ih rfl der\n    cases ih with\n    | inl val =>\n        obtain ⟨_, t, _⟩ := der.canonical_form_tabs val\n        exists t ^ᵗᵞ σ'\n        grind\n    | inr red =>\n        obtain ⟨t', _⟩ := red\n        exists .tapp t' σ'\n        grind\n  case let' t₁ σ t₂ τ L der _ ih _ =>\n    right\n    cases ih rfl der with\n    | inl _ =>\n        exists t₂ ^ᵗᵗ t₁\n        grind\n    | inr red =>\n        obtain ⟨t₁', _⟩ := red\n        exists t₁'.let' t₂\n        grind\n  case inl der _ ih =>\n    cases (ih rfl der) with\n    | inl val => grind\n    | inr red =>\n        right\n        obtain ⟨t', _⟩ := red\n        exists .inl t'\n        grind\n  case inr der _ ih =>\n    cases (ih rfl der) with\n    | inl val => grind\n    | inr red =>\n        right\n        obtain ⟨t', _⟩ := red\n        exists .inr t'\n        grind\n  case case t₁ _ _ t₂ _ t₃ _ der _ _ ih _ _ =>\n    right\n    cases ih rfl der with\n    | inl val =>\n        have ⟨t₁, lr⟩ := der.canonical_form_sum val\n        cases lr <;> [exists t₂ ^ᵗᵗ t₁; exists t₃ ^ᵗᵗ t₁] <;> grind\n    | inr red =>\n        obtain ⟨t₁', _⟩ := red\n        exists t₁'.case t₂ t₃\n        grind\n  case sub => grind\n  case abs σ _ τ L _ _=>\n    left\n    constructor\n    apply LC.abs L\n    · grind only [→ wf, cases Term.LC]\n    · grind only [→ wf]\n  case tabs L _ _=>\n    left\n    constructor\n    apply LC.tabs L\n    · grind only [→ wf, cases Term.LC]\n    · grind only [→ wf]",
+  "initial_status": "proof_error",
+  "initial_facts": {
+    "diagnostics": [
+      {
+        "severity": "error",
+        "position": {
+          "column": 19,
+          "line": 83
+        },
+        "end_position": {
+          "column": 23,
+          "line": 83
+        },
+        "message": "Application type mismatch: The argument\n  der'\nhas type\n  Typing [] (t₁.app t₂) τ✝\nbut is expected to have type\n  Typing [] t₁ (σ✝.arrow τ✝)\nin the application\n  ih_l rfl der'",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "Application type mismatch: The argument\n  der'\nhas type\n  Typing [] (t₁.app t₂) τ✝\nbut is expected to have type\n  Typing [] t₁ (σ✝.arrow τ✝)\nin the application\n  ih_l rfl der'",
+          "endPos": {
+            "column": 23,
+            "line": 83
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 19,
+            "line": 83
+          },
+          "severity": "error"
+        },
+        "source_line": "    cases ih_l rfl der' with",
+        "start_offset": 2874,
+        "start_byte_offset": 2992,
+        "end_offset": 2878,
+        "end_byte_offset": 2996,
+        "source_text": "der'",
+        "expected_actual_types": {
+          "actual": "Typing [] (t₁.app t₂) τ✝",
+          "expected": "Typing [] t₁ (σ✝.arrow τ✝)"
+        },
+        "failed_tactic": "cases ih_l rfl der' with",
+        "tactic_range": {
+          "position": {
+            "line": 83,
+            "column": 4
+          },
+          "end_position": {
+            "line": 83,
+            "column": 28
+          },
+          "start_offset": 2859,
+          "end_offset": 2883
+        },
+        "goals": [
+          "∃ t', t₁.app t₂ ⭢βᵛ t'"
+        ],
+        "local_context": [
+          "Var : Type u_1\ninst✝¹ : HasFresh Var\ninst✝ : DecidableEq Var\nt : Term Var\nτ : Ty Var\nΓ : List ((_ : Var) × Binding Var)\nt₁ : Term Var\nσ✝ τ✝ : Ty Var\nt₂ : Term Var\nl : Typing [] t₁ (σ✝.arrow τ✝)\nr : Typing [] t₂ σ✝\nih_l : [] = [] → Typing [] t₁ (σ✝.arrow τ✝) → t₁.Value ∨ ∃ t', t₁ ⭢βᵛ t'\nih_r : [] = [] → Typing [] t₂ σ✝ → t₂.Value ∨ ∃ t', t₂ ⭢βᵛ t'\nder' : Typing [] (t₁.app t₂) τ✝\nx✝ : t₁.Value ∨ ∃ t', t₁ ⭢βᵛ t'"
+        ],
+        "proof_state_source": "lean_infotree_before_tactic",
+        "proof_state_raw": {
+          "depth": 17,
+          "end": 10132,
+          "goals_after": [],
+          "goals_before": [
+            "Var : Type u_1\ninst✝¹ : HasFresh Var\ninst✝ : DecidableEq Var\nt : Term Var\nτ : Ty Var\nΓ : List ((_ : Var) × Binding Var)\nt₁ : Term Var\nσ✝ τ✝ : Ty Var\nt₂ : Term Var\nl : Typing [] t₁ (σ✝.arrow τ✝)\nr : Typing [] t₂ σ✝\nih_l : [] = [] → Typing [] t₁ (σ✝.arrow τ✝) → t₁.Value ∨ ∃ t', t₁ ⭢βᵛ t'\nih_r : [] = [] → Typing [] t₂ σ✝ → t₂.Value ∨ ∃ t', t₂ ⭢βᵛ t'\nder' : Typing [] (t₁.app t₂) τ✝\nx✝ : t₁.Value ∨ ∃ t', t₁ ⭢βᵛ t'\n⊢ ∃ t', t₁.app t₂ ⭢βᵛ t'"
+          ],
+          "kind": "tactic",
+          "start": 10108
+        }
+      },
+      {
+        "severity": "information",
+        "position": {
+          "column": 0,
+          "line": 164
+        },
+        "end_position": {
+          "column": 6,
+          "line": 164
+        },
+        "message": "Cslib.LambdaCalculus.LocallyNameless.Fsub.Typing.progress.{u_1} {Var : Type u_1} [Cslib.HasFresh Var] [DecidableEq Var]\n  {t : Cslib.LambdaCalculus.LocallyNameless.Fsub.Term Var} {τ : Cslib.LambdaCalculus.LocallyNameless.Fsub.Ty Var}\n  (der : Cslib.LambdaCalculus.LocallyNameless.Fsub.Typing [] t τ) : t.Value ∨ ∃ t', t.Red t'",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "Cslib.LambdaCalculus.LocallyNameless.Fsub.Typing.progress.{u_1} {Var : Type u_1} [Cslib.HasFresh Var] [DecidableEq Var]\n  {t : Cslib.LambdaCalculus.LocallyNameless.Fsub.Term Var} {τ : Cslib.LambdaCalculus.LocallyNameless.Fsub.Ty Var}\n  (der : Cslib.LambdaCalculus.LocallyNameless.Fsub.Typing [] t τ) : t.Value ∨ ∃ t', t.Red t'",
+          "endPos": {
+            "column": 6,
+            "line": 164
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 0,
+            "line": 164
+          },
+          "severity": "information"
+        }
+      },
+      {
+        "severity": "information",
+        "position": {
+          "column": 0,
+          "line": 165
+        },
+        "end_position": {
+          "column": 6,
+          "line": 165
+        },
+        "message": "'Cslib.LambdaCalculus.LocallyNameless.Fsub.Typing.progress' depends on axioms: [propext,\n sorryAx,\n Classical.choice,\n Quot.sound]",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "'Cslib.LambdaCalculus.LocallyNameless.Fsub.Typing.progress' depends on axioms: [propext,\n sorryAx,\n Classical.choice,\n Quot.sound]",
+          "endPos": {
+            "column": 6,
+            "line": 165
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 0,
+            "line": 165
+          },
+          "severity": "information"
+        }
+      }
+    ],
+    "goals": [
+      "∃ t', t₁.app t₂ ⭢βᵛ t'"
+    ],
+    "local_context": [
+      "Var : Type u_1\ninst✝¹ : HasFresh Var\ninst✝ : DecidableEq Var\nt : Term Var\nτ : Ty Var\nΓ : List ((_ : Var) × Binding Var)\nt₁ : Term Var\nσ✝ τ✝ : Ty Var\nt₂ : Term Var\nl : Typing [] t₁ (σ✝.arrow τ✝)\nr : Typing [] t₂ σ✝\nih_l : [] = [] → Typing [] t₁ (σ✝.arrow τ✝) → t₁.Value ∨ ∃ t', t₁ ⭢βᵛ t'\nih_r : [] = [] → Typing [] t₂ σ✝ → t₂.Value ∨ ∃ t', t₂ ⭢βᵛ t'\nder' : Typing [] (t₁.app t₂) τ✝\nx✝ : t₁.Value ∨ ∃ t', t₁ ⭢βᵛ t'"
+    ],
+    "sorries": [
+      {
+        "kind": "transitive_dependency",
+        "axiom": "sorryAx",
+        "position": null,
+        "end_position": null
+      }
+    ],
+    "axioms": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext",
+      "sorryAx"
+    ],
+    "detail": null,
+    "raw_lean_output": "{\"caption\":\"\",\"data\":\"Application type mismatch: The argument\\n  der'\\nhas type\\n  Typing [] (t₁.app t₂) τ✝\\nbut is expected to have type\\n  Typing [] t₁ (σ✝.arrow τ✝)\\nin the application\\n  ih_l rfl der'\",\"endPos\":{\"column\":23,\"line\":83},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"[anonymous]\",\"pos\":{\"column\":19,\"line\":83},\"severity\":\"error\"}\n{\"caption\":\"\",\"data\":\"Cslib.LambdaCalculus.LocallyNameless.Fsub.Typing.progress.{u_1} {Var : Type u_1} [Cslib.HasFresh Var] [DecidableEq Var]\\n  {t : Cslib.LambdaCalculus.LocallyNameless.Fsub.Term Var} {τ : Cslib.LambdaCalculus.LocallyNameless.Fsub.Ty Var}\\n  (der : Cslib.LambdaCalculus.LocallyNameless.Fsub.Typing [] t τ) : t.Value ∨ ∃ t', t.Red t'\",\"endPos\":{\"column\":6,\"line\":164},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"[anonymous]\",\"pos\":{\"column\":0,\"line\":164},\"severity\":\"information\"}\n{\"caption\":\"\",\"data\":\"'Cslib.LambdaCalculus.LocallyNameless.Fsub.Typing.progress' depends on axioms: [propext,\\n sorryAx,\\n Classical.choice,\\n Quot.sound]\",\"endPos\":{\"column\":6,\"line\":165},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"[anonymous]\",\"pos\":{\"column\":0,\"line\":165},\"severity\":\"information\"}\n"
+  },
+  "baseline_metrics": {
+    "proof_tokens": 406,
+    "raw_heartbeats": 59926888,
+    "heartbeats": 59926
+  },
+  "initial_measurement": {
+    "proof_tokens": 406,
+    "raw_heartbeats": null,
+    "token_reduction_pct": 0.0,
+    "heartbeat_reduction_pct": null,
+    "search_score": null
+  },
+  "original_candidate": null
+}

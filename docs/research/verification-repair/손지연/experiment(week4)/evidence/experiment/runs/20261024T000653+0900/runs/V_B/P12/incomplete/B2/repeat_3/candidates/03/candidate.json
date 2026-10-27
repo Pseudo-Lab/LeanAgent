@@ -1,0 +1,1615 @@
+{
+  "call": 3,
+  "origin": "generated",
+  "body": "by\n  classical\n  intro ϑ hϑ_gt_0\n  induction ϑ, hϑ_gt_0 using Nat.le_induction with\n  | base =>\n      intro u h_close\n      have hu : finMapTwoWords (u 0) (u 1) = u := by\n        funext i j\n        fin_cases i <;> rfl\n      have h_affine := hC_proximityGapAffineLines (u 0) (u 1)\n      apply hu ▸ h_affine\n      convert h_close using 1 <;>\n        simp [multilinearCombine, affineLineEvaluation,\n          PMF.uniformOfFintype_apply, Fin.sum_univ_two]\n  | succ ϑ hϑ_ge_one ih =>\n      intro u h_close\n      let U₀ := (splitHalfRowWiseInterleavedWords (ϑ := ϑ) u).1\n      let U₁ := (splitHalfRowWiseInterleavedWords (ϑ := ϑ) u).2\n      have h_split_close :\n          Pr_{ let r_last ← $ᵖ F;\n               let r_init ← $ᵖ (Fin ϑ → F) }[\n            multilinearCombine_affineComb_split_last_close\n              (MC := MC) (u := u) (e := e) r_last r_init ]\n            > (((Nat.cast (R := ℝ≥0) (ϑ + 1)) * ε : ℝ≥0) /\n                (Fintype.card F : ℝ≥0)) := by\n        convert h_close using 1 <;>\n          simp [multilinearCombine_affineComb_split_last_close,\n            multilinearCombine, splitHalfRowWiseInterleavedWords,\n            affineLineEvaluation, PMF.uniformOfFintype_apply,\n            Fin.sum_univ_succ, pow_succ] <;>\n          ext <;> simp [Fin.lastCases, pow_succ] <;> omega\n      have hR :\n          Pr_{ let r ← $ᵖ F }[\n            r ∈ R_star_tensor MC (m := ϑ) (e := e) (ε := ε) U₀ U₁ ]\n            > (↑ε : ENNReal) / (Fintype.card F : ENNReal) := by\n        simpa [U₀, U₁] using\n          (prob_R_star_gt_threshold (MC := MC) (ε := ε)\n            (ϑ := ϑ) u e h_split_close)\n      have h_affine_probability :\n          Pr_{ let r ← $ᵖ F }[\n            Δ₀(affineLineEvaluation (F := F) (⋈| U₀) (⋈| U₁) r,\n              MC ^⋈ (Fin (2 ^ ϑ))) ≤ e ]\n            > (↑ε : ENNReal) / (Fintype.card F : ENNReal) := by\n        apply lt_of_lt_of_le hR\n        apply Pr_le_Pr_of_implies\n        intro r hr\n        have h_joint := correlatedAgreement_of_mem_R_star_tensor\n          (MC := MC) (e := e) (ε := ε) (ϑ_pred := ϑ) ih u\n          (⟨r, hr⟩ : R_star_tensor MC (m := ϑ) (e := e) (ε := ε) U₀ U₁)\n        convert h_joint using 1 <;>\n          simp [jointProximityNat, U₀, U₁, Interleavable.interleave,\n            affineLineEvaluation, Matrix.transpose_apply, Pi.add_apply,\n            Pi.smul_apply] <;>\n          ext <;> simp [Matrix.transpose_apply]\n      have hpow : 2 ^ ϑ ≥ 1 := by\n        exact Nat.one_le_iff_ne_zero.mpr (pow_ne_zero ϑ (by decide))\n      have h_joint_halves :=\n        (h_interleaved_gaps (2 ^ ϑ) hpow)\n          (⋈| U₀) (⋈| U₁) h_affine_probability\n      convert h_joint_halves using 1 <;>\n        simp [jointProximityNat₂, jointProximityNat, U₀, U₁,\n          splitHalfRowWiseInterleavedWords, finMapTwoWords,\n          Interleavable.interleave, CodeInterleavable.interleaveCode,\n          interleavedCodeSet, Matrix.transpose_apply, pow_succ] <;>\n        ext <;> simp [Matrix.transpose_apply, pow_succ] <;> omega",
+  "proof_sha256": "80c89266e3b72d70ed634534113d1fadcf6af43d07c5ed1425d11fe237627963",
+  "full_source_sha256": "1ae02739ba6b83c2b01456509737183680ef9741315ebb30e6c2dfa0eb3fd5f9",
+  "eligible": false,
+  "verification": {
+    "task_id": "P12",
+    "attempt": "candidate_03",
+    "candidate_hash": "1ae02739ba6b83c2b01456509737183680ef9741315ebb30e6c2dfa0eb3fd5f9",
+    "environment_id": "0c6971d601fccc37e69d84ddfa1ac63a41527ba5fa2d7e4f87c63547c308939a",
+    "check_kind": "candidate",
+    "status": "proof_error",
+    "process_exit_code": 1,
+    "diagnostics": [
+      {
+        "severity": "error",
+        "position": {
+          "column": 6,
+          "line": 1224
+        },
+        "end_position": {
+          "column": 25,
+          "line": 1224
+        },
+        "message": "Tactic `apply` failed: could not unify the conclusion of `Eq.rec (motive := fun x h =>\n  (do\n          let r ← $ᵖ F\n          pure (Δ₀(affineLineEvaluation (x 0) (x 1) r, ↑MC) ≤ ↑e))\n        True >\n      ↑↑ε / ↑↑(Fintype.card F) →\n    jointProximityNat₂ (↑MC) (x 0) (x 1) e)\n  h_affine (Eq.symm hu)`\n  jointProximityNat₂ (↑MC) (finMapTwoWords (u 0) (u 1) 0) (finMapTwoWords (u 0) (u 1) 1) e\nwith the goal\n  jointProximityNat (↑MC) u e\n\nNote: The full type of `Eq.rec (motive := fun x h =>\n  (do\n          let r ← $ᵖ F\n          pure (Δ₀(affineLineEvaluation (x 0) (x 1) r, ↑MC) ≤ ↑e))\n        True >\n      ↑↑ε / ↑↑(Fintype.card F) →\n    jointProximityNat₂ (↑MC) (x 0) (x 1) e)\n  h_affine (Eq.symm hu)` is\n  (do\n          let r ← $ᵖ F\n          pure (Δ₀(affineLineEvaluation (finMapTwoWords (u 0) (u 1) 0) (finMapTwoWords (u 0) (u 1) 1) r, ↑MC) ≤ ↑e))\n        True >\n      ↑↑ε / ↑↑(Fintype.card F) →\n    jointProximityNat₂ (↑MC) (finMapTwoWords (u 0) (u 1) 0) (finMapTwoWords (u 0) (u 1) 1) e\n\ncase base\nι : Type l\ninst✝⁷ : Fintype ι\ninst✝⁶ : Nonempty ι\ninst✝⁵ : DecidableEq ι\nF : Type\ninst✝⁴ : CommRing F\ninst✝³ : Fintype F\nA : Type\ninst✝² : DecidableEq A\ninst✝¹ : AddCommGroup A\ninst✝ : Module F A\nMC : ModuleCode ι F A\ne ε : ℕ\nhC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε\nh_interleaved_gaps : ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε\nϑ : ℕ\nu : WordStack A (Fin (2 ^ Nat.succ 0)) ι\nh_close :\n  (do\n        let r ← $ᵖ (Fin (Nat.succ 0) → F)\n        pure (Δ₀(multilinearCombine u r, ↑MC) ≤ ↑e))\n      True >\n    ↑↑(Nat.succ 0) * ↑ε / ↑↑(Fintype.card F)\nhu : finMapTwoWords (u 0) (u 1) = u\nh_affine :\n  (do\n          let r ← $ᵖ F\n          pure (Δ₀(affineLineEvaluation (u 0) (u 1) r, ↑MC) ≤ ↑e))\n        True >\n      ↑↑ε / ↑↑(Fintype.card F) →\n    jointProximityNat₂ (↑MC) (u 0) (u 1) e\n⊢ jointProximityNat (↑MC) u e",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "Tactic `apply` failed: could not unify the conclusion of `Eq.rec (motive := fun x h =>\n  (do\n          let r ← $ᵖ F\n          pure (Δ₀(affineLineEvaluation (x 0) (x 1) r, ↑MC) ≤ ↑e))\n        True >\n      ↑↑ε / ↑↑(Fintype.card F) →\n    jointProximityNat₂ (↑MC) (x 0) (x 1) e)\n  h_affine (Eq.symm hu)`\n  jointProximityNat₂ (↑MC) (finMapTwoWords (u 0) (u 1) 0) (finMapTwoWords (u 0) (u 1) 1) e\nwith the goal\n  jointProximityNat (↑MC) u e\n\nNote: The full type of `Eq.rec (motive := fun x h =>\n  (do\n          let r ← $ᵖ F\n          pure (Δ₀(affineLineEvaluation (x 0) (x 1) r, ↑MC) ≤ ↑e))\n        True >\n      ↑↑ε / ↑↑(Fintype.card F) →\n    jointProximityNat₂ (↑MC) (x 0) (x 1) e)\n  h_affine (Eq.symm hu)` is\n  (do\n          let r ← $ᵖ F\n          pure (Δ₀(affineLineEvaluation (finMapTwoWords (u 0) (u 1) 0) (finMapTwoWords (u 0) (u 1) 1) r, ↑MC) ≤ ↑e))\n        True >\n      ↑↑ε / ↑↑(Fintype.card F) →\n    jointProximityNat₂ (↑MC) (finMapTwoWords (u 0) (u 1) 0) (finMapTwoWords (u 0) (u 1) 1) e\n\ncase base\nι : Type l\ninst✝⁷ : Fintype ι\ninst✝⁶ : Nonempty ι\ninst✝⁵ : DecidableEq ι\nF : Type\ninst✝⁴ : CommRing F\ninst✝³ : Fintype F\nA : Type\ninst✝² : DecidableEq A\ninst✝¹ : AddCommGroup A\ninst✝ : Module F A\nMC : ModuleCode ι F A\ne ε : ℕ\nhC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε\nh_interleaved_gaps : ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε\nϑ : ℕ\nu : WordStack A (Fin (2 ^ Nat.succ 0)) ι\nh_close :\n  (do\n        let r ← $ᵖ (Fin (Nat.succ 0) → F)\n        pure (Δ₀(multilinearCombine u r, ↑MC) ≤ ↑e))\n      True >\n    ↑↑(Nat.succ 0) * ↑ε / ↑↑(Fintype.card F)\nhu : finMapTwoWords (u 0) (u 1) = u\nh_affine :\n  (do\n          let r ← $ᵖ F\n          pure (Δ₀(affineLineEvaluation (u 0) (u 1) r, ↑MC) ≤ ↑e))\n        True >\n      ↑↑ε / ↑↑(Fintype.card F) →\n    jointProximityNat₂ (↑MC) (u 0) (u 1) e\n⊢ jointProximityNat (↑MC) u e",
+          "endPos": {
+            "column": 25,
+            "line": 1224
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P12/incomplete/B2/repeat_3/validation/lean/008_candidate_03/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 6,
+            "line": 1224
+          },
+          "severity": "error"
+        },
+        "source_line": "      apply hu ▸ h_affine",
+        "start_offset": 63610,
+        "start_byte_offset": 67659,
+        "end_offset": 63629,
+        "end_byte_offset": 67680,
+        "source_text": "apply hu ▸ h_affine",
+        "failed_tactic": "apply hu ▸ h_affine",
+        "tactic_range": {
+          "position": {
+            "line": 1224,
+            "column": 6
+          },
+          "end_position": {
+            "line": 1224,
+            "column": 25
+          },
+          "start_offset": 63610,
+          "end_offset": 63629
+        },
+        "goals": [
+          "jointProximityNat (↑MC) u e"
+        ],
+        "local_context": [
+          "case base\nι : Type l\ninst✝⁷ : Fintype ι\ninst✝⁶ : Nonempty ι\ninst✝⁵ : DecidableEq ι\nF : Type\ninst✝⁴ : CommRing F\ninst✝³ : Fintype F\nA : Type\ninst✝² : DecidableEq A\ninst✝¹ : AddCommGroup A\ninst✝ : Module F A\nMC : ModuleCode ι F A\ne ε : ℕ\nhC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε\nh_interleaved_gaps : ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε\nϑ : ℕ\nu : WordStack A (Fin (2 ^ Nat.succ 0)) ι\nh_close :\n  (do\n        let r ← $ᵖ (Fin (Nat.succ 0) → F)\n        pure (Δ₀(multilinearCombine u r, ↑MC) ≤ ↑e))\n      True >\n    ↑↑(Nat.succ 0) * ↑ε / ↑↑(Fintype.card F)\nhu : finMapTwoWords (u 0) (u 1) = u\nh_affine :\n  (do\n          let r ← $ᵖ F\n          pure (Δ₀(affineLineEvaluation (u 0) (u 1) r, ↑MC) ≤ ↑e))\n        True >\n      ↑↑ε / ↑↑(Fintype.card F) →\n    jointProximityNat₂ (↑MC) (u 0) (u 1) e"
+        ],
+        "proof_state_source": "lean_infotree_before_tactic",
+        "proof_state_raw": {
+          "depth": 16,
+          "end": 74811,
+          "goals_after": [
+            "case base\nι : Type l\ninst✝⁷ : Fintype ι\ninst✝⁶ : Nonempty ι\ninst✝⁵ : DecidableEq ι\nF : Type\ninst✝⁴ : CommRing F\ninst✝³ : Fintype F\nA : Type\ninst✝² : DecidableEq A\ninst✝¹ : AddCommGroup A\ninst✝ : Module F A\nMC : ModuleCode ι F A\ne ε : ℕ\nhC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε\nh_interleaved_gaps : ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε\nϑ : ℕ\nu : WordStack A (Fin (2 ^ Nat.succ 0)) ι\nh_close :\n  (do\n        let r ← $ᵖ (Fin (Nat.succ 0) → F)\n        pure (Δ₀(multilinearCombine u r, ↑MC) ≤ ↑e))\n      True >\n    ↑↑(Nat.succ 0) * ↑ε / ↑↑(Fintype.card F)\nhu : finMapTwoWords (u 0) (u 1) = u\nh_affine :\n  (do\n          let r ← $ᵖ F\n          pure (Δ₀(affineLineEvaluation (u 0) (u 1) r, ↑MC) ≤ ↑e))\n        True >\n      ↑↑ε / ↑↑(Fintype.card F) →\n    jointProximityNat₂ (↑MC) (u 0) (u 1) e\n⊢ jointProximityNat (↑MC) u e"
+          ],
+          "goals_before": [
+            "case base\nι : Type l\ninst✝⁷ : Fintype ι\ninst✝⁶ : Nonempty ι\ninst✝⁵ : DecidableEq ι\nF : Type\ninst✝⁴ : CommRing F\ninst✝³ : Fintype F\nA : Type\ninst✝² : DecidableEq A\ninst✝¹ : AddCommGroup A\ninst✝ : Module F A\nMC : ModuleCode ι F A\ne ε : ℕ\nhC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε\nh_interleaved_gaps : ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε\nϑ : ℕ\nu : WordStack A (Fin (2 ^ Nat.succ 0)) ι\nh_close :\n  (do\n        let r ← $ᵖ (Fin (Nat.succ 0) → F)\n        pure (Δ₀(multilinearCombine u r, ↑MC) ≤ ↑e))\n      True >\n    ↑↑(Nat.succ 0) * ↑ε / ↑↑(Fintype.card F)\nhu : finMapTwoWords (u 0) (u 1) = u\nh_affine :\n  (do\n          let r ← $ᵖ F\n          pure (Δ₀(affineLineEvaluation (u 0) (u 1) r, ↑MC) ≤ ↑e))\n        True >\n      ↑↑ε / ↑↑(Fintype.card F) →\n    jointProximityNat₂ (↑MC) (u 0) (u 1) e\n⊢ jointProximityNat (↑MC) u e"
+          ],
+          "kind": "tactic",
+          "start": 74790
+        }
+      },
+      {
+        "severity": "error",
+        "position": {
+          "column": 10,
+          "line": 1244
+        },
+        "end_position": {
+          "column": 13,
+          "line": 1244
+        },
+        "message": "No applicable extensionality theorem found for type\n  ENNReal\n\nNote: Extensionality theorems can be registered by marking them with the `[ext]` attribute",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "No applicable extensionality theorem found for type\n  ENNReal\n\nNote: Extensionality theorems can be registered by marking them with the `[ext]` attribute",
+          "endPos": {
+            "column": 13,
+            "line": 1244
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P12/incomplete/B2/repeat_3/validation/lean/008_candidate_03/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 10,
+            "line": 1244
+          },
+          "severity": "error"
+        },
+        "source_line": "          ext <;> simp [Fin.lastCases, pow_succ] <;> omega",
+        "start_offset": 64566,
+        "start_byte_offset": 68652,
+        "end_offset": 64569,
+        "end_byte_offset": 68655,
+        "source_text": "ext",
+        "failed_tactic": "ext",
+        "tactic_range": {
+          "position": {
+            "line": 1244,
+            "column": 10
+          },
+          "end_position": {
+            "line": 1244,
+            "column": 13
+          },
+          "start_offset": 64566,
+          "end_offset": 64569
+        },
+        "goals": [
+          "(do\n        let r_last ← $ᵖ F\n        (fun a =>\n              Δ₀(multilinearCombine\n                    (((1 - r_last) • fun rowIdx => u ⟨↑rowIdx, ⋯⟩) + r_last • fun rowIdx => u ⟨↑rowIdx + 2 ^ ϑ, ⋯⟩) a,\n                  ↑MC) ≤\n                ↑e) <$>\n            $ᵖ (Fin ϑ → F))\n      True =\n    ((fun a => Δ₀(multilinearCombine u a, ↑MC) ≤ ↑e) <$> $ᵖ (Fin (ϑ + 1) → F)) True"
+        ],
+        "local_context": [
+          "case e'_3\nι : Type l\ninst✝⁷ : Fintype ι\ninst✝⁶ : Nonempty ι\ninst✝⁵ : DecidableEq ι\nF : Type\ninst✝⁴ : CommRing F\ninst✝³ : Fintype F\nA : Type\ninst✝² : DecidableEq A\ninst✝¹ : AddCommGroup A\ninst✝ : Module F A\nMC : ModuleCode ι F A\ne ε : ℕ\nhC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε\nh_interleaved_gaps : ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε\nϑ✝ ϑ : ℕ\nhϑ_ge_one : Nat.succ 0 ≤ ϑ\nih : δ_ε_multilinearCorrelatedAgreement_Nat (↑MC) ϑ e ε\nu : WordStack A (Fin (2 ^ (ϑ + 1))) ι\nh_close :\n  (do\n        let r ← $ᵖ (Fin (ϑ + 1) → F)\n        pure (Δ₀(multilinearCombine u r, ↑MC) ≤ ↑e))\n      True >\n    ↑↑(ϑ + 1) * ↑ε / ↑↑(Fintype.card F)\nU₀ : WordStack A (Fin (2 ^ ϑ)) ι := (splitHalfRowWiseInterleavedWords u).1\nU₁ : WordStack A (Fin (2 ^ ϑ)) ι := (splitHalfRowWiseInterleavedWords u).2"
+        ],
+        "proof_state_source": "lean_infotree_before_tactic",
+        "proof_state_raw": {
+          "depth": 44,
+          "end": 75786,
+          "goals_after": [
+            "case e'_3\nι : Type l\ninst✝⁷ : Fintype ι\ninst✝⁶ : Nonempty ι\ninst✝⁵ : DecidableEq ι\nF : Type\ninst✝⁴ : CommRing F\ninst✝³ : Fintype F\nA : Type\ninst✝² : DecidableEq A\ninst✝¹ : AddCommGroup A\ninst✝ : Module F A\nMC : ModuleCode ι F A\ne ε : ℕ\nhC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε\nh_interleaved_gaps : ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε\nϑ✝ ϑ : ℕ\nhϑ_ge_one : Nat.succ 0 ≤ ϑ\nih : δ_ε_multilinearCorrelatedAgreement_Nat (↑MC) ϑ e ε\nu : WordStack A (Fin (2 ^ (ϑ + 1))) ι\nh_close :\n  (do\n        let r ← $ᵖ (Fin (ϑ + 1) → F)\n        pure (Δ₀(multilinearCombine u r, ↑MC) ≤ ↑e))\n      True >\n    ↑↑(ϑ + 1) * ↑ε / ↑↑(Fintype.card F)\nU₀ : WordStack A (Fin (2 ^ ϑ)) ι := (splitHalfRowWiseInterleavedWords u).1\nU₁ : WordStack A (Fin (2 ^ ϑ)) ι := (splitHalfRowWiseInterleavedWords u).2\n⊢ (do\n        let r_last ← $ᵖ F\n        (fun a =>\n              Δ₀(multilinearCombine\n                    (((1 - r_last) • fun rowIdx => u ⟨↑rowIdx, ⋯⟩) + r_last • fun rowIdx => u ⟨↑rowIdx + 2 ^ ϑ, ⋯⟩) a,\n                  ↑MC) ≤\n                ↑e) <$>\n            $ᵖ (Fin ϑ → F))\n      True =\n    ((fun a => Δ₀(multilinearCombine u a, ↑MC) ≤ ↑e) <$> $ᵖ (Fin (ϑ + 1) → F)) True"
+          ],
+          "goals_before": [
+            "case e'_3\nι : Type l\ninst✝⁷ : Fintype ι\ninst✝⁶ : Nonempty ι\ninst✝⁵ : DecidableEq ι\nF : Type\ninst✝⁴ : CommRing F\ninst✝³ : Fintype F\nA : Type\ninst✝² : DecidableEq A\ninst✝¹ : AddCommGroup A\ninst✝ : Module F A\nMC : ModuleCode ι F A\ne ε : ℕ\nhC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε\nh_interleaved_gaps : ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε\nϑ✝ ϑ : ℕ\nhϑ_ge_one : Nat.succ 0 ≤ ϑ\nih : δ_ε_multilinearCorrelatedAgreement_Nat (↑MC) ϑ e ε\nu : WordStack A (Fin (2 ^ (ϑ + 1))) ι\nh_close :\n  (do\n        let r ← $ᵖ (Fin (ϑ + 1) → F)\n        pure (Δ₀(multilinearCombine u r, ↑MC) ≤ ↑e))\n      True >\n    ↑↑(ϑ + 1) * ↑ε / ↑↑(Fintype.card F)\nU₀ : WordStack A (Fin (2 ^ ϑ)) ι := (splitHalfRowWiseInterleavedWords u).1\nU₁ : WordStack A (Fin (2 ^ ϑ)) ι := (splitHalfRowWiseInterleavedWords u).2\n⊢ (do\n        let r_last ← $ᵖ F\n        (fun a =>\n              Δ₀(multilinearCombine\n                    (((1 - r_last) • fun rowIdx => u ⟨↑rowIdx, ⋯⟩) + r_last • fun rowIdx => u ⟨↑rowIdx + 2 ^ ϑ, ⋯⟩) a,\n                  ↑MC) ≤\n                ↑e) <$>\n            $ᵖ (Fin ϑ → F))\n      True =\n    ((fun a => Δ₀(multilinearCombine u a, ↑MC) ≤ ↑e) <$> $ᵖ (Fin (ϑ + 1) → F)) True"
+          ],
+          "kind": "tactic",
+          "start": 75783
+        }
+      },
+      {
+        "severity": "error",
+        "position": {
+          "column": 10,
+          "line": 1267
+        },
+        "end_position": {
+          "column": 13,
+          "line": 1267
+        },
+        "message": "This extensionality tactic only applies to equalities, not\n  Δ₀((1 - r) • (splitHalfRowWiseInterleavedWords u).1.transpose + r • (splitHalfRowWiseInterleavedWords u).2.transpose,\n        {V | ∀ (k : Fin (2 ^ ϑ)), V.transpose k ∈ MC}) ≤\n      ↑e ↔\n    Δ₀(Matrix.transpose (((1 - r) • fun rowIdx => u ⟨↑rowIdx, ⋯⟩) + r • fun rowIdx => u ⟨↑rowIdx + 2 ^ ϑ, ⋯⟩),\n        {V | ∀ (k : Fin (2 ^ ϑ)), V.transpose k ∈ MC}) ≤\n      ↑e",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "This extensionality tactic only applies to equalities, not\n  Δ₀((1 - r) • (splitHalfRowWiseInterleavedWords u).1.transpose + r • (splitHalfRowWiseInterleavedWords u).2.transpose,\n        {V | ∀ (k : Fin (2 ^ ϑ)), V.transpose k ∈ MC}) ≤\n      ↑e ↔\n    Δ₀(Matrix.transpose (((1 - r) • fun rowIdx => u ⟨↑rowIdx, ⋯⟩) + r • fun rowIdx => u ⟨↑rowIdx + 2 ^ ϑ, ⋯⟩),\n        {V | ∀ (k : Fin (2 ^ ϑ)), V.transpose k ∈ MC}) ≤\n      ↑e",
+          "endPos": {
+            "column": 13,
+            "line": 1267
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P12/incomplete/B2/repeat_3/validation/lean/008_candidate_03/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 10,
+            "line": 1267
+          },
+          "severity": "error"
+        },
+        "source_line": "          ext <;> simp [Matrix.transpose_apply]",
+        "start_offset": 65651,
+        "start_byte_offset": 69803,
+        "end_offset": 65654,
+        "end_byte_offset": 69806,
+        "source_text": "ext",
+        "failed_tactic": "ext",
+        "tactic_range": {
+          "position": {
+            "line": 1267,
+            "column": 10
+          },
+          "end_position": {
+            "line": 1267,
+            "column": 13
+          },
+          "start_offset": 65651,
+          "end_offset": 65654
+        },
+        "goals": [
+          "Δ₀((1 - r) • (splitHalfRowWiseInterleavedWords u).1.transpose + r • (splitHalfRowWiseInterleavedWords u).2.transpose,\n        {V | ∀ (k : Fin (2 ^ ϑ)), V.transpose k ∈ MC}) ≤\n      ↑e ↔\n    Δ₀(Matrix.transpose (((1 - r) • fun rowIdx => u ⟨↑rowIdx, ⋯⟩) + r • fun rowIdx => u ⟨↑rowIdx + 2 ^ ϑ, ⋯⟩),\n        {V | ∀ (k : Fin (2 ^ ϑ)), V.transpose k ∈ MC}) ≤\n      ↑e"
+        ],
+        "local_context": [
+          "ι : Type l\ninst✝⁷ : Fintype ι\ninst✝⁶ : Nonempty ι\ninst✝⁵ : DecidableEq ι\nF : Type\ninst✝⁴ : CommRing F\ninst✝³ : Fintype F\nA : Type\ninst✝² : DecidableEq A\ninst✝¹ : AddCommGroup A\ninst✝ : Module F A\nMC : ModuleCode ι F A\ne ε : ℕ\nhC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε\nh_interleaved_gaps : ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε\nϑ✝ ϑ : ℕ\nhϑ_ge_one : Nat.succ 0 ≤ ϑ\nih : δ_ε_multilinearCorrelatedAgreement_Nat (↑MC) ϑ e ε\nu : WordStack A (Fin (2 ^ (ϑ + 1))) ι\nh_close :\n  (do\n        let r ← $ᵖ (Fin (ϑ + 1) → F)\n        pure (Δ₀(multilinearCombine u r, ↑MC) ≤ ↑e))\n      True >\n    ↑↑(ϑ + 1) * ↑ε / ↑↑(Fintype.card F)\nU₀ : WordStack A (Fin (2 ^ ϑ)) ι := (splitHalfRowWiseInterleavedWords u).1\nU₁ : WordStack A (Fin (2 ^ ϑ)) ι := (splitHalfRowWiseInterleavedWords u).2\nh_split_close :\n  (do\n        let r_last ← $ᵖ F\n        let r_init ← $ᵖ (Fin ϑ → F)\n        pure (multilinearCombine_affineComb_split_last_close MC u e r_last r_init))\n      True >\n    ↑(↑(ϑ + 1) * ↑ε) / ↑↑(Fintype.card F)\nhR :\n  (do\n        let r ← $ᵖ F\n        pure (r ∈ R_star_tensor MC U₀ U₁))\n      True >\n    ↑ε / ↑(Fintype.card F)\nr : F\nhr : r ∈ R_star_tensor MC U₀ U₁\nh_joint :\n  jointProximityNat (↑MC)\n    (affineLineEvaluation (fun rowIdx => u ⟨↑rowIdx, ⋯⟩) (fun rowIdx => u ⟨↑rowIdx + 2 ^ ϑ, ⋯⟩) ↑⟨r, hr⟩) e"
+        ],
+        "proof_state_source": "lean_infotree_before_tactic",
+        "proof_state_raw": {
+          "depth": 40,
+          "end": 76937,
+          "goals_after": [
+            "ι : Type l\ninst✝⁷ : Fintype ι\ninst✝⁶ : Nonempty ι\ninst✝⁵ : DecidableEq ι\nF : Type\ninst✝⁴ : CommRing F\ninst✝³ : Fintype F\nA : Type\ninst✝² : DecidableEq A\ninst✝¹ : AddCommGroup A\ninst✝ : Module F A\nMC : ModuleCode ι F A\ne ε : ℕ\nhC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε\nh_interleaved_gaps : ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε\nϑ✝ ϑ : ℕ\nhϑ_ge_one : Nat.succ 0 ≤ ϑ\nih : δ_ε_multilinearCorrelatedAgreement_Nat (↑MC) ϑ e ε\nu : WordStack A (Fin (2 ^ (ϑ + 1))) ι\nh_close :\n  (do\n        let r ← $ᵖ (Fin (ϑ + 1) → F)\n        pure (Δ₀(multilinearCombine u r, ↑MC) ≤ ↑e))\n      True >\n    ↑↑(ϑ + 1) * ↑ε / ↑↑(Fintype.card F)\nU₀ : WordStack A (Fin (2 ^ ϑ)) ι := (splitHalfRowWiseInterleavedWords u).1\nU₁ : WordStack A (Fin (2 ^ ϑ)) ι := (splitHalfRowWiseInterleavedWords u).2\nh_split_close :\n  (do\n        let r_last ← $ᵖ F\n        let r_init ← $ᵖ (Fin ϑ → F)\n        pure (multilinearCombine_affineComb_split_last_close MC u e r_last r_init))\n      True >\n    ↑(↑(ϑ + 1) * ↑ε) / ↑↑(Fintype.card F)\nhR :\n  (do\n        let r ← $ᵖ F\n        pure (r ∈ R_star_tensor MC U₀ U₁))\n      True >\n    ↑ε / ↑(Fintype.card F)\nr : F\nhr : r ∈ R_star_tensor MC U₀ U₁\nh_joint :\n  jointProximityNat (↑MC)\n    (affineLineEvaluation (fun rowIdx => u ⟨↑rowIdx, ⋯⟩) (fun rowIdx => u ⟨↑rowIdx + 2 ^ ϑ, ⋯⟩) ↑⟨r, hr⟩) e\n⊢ Δ₀((1 - r) • (splitHalfRowWiseInterleavedWords u).1.transpose + r • (splitHalfRowWiseInterleavedWords u).2.transpose,\n        {V | ∀ (k : Fin (2 ^ ϑ)), V.transpose k ∈ MC}) ≤\n      ↑e ↔\n    Δ₀(Matrix.transpose (((1 - r) • fun rowIdx => u ⟨↑rowIdx, ⋯⟩) + r • fun rowIdx => u ⟨↑rowIdx + 2 ^ ϑ, ⋯⟩),\n        {V | ∀ (k : Fin (2 ^ ϑ)), V.transpose k ∈ MC}) ≤\n      ↑e"
+          ],
+          "goals_before": [
+            "ι : Type l\ninst✝⁷ : Fintype ι\ninst✝⁶ : Nonempty ι\ninst✝⁵ : DecidableEq ι\nF : Type\ninst✝⁴ : CommRing F\ninst✝³ : Fintype F\nA : Type\ninst✝² : DecidableEq A\ninst✝¹ : AddCommGroup A\ninst✝ : Module F A\nMC : ModuleCode ι F A\ne ε : ℕ\nhC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε\nh_interleaved_gaps : ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε\nϑ✝ ϑ : ℕ\nhϑ_ge_one : Nat.succ 0 ≤ ϑ\nih : δ_ε_multilinearCorrelatedAgreement_Nat (↑MC) ϑ e ε\nu : WordStack A (Fin (2 ^ (ϑ + 1))) ι\nh_close :\n  (do\n        let r ← $ᵖ (Fin (ϑ + 1) → F)\n        pure (Δ₀(multilinearCombine u r, ↑MC) ≤ ↑e))\n      True >\n    ↑↑(ϑ + 1) * ↑ε / ↑↑(Fintype.card F)\nU₀ : WordStack A (Fin (2 ^ ϑ)) ι := (splitHalfRowWiseInterleavedWords u).1\nU₁ : WordStack A (Fin (2 ^ ϑ)) ι := (splitHalfRowWiseInterleavedWords u).2\nh_split_close :\n  (do\n        let r_last ← $ᵖ F\n        let r_init ← $ᵖ (Fin ϑ → F)\n        pure (multilinearCombine_affineComb_split_last_close MC u e r_last r_init))\n      True >\n    ↑(↑(ϑ + 1) * ↑ε) / ↑↑(Fintype.card F)\nhR :\n  (do\n        let r ← $ᵖ F\n        pure (r ∈ R_star_tensor MC U₀ U₁))\n      True >\n    ↑ε / ↑(Fintype.card F)\nr : F\nhr : r ∈ R_star_tensor MC U₀ U₁\nh_joint :\n  jointProximityNat (↑MC)\n    (affineLineEvaluation (fun rowIdx => u ⟨↑rowIdx, ⋯⟩) (fun rowIdx => u ⟨↑rowIdx + 2 ^ ϑ, ⋯⟩) ↑⟨r, hr⟩) e\n⊢ Δ₀((1 - r) • (splitHalfRowWiseInterleavedWords u).1.transpose + r • (splitHalfRowWiseInterleavedWords u).2.transpose,\n        {V | ∀ (k : Fin (2 ^ ϑ)), V.transpose k ∈ MC}) ≤\n      ↑e ↔\n    Δ₀(Matrix.transpose (((1 - r) • fun rowIdx => u ⟨↑rowIdx, ⋯⟩) + r • fun rowIdx => u ⟨↑rowIdx + 2 ^ ϑ, ⋯⟩),\n        {V | ∀ (k : Fin (2 ^ ϑ)), V.transpose k ∈ MC}) ≤\n      ↑e"
+          ],
+          "kind": "tactic",
+          "start": 76934
+        }
+      },
+      {
+        "severity": "error",
+        "position": {
+          "column": 16,
+          "line": 1278
+        },
+        "end_position": {
+          "column": 55,
+          "line": 1278
+        },
+        "message": "`simp` made no progress",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "`simp` made no progress",
+          "endPos": {
+            "column": 55,
+            "line": 1278
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P12/incomplete/B2/repeat_3/validation/lean/008_candidate_03/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 16,
+            "line": 1278
+          },
+          "severity": "error"
+        },
+        "source_line": "        ext <;> simp [Matrix.transpose_apply, pow_succ] <;> omega",
+        "start_offset": 66226,
+        "start_byte_offset": 70397,
+        "end_offset": 66265,
+        "end_byte_offset": 70436,
+        "source_text": "simp [Matrix.transpose_apply, pow_succ]",
+        "failed_tactic": "simp [Matrix.transpose_apply, pow_succ]",
+        "tactic_range": {
+          "position": {
+            "line": 1278,
+            "column": 16
+          },
+          "end_position": {
+            "line": 1278,
+            "column": 55
+          },
+          "start_offset": 66226,
+          "end_offset": 66265
+        },
+        "goals": [
+          "jointProximityNat (↑MC) u x✝ ↔\n    jointProximityNat₂ {V | ∀ (k : Fin (2 ^ ϑ)), V.transpose k ∈ MC} (Matrix.transpose fun rowIdx => u ⟨↑rowIdx, ⋯⟩)\n      (Matrix.transpose fun rowIdx => u ⟨↑rowIdx + 2 ^ ϑ, ⋯⟩) x✝"
+        ],
+        "local_context": [
+          "ι : Type l\ninst✝⁷ : Fintype ι\ninst✝⁶ : Nonempty ι\ninst✝⁵ : DecidableEq ι\nF : Type\ninst✝⁴ : CommRing F\ninst✝³ : Fintype F\nA : Type\ninst✝² : DecidableEq A\ninst✝¹ : AddCommGroup A\ninst✝ : Module F A\nMC : ModuleCode ι F A\ne ε : ℕ\nhC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε\nh_interleaved_gaps : ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε\nϑ✝ ϑ : ℕ\nhϑ_ge_one : Nat.succ 0 ≤ ϑ\nih : δ_ε_multilinearCorrelatedAgreement_Nat (↑MC) ϑ e ε\nu : WordStack A (Fin (2 ^ (ϑ + 1))) ι\nh_close :\n  (do\n        let r ← $ᵖ (Fin (ϑ + 1) → F)\n        pure (Δ₀(multilinearCombine u r, ↑MC) ≤ ↑e))\n      True >\n    ↑↑(ϑ + 1) * ↑ε / ↑↑(Fintype.card F)\nU₀ : WordStack A (Fin (2 ^ ϑ)) ι := ⋯\nU₁ : WordStack A (Fin (2 ^ ϑ)) ι := ⋯\nh_split_close :\n  (do\n        let r_last ← $ᵖ F\n        let r_init ← $ᵖ (Fin ϑ → F)\n        pure (multilinearCombine_affineComb_split_last_close MC u e r_last r_init))\n      True >\n    ↑(↑(ϑ + 1) * ↑ε) / ↑↑(Fintype.card F)\nhR :\n  (do\n        let r ← $ᵖ F\n        pure (r ∈ R_star_tensor MC U₀ U₁))\n      True >\n    ↑ε / ↑(Fintype.card F)\nh_affine_probability :\n  (do\n        let r ← $ᵖ F\n        pure (Δ₀(affineLineEvaluation (⋈|U₀) (⋈|U₁) r, ↑(CodeInterleavable.interleaveCode MC (Fin (2 ^ ϑ)))) ≤ ↑e))\n      True >\n    ↑ε / ↑(Fintype.card F)\nhpow : 2 ^ ϑ ≥ 1\nh_joint_halves : jointProximityNat₂ (↑(CodeInterleavable.interleaveCode MC (Fin (2 ^ ϑ)))) (⋈|U₀) (⋈|U₁) e\nx✝ : ℕ"
+        ],
+        "proof_state_source": "lean_infotree_before_tactic",
+        "proof_state_raw": {
+          "depth": 27,
+          "end": 77567,
+          "goals_after": [
+            "ι : Type l\ninst✝⁷ : Fintype ι\ninst✝⁶ : Nonempty ι\ninst✝⁵ : DecidableEq ι\nF : Type\ninst✝⁴ : CommRing F\ninst✝³ : Fintype F\nA : Type\ninst✝² : DecidableEq A\ninst✝¹ : AddCommGroup A\ninst✝ : Module F A\nMC : ModuleCode ι F A\ne ε : ℕ\nhC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε\nh_interleaved_gaps : ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε\nϑ✝ ϑ : ℕ\nhϑ_ge_one : Nat.succ 0 ≤ ϑ\nih : δ_ε_multilinearCorrelatedAgreement_Nat (↑MC) ϑ e ε\nu : WordStack A (Fin (2 ^ (ϑ + 1))) ι\nh_close :\n  (do\n        let r ← $ᵖ (Fin (ϑ + 1) → F)\n        pure (Δ₀(multilinearCombine u r, ↑MC) ≤ ↑e))\n      True >\n    ↑↑(ϑ + 1) * ↑ε / ↑↑(Fintype.card F)\nU₀ : WordStack A (Fin (2 ^ ϑ)) ι := ⋯\nU₁ : WordStack A (Fin (2 ^ ϑ)) ι := ⋯\nh_split_close :\n  (do\n        let r_last ← $ᵖ F\n        let r_init ← $ᵖ (Fin ϑ → F)\n        pure (multilinearCombine_affineComb_split_last_close MC u e r_last r_init))\n      True >\n    ↑(↑(ϑ + 1) * ↑ε) / ↑↑(Fintype.card F)\nhR :\n  (do\n        let r ← $ᵖ F\n        pure (r ∈ R_star_tensor MC U₀ U₁))\n      True >\n    ↑ε / ↑(Fintype.card F)\nh_affine_probability :\n  (do\n        let r ← $ᵖ F\n        pure (Δ₀(affineLineEvaluation (⋈|U₀) (⋈|U₁) r, ↑(CodeInterleavable.interleaveCode MC (Fin (2 ^ ϑ)))) ≤ ↑e))\n      True >\n    ↑ε / ↑(Fintype.card F)\nhpow : 2 ^ ϑ ≥ 1\nh_joint_halves : jointProximityNat₂ (↑(CodeInterleavable.interleaveCode MC (Fin (2 ^ ϑ)))) (⋈|U₀) (⋈|U₁) e\nx✝ : ℕ\n⊢ jointProximityNat (↑MC) u x✝ ↔\n    jointProximityNat₂ {V | ∀ (k : Fin (2 ^ ϑ)), V.transpose k ∈ MC} (Matrix.transpose fun rowIdx => u ⟨↑rowIdx, ⋯⟩)\n      (Matrix.transpose fun rowIdx => u ⟨↑rowIdx + 2 ^ ϑ, ⋯⟩) x✝"
+          ],
+          "goals_before": [
+            "ι : Type l\ninst✝⁷ : Fintype ι\ninst✝⁶ : Nonempty ι\ninst✝⁵ : DecidableEq ι\nF : Type\ninst✝⁴ : CommRing F\ninst✝³ : Fintype F\nA : Type\ninst✝² : DecidableEq A\ninst✝¹ : AddCommGroup A\ninst✝ : Module F A\nMC : ModuleCode ι F A\ne ε : ℕ\nhC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε\nh_interleaved_gaps : ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε\nϑ✝ ϑ : ℕ\nhϑ_ge_one : Nat.succ 0 ≤ ϑ\nih : δ_ε_multilinearCorrelatedAgreement_Nat (↑MC) ϑ e ε\nu : WordStack A (Fin (2 ^ (ϑ + 1))) ι\nh_close :\n  (do\n        let r ← $ᵖ (Fin (ϑ + 1) → F)\n        pure (Δ₀(multilinearCombine u r, ↑MC) ≤ ↑e))\n      True >\n    ↑↑(ϑ + 1) * ↑ε / ↑↑(Fintype.card F)\nU₀ : WordStack A (Fin (2 ^ ϑ)) ι := ⋯\nU₁ : WordStack A (Fin (2 ^ ϑ)) ι := ⋯\nh_split_close :\n  (do\n        let r_last ← $ᵖ F\n        let r_init ← $ᵖ (Fin ϑ → F)\n        pure (multilinearCombine_affineComb_split_last_close MC u e r_last r_init))\n      True >\n    ↑(↑(ϑ + 1) * ↑ε) / ↑↑(Fintype.card F)\nhR :\n  (do\n        let r ← $ᵖ F\n        pure (r ∈ R_star_tensor MC U₀ U₁))\n      True >\n    ↑ε / ↑(Fintype.card F)\nh_affine_probability :\n  (do\n        let r ← $ᵖ F\n        pure (Δ₀(affineLineEvaluation (⋈|U₀) (⋈|U₁) r, ↑(CodeInterleavable.interleaveCode MC (Fin (2 ^ ϑ)))) ≤ ↑e))\n      True >\n    ↑ε / ↑(Fintype.card F)\nhpow : 2 ^ ϑ ≥ 1\nh_joint_halves : jointProximityNat₂ (↑(CodeInterleavable.interleaveCode MC (Fin (2 ^ ϑ)))) (⋈|U₀) (⋈|U₁) e\nx✝ : ℕ\n⊢ jointProximityNat (↑MC) u x✝ ↔\n    jointProximityNat₂ {V | ∀ (k : Fin (2 ^ ϑ)), V.transpose k ∈ MC} (Matrix.transpose fun rowIdx => u ⟨↑rowIdx, ⋯⟩)\n      (Matrix.transpose fun rowIdx => u ⟨↑rowIdx + 2 ^ ϑ, ⋯⟩) x✝"
+          ],
+          "kind": "tactic",
+          "start": 77528
+        }
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 12,
+          "line": 1241
+        },
+        "end_position": {
+          "column": 30,
+          "line": 1241
+        },
+        "message": "This simp argument is unused:\n  multilinearCombine\n\nHint: Omit it from the simp argument list.\n  simp [multilinearCombine_affineComb_split_last_close, m̵u̵l̵t̵i̵l̵i̵n̵e̵a̵r̵C̵o̵m̵b̵i̵n̵e̵,̵ ̵splitHalfRowWiseInterleavedWords,\n              affineLineEvaluation, PMF.uniformOfFintype_apply, Fin.sum_univ_succ, pow_succ]\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "This simp argument is unused:\n  multilinearCombine\n\nHint: Omit it from the simp argument list.\n  simp [multilinearCombine_affineComb_split_last_close, m̵u̵l̵t̵i̵l̵i̵n̵e̵a̵r̵C̵o̵m̵b̵i̵n̵e̵,̵ ̵splitHalfRowWiseInterleavedWords,\n              affineLineEvaluation, PMF.uniformOfFintype_apply, Fin.sum_univ_succ, pow_succ]\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+          "endPos": {
+            "column": 30,
+            "line": 1241
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P12/incomplete/B2/repeat_3/validation/lean/008_candidate_03/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unusedSimpArgs",
+          "pos": {
+            "column": 12,
+            "line": 1241
+          },
+          "severity": "warning"
+        },
+        "source_line": "            multilinearCombine, splitHalfRowWiseInterleavedWords,",
+        "start_offset": 64395,
+        "start_byte_offset": 68481,
+        "end_offset": 64413,
+        "end_byte_offset": 68499,
+        "source_text": "multilinearCombine"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 34,
+          "line": 1242
+        },
+        "end_position": {
+          "column": 60,
+          "line": 1242
+        },
+        "message": "This simp argument is unused:\n  PMF.uniformOfFintype_apply\n\nHint: Omit it from the simp argument list.\n  simp [multilinearCombine_affineComb_split_last_close, multilinearCombine,\n  ̲  ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲splitHalfRowWiseInterleavedWords, affineLineEvaluation, P̵M̵F̵.̵u̵n̵i̵f̵o̵r̵m̵O̵f̵F̵i̵n̵t̵y̵p̵e̵_̵a̵p̵p̵l̵y̵,̵Fin.sum_univ_succ, pow_succ]\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "This simp argument is unused:\n  PMF.uniformOfFintype_apply\n\nHint: Omit it from the simp argument list.\n  simp [multilinearCombine_affineComb_split_last_close, multilinearCombine,\n  ̲  ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲splitHalfRowWiseInterleavedWords, affineLineEvaluation, P̵M̵F̵.̵u̵n̵i̵f̵o̵r̵m̵O̵f̵F̵i̵n̵t̵y̵p̵e̵_̵a̵p̵p̵l̵y̵,̵Fin.sum_univ_succ, pow_succ]\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+          "endPos": {
+            "column": 60,
+            "line": 1242
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P12/incomplete/B2/repeat_3/validation/lean/008_candidate_03/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unusedSimpArgs",
+          "pos": {
+            "column": 34,
+            "line": 1242
+          },
+          "severity": "warning"
+        },
+        "source_line": "            affineLineEvaluation, PMF.uniformOfFintype_apply,",
+        "start_offset": 64483,
+        "start_byte_offset": 68569,
+        "end_offset": 64509,
+        "end_byte_offset": 68595,
+        "source_text": "PMF.uniformOfFintype_apply"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 12,
+          "line": 1243
+        },
+        "end_position": {
+          "column": 29,
+          "line": 1243
+        },
+        "message": "This simp argument is unused:\n  Fin.sum_univ_succ\n\nHint: Omit it from the simp argument list.\n  simp [multilinearCombine_affineComb_split_last_close, multilinearCombine,\n  ̲  ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲splitHalfRowWiseInterleavedWords, affineLineEvaluation, PMF.uniformOfFintype_apply,\n              F̵i̵n̵.̵s̵u̵m̵_̵u̵n̵i̵v̵_̵s̵u̵c̵c̵,̵ ̵pow_succ]\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "This simp argument is unused:\n  Fin.sum_univ_succ\n\nHint: Omit it from the simp argument list.\n  simp [multilinearCombine_affineComb_split_last_close, multilinearCombine,\n  ̲  ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲splitHalfRowWiseInterleavedWords, affineLineEvaluation, PMF.uniformOfFintype_apply,\n              F̵i̵n̵.̵s̵u̵m̵_̵u̵n̵i̵v̵_̵s̵u̵c̵c̵,̵ ̵pow_succ]\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+          "endPos": {
+            "column": 29,
+            "line": 1243
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P12/incomplete/B2/repeat_3/validation/lean/008_candidate_03/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unusedSimpArgs",
+          "pos": {
+            "column": 12,
+            "line": 1243
+          },
+          "severity": "warning"
+        },
+        "source_line": "            Fin.sum_univ_succ, pow_succ] <;>",
+        "start_offset": 64523,
+        "start_byte_offset": 68609,
+        "end_offset": 64540,
+        "end_byte_offset": 68626,
+        "source_text": "Fin.sum_univ_succ"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 31,
+          "line": 1243
+        },
+        "end_position": {
+          "column": 39,
+          "line": 1243
+        },
+        "message": "This simp argument is unused:\n  pow_succ\n\nHint: Omit it from the simp argument list.\n  simp [multilinearCombine_affineComb_split_last_close, multilinearCombine,\n  ̲  ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲splitHalfRowWiseInterleavedWords, affineLineEvaluation, PMF.uniformOfFintype_apply,\n              F̵i̵n̵.̵s̵u̵m̵_̵u̵n̵i̵v̵_̵s̵u̵c̵c̵,̵ ̵p̵o̵w̵_̵s̵u̵c̵c̵]̵F̲i̲n̲.̲s̲u̲m̲_̲u̲n̲i̲v̲_̲s̲u̲c̲c̲]̲\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "This simp argument is unused:\n  pow_succ\n\nHint: Omit it from the simp argument list.\n  simp [multilinearCombine_affineComb_split_last_close, multilinearCombine,\n  ̲  ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲splitHalfRowWiseInterleavedWords, affineLineEvaluation, PMF.uniformOfFintype_apply,\n              F̵i̵n̵.̵s̵u̵m̵_̵u̵n̵i̵v̵_̵s̵u̵c̵c̵,̵ ̵p̵o̵w̵_̵s̵u̵c̵c̵]̵F̲i̲n̲.̲s̲u̲m̲_̲u̲n̲i̲v̲_̲s̲u̲c̲c̲]̲\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+          "endPos": {
+            "column": 39,
+            "line": 1243
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P12/incomplete/B2/repeat_3/validation/lean/008_candidate_03/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unusedSimpArgs",
+          "pos": {
+            "column": 31,
+            "line": 1243
+          },
+          "severity": "warning"
+        },
+        "source_line": "            Fin.sum_univ_succ, pow_succ] <;>",
+        "start_offset": 64542,
+        "start_byte_offset": 68628,
+        "end_offset": 64550,
+        "end_byte_offset": 68636,
+        "source_text": "pow_succ"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 34,
+          "line": 1265
+        },
+        "end_position": {
+          "column": 56,
+          "line": 1265
+        },
+        "message": "This simp argument is unused:\n  Matrix.transpose_apply\n\nHint: Omit it from the simp argument list.\n  simp [jointProximityNat, U₀, U₁, Interleavable.interleave, affineLineEvaluation,\n  ̲  ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲M̵a̵t̵r̵i̵x̵.̵t̵r̵a̵n̵s̵p̵o̵s̵e̵_̵a̵p̵p̵l̵y̵,̵ ̵Pi.add_apply, Pi.smul_apply]\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "This simp argument is unused:\n  Matrix.transpose_apply\n\nHint: Omit it from the simp argument list.\n  simp [jointProximityNat, U₀, U₁, Interleavable.interleave, affineLineEvaluation,\n  ̲  ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲M̵a̵t̵r̵i̵x̵.̵t̵r̵a̵n̵s̵p̵o̵s̵e̵_̵a̵p̵p̵l̵y̵,̵ ̵Pi.add_apply, Pi.smul_apply]\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+          "endPos": {
+            "column": 56,
+            "line": 1265
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P12/incomplete/B2/repeat_3/validation/lean/008_candidate_03/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unusedSimpArgs",
+          "pos": {
+            "column": 34,
+            "line": 1265
+          },
+          "severity": "warning"
+        },
+        "source_line": "            affineLineEvaluation, Matrix.transpose_apply, Pi.add_apply,",
+        "start_offset": 65572,
+        "start_byte_offset": 69724,
+        "end_offset": 65594,
+        "end_byte_offset": 69746,
+        "source_text": "Matrix.transpose_apply"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 58,
+          "line": 1265
+        },
+        "end_position": {
+          "column": 70,
+          "line": 1265
+        },
+        "message": "This simp argument is unused:\n  Pi.add_apply\n\nHint: Omit it from the simp argument list.\n  simp [jointProximityNat, U₀, U₁, Interleavable.interleave, affineLineEvaluation,\n  ̲  ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲Matrix.transpose_apply, P̵i̵.̵a̵d̵d̵_̵a̵p̵p̵l̵y̵,̵Pi.smul_apply]\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "This simp argument is unused:\n  Pi.add_apply\n\nHint: Omit it from the simp argument list.\n  simp [jointProximityNat, U₀, U₁, Interleavable.interleave, affineLineEvaluation,\n  ̲  ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲Matrix.transpose_apply, P̵i̵.̵a̵d̵d̵_̵a̵p̵p̵l̵y̵,̵Pi.smul_apply]\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+          "endPos": {
+            "column": 70,
+            "line": 1265
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P12/incomplete/B2/repeat_3/validation/lean/008_candidate_03/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unusedSimpArgs",
+          "pos": {
+            "column": 58,
+            "line": 1265
+          },
+          "severity": "warning"
+        },
+        "source_line": "            affineLineEvaluation, Matrix.transpose_apply, Pi.add_apply,",
+        "start_offset": 65596,
+        "start_byte_offset": 69748,
+        "end_offset": 65608,
+        "end_byte_offset": 69760,
+        "source_text": "Pi.add_apply"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 12,
+          "line": 1266
+        },
+        "end_position": {
+          "column": 25,
+          "line": 1266
+        },
+        "message": "This simp argument is unused:\n  Pi.smul_apply\n\nHint: Omit it from the simp argument list.\n  simp [jointProximityNat, U₀, U₁, Interleavable.interleave, affineLineEvaluation,\n  ̲  ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲Matrix.transpose_apply, P̵i̵.̵a̵d̵d̵_̵a̵p̵p̵l̵y̵,̵\n  ̵ ̵ ̵ ̵ ̵ ̵ ̵ ̵ ̵ ̵ ̵ ̵ ̵P̵i̵.̵s̵m̵u̵l̵_̵a̵p̵p̵l̵y̵]̵P̲i̲.̲a̲d̲d̲_̲a̲p̲p̲l̲y̲]̲\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "This simp argument is unused:\n  Pi.smul_apply\n\nHint: Omit it from the simp argument list.\n  simp [jointProximityNat, U₀, U₁, Interleavable.interleave, affineLineEvaluation,\n  ̲  ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲Matrix.transpose_apply, P̵i̵.̵a̵d̵d̵_̵a̵p̵p̵l̵y̵,̵\n  ̵ ̵ ̵ ̵ ̵ ̵ ̵ ̵ ̵ ̵ ̵ ̵ ̵P̵i̵.̵s̵m̵u̵l̵_̵a̵p̵p̵l̵y̵]̵P̲i̲.̲a̲d̲d̲_̲a̲p̲p̲l̲y̲]̲\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+          "endPos": {
+            "column": 25,
+            "line": 1266
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P12/incomplete/B2/repeat_3/validation/lean/008_candidate_03/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unusedSimpArgs",
+          "pos": {
+            "column": 12,
+            "line": 1266
+          },
+          "severity": "warning"
+        },
+        "source_line": "            Pi.smul_apply] <;>",
+        "start_offset": 65622,
+        "start_byte_offset": 69774,
+        "end_offset": 65635,
+        "end_byte_offset": 69787,
+        "source_text": "Pi.smul_apply"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 14,
+          "line": 1274
+        },
+        "end_position": {
+          "column": 32,
+          "line": 1274
+        },
+        "message": "This simp argument is unused:\n  jointProximityNat₂\n\nHint: Omit it from the simp argument list.\n  simp [̵j̵o̵i̵n̵t̵P̵r̵o̵x̵i̵m̵i̵t̵y̵N̵a̵t̵₂̵,̵ ̵j̵o̵i̵n̵t̵P̵r̵o̵x̵i̵m̵i̵t̵y̵N̵a̵t̵,̵[̲j̲o̲i̲n̲t̲P̲r̲o̲x̲i̲m̲i̲t̲y̲N̲a̲t̲,̲ U₀, U₁, splitHalfRowWiseInterleavedWords, finMapTwoWords,\n            Interleavable.interleave, CodeInterleavable.interleaveCode, interleavedCodeSet,\n  ̲  ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲Matrix.transpose_apply, pow_succ]\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "This simp argument is unused:\n  jointProximityNat₂\n\nHint: Omit it from the simp argument list.\n  simp [̵j̵o̵i̵n̵t̵P̵r̵o̵x̵i̵m̵i̵t̵y̵N̵a̵t̵₂̵,̵ ̵j̵o̵i̵n̵t̵P̵r̵o̵x̵i̵m̵i̵t̵y̵N̵a̵t̵,̵[̲j̲o̲i̲n̲t̲P̲r̲o̲x̲i̲m̲i̲t̲y̲N̲a̲t̲,̲ U₀, U₁, splitHalfRowWiseInterleavedWords, finMapTwoWords,\n            Interleavable.interleave, CodeInterleavable.interleaveCode, interleavedCodeSet,\n  ̲  ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲Matrix.transpose_apply, pow_succ]\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+          "endPos": {
+            "column": 32,
+            "line": 1274
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P12/incomplete/B2/repeat_3/validation/lean/008_candidate_03/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unusedSimpArgs",
+          "pos": {
+            "column": 14,
+            "line": 1274
+          },
+          "severity": "warning"
+        },
+        "source_line": "        simp [jointProximityNat₂, jointProximityNat, U₀, U₁,",
+        "start_offset": 65965,
+        "start_byte_offset": 70130,
+        "end_offset": 65983,
+        "end_byte_offset": 70150,
+        "source_text": "jointProximityNat₂"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 34,
+          "line": 1274
+        },
+        "end_position": {
+          "column": 51,
+          "line": 1274
+        },
+        "message": "This simp argument is unused:\n  jointProximityNat\n\nHint: Omit it from the simp argument list.\n  simp [jointProximityNat₂, j̵o̵i̵n̵t̵P̵r̵o̵x̵i̵m̵i̵t̵y̵N̵a̵t̵,̵ ̵U₀, U₁, splitHalfRowWiseInterleavedWords, finMapTwoWords,\n            Interleavable.interleave, CodeInterleavable.interleaveCode, interleavedCodeSet,\n  ̲  ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲Matrix.transpose_apply, pow_succ]\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "This simp argument is unused:\n  jointProximityNat\n\nHint: Omit it from the simp argument list.\n  simp [jointProximityNat₂, j̵o̵i̵n̵t̵P̵r̵o̵x̵i̵m̵i̵t̵y̵N̵a̵t̵,̵ ̵U₀, U₁, splitHalfRowWiseInterleavedWords, finMapTwoWords,\n            Interleavable.interleave, CodeInterleavable.interleaveCode, interleavedCodeSet,\n  ̲  ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲Matrix.transpose_apply, pow_succ]\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+          "endPos": {
+            "column": 51,
+            "line": 1274
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P12/incomplete/B2/repeat_3/validation/lean/008_candidate_03/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unusedSimpArgs",
+          "pos": {
+            "column": 34,
+            "line": 1274
+          },
+          "severity": "warning"
+        },
+        "source_line": "        simp [jointProximityNat₂, jointProximityNat, U₀, U₁,",
+        "start_offset": 65985,
+        "start_byte_offset": 70152,
+        "end_offset": 66002,
+        "end_byte_offset": 70169,
+        "source_text": "jointProximityNat"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 44,
+          "line": 1275
+        },
+        "end_position": {
+          "column": 58,
+          "line": 1275
+        },
+        "message": "This simp argument is unused:\n  finMapTwoWords\n\nHint: Omit it from the simp argument list.\n  simp [jointProximityNat₂, jointProximityNat, U₀, U₁, splitHalfRowWiseInterleavedWords,\n  ̲  ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲f̵i̵n̵M̵a̵p̵T̵w̵o̵W̵o̵r̵d̵s̵,̵Interleavable.interleave, CodeInterleavable.interleaveCode, interleavedCodeSet,\n            Matrix.transpose_apply, pow_succ]\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "This simp argument is unused:\n  finMapTwoWords\n\nHint: Omit it from the simp argument list.\n  simp [jointProximityNat₂, jointProximityNat, U₀, U₁, splitHalfRowWiseInterleavedWords,\n  ̲  ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲f̵i̵n̵M̵a̵p̵T̵w̵o̵W̵o̵r̵d̵s̵,̵Interleavable.interleave, CodeInterleavable.interleaveCode, interleavedCodeSet,\n            Matrix.transpose_apply, pow_succ]\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+          "endPos": {
+            "column": 58,
+            "line": 1275
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P12/incomplete/B2/repeat_3/validation/lean/008_candidate_03/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unusedSimpArgs",
+          "pos": {
+            "column": 44,
+            "line": 1275
+          },
+          "severity": "warning"
+        },
+        "source_line": "          splitHalfRowWiseInterleavedWords, finMapTwoWords,",
+        "start_offset": 66056,
+        "start_byte_offset": 70227,
+        "end_offset": 66070,
+        "end_byte_offset": 70241,
+        "source_text": "finMapTwoWords"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 30,
+          "line": 1277
+        },
+        "end_position": {
+          "column": 52,
+          "line": 1277
+        },
+        "message": "This simp argument is unused:\n  Matrix.transpose_apply\n\nHint: Omit it from the simp argument list.\n  simp [jointProximityNat₂, jointProximityNat, U₀, U₁, splitHalfRowWiseInterleavedWords,\n  ̲  ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲finMapTwoWords, Interleavable.interleave, CodeInterleavable.interleaveCode,\n            interleavedCodeSet, M̵a̵t̵r̵i̵x̵.̵t̵r̵a̵n̵s̵p̵o̵s̵e̵_̵a̵p̵p̵l̵y̵,̵ ̵pow_succ]\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "This simp argument is unused:\n  Matrix.transpose_apply\n\nHint: Omit it from the simp argument list.\n  simp [jointProximityNat₂, jointProximityNat, U₀, U₁, splitHalfRowWiseInterleavedWords,\n  ̲  ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲finMapTwoWords, Interleavable.interleave, CodeInterleavable.interleaveCode,\n            interleavedCodeSet, M̵a̵t̵r̵i̵x̵.̵t̵r̵a̵n̵s̵p̵o̵s̵e̵_̵a̵p̵p̵l̵y̵,̵ ̵pow_succ]\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+          "endPos": {
+            "column": 52,
+            "line": 1277
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P12/incomplete/B2/repeat_3/validation/lean/008_candidate_03/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unusedSimpArgs",
+          "pos": {
+            "column": 30,
+            "line": 1277
+          },
+          "severity": "warning"
+        },
+        "source_line": "          interleavedCodeSet, Matrix.transpose_apply, pow_succ] <;>",
+        "start_offset": 66172,
+        "start_byte_offset": 70343,
+        "end_offset": 66194,
+        "end_byte_offset": 70365,
+        "source_text": "Matrix.transpose_apply"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 54,
+          "line": 1277
+        },
+        "end_position": {
+          "column": 62,
+          "line": 1277
+        },
+        "message": "This simp argument is unused:\n  pow_succ\n\nHint: Omit it from the simp argument list.\n  simp [jointProximityNat₂, jointProximityNat, U₀, U₁,\n  ̵  ̵ ̵ ̵ ̵ ̵ ̵ ̵ ̵ ̵splitHalfRowWiseInterleavedWords,\n  ̲  ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲finMapTwoWords,\n  ̵  ̵ ̵ ̵ ̵ ̵ ̵ ̵ ̵ ̵Interleavable.interleave, CodeInterleavable.interleaveCode,\n            interleavedCodeSet, Matrix.transpose_apply,̵ ̵p̵o̵w̵_̵s̵u̵c̵c̵]\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "This simp argument is unused:\n  pow_succ\n\nHint: Omit it from the simp argument list.\n  simp [jointProximityNat₂, jointProximityNat, U₀, U₁,\n  ̵  ̵ ̵ ̵ ̵ ̵ ̵ ̵ ̵ ̵splitHalfRowWiseInterleavedWords,\n  ̲  ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲finMapTwoWords,\n  ̵  ̵ ̵ ̵ ̵ ̵ ̵ ̵ ̵ ̵Interleavable.interleave, CodeInterleavable.interleaveCode,\n            interleavedCodeSet, Matrix.transpose_apply,̵ ̵p̵o̵w̵_̵s̵u̵c̵c̵]\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+          "endPos": {
+            "column": 62,
+            "line": 1277
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P12/incomplete/B2/repeat_3/validation/lean/008_candidate_03/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unusedSimpArgs",
+          "pos": {
+            "column": 54,
+            "line": 1277
+          },
+          "severity": "warning"
+        },
+        "source_line": "          interleavedCodeSet, Matrix.transpose_apply, pow_succ] <;>",
+        "start_offset": 66196,
+        "start_byte_offset": 70367,
+        "end_offset": 66204,
+        "end_byte_offset": 70375,
+        "source_text": "pow_succ"
+      },
+      {
+        "severity": "information",
+        "position": {
+          "column": 0,
+          "line": 1343
+        },
+        "end_position": {
+          "column": 6,
+          "line": 1343
+        },
+        "message": "interleaved_affine_gaps_imply_tensor_gaps.{l} {ι : Type l} [Fintype ι] [Nonempty ι] [DecidableEq ι] {F : Type}\n  [CommRing F] [Fintype F] {A : Type} [DecidableEq A] [AddCommGroup A] [Module F A] (MC : ModuleCode ι F A) {e ε : ℕ}\n  (hC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε)\n  (h_interleaved_gaps :\n    ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(Code.CodeInterleavable.interleaveCode MC (Fin m))) e ε)\n  (ϑ : ℕ) (hϑ_gt_0 : ϑ > 0) : δ_ε_multilinearCorrelatedAgreement_Nat (↑MC) ϑ e ε",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "interleaved_affine_gaps_imply_tensor_gaps.{l} {ι : Type l} [Fintype ι] [Nonempty ι] [DecidableEq ι] {F : Type}\n  [CommRing F] [Fintype F] {A : Type} [DecidableEq A] [AddCommGroup A] [Module F A] (MC : ModuleCode ι F A) {e ε : ℕ}\n  (hC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε)\n  (h_interleaved_gaps :\n    ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(Code.CodeInterleavable.interleaveCode MC (Fin m))) e ε)\n  (ϑ : ℕ) (hϑ_gt_0 : ϑ > 0) : δ_ε_multilinearCorrelatedAgreement_Nat (↑MC) ϑ e ε",
+          "endPos": {
+            "column": 6,
+            "line": 1343
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P12/incomplete/B2/repeat_3/validation/lean/008_candidate_03/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 0,
+            "line": 1343
+          },
+          "severity": "information"
+        }
+      },
+      {
+        "severity": "information",
+        "position": {
+          "column": 0,
+          "line": 1344
+        },
+        "end_position": {
+          "column": 6,
+          "line": 1344
+        },
+        "message": "'interleaved_affine_gaps_imply_tensor_gaps' depends on axioms: [propext, sorryAx, Classical.choice, Quot.sound]",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "'interleaved_affine_gaps_imply_tensor_gaps' depends on axioms: [propext, sorryAx, Classical.choice, Quot.sound]",
+          "endPos": {
+            "column": 6,
+            "line": 1344
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P12/incomplete/B2/repeat_3/validation/lean/008_candidate_03/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 0,
+            "line": 1344
+          },
+          "severity": "information"
+        }
+      }
+    ],
+    "goals": [
+      "jointProximityNat (↑MC) u e"
+    ],
+    "local_context": [
+      "case base\nι : Type l\ninst✝⁷ : Fintype ι\ninst✝⁶ : Nonempty ι\ninst✝⁵ : DecidableEq ι\nF : Type\ninst✝⁴ : CommRing F\ninst✝³ : Fintype F\nA : Type\ninst✝² : DecidableEq A\ninst✝¹ : AddCommGroup A\ninst✝ : Module F A\nMC : ModuleCode ι F A\ne ε : ℕ\nhC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε\nh_interleaved_gaps : ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε\nϑ : ℕ\nu : WordStack A (Fin (2 ^ Nat.succ 0)) ι\nh_close :\n  (do\n        let r ← $ᵖ (Fin (Nat.succ 0) → F)\n        pure (Δ₀(multilinearCombine u r, ↑MC) ≤ ↑e))\n      True >\n    ↑↑(Nat.succ 0) * ↑ε / ↑↑(Fintype.card F)\nhu : finMapTwoWords (u 0) (u 1) = u\nh_affine :\n  (do\n          let r ← $ᵖ F\n          pure (Δ₀(affineLineEvaluation (u 0) (u 1) r, ↑MC) ≤ ↑e))\n        True >\n      ↑↑ε / ↑↑(Fintype.card F) →\n    jointProximityNat₂ (↑MC) (u 0) (u 1) e"
+    ],
+    "sorries": [
+      {
+        "kind": "transitive_dependency",
+        "axiom": "sorryAx",
+        "position": null,
+        "end_position": null
+      }
+    ],
+    "backend_proof_status": null,
+    "statement_check": "fixed_context_preserved",
+    "axioms": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext",
+      "sorryAx"
+    ],
+    "metrics": {
+      "proof_tokens": 517
+    },
+    "elapsed_ms": 26129,
+    "raw_log_path": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P12/incomplete/B2/repeat_3/validation/lean/008_candidate_03/stdout.log",
+    "detail": null,
+    "failure_kind": "proof_error"
+  },
+  "measurement": {
+    "proof_tokens": 517,
+    "raw_heartbeats": null,
+    "token_reduction_pct": 61.098570353649365,
+    "heartbeat_reduction_pct": null,
+    "search_score": null
+  },
+  "facts": {
+    "diagnostics": [
+      {
+        "severity": "error",
+        "position": {
+          "column": 6,
+          "line": 1224
+        },
+        "end_position": {
+          "column": 25,
+          "line": 1224
+        },
+        "message": "Tactic `apply` failed: could not unify the conclusion of `Eq.rec (motive := fun x h =>\n  (do\n          let r ← $ᵖ F\n          pure (Δ₀(affineLineEvaluation (x 0) (x 1) r, ↑MC) ≤ ↑e))\n        True >\n      ↑↑ε / ↑↑(Fintype.card F) →\n    jointProximityNat₂ (↑MC) (x 0) (x 1) e)\n  h_affine (Eq.symm hu)`\n  jointProximityNat₂ (↑MC) (finMapTwoWords (u 0) (u 1) 0) (finMapTwoWords (u 0) (u 1) 1) e\nwith the goal\n  jointProximityNat (↑MC) u e\n\nNote: The full type of `Eq.rec (motive := fun x h =>\n  (do\n          let r ← $ᵖ F\n          pure (Δ₀(affineLineEvaluation (x 0) (x 1) r, ↑MC) ≤ ↑e))\n        True >\n      ↑↑ε / ↑↑(Fintype.card F) →\n    jointProximityNat₂ (↑MC) (x 0) (x 1) e)\n  h_affine (Eq.symm hu)` is\n  (do\n          let r ← $ᵖ F\n          pure (Δ₀(affineLineEvaluation (finMapTwoWords (u 0) (u 1) 0) (finMapTwoWords (u 0) (u 1) 1) r, ↑MC) ≤ ↑e))\n        True >\n      ↑↑ε / ↑↑(Fintype.card F) →\n    jointProximityNat₂ (↑MC) (finMapTwoWords (u 0) (u 1) 0) (finMapTwoWords (u 0) (u 1) 1) e\n\ncase base\nι : Type l\ninst✝⁷ : Fintype ι\ninst✝⁶ : Nonempty ι\ninst✝⁵ : DecidableEq ι\nF : Type\ninst✝⁴ : CommRing F\ninst✝³ : Fintype F\nA : Type\ninst✝² : DecidableEq A\ninst✝¹ : AddCommGroup A\ninst✝ : Module F A\nMC : ModuleCode ι F A\ne ε : ℕ\nhC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε\nh_interleaved_gaps : ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε\nϑ : ℕ\nu : WordStack A (Fin (2 ^ Nat.succ 0)) ι\nh_close :\n  (do\n        let r ← $ᵖ (Fin (Nat.succ 0) → F)\n        pure (Δ₀(multilinearCombine u r, ↑MC) ≤ ↑e))\n      True >\n    ↑↑(Nat.succ 0) * ↑ε / ↑↑(Fintype.card F)\nhu : finMapTwoWords (u 0) (u 1) = u\nh_affine :\n  (do\n          let r ← $ᵖ F\n          pure (Δ₀(affineLineEvaluation (u 0) (u 1) r, ↑MC) ≤ ↑e))\n        True >\n      ↑↑ε / ↑↑(Fintype.card F) →\n    jointProximityNat₂ (↑MC) (u 0) (u 1) e\n⊢ jointProximityNat (↑MC) u e",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "Tactic `apply` failed: could not unify the conclusion of `Eq.rec (motive := fun x h =>\n  (do\n          let r ← $ᵖ F\n          pure (Δ₀(affineLineEvaluation (x 0) (x 1) r, ↑MC) ≤ ↑e))\n        True >\n      ↑↑ε / ↑↑(Fintype.card F) →\n    jointProximityNat₂ (↑MC) (x 0) (x 1) e)\n  h_affine (Eq.symm hu)`\n  jointProximityNat₂ (↑MC) (finMapTwoWords (u 0) (u 1) 0) (finMapTwoWords (u 0) (u 1) 1) e\nwith the goal\n  jointProximityNat (↑MC) u e\n\nNote: The full type of `Eq.rec (motive := fun x h =>\n  (do\n          let r ← $ᵖ F\n          pure (Δ₀(affineLineEvaluation (x 0) (x 1) r, ↑MC) ≤ ↑e))\n        True >\n      ↑↑ε / ↑↑(Fintype.card F) →\n    jointProximityNat₂ (↑MC) (x 0) (x 1) e)\n  h_affine (Eq.symm hu)` is\n  (do\n          let r ← $ᵖ F\n          pure (Δ₀(affineLineEvaluation (finMapTwoWords (u 0) (u 1) 0) (finMapTwoWords (u 0) (u 1) 1) r, ↑MC) ≤ ↑e))\n        True >\n      ↑↑ε / ↑↑(Fintype.card F) →\n    jointProximityNat₂ (↑MC) (finMapTwoWords (u 0) (u 1) 0) (finMapTwoWords (u 0) (u 1) 1) e\n\ncase base\nι : Type l\ninst✝⁷ : Fintype ι\ninst✝⁶ : Nonempty ι\ninst✝⁵ : DecidableEq ι\nF : Type\ninst✝⁴ : CommRing F\ninst✝³ : Fintype F\nA : Type\ninst✝² : DecidableEq A\ninst✝¹ : AddCommGroup A\ninst✝ : Module F A\nMC : ModuleCode ι F A\ne ε : ℕ\nhC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε\nh_interleaved_gaps : ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε\nϑ : ℕ\nu : WordStack A (Fin (2 ^ Nat.succ 0)) ι\nh_close :\n  (do\n        let r ← $ᵖ (Fin (Nat.succ 0) → F)\n        pure (Δ₀(multilinearCombine u r, ↑MC) ≤ ↑e))\n      True >\n    ↑↑(Nat.succ 0) * ↑ε / ↑↑(Fintype.card F)\nhu : finMapTwoWords (u 0) (u 1) = u\nh_affine :\n  (do\n          let r ← $ᵖ F\n          pure (Δ₀(affineLineEvaluation (u 0) (u 1) r, ↑MC) ≤ ↑e))\n        True >\n      ↑↑ε / ↑↑(Fintype.card F) →\n    jointProximityNat₂ (↑MC) (u 0) (u 1) e\n⊢ jointProximityNat (↑MC) u e",
+          "endPos": {
+            "column": 25,
+            "line": 1224
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 6,
+            "line": 1224
+          },
+          "severity": "error"
+        },
+        "source_line": "      apply hu ▸ h_affine",
+        "start_offset": 63610,
+        "start_byte_offset": 67659,
+        "end_offset": 63629,
+        "end_byte_offset": 67680,
+        "source_text": "apply hu ▸ h_affine",
+        "failed_tactic": "apply hu ▸ h_affine",
+        "tactic_range": {
+          "position": {
+            "line": 1224,
+            "column": 6
+          },
+          "end_position": {
+            "line": 1224,
+            "column": 25
+          },
+          "start_offset": 63610,
+          "end_offset": 63629
+        },
+        "goals": [
+          "jointProximityNat (↑MC) u e"
+        ],
+        "local_context": [
+          "case base\nι : Type l\ninst✝⁷ : Fintype ι\ninst✝⁶ : Nonempty ι\ninst✝⁵ : DecidableEq ι\nF : Type\ninst✝⁴ : CommRing F\ninst✝³ : Fintype F\nA : Type\ninst✝² : DecidableEq A\ninst✝¹ : AddCommGroup A\ninst✝ : Module F A\nMC : ModuleCode ι F A\ne ε : ℕ\nhC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε\nh_interleaved_gaps : ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε\nϑ : ℕ\nu : WordStack A (Fin (2 ^ Nat.succ 0)) ι\nh_close :\n  (do\n        let r ← $ᵖ (Fin (Nat.succ 0) → F)\n        pure (Δ₀(multilinearCombine u r, ↑MC) ≤ ↑e))\n      True >\n    ↑↑(Nat.succ 0) * ↑ε / ↑↑(Fintype.card F)\nhu : finMapTwoWords (u 0) (u 1) = u\nh_affine :\n  (do\n          let r ← $ᵖ F\n          pure (Δ₀(affineLineEvaluation (u 0) (u 1) r, ↑MC) ≤ ↑e))\n        True >\n      ↑↑ε / ↑↑(Fintype.card F) →\n    jointProximityNat₂ (↑MC) (u 0) (u 1) e"
+        ],
+        "proof_state_source": "lean_infotree_before_tactic",
+        "proof_state_raw": {
+          "depth": 16,
+          "end": 74811,
+          "goals_after": [
+            "case base\nι : Type l\ninst✝⁷ : Fintype ι\ninst✝⁶ : Nonempty ι\ninst✝⁵ : DecidableEq ι\nF : Type\ninst✝⁴ : CommRing F\ninst✝³ : Fintype F\nA : Type\ninst✝² : DecidableEq A\ninst✝¹ : AddCommGroup A\ninst✝ : Module F A\nMC : ModuleCode ι F A\ne ε : ℕ\nhC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε\nh_interleaved_gaps : ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε\nϑ : ℕ\nu : WordStack A (Fin (2 ^ Nat.succ 0)) ι\nh_close :\n  (do\n        let r ← $ᵖ (Fin (Nat.succ 0) → F)\n        pure (Δ₀(multilinearCombine u r, ↑MC) ≤ ↑e))\n      True >\n    ↑↑(Nat.succ 0) * ↑ε / ↑↑(Fintype.card F)\nhu : finMapTwoWords (u 0) (u 1) = u\nh_affine :\n  (do\n          let r ← $ᵖ F\n          pure (Δ₀(affineLineEvaluation (u 0) (u 1) r, ↑MC) ≤ ↑e))\n        True >\n      ↑↑ε / ↑↑(Fintype.card F) →\n    jointProximityNat₂ (↑MC) (u 0) (u 1) e\n⊢ jointProximityNat (↑MC) u e"
+          ],
+          "goals_before": [
+            "case base\nι : Type l\ninst✝⁷ : Fintype ι\ninst✝⁶ : Nonempty ι\ninst✝⁵ : DecidableEq ι\nF : Type\ninst✝⁴ : CommRing F\ninst✝³ : Fintype F\nA : Type\ninst✝² : DecidableEq A\ninst✝¹ : AddCommGroup A\ninst✝ : Module F A\nMC : ModuleCode ι F A\ne ε : ℕ\nhC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε\nh_interleaved_gaps : ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε\nϑ : ℕ\nu : WordStack A (Fin (2 ^ Nat.succ 0)) ι\nh_close :\n  (do\n        let r ← $ᵖ (Fin (Nat.succ 0) → F)\n        pure (Δ₀(multilinearCombine u r, ↑MC) ≤ ↑e))\n      True >\n    ↑↑(Nat.succ 0) * ↑ε / ↑↑(Fintype.card F)\nhu : finMapTwoWords (u 0) (u 1) = u\nh_affine :\n  (do\n          let r ← $ᵖ F\n          pure (Δ₀(affineLineEvaluation (u 0) (u 1) r, ↑MC) ≤ ↑e))\n        True >\n      ↑↑ε / ↑↑(Fintype.card F) →\n    jointProximityNat₂ (↑MC) (u 0) (u 1) e\n⊢ jointProximityNat (↑MC) u e"
+          ],
+          "kind": "tactic",
+          "start": 74790
+        }
+      },
+      {
+        "severity": "error",
+        "position": {
+          "column": 10,
+          "line": 1244
+        },
+        "end_position": {
+          "column": 13,
+          "line": 1244
+        },
+        "message": "No applicable extensionality theorem found for type\n  ENNReal\n\nNote: Extensionality theorems can be registered by marking them with the `[ext]` attribute",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "No applicable extensionality theorem found for type\n  ENNReal\n\nNote: Extensionality theorems can be registered by marking them with the `[ext]` attribute",
+          "endPos": {
+            "column": 13,
+            "line": 1244
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 10,
+            "line": 1244
+          },
+          "severity": "error"
+        },
+        "source_line": "          ext <;> simp [Fin.lastCases, pow_succ] <;> omega",
+        "start_offset": 64566,
+        "start_byte_offset": 68652,
+        "end_offset": 64569,
+        "end_byte_offset": 68655,
+        "source_text": "ext",
+        "failed_tactic": "ext",
+        "tactic_range": {
+          "position": {
+            "line": 1244,
+            "column": 10
+          },
+          "end_position": {
+            "line": 1244,
+            "column": 13
+          },
+          "start_offset": 64566,
+          "end_offset": 64569
+        },
+        "goals": [
+          "(do\n        let r_last ← $ᵖ F\n        (fun a =>\n              Δ₀(multilinearCombine\n                    (((1 - r_last) • fun rowIdx => u ⟨↑rowIdx, ⋯⟩) + r_last • fun rowIdx => u ⟨↑rowIdx + 2 ^ ϑ, ⋯⟩) a,\n                  ↑MC) ≤\n                ↑e) <$>\n            $ᵖ (Fin ϑ → F))\n      True =\n    ((fun a => Δ₀(multilinearCombine u a, ↑MC) ≤ ↑e) <$> $ᵖ (Fin (ϑ + 1) → F)) True"
+        ],
+        "local_context": [
+          "case e'_3\nι : Type l\ninst✝⁷ : Fintype ι\ninst✝⁶ : Nonempty ι\ninst✝⁵ : DecidableEq ι\nF : Type\ninst✝⁴ : CommRing F\ninst✝³ : Fintype F\nA : Type\ninst✝² : DecidableEq A\ninst✝¹ : AddCommGroup A\ninst✝ : Module F A\nMC : ModuleCode ι F A\ne ε : ℕ\nhC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε\nh_interleaved_gaps : ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε\nϑ✝ ϑ : ℕ\nhϑ_ge_one : Nat.succ 0 ≤ ϑ\nih : δ_ε_multilinearCorrelatedAgreement_Nat (↑MC) ϑ e ε\nu : WordStack A (Fin (2 ^ (ϑ + 1))) ι\nh_close :\n  (do\n        let r ← $ᵖ (Fin (ϑ + 1) → F)\n        pure (Δ₀(multilinearCombine u r, ↑MC) ≤ ↑e))\n      True >\n    ↑↑(ϑ + 1) * ↑ε / ↑↑(Fintype.card F)\nU₀ : WordStack A (Fin (2 ^ ϑ)) ι := (splitHalfRowWiseInterleavedWords u).1\nU₁ : WordStack A (Fin (2 ^ ϑ)) ι := (splitHalfRowWiseInterleavedWords u).2"
+        ],
+        "proof_state_source": "lean_infotree_before_tactic",
+        "proof_state_raw": {
+          "depth": 44,
+          "end": 75786,
+          "goals_after": [
+            "case e'_3\nι : Type l\ninst✝⁷ : Fintype ι\ninst✝⁶ : Nonempty ι\ninst✝⁵ : DecidableEq ι\nF : Type\ninst✝⁴ : CommRing F\ninst✝³ : Fintype F\nA : Type\ninst✝² : DecidableEq A\ninst✝¹ : AddCommGroup A\ninst✝ : Module F A\nMC : ModuleCode ι F A\ne ε : ℕ\nhC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε\nh_interleaved_gaps : ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε\nϑ✝ ϑ : ℕ\nhϑ_ge_one : Nat.succ 0 ≤ ϑ\nih : δ_ε_multilinearCorrelatedAgreement_Nat (↑MC) ϑ e ε\nu : WordStack A (Fin (2 ^ (ϑ + 1))) ι\nh_close :\n  (do\n        let r ← $ᵖ (Fin (ϑ + 1) → F)\n        pure (Δ₀(multilinearCombine u r, ↑MC) ≤ ↑e))\n      True >\n    ↑↑(ϑ + 1) * ↑ε / ↑↑(Fintype.card F)\nU₀ : WordStack A (Fin (2 ^ ϑ)) ι := (splitHalfRowWiseInterleavedWords u).1\nU₁ : WordStack A (Fin (2 ^ ϑ)) ι := (splitHalfRowWiseInterleavedWords u).2\n⊢ (do\n        let r_last ← $ᵖ F\n        (fun a =>\n              Δ₀(multilinearCombine\n                    (((1 - r_last) • fun rowIdx => u ⟨↑rowIdx, ⋯⟩) + r_last • fun rowIdx => u ⟨↑rowIdx + 2 ^ ϑ, ⋯⟩) a,\n                  ↑MC) ≤\n                ↑e) <$>\n            $ᵖ (Fin ϑ → F))\n      True =\n    ((fun a => Δ₀(multilinearCombine u a, ↑MC) ≤ ↑e) <$> $ᵖ (Fin (ϑ + 1) → F)) True"
+          ],
+          "goals_before": [
+            "case e'_3\nι : Type l\ninst✝⁷ : Fintype ι\ninst✝⁶ : Nonempty ι\ninst✝⁵ : DecidableEq ι\nF : Type\ninst✝⁴ : CommRing F\ninst✝³ : Fintype F\nA : Type\ninst✝² : DecidableEq A\ninst✝¹ : AddCommGroup A\ninst✝ : Module F A\nMC : ModuleCode ι F A\ne ε : ℕ\nhC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε\nh_interleaved_gaps : ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε\nϑ✝ ϑ : ℕ\nhϑ_ge_one : Nat.succ 0 ≤ ϑ\nih : δ_ε_multilinearCorrelatedAgreement_Nat (↑MC) ϑ e ε\nu : WordStack A (Fin (2 ^ (ϑ + 1))) ι\nh_close :\n  (do\n        let r ← $ᵖ (Fin (ϑ + 1) → F)\n        pure (Δ₀(multilinearCombine u r, ↑MC) ≤ ↑e))\n      True >\n    ↑↑(ϑ + 1) * ↑ε / ↑↑(Fintype.card F)\nU₀ : WordStack A (Fin (2 ^ ϑ)) ι := (splitHalfRowWiseInterleavedWords u).1\nU₁ : WordStack A (Fin (2 ^ ϑ)) ι := (splitHalfRowWiseInterleavedWords u).2\n⊢ (do\n        let r_last ← $ᵖ F\n        (fun a =>\n              Δ₀(multilinearCombine\n                    (((1 - r_last) • fun rowIdx => u ⟨↑rowIdx, ⋯⟩) + r_last • fun rowIdx => u ⟨↑rowIdx + 2 ^ ϑ, ⋯⟩) a,\n                  ↑MC) ≤\n                ↑e) <$>\n            $ᵖ (Fin ϑ → F))\n      True =\n    ((fun a => Δ₀(multilinearCombine u a, ↑MC) ≤ ↑e) <$> $ᵖ (Fin (ϑ + 1) → F)) True"
+          ],
+          "kind": "tactic",
+          "start": 75783
+        }
+      },
+      {
+        "severity": "error",
+        "position": {
+          "column": 10,
+          "line": 1267
+        },
+        "end_position": {
+          "column": 13,
+          "line": 1267
+        },
+        "message": "This extensionality tactic only applies to equalities, not\n  Δ₀((1 - r) • (splitHalfRowWiseInterleavedWords u).1.transpose + r • (splitHalfRowWiseInterleavedWords u).2.transpose,\n        {V | ∀ (k : Fin (2 ^ ϑ)), V.transpose k ∈ MC}) ≤\n      ↑e ↔\n    Δ₀(Matrix.transpose (((1 - r) • fun rowIdx => u ⟨↑rowIdx, ⋯⟩) + r • fun rowIdx => u ⟨↑rowIdx + 2 ^ ϑ, ⋯⟩),\n        {V | ∀ (k : Fin (2 ^ ϑ)), V.transpose k ∈ MC}) ≤\n      ↑e",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "This extensionality tactic only applies to equalities, not\n  Δ₀((1 - r) • (splitHalfRowWiseInterleavedWords u).1.transpose + r • (splitHalfRowWiseInterleavedWords u).2.transpose,\n        {V | ∀ (k : Fin (2 ^ ϑ)), V.transpose k ∈ MC}) ≤\n      ↑e ↔\n    Δ₀(Matrix.transpose (((1 - r) • fun rowIdx => u ⟨↑rowIdx, ⋯⟩) + r • fun rowIdx => u ⟨↑rowIdx + 2 ^ ϑ, ⋯⟩),\n        {V | ∀ (k : Fin (2 ^ ϑ)), V.transpose k ∈ MC}) ≤\n      ↑e",
+          "endPos": {
+            "column": 13,
+            "line": 1267
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 10,
+            "line": 1267
+          },
+          "severity": "error"
+        },
+        "source_line": "          ext <;> simp [Matrix.transpose_apply]",
+        "start_offset": 65651,
+        "start_byte_offset": 69803,
+        "end_offset": 65654,
+        "end_byte_offset": 69806,
+        "source_text": "ext",
+        "failed_tactic": "ext",
+        "tactic_range": {
+          "position": {
+            "line": 1267,
+            "column": 10
+          },
+          "end_position": {
+            "line": 1267,
+            "column": 13
+          },
+          "start_offset": 65651,
+          "end_offset": 65654
+        },
+        "goals": [
+          "Δ₀((1 - r) • (splitHalfRowWiseInterleavedWords u).1.transpose + r • (splitHalfRowWiseInterleavedWords u).2.transpose,\n        {V | ∀ (k : Fin (2 ^ ϑ)), V.transpose k ∈ MC}) ≤\n      ↑e ↔\n    Δ₀(Matrix.transpose (((1 - r) • fun rowIdx => u ⟨↑rowIdx, ⋯⟩) + r • fun rowIdx => u ⟨↑rowIdx + 2 ^ ϑ, ⋯⟩),\n        {V | ∀ (k : Fin (2 ^ ϑ)), V.transpose k ∈ MC}) ≤\n      ↑e"
+        ],
+        "local_context": [
+          "ι : Type l\ninst✝⁷ : Fintype ι\ninst✝⁶ : Nonempty ι\ninst✝⁵ : DecidableEq ι\nF : Type\ninst✝⁴ : CommRing F\ninst✝³ : Fintype F\nA : Type\ninst✝² : DecidableEq A\ninst✝¹ : AddCommGroup A\ninst✝ : Module F A\nMC : ModuleCode ι F A\ne ε : ℕ\nhC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε\nh_interleaved_gaps : ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε\nϑ✝ ϑ : ℕ\nhϑ_ge_one : Nat.succ 0 ≤ ϑ\nih : δ_ε_multilinearCorrelatedAgreement_Nat (↑MC) ϑ e ε\nu : WordStack A (Fin (2 ^ (ϑ + 1))) ι\nh_close :\n  (do\n        let r ← $ᵖ (Fin (ϑ + 1) → F)\n        pure (Δ₀(multilinearCombine u r, ↑MC) ≤ ↑e))\n      True >\n    ↑↑(ϑ + 1) * ↑ε / ↑↑(Fintype.card F)\nU₀ : WordStack A (Fin (2 ^ ϑ)) ι := (splitHalfRowWiseInterleavedWords u).1\nU₁ : WordStack A (Fin (2 ^ ϑ)) ι := (splitHalfRowWiseInterleavedWords u).2\nh_split_close :\n  (do\n        let r_last ← $ᵖ F\n        let r_init ← $ᵖ (Fin ϑ → F)\n        pure (multilinearCombine_affineComb_split_last_close MC u e r_last r_init))\n      True >\n    ↑(↑(ϑ + 1) * ↑ε) / ↑↑(Fintype.card F)\nhR :\n  (do\n        let r ← $ᵖ F\n        pure (r ∈ R_star_tensor MC U₀ U₁))\n      True >\n    ↑ε / ↑(Fintype.card F)\nr : F\nhr : r ∈ R_star_tensor MC U₀ U₁\nh_joint :\n  jointProximityNat (↑MC)\n    (affineLineEvaluation (fun rowIdx => u ⟨↑rowIdx, ⋯⟩) (fun rowIdx => u ⟨↑rowIdx + 2 ^ ϑ, ⋯⟩) ↑⟨r, hr⟩) e"
+        ],
+        "proof_state_source": "lean_infotree_before_tactic",
+        "proof_state_raw": {
+          "depth": 40,
+          "end": 76937,
+          "goals_after": [
+            "ι : Type l\ninst✝⁷ : Fintype ι\ninst✝⁶ : Nonempty ι\ninst✝⁵ : DecidableEq ι\nF : Type\ninst✝⁴ : CommRing F\ninst✝³ : Fintype F\nA : Type\ninst✝² : DecidableEq A\ninst✝¹ : AddCommGroup A\ninst✝ : Module F A\nMC : ModuleCode ι F A\ne ε : ℕ\nhC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε\nh_interleaved_gaps : ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε\nϑ✝ ϑ : ℕ\nhϑ_ge_one : Nat.succ 0 ≤ ϑ\nih : δ_ε_multilinearCorrelatedAgreement_Nat (↑MC) ϑ e ε\nu : WordStack A (Fin (2 ^ (ϑ + 1))) ι\nh_close :\n  (do\n        let r ← $ᵖ (Fin (ϑ + 1) → F)\n        pure (Δ₀(multilinearCombine u r, ↑MC) ≤ ↑e))\n      True >\n    ↑↑(ϑ + 1) * ↑ε / ↑↑(Fintype.card F)\nU₀ : WordStack A (Fin (2 ^ ϑ)) ι := (splitHalfRowWiseInterleavedWords u).1\nU₁ : WordStack A (Fin (2 ^ ϑ)) ι := (splitHalfRowWiseInterleavedWords u).2\nh_split_close :\n  (do\n        let r_last ← $ᵖ F\n        let r_init ← $ᵖ (Fin ϑ → F)\n        pure (multilinearCombine_affineComb_split_last_close MC u e r_last r_init))\n      True >\n    ↑(↑(ϑ + 1) * ↑ε) / ↑↑(Fintype.card F)\nhR :\n  (do\n        let r ← $ᵖ F\n        pure (r ∈ R_star_tensor MC U₀ U₁))\n      True >\n    ↑ε / ↑(Fintype.card F)\nr : F\nhr : r ∈ R_star_tensor MC U₀ U₁\nh_joint :\n  jointProximityNat (↑MC)\n    (affineLineEvaluation (fun rowIdx => u ⟨↑rowIdx, ⋯⟩) (fun rowIdx => u ⟨↑rowIdx + 2 ^ ϑ, ⋯⟩) ↑⟨r, hr⟩) e\n⊢ Δ₀((1 - r) • (splitHalfRowWiseInterleavedWords u).1.transpose + r • (splitHalfRowWiseInterleavedWords u).2.transpose,\n        {V | ∀ (k : Fin (2 ^ ϑ)), V.transpose k ∈ MC}) ≤\n      ↑e ↔\n    Δ₀(Matrix.transpose (((1 - r) • fun rowIdx => u ⟨↑rowIdx, ⋯⟩) + r • fun rowIdx => u ⟨↑rowIdx + 2 ^ ϑ, ⋯⟩),\n        {V | ∀ (k : Fin (2 ^ ϑ)), V.transpose k ∈ MC}) ≤\n      ↑e"
+          ],
+          "goals_before": [
+            "ι : Type l\ninst✝⁷ : Fintype ι\ninst✝⁶ : Nonempty ι\ninst✝⁵ : DecidableEq ι\nF : Type\ninst✝⁴ : CommRing F\ninst✝³ : Fintype F\nA : Type\ninst✝² : DecidableEq A\ninst✝¹ : AddCommGroup A\ninst✝ : Module F A\nMC : ModuleCode ι F A\ne ε : ℕ\nhC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε\nh_interleaved_gaps : ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε\nϑ✝ ϑ : ℕ\nhϑ_ge_one : Nat.succ 0 ≤ ϑ\nih : δ_ε_multilinearCorrelatedAgreement_Nat (↑MC) ϑ e ε\nu : WordStack A (Fin (2 ^ (ϑ + 1))) ι\nh_close :\n  (do\n        let r ← $ᵖ (Fin (ϑ + 1) → F)\n        pure (Δ₀(multilinearCombine u r, ↑MC) ≤ ↑e))\n      True >\n    ↑↑(ϑ + 1) * ↑ε / ↑↑(Fintype.card F)\nU₀ : WordStack A (Fin (2 ^ ϑ)) ι := (splitHalfRowWiseInterleavedWords u).1\nU₁ : WordStack A (Fin (2 ^ ϑ)) ι := (splitHalfRowWiseInterleavedWords u).2\nh_split_close :\n  (do\n        let r_last ← $ᵖ F\n        let r_init ← $ᵖ (Fin ϑ → F)\n        pure (multilinearCombine_affineComb_split_last_close MC u e r_last r_init))\n      True >\n    ↑(↑(ϑ + 1) * ↑ε) / ↑↑(Fintype.card F)\nhR :\n  (do\n        let r ← $ᵖ F\n        pure (r ∈ R_star_tensor MC U₀ U₁))\n      True >\n    ↑ε / ↑(Fintype.card F)\nr : F\nhr : r ∈ R_star_tensor MC U₀ U₁\nh_joint :\n  jointProximityNat (↑MC)\n    (affineLineEvaluation (fun rowIdx => u ⟨↑rowIdx, ⋯⟩) (fun rowIdx => u ⟨↑rowIdx + 2 ^ ϑ, ⋯⟩) ↑⟨r, hr⟩) e\n⊢ Δ₀((1 - r) • (splitHalfRowWiseInterleavedWords u).1.transpose + r • (splitHalfRowWiseInterleavedWords u).2.transpose,\n        {V | ∀ (k : Fin (2 ^ ϑ)), V.transpose k ∈ MC}) ≤\n      ↑e ↔\n    Δ₀(Matrix.transpose (((1 - r) • fun rowIdx => u ⟨↑rowIdx, ⋯⟩) + r • fun rowIdx => u ⟨↑rowIdx + 2 ^ ϑ, ⋯⟩),\n        {V | ∀ (k : Fin (2 ^ ϑ)), V.transpose k ∈ MC}) ≤\n      ↑e"
+          ],
+          "kind": "tactic",
+          "start": 76934
+        }
+      },
+      {
+        "severity": "error",
+        "position": {
+          "column": 16,
+          "line": 1278
+        },
+        "end_position": {
+          "column": 55,
+          "line": 1278
+        },
+        "message": "`simp` made no progress",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "`simp` made no progress",
+          "endPos": {
+            "column": 55,
+            "line": 1278
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 16,
+            "line": 1278
+          },
+          "severity": "error"
+        },
+        "source_line": "        ext <;> simp [Matrix.transpose_apply, pow_succ] <;> omega",
+        "start_offset": 66226,
+        "start_byte_offset": 70397,
+        "end_offset": 66265,
+        "end_byte_offset": 70436,
+        "source_text": "simp [Matrix.transpose_apply, pow_succ]",
+        "failed_tactic": "simp [Matrix.transpose_apply, pow_succ]",
+        "tactic_range": {
+          "position": {
+            "line": 1278,
+            "column": 16
+          },
+          "end_position": {
+            "line": 1278,
+            "column": 55
+          },
+          "start_offset": 66226,
+          "end_offset": 66265
+        },
+        "goals": [
+          "jointProximityNat (↑MC) u x✝ ↔\n    jointProximityNat₂ {V | ∀ (k : Fin (2 ^ ϑ)), V.transpose k ∈ MC} (Matrix.transpose fun rowIdx => u ⟨↑rowIdx, ⋯⟩)\n      (Matrix.transpose fun rowIdx => u ⟨↑rowIdx + 2 ^ ϑ, ⋯⟩) x✝"
+        ],
+        "local_context": [
+          "ι : Type l\ninst✝⁷ : Fintype ι\ninst✝⁶ : Nonempty ι\ninst✝⁵ : DecidableEq ι\nF : Type\ninst✝⁴ : CommRing F\ninst✝³ : Fintype F\nA : Type\ninst✝² : DecidableEq A\ninst✝¹ : AddCommGroup A\ninst✝ : Module F A\nMC : ModuleCode ι F A\ne ε : ℕ\nhC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε\nh_interleaved_gaps : ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε\nϑ✝ ϑ : ℕ\nhϑ_ge_one : Nat.succ 0 ≤ ϑ\nih : δ_ε_multilinearCorrelatedAgreement_Nat (↑MC) ϑ e ε\nu : WordStack A (Fin (2 ^ (ϑ + 1))) ι\nh_close :\n  (do\n        let r ← $ᵖ (Fin (ϑ + 1) → F)\n        pure (Δ₀(multilinearCombine u r, ↑MC) ≤ ↑e))\n      True >\n    ↑↑(ϑ + 1) * ↑ε / ↑↑(Fintype.card F)\nU₀ : WordStack A (Fin (2 ^ ϑ)) ι := ⋯\nU₁ : WordStack A (Fin (2 ^ ϑ)) ι := ⋯\nh_split_close :\n  (do\n        let r_last ← $ᵖ F\n        let r_init ← $ᵖ (Fin ϑ → F)\n        pure (multilinearCombine_affineComb_split_last_close MC u e r_last r_init))\n      True >\n    ↑(↑(ϑ + 1) * ↑ε) / ↑↑(Fintype.card F)\nhR :\n  (do\n        let r ← $ᵖ F\n        pure (r ∈ R_star_tensor MC U₀ U₁))\n      True >\n    ↑ε / ↑(Fintype.card F)\nh_affine_probability :\n  (do\n        let r ← $ᵖ F\n        pure (Δ₀(affineLineEvaluation (⋈|U₀) (⋈|U₁) r, ↑(CodeInterleavable.interleaveCode MC (Fin (2 ^ ϑ)))) ≤ ↑e))\n      True >\n    ↑ε / ↑(Fintype.card F)\nhpow : 2 ^ ϑ ≥ 1\nh_joint_halves : jointProximityNat₂ (↑(CodeInterleavable.interleaveCode MC (Fin (2 ^ ϑ)))) (⋈|U₀) (⋈|U₁) e\nx✝ : ℕ"
+        ],
+        "proof_state_source": "lean_infotree_before_tactic",
+        "proof_state_raw": {
+          "depth": 27,
+          "end": 77567,
+          "goals_after": [
+            "ι : Type l\ninst✝⁷ : Fintype ι\ninst✝⁶ : Nonempty ι\ninst✝⁵ : DecidableEq ι\nF : Type\ninst✝⁴ : CommRing F\ninst✝³ : Fintype F\nA : Type\ninst✝² : DecidableEq A\ninst✝¹ : AddCommGroup A\ninst✝ : Module F A\nMC : ModuleCode ι F A\ne ε : ℕ\nhC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε\nh_interleaved_gaps : ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε\nϑ✝ ϑ : ℕ\nhϑ_ge_one : Nat.succ 0 ≤ ϑ\nih : δ_ε_multilinearCorrelatedAgreement_Nat (↑MC) ϑ e ε\nu : WordStack A (Fin (2 ^ (ϑ + 1))) ι\nh_close :\n  (do\n        let r ← $ᵖ (Fin (ϑ + 1) → F)\n        pure (Δ₀(multilinearCombine u r, ↑MC) ≤ ↑e))\n      True >\n    ↑↑(ϑ + 1) * ↑ε / ↑↑(Fintype.card F)\nU₀ : WordStack A (Fin (2 ^ ϑ)) ι := ⋯\nU₁ : WordStack A (Fin (2 ^ ϑ)) ι := ⋯\nh_split_close :\n  (do\n        let r_last ← $ᵖ F\n        let r_init ← $ᵖ (Fin ϑ → F)\n        pure (multilinearCombine_affineComb_split_last_close MC u e r_last r_init))\n      True >\n    ↑(↑(ϑ + 1) * ↑ε) / ↑↑(Fintype.card F)\nhR :\n  (do\n        let r ← $ᵖ F\n        pure (r ∈ R_star_tensor MC U₀ U₁))\n      True >\n    ↑ε / ↑(Fintype.card F)\nh_affine_probability :\n  (do\n        let r ← $ᵖ F\n        pure (Δ₀(affineLineEvaluation (⋈|U₀) (⋈|U₁) r, ↑(CodeInterleavable.interleaveCode MC (Fin (2 ^ ϑ)))) ≤ ↑e))\n      True >\n    ↑ε / ↑(Fintype.card F)\nhpow : 2 ^ ϑ ≥ 1\nh_joint_halves : jointProximityNat₂ (↑(CodeInterleavable.interleaveCode MC (Fin (2 ^ ϑ)))) (⋈|U₀) (⋈|U₁) e\nx✝ : ℕ\n⊢ jointProximityNat (↑MC) u x✝ ↔\n    jointProximityNat₂ {V | ∀ (k : Fin (2 ^ ϑ)), V.transpose k ∈ MC} (Matrix.transpose fun rowIdx => u ⟨↑rowIdx, ⋯⟩)\n      (Matrix.transpose fun rowIdx => u ⟨↑rowIdx + 2 ^ ϑ, ⋯⟩) x✝"
+          ],
+          "goals_before": [
+            "ι : Type l\ninst✝⁷ : Fintype ι\ninst✝⁶ : Nonempty ι\ninst✝⁵ : DecidableEq ι\nF : Type\ninst✝⁴ : CommRing F\ninst✝³ : Fintype F\nA : Type\ninst✝² : DecidableEq A\ninst✝¹ : AddCommGroup A\ninst✝ : Module F A\nMC : ModuleCode ι F A\ne ε : ℕ\nhC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε\nh_interleaved_gaps : ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε\nϑ✝ ϑ : ℕ\nhϑ_ge_one : Nat.succ 0 ≤ ϑ\nih : δ_ε_multilinearCorrelatedAgreement_Nat (↑MC) ϑ e ε\nu : WordStack A (Fin (2 ^ (ϑ + 1))) ι\nh_close :\n  (do\n        let r ← $ᵖ (Fin (ϑ + 1) → F)\n        pure (Δ₀(multilinearCombine u r, ↑MC) ≤ ↑e))\n      True >\n    ↑↑(ϑ + 1) * ↑ε / ↑↑(Fintype.card F)\nU₀ : WordStack A (Fin (2 ^ ϑ)) ι := ⋯\nU₁ : WordStack A (Fin (2 ^ ϑ)) ι := ⋯\nh_split_close :\n  (do\n        let r_last ← $ᵖ F\n        let r_init ← $ᵖ (Fin ϑ → F)\n        pure (multilinearCombine_affineComb_split_last_close MC u e r_last r_init))\n      True >\n    ↑(↑(ϑ + 1) * ↑ε) / ↑↑(Fintype.card F)\nhR :\n  (do\n        let r ← $ᵖ F\n        pure (r ∈ R_star_tensor MC U₀ U₁))\n      True >\n    ↑ε / ↑(Fintype.card F)\nh_affine_probability :\n  (do\n        let r ← $ᵖ F\n        pure (Δ₀(affineLineEvaluation (⋈|U₀) (⋈|U₁) r, ↑(CodeInterleavable.interleaveCode MC (Fin (2 ^ ϑ)))) ≤ ↑e))\n      True >\n    ↑ε / ↑(Fintype.card F)\nhpow : 2 ^ ϑ ≥ 1\nh_joint_halves : jointProximityNat₂ (↑(CodeInterleavable.interleaveCode MC (Fin (2 ^ ϑ)))) (⋈|U₀) (⋈|U₁) e\nx✝ : ℕ\n⊢ jointProximityNat (↑MC) u x✝ ↔\n    jointProximityNat₂ {V | ∀ (k : Fin (2 ^ ϑ)), V.transpose k ∈ MC} (Matrix.transpose fun rowIdx => u ⟨↑rowIdx, ⋯⟩)\n      (Matrix.transpose fun rowIdx => u ⟨↑rowIdx + 2 ^ ϑ, ⋯⟩) x✝"
+          ],
+          "kind": "tactic",
+          "start": 77528
+        }
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 12,
+          "line": 1241
+        },
+        "end_position": {
+          "column": 30,
+          "line": 1241
+        },
+        "message": "This simp argument is unused:\n  multilinearCombine\n\nHint: Omit it from the simp argument list.\n  simp [multilinearCombine_affineComb_split_last_close, m̵u̵l̵t̵i̵l̵i̵n̵e̵a̵r̵C̵o̵m̵b̵i̵n̵e̵,̵ ̵splitHalfRowWiseInterleavedWords,\n              affineLineEvaluation, PMF.uniformOfFintype_apply, Fin.sum_univ_succ, pow_succ]\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "This simp argument is unused:\n  multilinearCombine\n\nHint: Omit it from the simp argument list.\n  simp [multilinearCombine_affineComb_split_last_close, m̵u̵l̵t̵i̵l̵i̵n̵e̵a̵r̵C̵o̵m̵b̵i̵n̵e̵,̵ ̵splitHalfRowWiseInterleavedWords,\n              affineLineEvaluation, PMF.uniformOfFintype_apply, Fin.sum_univ_succ, pow_succ]\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+          "endPos": {
+            "column": 30,
+            "line": 1241
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unusedSimpArgs",
+          "pos": {
+            "column": 12,
+            "line": 1241
+          },
+          "severity": "warning"
+        },
+        "source_line": "            multilinearCombine, splitHalfRowWiseInterleavedWords,",
+        "start_offset": 64395,
+        "start_byte_offset": 68481,
+        "end_offset": 64413,
+        "end_byte_offset": 68499,
+        "source_text": "multilinearCombine"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 34,
+          "line": 1242
+        },
+        "end_position": {
+          "column": 60,
+          "line": 1242
+        },
+        "message": "This simp argument is unused:\n  PMF.uniformOfFintype_apply\n\nHint: Omit it from the simp argument list.\n  simp [multilinearCombine_affineComb_split_last_close, multilinearCombine,\n  ̲  ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲splitHalfRowWiseInterleavedWords, affineLineEvaluation, P̵M̵F̵.̵u̵n̵i̵f̵o̵r̵m̵O̵f̵F̵i̵n̵t̵y̵p̵e̵_̵a̵p̵p̵l̵y̵,̵Fin.sum_univ_succ, pow_succ]\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "This simp argument is unused:\n  PMF.uniformOfFintype_apply\n\nHint: Omit it from the simp argument list.\n  simp [multilinearCombine_affineComb_split_last_close, multilinearCombine,\n  ̲  ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲splitHalfRowWiseInterleavedWords, affineLineEvaluation, P̵M̵F̵.̵u̵n̵i̵f̵o̵r̵m̵O̵f̵F̵i̵n̵t̵y̵p̵e̵_̵a̵p̵p̵l̵y̵,̵Fin.sum_univ_succ, pow_succ]\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+          "endPos": {
+            "column": 60,
+            "line": 1242
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unusedSimpArgs",
+          "pos": {
+            "column": 34,
+            "line": 1242
+          },
+          "severity": "warning"
+        },
+        "source_line": "            affineLineEvaluation, PMF.uniformOfFintype_apply,",
+        "start_offset": 64483,
+        "start_byte_offset": 68569,
+        "end_offset": 64509,
+        "end_byte_offset": 68595,
+        "source_text": "PMF.uniformOfFintype_apply"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 12,
+          "line": 1243
+        },
+        "end_position": {
+          "column": 29,
+          "line": 1243
+        },
+        "message": "This simp argument is unused:\n  Fin.sum_univ_succ\n\nHint: Omit it from the simp argument list.\n  simp [multilinearCombine_affineComb_split_last_close, multilinearCombine,\n  ̲  ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲splitHalfRowWiseInterleavedWords, affineLineEvaluation, PMF.uniformOfFintype_apply,\n              F̵i̵n̵.̵s̵u̵m̵_̵u̵n̵i̵v̵_̵s̵u̵c̵c̵,̵ ̵pow_succ]\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "This simp argument is unused:\n  Fin.sum_univ_succ\n\nHint: Omit it from the simp argument list.\n  simp [multilinearCombine_affineComb_split_last_close, multilinearCombine,\n  ̲  ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲splitHalfRowWiseInterleavedWords, affineLineEvaluation, PMF.uniformOfFintype_apply,\n              F̵i̵n̵.̵s̵u̵m̵_̵u̵n̵i̵v̵_̵s̵u̵c̵c̵,̵ ̵pow_succ]\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+          "endPos": {
+            "column": 29,
+            "line": 1243
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unusedSimpArgs",
+          "pos": {
+            "column": 12,
+            "line": 1243
+          },
+          "severity": "warning"
+        },
+        "source_line": "            Fin.sum_univ_succ, pow_succ] <;>",
+        "start_offset": 64523,
+        "start_byte_offset": 68609,
+        "end_offset": 64540,
+        "end_byte_offset": 68626,
+        "source_text": "Fin.sum_univ_succ"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 31,
+          "line": 1243
+        },
+        "end_position": {
+          "column": 39,
+          "line": 1243
+        },
+        "message": "This simp argument is unused:\n  pow_succ\n\nHint: Omit it from the simp argument list.\n  simp [multilinearCombine_affineComb_split_last_close, multilinearCombine,\n  ̲  ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲splitHalfRowWiseInterleavedWords, affineLineEvaluation, PMF.uniformOfFintype_apply,\n              F̵i̵n̵.̵s̵u̵m̵_̵u̵n̵i̵v̵_̵s̵u̵c̵c̵,̵ ̵p̵o̵w̵_̵s̵u̵c̵c̵]̵F̲i̲n̲.̲s̲u̲m̲_̲u̲n̲i̲v̲_̲s̲u̲c̲c̲]̲\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "This simp argument is unused:\n  pow_succ\n\nHint: Omit it from the simp argument list.\n  simp [multilinearCombine_affineComb_split_last_close, multilinearCombine,\n  ̲  ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲splitHalfRowWiseInterleavedWords, affineLineEvaluation, PMF.uniformOfFintype_apply,\n              F̵i̵n̵.̵s̵u̵m̵_̵u̵n̵i̵v̵_̵s̵u̵c̵c̵,̵ ̵p̵o̵w̵_̵s̵u̵c̵c̵]̵F̲i̲n̲.̲s̲u̲m̲_̲u̲n̲i̲v̲_̲s̲u̲c̲c̲]̲\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+          "endPos": {
+            "column": 39,
+            "line": 1243
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unusedSimpArgs",
+          "pos": {
+            "column": 31,
+            "line": 1243
+          },
+          "severity": "warning"
+        },
+        "source_line": "            Fin.sum_univ_succ, pow_succ] <;>",
+        "start_offset": 64542,
+        "start_byte_offset": 68628,
+        "end_offset": 64550,
+        "end_byte_offset": 68636,
+        "source_text": "pow_succ"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 34,
+          "line": 1265
+        },
+        "end_position": {
+          "column": 56,
+          "line": 1265
+        },
+        "message": "This simp argument is unused:\n  Matrix.transpose_apply\n\nHint: Omit it from the simp argument list.\n  simp [jointProximityNat, U₀, U₁, Interleavable.interleave, affineLineEvaluation,\n  ̲  ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲M̵a̵t̵r̵i̵x̵.̵t̵r̵a̵n̵s̵p̵o̵s̵e̵_̵a̵p̵p̵l̵y̵,̵ ̵Pi.add_apply, Pi.smul_apply]\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "This simp argument is unused:\n  Matrix.transpose_apply\n\nHint: Omit it from the simp argument list.\n  simp [jointProximityNat, U₀, U₁, Interleavable.interleave, affineLineEvaluation,\n  ̲  ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲M̵a̵t̵r̵i̵x̵.̵t̵r̵a̵n̵s̵p̵o̵s̵e̵_̵a̵p̵p̵l̵y̵,̵ ̵Pi.add_apply, Pi.smul_apply]\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+          "endPos": {
+            "column": 56,
+            "line": 1265
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unusedSimpArgs",
+          "pos": {
+            "column": 34,
+            "line": 1265
+          },
+          "severity": "warning"
+        },
+        "source_line": "            affineLineEvaluation, Matrix.transpose_apply, Pi.add_apply,",
+        "start_offset": 65572,
+        "start_byte_offset": 69724,
+        "end_offset": 65594,
+        "end_byte_offset": 69746,
+        "source_text": "Matrix.transpose_apply"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 58,
+          "line": 1265
+        },
+        "end_position": {
+          "column": 70,
+          "line": 1265
+        },
+        "message": "This simp argument is unused:\n  Pi.add_apply\n\nHint: Omit it from the simp argument list.\n  simp [jointProximityNat, U₀, U₁, Interleavable.interleave, affineLineEvaluation,\n  ̲  ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲Matrix.transpose_apply, P̵i̵.̵a̵d̵d̵_̵a̵p̵p̵l̵y̵,̵Pi.smul_apply]\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "This simp argument is unused:\n  Pi.add_apply\n\nHint: Omit it from the simp argument list.\n  simp [jointProximityNat, U₀, U₁, Interleavable.interleave, affineLineEvaluation,\n  ̲  ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲Matrix.transpose_apply, P̵i̵.̵a̵d̵d̵_̵a̵p̵p̵l̵y̵,̵Pi.smul_apply]\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+          "endPos": {
+            "column": 70,
+            "line": 1265
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unusedSimpArgs",
+          "pos": {
+            "column": 58,
+            "line": 1265
+          },
+          "severity": "warning"
+        },
+        "source_line": "            affineLineEvaluation, Matrix.transpose_apply, Pi.add_apply,",
+        "start_offset": 65596,
+        "start_byte_offset": 69748,
+        "end_offset": 65608,
+        "end_byte_offset": 69760,
+        "source_text": "Pi.add_apply"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 12,
+          "line": 1266
+        },
+        "end_position": {
+          "column": 25,
+          "line": 1266
+        },
+        "message": "This simp argument is unused:\n  Pi.smul_apply\n\nHint: Omit it from the simp argument list.\n  simp [jointProximityNat, U₀, U₁, Interleavable.interleave, affineLineEvaluation,\n  ̲  ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲Matrix.transpose_apply, P̵i̵.̵a̵d̵d̵_̵a̵p̵p̵l̵y̵,̵\n  ̵ ̵ ̵ ̵ ̵ ̵ ̵ ̵ ̵ ̵ ̵ ̵ ̵P̵i̵.̵s̵m̵u̵l̵_̵a̵p̵p̵l̵y̵]̵P̲i̲.̲a̲d̲d̲_̲a̲p̲p̲l̲y̲]̲\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "This simp argument is unused:\n  Pi.smul_apply\n\nHint: Omit it from the simp argument list.\n  simp [jointProximityNat, U₀, U₁, Interleavable.interleave, affineLineEvaluation,\n  ̲  ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲Matrix.transpose_apply, P̵i̵.̵a̵d̵d̵_̵a̵p̵p̵l̵y̵,̵\n  ̵ ̵ ̵ ̵ ̵ ̵ ̵ ̵ ̵ ̵ ̵ ̵ ̵P̵i̵.̵s̵m̵u̵l̵_̵a̵p̵p̵l̵y̵]̵P̲i̲.̲a̲d̲d̲_̲a̲p̲p̲l̲y̲]̲\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+          "endPos": {
+            "column": 25,
+            "line": 1266
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unusedSimpArgs",
+          "pos": {
+            "column": 12,
+            "line": 1266
+          },
+          "severity": "warning"
+        },
+        "source_line": "            Pi.smul_apply] <;>",
+        "start_offset": 65622,
+        "start_byte_offset": 69774,
+        "end_offset": 65635,
+        "end_byte_offset": 69787,
+        "source_text": "Pi.smul_apply"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 14,
+          "line": 1274
+        },
+        "end_position": {
+          "column": 32,
+          "line": 1274
+        },
+        "message": "This simp argument is unused:\n  jointProximityNat₂\n\nHint: Omit it from the simp argument list.\n  simp [̵j̵o̵i̵n̵t̵P̵r̵o̵x̵i̵m̵i̵t̵y̵N̵a̵t̵₂̵,̵ ̵j̵o̵i̵n̵t̵P̵r̵o̵x̵i̵m̵i̵t̵y̵N̵a̵t̵,̵[̲j̲o̲i̲n̲t̲P̲r̲o̲x̲i̲m̲i̲t̲y̲N̲a̲t̲,̲ U₀, U₁, splitHalfRowWiseInterleavedWords, finMapTwoWords,\n            Interleavable.interleave, CodeInterleavable.interleaveCode, interleavedCodeSet,\n  ̲  ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲Matrix.transpose_apply, pow_succ]\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "This simp argument is unused:\n  jointProximityNat₂\n\nHint: Omit it from the simp argument list.\n  simp [̵j̵o̵i̵n̵t̵P̵r̵o̵x̵i̵m̵i̵t̵y̵N̵a̵t̵₂̵,̵ ̵j̵o̵i̵n̵t̵P̵r̵o̵x̵i̵m̵i̵t̵y̵N̵a̵t̵,̵[̲j̲o̲i̲n̲t̲P̲r̲o̲x̲i̲m̲i̲t̲y̲N̲a̲t̲,̲ U₀, U₁, splitHalfRowWiseInterleavedWords, finMapTwoWords,\n            Interleavable.interleave, CodeInterleavable.interleaveCode, interleavedCodeSet,\n  ̲  ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲Matrix.transpose_apply, pow_succ]\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+          "endPos": {
+            "column": 32,
+            "line": 1274
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unusedSimpArgs",
+          "pos": {
+            "column": 14,
+            "line": 1274
+          },
+          "severity": "warning"
+        },
+        "source_line": "        simp [jointProximityNat₂, jointProximityNat, U₀, U₁,",
+        "start_offset": 65965,
+        "start_byte_offset": 70130,
+        "end_offset": 65983,
+        "end_byte_offset": 70150,
+        "source_text": "jointProximityNat₂"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 34,
+          "line": 1274
+        },
+        "end_position": {
+          "column": 51,
+          "line": 1274
+        },
+        "message": "This simp argument is unused:\n  jointProximityNat\n\nHint: Omit it from the simp argument list.\n  simp [jointProximityNat₂, j̵o̵i̵n̵t̵P̵r̵o̵x̵i̵m̵i̵t̵y̵N̵a̵t̵,̵ ̵U₀, U₁, splitHalfRowWiseInterleavedWords, finMapTwoWords,\n            Interleavable.interleave, CodeInterleavable.interleaveCode, interleavedCodeSet,\n  ̲  ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲Matrix.transpose_apply, pow_succ]\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "This simp argument is unused:\n  jointProximityNat\n\nHint: Omit it from the simp argument list.\n  simp [jointProximityNat₂, j̵o̵i̵n̵t̵P̵r̵o̵x̵i̵m̵i̵t̵y̵N̵a̵t̵,̵ ̵U₀, U₁, splitHalfRowWiseInterleavedWords, finMapTwoWords,\n            Interleavable.interleave, CodeInterleavable.interleaveCode, interleavedCodeSet,\n  ̲  ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲Matrix.transpose_apply, pow_succ]\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+          "endPos": {
+            "column": 51,
+            "line": 1274
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unusedSimpArgs",
+          "pos": {
+            "column": 34,
+            "line": 1274
+          },
+          "severity": "warning"
+        },
+        "source_line": "        simp [jointProximityNat₂, jointProximityNat, U₀, U₁,",
+        "start_offset": 65985,
+        "start_byte_offset": 70152,
+        "end_offset": 66002,
+        "end_byte_offset": 70169,
+        "source_text": "jointProximityNat"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 44,
+          "line": 1275
+        },
+        "end_position": {
+          "column": 58,
+          "line": 1275
+        },
+        "message": "This simp argument is unused:\n  finMapTwoWords\n\nHint: Omit it from the simp argument list.\n  simp [jointProximityNat₂, jointProximityNat, U₀, U₁, splitHalfRowWiseInterleavedWords,\n  ̲  ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲f̵i̵n̵M̵a̵p̵T̵w̵o̵W̵o̵r̵d̵s̵,̵Interleavable.interleave, CodeInterleavable.interleaveCode, interleavedCodeSet,\n            Matrix.transpose_apply, pow_succ]\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "This simp argument is unused:\n  finMapTwoWords\n\nHint: Omit it from the simp argument list.\n  simp [jointProximityNat₂, jointProximityNat, U₀, U₁, splitHalfRowWiseInterleavedWords,\n  ̲  ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲f̵i̵n̵M̵a̵p̵T̵w̵o̵W̵o̵r̵d̵s̵,̵Interleavable.interleave, CodeInterleavable.interleaveCode, interleavedCodeSet,\n            Matrix.transpose_apply, pow_succ]\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+          "endPos": {
+            "column": 58,
+            "line": 1275
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unusedSimpArgs",
+          "pos": {
+            "column": 44,
+            "line": 1275
+          },
+          "severity": "warning"
+        },
+        "source_line": "          splitHalfRowWiseInterleavedWords, finMapTwoWords,",
+        "start_offset": 66056,
+        "start_byte_offset": 70227,
+        "end_offset": 66070,
+        "end_byte_offset": 70241,
+        "source_text": "finMapTwoWords"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 30,
+          "line": 1277
+        },
+        "end_position": {
+          "column": 52,
+          "line": 1277
+        },
+        "message": "This simp argument is unused:\n  Matrix.transpose_apply\n\nHint: Omit it from the simp argument list.\n  simp [jointProximityNat₂, jointProximityNat, U₀, U₁, splitHalfRowWiseInterleavedWords,\n  ̲  ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲finMapTwoWords, Interleavable.interleave, CodeInterleavable.interleaveCode,\n            interleavedCodeSet, M̵a̵t̵r̵i̵x̵.̵t̵r̵a̵n̵s̵p̵o̵s̵e̵_̵a̵p̵p̵l̵y̵,̵ ̵pow_succ]\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "This simp argument is unused:\n  Matrix.transpose_apply\n\nHint: Omit it from the simp argument list.\n  simp [jointProximityNat₂, jointProximityNat, U₀, U₁, splitHalfRowWiseInterleavedWords,\n  ̲  ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲finMapTwoWords, Interleavable.interleave, CodeInterleavable.interleaveCode,\n            interleavedCodeSet, M̵a̵t̵r̵i̵x̵.̵t̵r̵a̵n̵s̵p̵o̵s̵e̵_̵a̵p̵p̵l̵y̵,̵ ̵pow_succ]\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+          "endPos": {
+            "column": 52,
+            "line": 1277
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unusedSimpArgs",
+          "pos": {
+            "column": 30,
+            "line": 1277
+          },
+          "severity": "warning"
+        },
+        "source_line": "          interleavedCodeSet, Matrix.transpose_apply, pow_succ] <;>",
+        "start_offset": 66172,
+        "start_byte_offset": 70343,
+        "end_offset": 66194,
+        "end_byte_offset": 70365,
+        "source_text": "Matrix.transpose_apply"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 54,
+          "line": 1277
+        },
+        "end_position": {
+          "column": 62,
+          "line": 1277
+        },
+        "message": "This simp argument is unused:\n  pow_succ\n\nHint: Omit it from the simp argument list.\n  simp [jointProximityNat₂, jointProximityNat, U₀, U₁,\n  ̵  ̵ ̵ ̵ ̵ ̵ ̵ ̵ ̵ ̵splitHalfRowWiseInterleavedWords,\n  ̲  ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲finMapTwoWords,\n  ̵  ̵ ̵ ̵ ̵ ̵ ̵ ̵ ̵ ̵Interleavable.interleave, CodeInterleavable.interleaveCode,\n            interleavedCodeSet, Matrix.transpose_apply,̵ ̵p̵o̵w̵_̵s̵u̵c̵c̵]\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "This simp argument is unused:\n  pow_succ\n\nHint: Omit it from the simp argument list.\n  simp [jointProximityNat₂, jointProximityNat, U₀, U₁,\n  ̵  ̵ ̵ ̵ ̵ ̵ ̵ ̵ ̵ ̵splitHalfRowWiseInterleavedWords,\n  ̲  ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲finMapTwoWords,\n  ̵  ̵ ̵ ̵ ̵ ̵ ̵ ̵ ̵ ̵Interleavable.interleave, CodeInterleavable.interleaveCode,\n            interleavedCodeSet, Matrix.transpose_apply,̵ ̵p̵o̵w̵_̵s̵u̵c̵c̵]\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+          "endPos": {
+            "column": 62,
+            "line": 1277
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unusedSimpArgs",
+          "pos": {
+            "column": 54,
+            "line": 1277
+          },
+          "severity": "warning"
+        },
+        "source_line": "          interleavedCodeSet, Matrix.transpose_apply, pow_succ] <;>",
+        "start_offset": 66196,
+        "start_byte_offset": 70367,
+        "end_offset": 66204,
+        "end_byte_offset": 70375,
+        "source_text": "pow_succ"
+      },
+      {
+        "severity": "information",
+        "position": {
+          "column": 0,
+          "line": 1343
+        },
+        "end_position": {
+          "column": 6,
+          "line": 1343
+        },
+        "message": "interleaved_affine_gaps_imply_tensor_gaps.{l} {ι : Type l} [Fintype ι] [Nonempty ι] [DecidableEq ι] {F : Type}\n  [CommRing F] [Fintype F] {A : Type} [DecidableEq A] [AddCommGroup A] [Module F A] (MC : ModuleCode ι F A) {e ε : ℕ}\n  (hC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε)\n  (h_interleaved_gaps :\n    ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(Code.CodeInterleavable.interleaveCode MC (Fin m))) e ε)\n  (ϑ : ℕ) (hϑ_gt_0 : ϑ > 0) : δ_ε_multilinearCorrelatedAgreement_Nat (↑MC) ϑ e ε",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "interleaved_affine_gaps_imply_tensor_gaps.{l} {ι : Type l} [Fintype ι] [Nonempty ι] [DecidableEq ι] {F : Type}\n  [CommRing F] [Fintype F] {A : Type} [DecidableEq A] [AddCommGroup A] [Module F A] (MC : ModuleCode ι F A) {e ε : ℕ}\n  (hC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε)\n  (h_interleaved_gaps :\n    ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(Code.CodeInterleavable.interleaveCode MC (Fin m))) e ε)\n  (ϑ : ℕ) (hϑ_gt_0 : ϑ > 0) : δ_ε_multilinearCorrelatedAgreement_Nat (↑MC) ϑ e ε",
+          "endPos": {
+            "column": 6,
+            "line": 1343
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 0,
+            "line": 1343
+          },
+          "severity": "information"
+        }
+      },
+      {
+        "severity": "information",
+        "position": {
+          "column": 0,
+          "line": 1344
+        },
+        "end_position": {
+          "column": 6,
+          "line": 1344
+        },
+        "message": "'interleaved_affine_gaps_imply_tensor_gaps' depends on axioms: [propext, sorryAx, Classical.choice, Quot.sound]",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "'interleaved_affine_gaps_imply_tensor_gaps' depends on axioms: [propext, sorryAx, Classical.choice, Quot.sound]",
+          "endPos": {
+            "column": 6,
+            "line": 1344
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 0,
+            "line": 1344
+          },
+          "severity": "information"
+        }
+      }
+    ],
+    "goals": [
+      "jointProximityNat (↑MC) u e"
+    ],
+    "local_context": [
+      "case base\nι : Type l\ninst✝⁷ : Fintype ι\ninst✝⁶ : Nonempty ι\ninst✝⁵ : DecidableEq ι\nF : Type\ninst✝⁴ : CommRing F\ninst✝³ : Fintype F\nA : Type\ninst✝² : DecidableEq A\ninst✝¹ : AddCommGroup A\ninst✝ : Module F A\nMC : ModuleCode ι F A\ne ε : ℕ\nhC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε\nh_interleaved_gaps : ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε\nϑ : ℕ\nu : WordStack A (Fin (2 ^ Nat.succ 0)) ι\nh_close :\n  (do\n        let r ← $ᵖ (Fin (Nat.succ 0) → F)\n        pure (Δ₀(multilinearCombine u r, ↑MC) ≤ ↑e))\n      True >\n    ↑↑(Nat.succ 0) * ↑ε / ↑↑(Fintype.card F)\nhu : finMapTwoWords (u 0) (u 1) = u\nh_affine :\n  (do\n          let r ← $ᵖ F\n          pure (Δ₀(affineLineEvaluation (u 0) (u 1) r, ↑MC) ≤ ↑e))\n        True >\n      ↑↑ε / ↑↑(Fintype.card F) →\n    jointProximityNat₂ (↑MC) (u 0) (u 1) e"
+    ],
+    "sorries": [
+      {
+        "kind": "transitive_dependency",
+        "axiom": "sorryAx",
+        "position": null,
+        "end_position": null
+      }
+    ],
+    "axioms": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext",
+      "sorryAx"
+    ],
+    "detail": null,
+    "raw_lean_output": "{\"caption\":\"\",\"data\":\"Tactic `apply` failed: could not unify the conclusion of `Eq.rec (motive := fun x h =>\\n  (do\\n          let r ← $ᵖ F\\n          pure (Δ₀(affineLineEvaluation (x 0) (x 1) r, ↑MC) ≤ ↑e))\\n        True >\\n      ↑↑ε / ↑↑(Fintype.card F) →\\n    jointProximityNat₂ (↑MC) (x 0) (x 1) e)\\n  h_affine (Eq.symm hu)`\\n  jointProximityNat₂ (↑MC) (finMapTwoWords (u 0) (u 1) 0) (finMapTwoWords (u 0) (u 1) 1) e\\nwith the goal\\n  jointProximityNat (↑MC) u e\\n\\nNote: The full type of `Eq.rec (motive := fun x h =>\\n  (do\\n          let r ← $ᵖ F\\n          pure (Δ₀(affineLineEvaluation (x 0) (x 1) r, ↑MC) ≤ ↑e))\\n        True >\\n      ↑↑ε / ↑↑(Fintype.card F) →\\n    jointProximityNat₂ (↑MC) (x 0) (x 1) e)\\n  h_affine (Eq.symm hu)` is\\n  (do\\n          let r ← $ᵖ F\\n          pure (Δ₀(affineLineEvaluation (finMapTwoWords (u 0) (u 1) 0) (finMapTwoWords (u 0) (u 1) 1) r, ↑MC) ≤ ↑e))\\n        True >\\n      ↑↑ε / ↑↑(Fintype.card F) →\\n    jointProximityNat₂ (↑MC) (finMapTwoWords (u 0) (u 1) 0) (finMapTwoWords (u 0) (u 1) 1) e\\n\\ncase base\\nι : Type l\\ninst✝⁷ : Fintype ι\\ninst✝⁶ : Nonempty ι\\ninst✝⁵ : DecidableEq ι\\nF : Type\\ninst✝⁴ : CommRing F\\ninst✝³ : Fintype F\\nA : Type\\ninst✝² : DecidableEq A\\ninst✝¹ : AddCommGroup A\\ninst✝ : Module F A\\nMC : ModuleCode ι F A\\ne ε : ℕ\\nhC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε\\nh_interleaved_gaps : ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε\\nϑ : ℕ\\nu : WordStack A (Fin (2 ^ Nat.succ 0)) ι\\nh_close :\\n  (do\\n        let r ← $ᵖ (Fin (Nat.succ 0) → F)\\n        pure (Δ₀(multilinearCombine u r, ↑MC) ≤ ↑e))\\n      True >\\n    ↑↑(Nat.succ 0) * ↑ε / ↑↑(Fintype.card F)\\nhu : finMapTwoWords (u 0) (u 1) = u\\nh_affine :\\n  (do\\n          let r ← $ᵖ F\\n          pure (Δ₀(affineLineEvaluation (u 0) (u 1) r, ↑MC) ≤ ↑e))\\n        True >\\n      ↑↑ε / ↑↑(Fintype.card F) →\\n    jointProximityNat₂ (↑MC) (u 0) (u 1) e\\n⊢ jointProximityNat (↑MC) u e\",\"endPos\":{\"column\":25,\"line\":1224},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"[anonymous]\",\"pos\":{\"column\":6,\"line\":1224},\"severity\":\"error\"}\n{\"caption\":\"\",\"data\":\"No applicable extensionality theorem found for type\\n  ENNReal\\n\\nNote: Extensionality theorems can be registered by marking them with the `[ext]` attribute\",\"endPos\":{\"column\":13,\"line\":1244},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"[anonymous]\",\"pos\":{\"column\":10,\"line\":1244},\"severity\":\"error\"}\n{\"caption\":\"\",\"data\":\"This extensionality tactic only applies to equalities, not\\n  Δ₀((1 - r) • (splitHalfRowWiseInterleavedWords u).1.transpose + r • (splitHalfRowWiseInterleavedWords u).2.transpose,\\n        {V | ∀ (k : Fin (2 ^ ϑ)), V.transpose k ∈ MC}) ≤\\n      ↑e ↔\\n    Δ₀(Matrix.transpose (((1 - r) • fun rowIdx => u ⟨↑rowIdx, ⋯⟩) + r • fun rowIdx => u ⟨↑rowIdx + 2 ^ ϑ, ⋯⟩),\\n        {V | ∀ (k : Fin (2 ^ ϑ)), V.transpose k ∈ MC}) ≤\\n      ↑e\",\"endPos\":{\"column\":13,\"line\":1267},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"[anonymous]\",\"pos\":{\"column\":10,\"line\":1267},\"severity\":\"error\"}\n{\"caption\":\"\",\"data\":\"`simp` made no progress\",\"endPos\":{\"column\":55,\"line\":1278},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"[anonymous]\",\"pos\":{\"column\":16,\"line\":1278},\"severity\":\"error\"}\n{\"caption\":\"\",\"data\":\"This simp argument is unused:\\n  multilinearCombine\\n\\nHint: Omit it from the simp argument list.\\n  simp [multilinearCombine_affineComb_split_last_close, m̵u̵l̵t̵i̵l̵i̵n̵e̵a̵r̵C̵o̵m̵b̵i̵n̵e̵,̵ ̵splitHalfRowWiseInterleavedWords,\\n              affineLineEvaluation, PMF.uniformOfFintype_apply, Fin.sum_univ_succ, pow_succ]\\n\\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`\",\"endPos\":{\"column\":30,\"line\":1241},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"linter.unusedSimpArgs\",\"pos\":{\"column\":12,\"line\":1241},\"severity\":\"warning\"}\n{\"caption\":\"\",\"data\":\"This simp argument is unused:\\n  PMF.uniformOfFintype_apply\\n\\nHint: Omit it from the simp argument list.\\n  simp [multilinearCombine_affineComb_split_last_close, multilinearCombine,\\n  ̲  ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲splitHalfRowWiseInterleavedWords, affineLineEvaluation, P̵M̵F̵.̵u̵n̵i̵f̵o̵r̵m̵O̵f̵F̵i̵n̵t̵y̵p̵e̵_̵a̵p̵p̵l̵y̵,̵Fin.sum_univ_succ, pow_succ]\\n\\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`\",\"endPos\":{\"column\":60,\"line\":1242},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"linter.unusedSimpArgs\",\"pos\":{\"column\":34,\"line\":1242},\"severity\":\"warning\"}\n{\"caption\":\"\",\"data\":\"This simp argument is unused:\\n  Fin.sum_univ_succ\\n\\nHint: Omit it from the simp argument list.\\n  simp [multilinearCombine_affineComb_split_last_close, multilinearCombine,\\n  ̲  ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲splitHalfRowWiseInterleavedWords, affineLineEvaluation, PMF.uniformOfFintype_apply,\\n              F̵i̵n̵.̵s̵u̵m̵_̵u̵n̵i̵v̵_̵s̵u̵c̵c̵,̵ ̵pow_succ]\\n\\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`\",\"endPos\":{\"column\":29,\"line\":1243},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"linter.unusedSimpArgs\",\"pos\":{\"column\":12,\"line\":1243},\"severity\":\"warning\"}\n{\"caption\":\"\",\"data\":\"This simp argument is unused:\\n  pow_succ\\n\\nHint: Omit it from the simp argument list.\\n  simp [multilinearCombine_affineComb_split_last_close, multilinearCombine,\\n  ̲  ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲splitHalfRowWiseInterleavedWords, affineLineEvaluation, PMF.uniformOfFintype_apply,\\n              F̵i̵n̵.̵s̵u̵m̵_̵u̵n̵i̵v̵_̵s̵u̵c̵c̵,̵ ̵p̵o̵w̵_̵s̵u̵c̵c̵]̵F̲i̲n̲.̲s̲u̲m̲_̲u̲n̲i̲v̲_̲s̲u̲c̲c̲]̲\\n\\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`\",\"endPos\":{\"column\":39,\"line\":1243},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"linter.unusedSimpArgs\",\"pos\":{\"column\":31,\"line\":1243},\"severity\":\"warning\"}\n{\"caption\":\"\",\"data\":\"This simp argument is unused:\\n  Matrix.transpose_apply\\n\\nHint: Omit it from the simp argument list.\\n  simp [jointProximityNat, U₀, U₁, Interleavable.interleave, affineLineEvaluation,\\n  ̲  ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲M̵a̵t̵r̵i̵x̵.̵t̵r̵a̵n̵s̵p̵o̵s̵e̵_̵a̵p̵p̵l̵y̵,̵ ̵Pi.add_apply, Pi.smul_apply]\\n\\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`\",\"endPos\":{\"column\":56,\"line\":1265},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"linter.unusedSimpArgs\",\"pos\":{\"column\":34,\"line\":1265},\"severity\":\"warning\"}\n{\"caption\":\"\",\"data\":\"This simp argument is unused:\\n  Pi.add_apply\\n\\nHint: Omit it from the simp argument list.\\n  simp [jointProximityNat, U₀, U₁, Interleavable.interleave, affineLineEvaluation,\\n  ̲  ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲Matrix.transpose_apply, P̵i̵.̵a̵d̵d̵_̵a̵p̵p̵l̵y̵,̵Pi.smul_apply]\\n\\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`\",\"endPos\":{\"column\":70,\"line\":1265},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"linter.unusedSimpArgs\",\"pos\":{\"column\":58,\"line\":1265},\"severity\":\"warning\"}\n{\"caption\":\"\",\"data\":\"This simp argument is unused:\\n  Pi.smul_apply\\n\\nHint: Omit it from the simp argument list.\\n  simp [jointProximityNat, U₀, U₁, Interleavable.interleave, affineLineEvaluation,\\n  ̲  ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲Matrix.transpose_apply, P̵i̵.̵a̵d̵d̵_̵a̵p̵p̵l̵y̵,̵\\n  ̵ ̵ ̵ ̵ ̵ ̵ ̵ ̵ ̵ ̵ ̵ ̵ ̵P̵i̵.̵s̵m̵u̵l̵_̵a̵p̵p̵l̵y̵]̵P̲i̲.̲a̲d̲d̲_̲a̲p̲p̲l̲y̲]̲\\n\\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`\",\"endPos\":{\"column\":25,\"line\":1266},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"linter.unusedSimpArgs\",\"pos\":{\"column\":12,\"line\":1266},\"severity\":\"warning\"}\n{\"caption\":\"\",\"data\":\"This simp argument is unused:\\n  jointProximityNat₂\\n\\nHint: Omit it from the simp argument list.\\n  simp [̵j̵o̵i̵n̵t̵P̵r̵o̵x̵i̵m̵i̵t̵y̵N̵a̵t̵₂̵,̵ ̵j̵o̵i̵n̵t̵P̵r̵o̵x̵i̵m̵i̵t̵y̵N̵a̵t̵,̵[̲j̲o̲i̲n̲t̲P̲r̲o̲x̲i̲m̲i̲t̲y̲N̲a̲t̲,̲ U₀, U₁, splitHalfRowWiseInterleavedWords, finMapTwoWords,\\n            Interleavable.interleave, CodeInterleavable.interleaveCode, interleavedCodeSet,\\n  ̲  ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲Matrix.transpose_apply, pow_succ]\\n\\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`\",\"endPos\":{\"column\":32,\"line\":1274},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"linter.unusedSimpArgs\",\"pos\":{\"column\":14,\"line\":1274},\"severity\":\"warning\"}\n{\"caption\":\"\",\"data\":\"This simp argument is unused:\\n  jointProximityNat\\n\\nHint: Omit it from the simp argument list.\\n  simp [jointProximityNat₂, j̵o̵i̵n̵t̵P̵r̵o̵x̵i̵m̵i̵t̵y̵N̵a̵t̵,̵ ̵U₀, U₁, splitHalfRowWiseInterleavedWords, finMapTwoWords,\\n            Interleavable.interleave, CodeInterleavable.interleaveCode, interleavedCodeSet,\\n  ̲  ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲Matrix.transpose_apply, pow_succ]\\n\\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`\",\"endPos\":{\"column\":51,\"line\":1274},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"linter.unusedSimpArgs\",\"pos\":{\"column\":34,\"line\":1274},\"severity\":\"warning\"}\n{\"caption\":\"\",\"data\":\"This simp argument is unused:\\n  finMapTwoWords\\n\\nHint: Omit it from the simp argument list.\\n  simp [jointProximityNat₂, jointProximityNat, U₀, U₁, splitHalfRowWiseInterleavedWords,\\n  ̲  ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲f̵i̵n̵M̵a̵p̵T̵w̵o̵W̵o̵r̵d̵s̵,̵Interleavable.interleave, CodeInterleavable.interleaveCode, interleavedCodeSet,\\n            Matrix.transpose_apply, pow_succ]\\n\\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`\",\"endPos\":{\"column\":58,\"line\":1275},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"linter.unusedSimpArgs\",\"pos\":{\"column\":44,\"line\":1275},\"severity\":\"warning\"}\n{\"caption\":\"\",\"data\":\"This simp argument is unused:\\n  Matrix.transpose_apply\\n\\nHint: Omit it from the simp argument list.\\n  simp [jointProximityNat₂, jointProximityNat, U₀, U₁, splitHalfRowWiseInterleavedWords,\\n  ̲  ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲finMapTwoWords, Interleavable.interleave, CodeInterleavable.interleaveCode,\\n            interleavedCodeSet, M̵a̵t̵r̵i̵x̵.̵t̵r̵a̵n̵s̵p̵o̵s̵e̵_̵a̵p̵p̵l̵y̵,̵ ̵pow_succ]\\n\\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`\",\"endPos\":{\"column\":52,\"line\":1277},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"linter.unusedSimpArgs\",\"pos\":{\"column\":30,\"line\":1277},\"severity\":\"warning\"}\n{\"caption\":\"\",\"data\":\"This simp argument is unused:\\n  pow_succ\\n\\nHint: Omit it from the simp argument list.\\n  simp [jointProximityNat₂, jointProximityNat, U₀, U₁,\\n  ̵  ̵ ̵ ̵ ̵ ̵ ̵ ̵ ̵ ̵splitHalfRowWiseInterleavedWords,\\n  ̲  ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲ ̲finMapTwoWords,\\n  ̵  ̵ ̵ ̵ ̵ ̵ ̵ ̵ ̵ ̵Interleavable.interleave, CodeInterleavable.interleaveCode,\\n            interleavedCodeSet, Matrix.transpose_apply,̵ ̵p̵o̵w̵_̵s̵u̵c̵c̵]\\n\\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`\",\"endPos\":{\"column\":62,\"line\":1277},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"linter.unusedSimpArgs\",\"pos\":{\"column\":54,\"line\":1277},\"severity\":\"warning\"}\n{\"caption\":\"\",\"data\":\"interleaved_affine_gaps_imply_tensor_gaps.{l} {ι : Type l} [Fintype ι] [Nonempty ι] [DecidableEq ι] {F : Type}\\n  [CommRing F] [Fintype F] {A : Type} [DecidableEq A] [AddCommGroup A] [Module F A] (MC : ModuleCode ι F A) {e ε : ℕ}\\n  (hC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε)\\n  (h_interleaved_gaps :\\n    ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(Code.CodeInterleavable.interleaveCode MC (Fin m))) e ε)\\n  (ϑ : ℕ) (hϑ_gt_0 : ϑ > 0) : δ_ε_multilinearCorrelatedAgreement_Nat (↑MC) ϑ e ε\",\"endPos\":{\"column\":6,\"line\":1343},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"[anonymous]\",\"pos\":{\"column\":0,\"line\":1343},\"severity\":\"information\"}\n{\"caption\":\"\",\"data\":\"'interleaved_affine_gaps_imply_tensor_gaps' depends on axioms: [propext, sorryAx, Classical.choice, Quot.sound]\",\"endPos\":{\"column\":6,\"line\":1344},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"[anonymous]\",\"pos\":{\"column\":0,\"line\":1344},\"severity\":\"information\"}\n"
+  },
+  "diagnosis": "The proof needs explicit extensional conversions between tensor coordinates and their split/interleaved representations; the original `simpa` calls unfolded definitions but did not prove those function and matrix equalities.",
+  "duplicate_cache": false,
+  "available_at": 1792777231.628299,
+  "cumulative_calls": 3,
+  "cumulative_tokens": 168029,
+  "api_spend_usd": null
+}

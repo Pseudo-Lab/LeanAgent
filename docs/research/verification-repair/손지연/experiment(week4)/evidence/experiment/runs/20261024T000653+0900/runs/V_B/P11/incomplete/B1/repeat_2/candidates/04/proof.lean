@@ -1,0 +1,99 @@
+by
+  simp only
+  intro y
+  unfold fold
+  simp_rw [qMap_total_fiber_one_level_eq 𝔽q β i (by omega)]
+
+  have eval_sum (z : L) {α : Type} [DecidableEq α]
+      (s : Finset α) (g : α → L[X]) :
+      Polynomial.eval z (Finset.sum s g) =
+        Finset.sum s (fun a => Polynomial.eval z (g a)) := by
+    induction s using Finset.induction_on with
+    | empty => simp
+    | @insert a s ha ih => simp [ha, ih]
+
+  have eval_prod (z : L) {α : Type} [DecidableEq α]
+      (s : Finset α) (g : α → L[X]) :
+      Polynomial.eval z (Finset.prod s g) =
+        Finset.prod s (fun a => Polynomial.eval z (g a)) := by
+    induction s using Finset.induction_on with
+    | empty => simp
+    | @insert a s ha ih => simp [ha, ih]
+
+  have hsub : ℓ - i.val = (ℓ - (i.val + 1)) + 1 := by omega
+  have hpow :
+      2 ^ (ℓ - i.val) = 2 ^ (ℓ - (i.val + 1)) * 2 := by
+    rw [hsub, pow_succ]
+
+  let pairEquiv :
+      Fin (2 ^ (ℓ - (i.val + 1))) × Fin 2 ≃
+        Fin (2 ^ (ℓ - i.val)) :=
+    { toFun := fun p =>
+        ⟨p.1.val * 2 + p.2.val, by
+          rw [hpow]
+          omega⟩
+      invFun := fun k =>
+        (⟨k.val / 2, by
+            have hk := k.isLt
+            rw [hpow] at hk
+            apply Nat.div_lt_of_lt_mul
+            omega⟩,
+         ⟨k.val % 2, Nat.mod_lt _ (by omega)⟩)
+      left_inv := by
+        rintro ⟨a, b⟩
+        apply Prod.ext
+        · apply Fin.ext
+          dsimp
+          omega
+        · apply Fin.ext
+          dsimp
+          omega
+      right_inv := by
+        intro k
+        apply Fin.ext
+        dsimp
+        omega }
+
+  have sum_even_odd (g : Fin (2 ^ (ℓ - i.val)) → L) :
+      (∑ k, g k) =
+        ∑ j : Fin (2 ^ (ℓ - (i.val + 1))),
+          g ⟨j.val * 2, by
+            rw [hpow]
+            omega⟩ +
+          g ⟨j.val * 2 + 1, by
+            rw [hpow]
+            omega⟩ := by
+    calc
+      (∑ k, g k) = ∑ p, g (pairEquiv p) :=
+        (pairEquiv.sum_comp g).symm
+      _ = _ := by
+        rw [Fintype.sum_prod_type]
+        simp [pairEquiv, Fin.sum_univ_two]
+
+  let tailEquiv : Fin ((ℓ - (i.val + 1)) + 1) ≃ Fin (ℓ - i.val) :=
+    Fin.cast hsub.symm
+
+  have prod_head_tail (g : Fin (ℓ - i.val) → L) :
+      (∏ k, g k) =
+        g ⟨0, by omega⟩ *
+          ∏ j : Fin (ℓ - (i.val + 1)), g ⟨j.val + 1, by omega⟩ := by
+    calc
+      (∏ k, g k) = ∏ k, g (tailEquiv k) :=
+        (tailEquiv.prod_comp g).symm
+      _ = _ := by
+        rw [Fin.prod_univ_succ]
+        simp [tailEquiv]
+
+  simp only [Fin2ToF2, intermediateEvaluationPoly]
+  simp_rw [eval_sum]
+  simp only [Polynomial.eval_mul, Polynomial.eval_C]
+  rw [sum_even_odd, sum_even_odd]
+  rw [Finset.sum_mul, Finset.sum_mul, ← Finset.sum_add_distrib]
+  apply Finset.sum_congr rfl
+  intro j _
+  simp only [intermediateNovelBasisX]
+  simp_rw [eval_prod]
+  simp only [Polynomial.eval_pow]
+  simp_rw [prod_head_tail]
+  simp [intermediateNormVpoly, sDomain.lift, sDomain_basis, h_β₀_eq_1.out]
+  ring

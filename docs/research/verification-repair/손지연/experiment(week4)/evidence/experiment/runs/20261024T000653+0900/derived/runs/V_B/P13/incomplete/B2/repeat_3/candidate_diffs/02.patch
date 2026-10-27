@@ -1,0 +1,42 @@
+--- candidate_01.proof.lean
++++ candidate_02.proof.lean
+@@ -45,10 +45,17 @@
+               n = a ∨ n = a + 1 ∨ n = a + 2 ∨ n = a + 3 := by
+             omega
+           rcases hcases with rfl | rfl | rfl | rfl
+-          · convert h0.symm using 1 <;> omega
+-          · convert h1.symm using 1 <;> omega
+-          · convert h2.symm using 1 <;> omega
+-          · convert h3.symm using 1 <;> omega
++          · rw [hac]
++            exact h0.symm
++          · have hi : a + 1 + c = b + 1 := by omega
++            rw [hi]
++            exact h1.symm
++          · have hi : a + 2 + c = b + 2 := by omega
++            rw [hi]
++            exact h2.symm
++          · have hi : a + 3 + c = b + 3 := by omega
++            rw [hi]
++            exact h3.symm
+         · have hu1 : u ((n - 1) + c) = u (n - 1) :=
+             ih (n - 1) (by omega) (by omega)
+           have hu2 : u ((n - 2) + c) = u (n - 2) :=
+@@ -66,9 +73,13 @@
+           rw [hi1, hi2, hi3, hi4, hu1, hu2, hu3, hu4] at hnc
+           have hreal : (u (n + c) : ℝ) = u n := hnc.trans hn.symm
+           exact_mod_cast hreal
+-  obtain ⟨a, b, hab, hstate⟩ := hv.exists_ne_map_eq_of_infinite
++  obtain ⟨a, b, hab, hstate⟩ :=
++    hv.exists_ne_map_eq_of_infinite
++      (fun n : ℕ => ⟨v n, Set.mem_range_self n⟩)
++  have hstate' : v a = v b :=
++    congrArg (fun z : Set.range v => z.1) hstate
+   rcases lt_or_gt_of_ne hab with hab' | hba
+-  · obtain ⟨c, hc, hp⟩ := periodic_of_state hab' hstate
++  · obtain ⟨c, hc, hp⟩ := periodic_of_state hab' hstate'
+     exact ⟨a, c, hc, hp⟩
+-  · obtain ⟨c, hc, hp⟩ := periodic_of_state hba hstate.symm
++  · obtain ⟨c, hc, hp⟩ := periodic_of_state hba hstate'.symm
+     exact ⟨b, c, hc, hp⟩
+\ No newline at end of file

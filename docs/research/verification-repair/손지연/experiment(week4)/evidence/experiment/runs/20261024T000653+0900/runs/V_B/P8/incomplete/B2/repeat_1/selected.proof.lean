@@ -1,0 +1,56 @@
+by
+  intro a b c hab hac
+  induction hab generalizing c with
+  | refl a =>
+      exact ⟨c, hac, ParallelReduction.refl c⟩
+  | red_I x =>
+      cases hac with
+      | refl =>
+          exact ⟨x, ParallelReduction.refl x, ParallelReduction.red_I x⟩
+      | red_I =>
+          exact ⟨x, ParallelReduction.refl x, ParallelReduction.refl x⟩
+      | par hI hx =>
+          obtain rfl := I_irreducible _ hI
+          exact ⟨_, hx, ParallelReduction.red_I _⟩
+  | red_K x y =>
+      cases hac with
+      | refl =>
+          exact ⟨x, ParallelReduction.refl x, ParallelReduction.red_K x y⟩
+      | red_K =>
+          exact ⟨x, ParallelReduction.refl x, ParallelReduction.refl x⟩
+      | par hh hy =>
+          obtain ⟨x', hx, rfl⟩ := Ka_irreducible x _ hh
+          exact ⟨x', hx, ParallelReduction.red_K x' _⟩
+  | red_S x y z =>
+      cases hac with
+      | refl =>
+          exact ⟨x ⬝ z ⬝ (y ⬝ z), ParallelReduction.refl _, ParallelReduction.red_S x y z⟩
+      | red_S =>
+          exact ⟨x ⬝ z ⬝ (y ⬝ z), ParallelReduction.refl _, ParallelReduction.refl _⟩
+      | par hh hz =>
+          obtain ⟨x', y', hx, hy, rfl⟩ := Sab_irreducible x y _ hh
+          exact ⟨x' ⬝ _ ⬝ (y' ⬝ _),
+            ParallelReduction.par (ParallelReduction.par hx hz)
+              (ParallelReduction.par hy hz),
+            ParallelReduction.red_S x' y' _⟩
+  | par ha hb iha ihb =>
+      cases hac with
+      | refl =>
+          exact ⟨_, ParallelReduction.refl _, ParallelReduction.par ha hb⟩
+      | red_I =>
+          obtain rfl := I_irreducible _ ha
+          exact ⟨_, ParallelReduction.red_I _, hb⟩
+      | red_K =>
+          obtain ⟨x', hx, rfl⟩ := Ka_irreducible _ _ ha
+          exact ⟨x', ParallelReduction.red_K _ _, hx⟩
+      | red_S =>
+          obtain ⟨x', y', hx, hy, rfl⟩ := Sab_irreducible _ _ _ ha
+          exact ⟨x' ⬝ _ ⬝ (y' ⬝ _),
+            ParallelReduction.red_S _ _ _,
+            ParallelReduction.par (ParallelReduction.par hx hb)
+              (ParallelReduction.par hy hb)⟩
+      | par hc hd =>
+          obtain ⟨u, hau, hcu⟩ := iha hc
+          obtain ⟨v, hbv, hdv⟩ := ihb hd
+          exact ⟨u ⬝ v, ParallelReduction.par hau hbv,
+            ParallelReduction.par hcu hdv⟩

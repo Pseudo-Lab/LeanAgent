@@ -1,0 +1,22 @@
+--- candidate_02.proof.lean
++++ candidate_03.proof.lean
+@@ -1,14 +1,14 @@
+ by
+   intro a a₁ a₂ h₁ h₂
+-  cases h₁
++  induction h₁ generalizing a₂
+   case refl => exact ⟨a₂, h₂, .refl _⟩
+-  case par a a' b b' ha' hb' =>
++  case par a a' b b' ha' hb' iha ihb =>
+     cases h₂
+     case refl => exact ⟨a' ⬝ b', .refl _, .par ha' hb'⟩
+     case par a'' b'' ha'' hb'' =>
+-      let ⟨a₃, ha⟩ := parallelReduction_diamond ha' ha''
+-      let ⟨b₃, hb⟩ := parallelReduction_diamond hb' hb''
+-      exact ⟨a₃ ⬝ b₃, .par ha.1 hb.1, .par ha.2 hb.2⟩
++      obtain ⟨a₃, ha₁, ha₂⟩ := iha ha''
++      obtain ⟨b₃, hb₁, hb₂⟩ := ihb hb''
++      exact ⟨a₃ ⬝ b₃, .par ha₁ hb₁, .par ha₂ hb₂⟩
+     case red_I =>
+       obtain rfl := I_irreducible a' ha'
+       exact ⟨b', .red_I _, hb'⟩

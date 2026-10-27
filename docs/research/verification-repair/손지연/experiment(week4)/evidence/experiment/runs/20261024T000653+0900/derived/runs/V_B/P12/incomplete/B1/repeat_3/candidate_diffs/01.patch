@@ -1,0 +1,78 @@
+--- initial.proof.lean
++++ candidate_01.proof.lean
+@@ -1,2 +1,72 @@
+ by
+-  skip
+\ No newline at end of file
++  classical
++  intro ϑ
++  induction ϑ using Nat.strong_induction_on with
++  | h ϑ ih =>
++    intro hϑ_gt_0
++    cases ϑ with
++    | zero => omega
++    | succ k =>
++      by_cases hk : k = 0
++      · subst k
++        simpa [δ_ε_multilinearCorrelatedAgreement_Nat] using
++          hC_proximityGapAffineLines
++      · have ih_k :
++          δ_ε_multilinearCorrelatedAgreement_Nat (F := F) (A := A)
++            (ι := ι) (C := MC) (ϑ := k) (e := e) (ε := ε) :=
++          ih k (Nat.lt_succ_self k) (Nat.pos_of_ne_zero hk)
++        intro u hu
++        let U₀ := (splitHalfRowWiseInterleavedWords (ϑ := k) u).1
++        let U₁ := (splitHalfRowWiseInterleavedWords (ϑ := k) u).2
++        have h_prob_split :
++            Pr_{ let r_last ← $ᵖ F;
++                 let r_init ← $ᵖ (Fin k → F) }[
++              multilinearCombine_affineComb_split_last_close
++                (MC := MC) (u := u) (e := e) r_last r_init]
++              > (((Nat.cast (R := ℝ≥0) (k + 1)) * ε : ℝ≥0) /
++                  (Fintype.card F : ℝ≥0)) := by
++          simpa [multilinearCombine_affineComb_split_last_close] using hu
++        have h_prob_R :
++            Pr_{ let r ← $ᵖ F }[
++              r ∈ R_star_tensor MC (m := k) (e := e) (ε := ε) U₀ U₁]
++              > (↑ε : ENNReal) / (Fintype.card F : ENNReal) := by
++          simpa [U₀, U₁] using
++            (prob_R_star_gt_threshold (MC := MC) (ε := ε)
++              (ϑ := k) u e h_prob_split)
++        have h_joint_of_mem :
++            ∀ r : R_star_tensor MC (m := k) (e := e) (ε := ε) U₀ U₁,
++              jointProximityNat
++                (u := affineLineEvaluation U₀ U₁ r.val)
++                (e := e) (C := MC) := by
++          simpa [U₀, U₁] using
++            (correlatedAgreement_of_mem_R_star_tensor
++              (MC := MC) (e := e) (ε := ε) (ϑ_pred := k)
++              ih_k u)
++        have h_prob_mono :
++            Pr_{ let r ← $ᵖ F }[
++              r ∈ R_star_tensor MC (m := k) (e := e) (ε := ε) U₀ U₁]
++              ≤ Pr_{ let r ← $ᵖ F }[
++                jointProximityNat
++                  (u := affineLineEvaluation U₀ U₁ r)
++                  (e := e) (C := MC)] := by
++          apply Pr_le_Pr_of_implies
++          intro r hr
++          exact h_joint_of_mem ⟨r, hr⟩
++        have h_prob_close :
++            Pr_{ let r ← $ᵖ F }[
++              jointProximityNat
++                (u := affineLineEvaluation U₀ U₁ r)
++                (e := e) (C := MC)]
++              > (↑ε : ENNReal) / (Fintype.card F : ENNReal) :=
++          lt_of_lt_of_le h_prob_R h_prob_mono
++        have h_prob_interleaved :
++            Pr_{ let r ← $ᵖ F }[
++              Δ₀(affineLineEvaluation (F := F) (⋈| U₀) (⋈| U₁) r,
++                MC ^⋈ (Fin (2 ^ k))) ≤ e]
++              > (↑ε : ENNReal) / (Fintype.card F : ENNReal) := by
++          simpa [jointProximityNat, affineLineEvaluation] using h_prob_close
++        have h_pair :=
++          (h_interleaved_gaps (2 ^ k) (by positivity))
++            (⋈| U₀) (⋈| U₁) h_prob_interleaved
++        simpa [jointProximityNat₂, jointProximityNat, U₀, U₁,
++          splitHalfRowWiseInterleavedWords, finMapTwoWords] using h_pair
+\ No newline at end of file

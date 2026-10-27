@@ -1,0 +1,36 @@
+--- candidate_02.proof.lean
++++ candidate_03.proof.lean
+@@ -21,27 +21,19 @@
+       have hx' : x ∈ A ∩ U := ⟨hxA, hxU⟩
+       rw [hAU] at hx'
+       exact hx'
+-  have hnot (A : Set S) (hA : A ∈ P) : Aᶜ ∉ P := by
+-    intro hAc
+-    exact (hPP A hA Aᶜ hAc) (by simp)
++  have hnot (A : Set S) (hA : A ∈ P) : Aᶜ ∉ P := fun hAc =>
++    (hPP A hA Aᶜ hAc) (by simp)
+   let Q : Finset (Set S) := Finset.univ \ P
+-  have hf : ∀ A ∈ P, Aᶜ ∈ Q := by
+-    intro A hA
+-    simp only [Q, Finset.mem_sdiff, Finset.mem_univ, true_and]
+-    exact hnot A hA
+-  have hg : ∀ A ∈ Q, Aᶜ ∈ P := by
+-    intro A hA
+-    have hn : A ∉ P := by
+-      simpa only [Q, Finset.mem_sdiff, Finset.mem_univ, true_and] using hA
+-    exact (hcover A).resolve_left hn
+   have hcard : P.card = Q.card := by
+     apply Finset.card_bij' (fun A _ => Aᶜ) (fun A _ => Aᶜ)
+     · intro A hA
+       simp
+     · intro A hA
+       simp
+-    · exact hf
+-    · exact hg
++    · intro A hA
++      simp [Q, hnot A hA]
++    · intro A hA
++      exact (hcover A).resolve_left (by simpa [Q] using hA)
+   have hQ : Q.card = (Finset.univ : Finset (Set S)).card - P.card := by
+     simp [Q, Finset.card_sdiff]
+   have hle : P.card ≤ (Finset.univ : Finset (Set S)).card :=

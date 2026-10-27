@@ -1,0 +1,58 @@
+--- candidate_02.proof.lean
++++ candidate_03.proof.lean
+@@ -1,31 +1,29 @@
+ by
+   intro h
+-  use @ChoiceBisim _ _ defs, ChoiceBisim.choice h
+-  intro s₁ s₂ hr μ
++  use @ChoiceBisim _ _ defs, .choice h
++  intro _ _ hr _
+   constructor
+-  case left =>
+-    intro s₁' ht
+-    cases hr
+-    case choice p q r h =>
+-      cases ht
+-      case choiceL a b c ht =>
++  · intro s' ht
++    cases hr with
++    | choice h =>
++      cases ht with
++      | choiceL ht =>
+         obtain ⟨q', ht, h'⟩ := h.follow_fst ht
+-        exact ⟨q', Tr.choiceL ht, ChoiceBisim.bisim h'⟩
+-      case choiceR a b c ht =>
+-        exact ⟨s₁', Tr.choiceR ht, ChoiceBisim.bisim (HomBisimilarity.refl _)⟩
+-    case bisim h =>
++        exact ⟨q', .choiceL ht, .bisim h'⟩
++      | choiceR ht =>
++        exact ⟨s', .choiceR ht, .bisim (HomBisimilarity.refl _)⟩
++    | bisim h =>
+       obtain ⟨q', ht, h'⟩ := h.follow_fst ht
+-      exact ⟨q', ht, ChoiceBisim.bisim h'⟩
+-  case right =>
+-    intro s₂' ht
+-    cases hr
+-    case choice p q r h =>
+-      cases ht
+-      case choiceL a b c ht =>
++      exact ⟨q', ht, .bisim h'⟩
++  · intro s' ht
++    cases hr with
++    | choice h =>
++      cases ht with
++      | choiceL ht =>
+         obtain ⟨p', ht, h'⟩ := h.follow_snd ht
+-        exact ⟨p', Tr.choiceL ht, ChoiceBisim.bisim h'⟩
+-      case choiceR a b c ht =>
+-        exact ⟨s₂', Tr.choiceR ht, ChoiceBisim.bisim (HomBisimilarity.refl _)⟩
+-    case bisim h =>
++        exact ⟨p', .choiceL ht, .bisim h'⟩
++      | choiceR ht =>
++        exact ⟨s', .choiceR ht, .bisim (HomBisimilarity.refl _)⟩
++    | bisim h =>
+       obtain ⟨p', ht, h'⟩ := h.follow_snd ht
+-      exact ⟨p', ht, ChoiceBisim.bisim h'⟩
+\ No newline at end of file
++      exact ⟨p', ht, .bisim h'⟩
+\ No newline at end of file

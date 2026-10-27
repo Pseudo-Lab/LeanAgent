@@ -1,0 +1,92 @@
+--- initial.proof.lean
++++ candidate_01.proof.lean
+@@ -1,61 +1,31 @@
+ by
+   intro h
+-  exists @ChoiceBisim _ _ defs
+-  constructor
+-  · constructor; assumption
+-  intro s1 s2 r μ
++  use @ChoiceBisim _ _ defs, ChoiceBisim.choice h
++  intro s₁ s₂ hr μ
+   constructor
+   case left =>
+-    intro s1' htr
+-    cases r
+-    case choice p q r hbisim =>
+-      obtain ⟨rel, hr, hb⟩ := hbisim
+-      cases htr
+-      case choiceL a b c htr =>
+-        obtain ⟨s2', htr2, hr2⟩ := hb.follow_fst hr htr
+-        exists s2'
+-        constructor
+-        · apply Tr.choiceL htr2
+-        · constructor
+-          apply hb.le_bisimilarity _ _ hr2
+-      case choiceR a b c htr =>
+-        exists s1'
+-        constructor
+-        · apply Tr.choiceR htr
+-        · constructor
+-          apply HomBisimilarity.refl
+-    case bisim hbisim =>
+-      obtain ⟨rel, hr, hb⟩ := hbisim
+-      obtain ⟨s2', htr2, hr2⟩ := hb.follow_fst hr htr
+-      exists s2'
+-      constructor
+-      · assumption
+-      constructor
+-      apply hb.le_bisimilarity _ _ hr2
++    intro s₁' ht
++    cases hr
++    case choice p q r h =>
++      cases ht
++      case choiceL a b c ht =>
++        obtain ⟨q', ht, h'⟩ := h.follow_fst ht
++        exact ⟨q', Tr.choiceL ht, ChoiceBisim.bisim h'⟩
++      case choiceR a b c ht =>
++        exact ⟨s₁', Tr.choiceR ht, ChoiceBisim.bisim HomBisimilarity.refl⟩
++    case bisim h =>
++      obtain ⟨q', ht, h'⟩ := h.follow_fst ht
++      exact ⟨q', ht, ChoiceBisim.bisim h'⟩
+   case right =>
+-    intro s2' htr
+-    cases r
+-    case choice p q r hbisim =>
+-      obtain ⟨rel, hr, hb⟩ := hbisim
+-      cases htr
+-      case choiceL a b c htr =>
+-        obtain ⟨s1', htr1, hr1⟩ := hb.follow_snd hr htr
+-        exists s1'
+-        constructor
+-        · apply Tr.choiceL htr1
+-        · constructor
+-          apply hb.le_bisimilarity _ _ hr1
+-      case choiceR a b c htr =>
+-        exists s2'
+-        constructor
+-        · apply Tr.choiceR htr
+-        · constructor
+-          apply HomBisimilarity.refl
+-    case bisim hbisim =>
+-      obtain ⟨rel, hr, hb⟩ := hbisim
+-      obtain ⟨s1', htr1, hr1⟩ := hb.follow_snd hr htr
+-      exists s1'
+-      constructor
+-      · assumption
+-      · constructor
+-        apply hb.le_bisimilarity _ _ hr1
+\ No newline at end of file
++    intro s₂' ht
++    cases hr
++    case choice p q r h =>
++      cases ht
++      case choiceL a b c ht =>
++        obtain ⟨p', ht, h'⟩ := h.follow_snd ht
++        exact ⟨p', Tr.choiceL ht, ChoiceBisim.bisim h'⟩
++      case choiceR a b c ht =>
++        exact ⟨s₂', Tr.choiceR ht, ChoiceBisim.bisim HomBisimilarity.refl⟩
++    case bisim h =>
++      obtain ⟨p', ht, h'⟩ := h.follow_snd ht
++      exact ⟨p', ht, ChoiceBisim.bisim h'⟩
+\ No newline at end of file

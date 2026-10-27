@@ -1,0 +1,19 @@
+--- candidate_01.proof.lean
++++ candidate_02.proof.lean
+@@ -11,14 +11,14 @@
+         obtain ⟨q', ht', h'⟩ := h.follow_fst ht
+         exact ⟨q', Tr.choiceL ht', ChoiceBisim.bisim h'⟩
+       | choiceR ht =>
+-        exact ⟨s', Tr.choiceR ht, ChoiceBisim.bisim HomBisimilarity.refl⟩
++        exact ⟨s', Tr.choiceR ht, ChoiceBisim.bisim (HomBisimilarity.refl s')⟩
+     · intro s' ht
+       cases ht with
+       | choiceL ht =>
+         obtain ⟨p', ht', h'⟩ := h.follow_snd ht
+         exact ⟨p', Tr.choiceL ht', ChoiceBisim.bisim h'⟩
+       | choiceR ht =>
+-        exact ⟨s', Tr.choiceR ht, ChoiceBisim.bisim HomBisimilarity.refl⟩
++        exact ⟨s', Tr.choiceR ht, ChoiceBisim.bisim (HomBisimilarity.refl s')⟩
+   | bisim h =>
+     constructor
+     · intro s' ht

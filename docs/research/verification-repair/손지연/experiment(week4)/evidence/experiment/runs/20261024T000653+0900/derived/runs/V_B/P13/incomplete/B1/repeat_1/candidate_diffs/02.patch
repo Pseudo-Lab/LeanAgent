@@ -1,0 +1,22 @@
+--- candidate_01.proof.lean
++++ candidate_02.proof.lean
+@@ -24,7 +24,8 @@
+     simpa [f] using
+       congrArg (fun g : Fin 4 → S => (g i : ℤ)) hstate
+   have hperiod : ∀ k : ℕ, u (p + k + c) = u (p + k) := by
+-    apply Nat.strong_induction_on
++    intro k
++    refine Nat.strong_induction_on k ?_
+     intro k ih
+     by_cases hk : k < 4
+     · have h := hbase ⟨k, hk⟩
+@@ -51,4 +52,6 @@
+   refine ⟨p, c, hcpos, ?_⟩
+   intro n hn
+   have h := hperiod (n - p)
+-  convert h using 1 <;> omega
+\ No newline at end of file
++  have hnp : p + (n - p) = n := by omega
++  rw [hnp] at h
++  exact h
+\ No newline at end of file

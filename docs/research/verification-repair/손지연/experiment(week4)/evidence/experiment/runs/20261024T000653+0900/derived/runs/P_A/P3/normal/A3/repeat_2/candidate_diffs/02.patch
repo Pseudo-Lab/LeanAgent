@@ -1,0 +1,22 @@
+--- candidate_01.proof.lean
++++ candidate_02.proof.lean
+@@ -3,16 +3,12 @@
+   have HlenI := InitStatesLength Hinit
+   have HlenU := UpdateStatesLength Hup
+   have Hndef := InitStatesNotDefined Hinit
+-  have Hinit₁ : InitStates σ ks' vs' (updatedStates σ ks' vs') :=
+-    updatedStatesInit HlenI
+-      (UpdateStatesNotDefMonotone' Hndef Hup)
+-      (InitStatesNodup Hinit)
+-  refine ⟨updatedStates σ ks' vs', rfl, Hinit₁, ?_⟩
+   have Hdisj : ks'.Disjoint ks := by
+     intro k hk' hk
+-    have hn := Hndef k hk'
+     have hd := (UpdateStatesDefined Hup) k hk
+-    simpa [hn] using hd
++    simp [Hndef k hk'] at hd
++  refine ⟨_, rfl, updatedStatesInit HlenI
++    (UpdateStatesNotDefMonotone' Hndef Hup) (InitStatesNodup Hinit), ?_⟩
+   have Hcomm :
+       updatedStates (updatedStates σ ks' vs') ks vs =
+       updatedStates (updatedStates σ ks vs) ks' vs' := by

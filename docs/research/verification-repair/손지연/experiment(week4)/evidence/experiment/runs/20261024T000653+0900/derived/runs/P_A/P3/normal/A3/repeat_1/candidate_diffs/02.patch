@@ -1,0 +1,38 @@
+--- candidate_01.proof.lean
++++ candidate_02.proof.lean
+@@ -1,21 +1,18 @@
+ by
+-  intros Hup Hinit
+-  have hli := InitStatesLength Hinit
+-  have hlu := UpdateStatesLength Hup
+-  have hni := InitStatesNotDefined Hinit
+-  have hn := UpdateStatesNotDefMonotone' hni Hup
+-  have hd : ks.Disjoint ks' := by
++  intro u i
++  have li := InitStatesLength i
++  have lu := UpdateStatesLength u
++  have n := UpdateStatesNotDefMonotone' (InitStatesNotDefined i) u
++  have d : ks.Disjoint ks' := by
+     intro k hk hk'
+-    have h₁ := (UpdateStatesDefined' Hup) k hk
+-    have h₂ := hn k hk'
+-    simp [h₂] at h₁
+-  have hc :
++    simpa [n k hk'] using (UpdateStatesDefined' u) k hk
++  have c :
+       updatedStates (updatedStates σ ks vs) ks' vs' =
+         updatedStates (updatedStates σ ks' vs') ks vs := by
+     simp only [updatedStates]
+     apply updatedStatesComm
+-    rw [List.unzip_zip, List.unzip_zip] <;> simp_all
+-  refine ⟨_, rfl, updatedStatesInit hli hn (InitStatesNodup Hinit), ?_⟩
+-  rw [InitStatesUpdated Hinit, UpdateStatesUpdated Hup, hc]
+-  exact updatedStatesUpdate hlu
+-    (updatedStatesDefMonotone (UpdateStatesDefined' Hup))
+\ No newline at end of file
++    simpa only [List.unzip_zip lu, List.unzip_zip li] using d
++  refine ⟨_, rfl, updatedStatesInit li n (InitStatesNodup i), ?_⟩
++  rw [InitStatesUpdated i, UpdateStatesUpdated u, c]
++  exact updatedStatesUpdate lu
++    (updatedStatesDefMonotone (UpdateStatesDefined' u))
+\ No newline at end of file

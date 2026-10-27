@@ -1,0 +1,41 @@
+--- candidate_01.proof.lean
++++ candidate_02.proof.lean
+@@ -45,12 +45,8 @@
+           module
+         _ = crAnTimeOrderSign (φs' ++ [φ, ψ] ++ φs) •
+             (ι (ofCrAnListF l0) * ι (ofCrAnListF l1) *
+-                ι (ofCrAnListF [φ, ψ]) * ι (ofCrAnListF l2) *
+-                ι (ofCrAnListF l3) -
+-              𝓢(𝓕.crAnStatistics φ, 𝓕.crAnStatistics ψ) •
+-                ι (ofCrAnListF l0) * ι (ofCrAnListF l1) *
+-                ι (ofCrAnListF [ψ, φ]) * ι (ofCrAnListF l2) *
+-                ι (ofCrAnListF l3)) := by
++              ι [ofCrAnOpF φ, ofCrAnOpF ψ]ₛF *
++              ι (ofCrAnListF l2) * ι (ofCrAnListF l3)) := by
+           have h1 := insertionSort_of_eq_list 𝓕.crAnTimeOrderRel φ φs' [φ, ψ] φs
+             (by simp_all)
+           rw [crAnTimeOrderList,
+@@ -60,22 +56,9 @@
+           rw [crAnTimeOrderList,
+             show φs' ++ ψ :: φ :: φs = φs' ++ [ψ, φ] ++ φs by simp, h2]
+           repeat rw [ofCrAnListF_append]
+-          simp [l0, l1, l2, l3]
+-        _ = crAnTimeOrderSign (φs' ++ [φ, ψ] ++ φs) •
+-            (ι (ofCrAnListF l0) * ι (ofCrAnListF l1) *
+-              (ι (ofCrAnListF [φ, ψ]) -
+-                𝓢(𝓕.crAnStatistics φ, 𝓕.crAnStatistics ψ) •
+-                  ι (ofCrAnListF [ψ, φ])) *
+-              ι (ofCrAnListF l2) * ι (ofCrAnListF l3)) := by
+-          simp [mul_sub, sub_mul]
+-        _ = crAnTimeOrderSign (φs' ++ [φ, ψ] ++ φs) •
+-            (ι (ofCrAnListF l0) * ι (ofCrAnListF l1) *
+-              ι [ofCrAnOpF φ, ofCrAnOpF ψ]ₛF *
+-              ι (ofCrAnListF l2) * ι (ofCrAnListF l3)) := by
+-          congr
+           rw [superCommuteF_ofCrAnOpF_ofCrAnOpF, ← ofCrAnListF_singleton,
+             ← ofCrAnListF_singleton]
+-          simp [← ofCrAnListF_append]
++          simp [l0, l1, l2, l3, ← ofCrAnListF_append, mul_sub, sub_mul]
+       rw [Subalgebra.mem_center_iff.mp
+         (ι_superCommuteF_ofCrAnOpF_ofCrAnOpF_mem_center φ ψ)]
+       repeat rw [mul_assoc]

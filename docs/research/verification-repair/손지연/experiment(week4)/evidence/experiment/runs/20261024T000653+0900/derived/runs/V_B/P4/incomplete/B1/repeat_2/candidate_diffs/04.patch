@@ -1,0 +1,25 @@
+--- candidate_03.proof.lean
++++ candidate_04.proof.lean
+@@ -1,14 +1,13 @@
+ by
+-  have hf' := hg f hf
+-  rw [MeasureTheory.integral_eq_zero_iff_of_nonneg] at hf'
+-  · rw [Continuous.ae_eq_iff_eq] at hf'
++  have h_integral := hg f hf
++  rw [MeasureTheory.integral_eq_zero_iff_of_nonneg] at h_integral
++  · rw [Continuous.ae_eq_iff_eq] at h_integral
+     · funext x
+-      have hf'' := congrFun hf' x
+-      simpa using hf''
+-    · have hf_cont : Continuous f := hf.smooth.continuous
+-      fun_prop
++      have hx := congrFun h_integral x
++      simpa using hx
++    · exact hf.smooth.continuous.inner hf.smooth.continuous
+     · fun_prop
+   · intro x
+     simp only [Pi.zero_apply]
+-    apply real_inner_self_nonneg'
++    exact real_inner_self_nonneg' (f x)
+   · exact (IsTestFunction.inner hf hf).integrable
+\ No newline at end of file

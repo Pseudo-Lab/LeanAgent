@@ -1,0 +1,62 @@
+--- candidate_01.proof.lean
++++ candidate_02.proof.lean
+@@ -8,8 +8,11 @@
+     · intro hT
+       have hex : ∃ U ∈ P, T ∩ U = ∅ := by
+         by_contra hx
+-        push_neg at hx
+-        exact hT (hmax T hx)
++        apply hT
++        apply hmax T
++        intro U hU hTU
++        apply hx
++        exact ⟨U, hU, hTU⟩
+       rcases hex with ⟨U, hU, hTU⟩
+       apply hmax Tᶜ
+       intro V hV
+@@ -30,15 +33,14 @@
+     · intro hTc hT
+       have h := hPP T hT Tᶜ hTc
+       exact h (by simp)
+-  let e : {T : Set S // T ∈ P} ≃ {T : Set S // T ∈ Pᶜ} :=
++  let e : {T : Set S // T ∈ P} ≃ {T : Set S // T ∉ P} :=
+     { toFun := fun T =>
+         ⟨T.1ᶜ, by
+-          simp only [Finset.mem_compl]
+-          exact (hcompl T.1ᶜ).2 (by simpa using T.2)⟩
++          intro hTc
++          have h := hPP T.1 T.2 T.1ᶜ hTc
++          exact h (by simp)⟩
+       invFun := fun T =>
+-        ⟨T.1ᶜ, by
+-          have hT : T.1 ∉ P := by simpa using T.2
+-          exact (hcompl T.1).1 hT⟩
++        ⟨T.1ᶜ, (hcompl T.1).1 T.2⟩
+       left_inv := by
+         intro T
+         apply Subtype.ext
+@@ -47,20 +49,17 @@
+         intro T
+         apply Subtype.ext
+         simp }
+-  have hcard : P.card = Pᶜ.card := by
++  have hcard : P.card = 2 ^ Fintype.card S - P.card := by
+     simpa using Fintype.card_congr e
+   have hsum : P.card + P.card = 2 ^ Fintype.card S := by
+-    calc
+-      P.card + P.card = P.card + Pᶜ.card :=
+-        congrArg (fun n : ℕ => P.card + n) hcard
+-      _ = Fintype.card (Set S) := Finset.card_add_card_compl P
+-      _ = 2 ^ Fintype.card S := by simp
++    omega
+   have hn : 0 < Fintype.card S := Fintype.card_pos
+   have hn' : Fintype.card S = (Fintype.card S - 1) + 1 := by
+     omega
+   have hp : 2 ^ Fintype.card S = 2 * 2 ^ (Fintype.card S - 1) := by
+     calc
+-      2 ^ Fintype.card S = 2 ^ ((Fintype.card S - 1) + 1) := by rw [hn']
++      2 ^ Fintype.card S = 2 ^ ((Fintype.card S - 1) + 1) :=
++        congrArg (fun k : ℕ => 2 ^ k) hn'
+       _ = 2 ^ (Fintype.card S - 1) * 2 := by rw [pow_succ]
+       _ = 2 * 2 ^ (Fintype.card S - 1) := by omega
+   rw [hp] at hsum

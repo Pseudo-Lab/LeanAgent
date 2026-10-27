@@ -1,0 +1,20 @@
+--- initial.proof.lean
++++ candidate_01.proof.lean
+@@ -1,10 +1,15 @@
+-by 
++by
+   have h_no_empty : ∀ (T : Set S), T ∈ P → T.Nonempty := by
+     intro T hT
+     have h₁ : T ∩ T ≠ ∅ := hPP T hT T hT
+     have h₂ : T ∩ T = T := by simp [Set.ext_iff]
+     rw [h₂] at h₁
+-    exact experiment_missing_lemma
++    by_contra h₃
++    apply h₁
++    ext x
++    simp only [Set.mem_empty_iff_false, iff_false]
++    intro hx
++    exact h₃ ⟨x, hx⟩
+   
+   have h_subset_or_compl : ∀ (A : Set S), A ∈ P ∨ Aᶜ ∈ P := by
+     intro A

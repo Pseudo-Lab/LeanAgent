@@ -1,0 +1,2132 @@
+{
+  "target": "Cslib.SKI.parallelReduction_diamond",
+  "current_file": "/-\nCopyright (c) 2025 Thomas Waring. All rights reserved.\nReleased under Apache 2.0 license as described in the file LICENSE.\nAuthors: Thomas Waring\n-/\n\nmodule\n\npublic import Cslib.Languages.CombinatoryLogic.Defs\npublic import Cslib.Foundations.Relation.Confluence\n\n/-!\n# SKI reduction is confluent\n\nThis file proves the **Church-Rosser** theorem for the SKI calculus, that is, if `a ↠ b` and\n`a ↠ c`, `b ↠ d` and `c ↠ d` for some term `d`. More strongly (though equivalently), we show\nthat the relation of having a common reduct is transitive — in the above situation, `a` and `b`,\nand `a` and `c` have common reducts, so the result implies the same of `b` and `c`. Note that\n`MJoin Red` is symmetric (trivially) and reflexive (since `↠` is), so we in fact show that\n`MJoin Red` is an equivalence.\n\nOur proof\nfollows the method of Tait and Martin-Löf for the lambda calculus, as presented for instance in\nChapter 4 of Peter Selinger's notes:\n<https://www.mscs.dal.ca/~selinger/papers/papers/lambdanotes.pdf>.\n\n## Main definitions\n\n- `ParallelReduction` : a relation `⭢ₚ` on terms such that `⭢ ⊆ ⭢ₚ ⊆ ↠`, allowing simultaneous\nreduction on the head and tail of a term.\n\n## Main results\n\n- `parallelReduction_diamond` : parallel reduction satisfies the diamond property, that is, it is\nconfluent in a single step.\n- `mJoin_red_equivalence` : by a general result, the diamond property for `⭢ₚ` implies the same\nfor its reflexive-transitive closure. This closure is exactly `↠`, which implies the\n**Church-Rosser** theorem as sketched above.\n-/\n\n@[expose] public section\n\nnamespace Cslib\n\nnamespace SKI\n\nopen Red MRed Relation\n\n/-- A reduction step allowing simultaneous reduction of disjoint redexes -/\n@[reduction_sys \"ₚ\"]\ninductive ParallelReduction : SKI → SKI → Prop\n  /-- Parallel reduction is reflexive, -/\n  | refl (a : SKI) : ParallelReduction a a\n  /-- Contains `Red`, -/\n  | red_I (a : SKI) : ParallelReduction (I ⬝ a) a\n  | red_K (a b : SKI) : ParallelReduction (K ⬝ a ⬝ b) a\n  | red_S (a b c : SKI) : ParallelReduction (S ⬝ a ⬝ b ⬝ c) (a ⬝ c ⬝ (b ⬝ c))\n  /-- and allows simultaneous reduction of disjoint redexes. -/\n  | par ⦃a a' b b' : SKI⦄ :\n      ParallelReduction a a' → ParallelReduction b b' → ParallelReduction (a ⬝ b) (a' ⬝ b')\n\n/-- The inclusion `(· ⭢ₚ ·) ≤ (· ↠ ·)`. -/\ntheorem ParallelReduction.le_reflTransGen_red :\n    (· ⭢ₚ ·) ≤ (· ↠ ·) := by\n  intro a a' h\n  cases h\n  case refl => exact Relation.ReflTransGen.refl\n  case par a a' b b' ha hb =>\n    apply parallel_mRed\n    · exact ha.le_reflTransGen_red\n    · exact hb.le_reflTransGen_red\n  case red_I => exact Relation.ReflTransGen.single (Red.red_I a')\n  case red_K b => exact Relation.ReflTransGen.single (Red.red_K a' b)\n  case red_S a b c => exact Relation.ReflTransGen.single (Red.red_S a b c)\n\n/-- The inclusion `(· ⭢ ·) ≤ (· ⭢ₚ ·)`. -/\ntheorem Red.le_parallelReduction :\n    (· ⭢ ·) ≤ (· ⭢ₚ ·) := by\n  intro a a' h\n  cases h\n  case red_S => apply ParallelReduction.red_S\n  case red_K => apply ParallelReduction.red_K\n  case red_I => apply ParallelReduction.red_I\n  case red_head a a' b h =>\n    apply ParallelReduction.par\n    · exact h.le_parallelReduction\n    · exact ParallelReduction.refl b\n  case red_tail a b b' h =>\n    apply ParallelReduction.par\n    · exact ParallelReduction.refl a\n    · exact h.le_parallelReduction\n\n/-- The relations `⭢` and `⭢ₚ` have the same reflexive-transitive closure. -/\ntheorem reflTransGen_parallelReduction_mRed :\n    ReflTransGen ParallelReduction = ReflTransGen Red := by\n  apply le_antisymm\n  · exact reflTransGen_le_of_le ParallelReduction.le_reflTransGen_red\n  · exact ReflTransGen.mono Red.le_parallelReduction\n\n/-!\nIrreducibility for the (partially applied) primitive combinators.\n\nTODO: possibly these should be proven more generally (in another file) for `↠`.\n-/\n\nlemma I_irreducible (a : SKI) (h : I ⭢ₚ a) : a = I := by\n  cases h\n  rfl\n\nlemma K_irreducible (a : SKI) (h : K ⭢ₚ a) : a = K := by\n  cases h\n  rfl\n\nlemma Ka_irreducible (a c : SKI) (h : (K ⬝ a) ⭢ₚ c) : ∃ a', a ⭢ₚ a' ∧ c = K ⬝ a' := by\n  cases h\n  case refl => use a, .refl a\n  case par b a' h h' => rw [K_irreducible b h]; use a'\n\nlemma S_irreducible (a : SKI) (h : S ⭢ₚ a) : a = S := by\n  cases h\n  rfl\n\nlemma Sa_irreducible (a c : SKI) (h : (S ⬝ a) ⭢ₚ c) : ∃ a', a ⭢ₚ a' ∧ c = S ⬝ a' := by\n  cases h\n  case refl =>\n    exact ⟨a, ParallelReduction.refl a, rfl⟩\n  case par b a' h h' => rw [S_irreducible b h]; use a'\n\nlemma Sab_irreducible (a b c : SKI) (h : (S ⬝ a ⬝ b) ⭢ₚ c) :\n    ∃ a' b', a ⭢ₚ a' ∧ b ⭢ₚ b' ∧ c = S ⬝ a' ⬝ b' := by\n  cases h\n  case refl => use a, b, .refl a, .refl b\n  case par c b' hc hb =>\n    let ⟨d, hd⟩ := Sa_irreducible a c hc\n    rw [hd.2]\n    use d, b', hd.1\n\n/--\nThe key result: the Church-Rosser property holds for `⭢ₚ`. The proof is a lengthy case analysis\non the reductions `a ⭢ₚ a₁` and `a ⭢ₚ a₂`, but is entirely mechanical.\n-/\ntheorem parallelReduction_diamond : Diamond ParallelReduction := by\n  intro a b c hab hac\n  induction hab generalizing c with\n  | refl =>\n      exact ⟨c, hac, .refl c⟩\n  | red_I =>\n      cases hac with\n      | refl =>\n          exact ⟨_, .refl _, .red_I _⟩\n      | red_I =>\n          exact ⟨_, .refl _, .refl _⟩\n      | par i' a' hi ha =>\n          have hi' : i' = I := I_irreducible i' hi\n          subst i'\n          exact ⟨a', ha, .red_I a'⟩\n  | red_K _ =>\n      cases hac with\n      | refl =>\n          exact ⟨_, .refl _, .red_K _ _⟩\n      | red_K =>\n          exact ⟨_, .refl _, .refl _⟩\n      | par k' b' hk hb =>\n          obtain ⟨x, hx, hk'⟩ := Ka_irreducible _ k' hk\n          subst k'\n          exact ⟨x, hx, .red_K x b'⟩\n  | red_S _ _ _ =>\n      cases hac with\n      | refl =>\n          exact ⟨_, .refl _, .red_S _ _ _⟩\n      | red_S =>\n          exact ⟨_, .refl _, .refl _⟩\n      | par s' c' hs hc =>\n          obtain ⟨x, y, hx, hy, hs'⟩ := Sab_irreducible _ _ s' hs\n          subst s'\n          exact\n            ⟨x ⬝ c' ⬝ (y ⬝ c'),\n              .par (.par hx hc) (.par hy hc),\n              .red_S x y c'⟩\n  | par a a' b b' ha hb iha ihb =>\n      cases hac with\n      | refl =>\n          exact ⟨a' ⬝ b', .refl _, .par ha hb⟩\n      | red_I =>\n          have ha' : a' = I := I_irreducible a' ha\n          subst a'\n          exact ⟨b', .red_I b', hb⟩\n      | red_K =>\n          obtain ⟨x, hx, ha'⟩ := Ka_irreducible _ a' ha\n          subst a'\n          exact ⟨x, .red_K x b', hx⟩\n      | red_S _ _ =>\n          obtain ⟨x, y, hx, hy, ha'⟩ := Sab_irreducible _ _ a' ha\n          subst a'\n          exact\n            ⟨x ⬝ b' ⬝ (y ⬝ b'),\n              .red_S x y b',\n              .par (.par hx hb) (.par hy hb)⟩\n      | par c' d' hc hd =>\n          obtain ⟨x, hx₁, hx₂⟩ := iha hc\n          obtain ⟨y, hy₁, hy₂⟩ := ihb hd\n          exact ⟨x ⬝ y, .par hx₁ hy₁, .par hx₂ hy₂⟩\n\ntheorem join_parallelReduction_equivalence :\n    Equivalence (MJoin ParallelReduction) :=\n  Confluent.equivalence_join_reflTransGen <| Diamond.toConfluent parallelReduction_diamond\n\n/-- The **Church-Rosser** theorem in its general form. -/\ntheorem mJoin_red_equivalence : Equivalence (MJoin Red) := by\n  rw [MJoin, ←reflTransGen_parallelReduction_mRed]\n  exact join_parallelReduction_equivalence\n\n/-- The **Church-Rosser** theorem in the form it is usually stated. -/\ntheorem MRed.diamond : Confluent Red := by\n  intro a b c hab hac\n  apply mJoin_red_equivalence.trans (y := a)\n  · exact mJoin_red_equivalence.symm (MJoin.single hab)\n  · exact MJoin.single hac\n\nend SKI\n\nend Cslib\n",
+  "constraints": [
+    "Return exactly diagnosis and proof_body as JSON strings; proof_body is one complete by proof.",
+    "Only the designated proof body may change. Preserve every declaration, statement, assumption, import and surrounding source byte.",
+    "No sorry/admit, new axioms, unsafe code, metaprogramming, IO, commands or resource-option changes.",
+    "Ordinary local have proofs and ordinary mathematical constants are allowed."
+  ],
+  "remaining_proposals": 3,
+  "objective": "Repair the damaged proof. The normal reference proof is hidden. Close all goals and produce a complete proof.",
+  "feedback": {
+    "status": "proof_error",
+    "diagnostics": [
+      {
+        "severity": "error",
+        "position": {
+          "column": 6,
+          "line": 153
+        },
+        "end_position": {
+          "column": 35,
+          "line": 156
+        },
+        "message": "Too many variable names provided at alternative `par`: 4 provided, but 2 expected",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "Too many variable names provided at alternative `par`: 4 provided, but 2 expected",
+          "endPos": {
+            "column": 35,
+            "line": 156
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 6,
+            "line": 153
+          },
+          "severity": "error"
+        },
+        "source_line": "      | par i' a' hi ha =>",
+        "start_offset": 5174,
+        "start_byte_offset": 5415,
+        "end_offset": 5300,
+        "end_byte_offset": 5545,
+        "source_text": "| par i' a' hi ha =>\n          have hi' : i' = I := I_irreducible i' hi\n          subst i'\n          exact ⟨a', ha, .red_I a'⟩",
+        "failed_tactic": "| par i' a' hi ha =>",
+        "tactic_range": {
+          "position": {
+            "line": 153,
+            "column": 6
+          },
+          "end_position": {
+            "line": 153,
+            "column": 26
+          },
+          "start_offset": 5174,
+          "end_offset": 5194
+        },
+        "goals": [
+          "Join ParallelReduction a✝ (a'✝ ⬝ b'✝)"
+        ],
+        "local_context": [
+          "case red_I.par\na b a✝ a'✝ b'✝ : SKI\ni' : I ⭢ₚ a'✝\na' : a✝ ⭢ₚ b'✝"
+        ],
+        "proof_state_source": "lean_infotree_before_tactic",
+        "proof_state_raw": {
+          "depth": 13,
+          "end": 12566,
+          "goals_after": [
+            "case red_I.par\na b a✝ a'✝ b'✝ : SKI\ni' : I ⭢ₚ a'✝\na' : a✝ ⭢ₚ b'✝\nhi' : sorry\n⊢ Join ParallelReduction a✝ (a'✝ ⬝ b'✝)"
+          ],
+          "goals_before": [
+            "case red_I.par\na b a✝ a'✝ b'✝ : SKI\ni' : I ⭢ₚ a'✝\na' : a✝ ⭢ₚ b'✝\n⊢ Join ParallelReduction a✝ (a'✝ ⬝ b'✝)"
+          ],
+          "kind": "tactic",
+          "start": 12546
+        }
+      },
+      {
+        "severity": "error",
+        "position": {
+          "column": 26,
+          "line": 154
+        },
+        "end_position": {
+          "column": 27,
+          "line": 154
+        },
+        "message": "Type mismatch\n  I\nhas type\n  SKI\nof sort `Type` but is expected to have type\n  I ⭢ₚ a'✝\nof sort `Prop`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "Type mismatch\n  I\nhas type\n  SKI\nof sort `Type` but is expected to have type\n  I ⭢ₚ a'✝\nof sort `Prop`",
+          "endPos": {
+            "column": 27,
+            "line": 154
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 26,
+            "line": 154
+          },
+          "severity": "error"
+        },
+        "source_line": "          have hi' : i' = I := I_irreducible i' hi",
+        "start_offset": 5221,
+        "start_byte_offset": 5462,
+        "end_offset": 5222,
+        "end_byte_offset": 5463,
+        "source_text": "I",
+        "failed_tactic": "have hi' : i' = I := I_irreducible i' hi",
+        "tactic_range": {
+          "position": {
+            "line": 154,
+            "column": 10
+          },
+          "end_position": {
+            "line": 154,
+            "column": 50
+          },
+          "start_offset": 5205,
+          "end_offset": 5245
+        },
+        "goals": [
+          "Join ParallelReduction a✝ (a'✝ ⬝ b'✝)"
+        ],
+        "local_context": [
+          "case red_I.par\na b a✝ a'✝ b'✝ : SKI\ni' : I ⭢ₚ a'✝\na' : a✝ ⭢ₚ b'✝"
+        ],
+        "proof_state_source": "lean_infotree_before_tactic",
+        "proof_state_raw": {
+          "depth": 24,
+          "end": 12617,
+          "goals_after": [
+            "case red_I.par\na b a✝ a'✝ b'✝ : SKI\ni' : I ⭢ₚ a'✝\na' : a✝ ⭢ₚ b'✝\nhi' : sorry\n⊢ Join ParallelReduction a✝ (a'✝ ⬝ b'✝)"
+          ],
+          "goals_before": [
+            "case red_I.par\na b a✝ a'✝ b'✝ : SKI\ni' : I ⭢ₚ a'✝\na' : a✝ ⭢ₚ b'✝\n⊢ Join ParallelReduction a✝ (a'✝ ⬝ b'✝)"
+          ],
+          "kind": "tactic",
+          "start": 12577
+        }
+      },
+      {
+        "severity": "error",
+        "position": {
+          "column": 45,
+          "line": 154
+        },
+        "end_position": {
+          "column": 47,
+          "line": 154
+        },
+        "message": "Application type mismatch: The argument\n  i'\nhas type\n  I ⭢ₚ a'✝\nof sort `Prop` but is expected to have type\n  SKI\nof sort `Type` in the application\n  I_irreducible i'",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "Application type mismatch: The argument\n  i'\nhas type\n  I ⭢ₚ a'✝\nof sort `Prop` but is expected to have type\n  SKI\nof sort `Type` in the application\n  I_irreducible i'",
+          "endPos": {
+            "column": 47,
+            "line": 154
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 45,
+            "line": 154
+          },
+          "severity": "error"
+        },
+        "source_line": "          have hi' : i' = I := I_irreducible i' hi",
+        "start_offset": 5240,
+        "start_byte_offset": 5481,
+        "end_offset": 5242,
+        "end_byte_offset": 5483,
+        "source_text": "i'",
+        "failed_tactic": "have hi' : i' = I := I_irreducible i' hi",
+        "tactic_range": {
+          "position": {
+            "line": 154,
+            "column": 10
+          },
+          "end_position": {
+            "line": 154,
+            "column": 50
+          },
+          "start_offset": 5205,
+          "end_offset": 5245
+        },
+        "goals": [
+          "Join ParallelReduction a✝ (a'✝ ⬝ b'✝)"
+        ],
+        "local_context": [
+          "case red_I.par\na b a✝ a'✝ b'✝ : SKI\ni' : I ⭢ₚ a'✝\na' : a✝ ⭢ₚ b'✝"
+        ],
+        "proof_state_source": "lean_infotree_before_tactic",
+        "proof_state_raw": {
+          "depth": 24,
+          "end": 12617,
+          "goals_after": [
+            "case red_I.par\na b a✝ a'✝ b'✝ : SKI\ni' : I ⭢ₚ a'✝\na' : a✝ ⭢ₚ b'✝\nhi' : sorry\n⊢ Join ParallelReduction a✝ (a'✝ ⬝ b'✝)"
+          ],
+          "goals_before": [
+            "case red_I.par\na b a✝ a'✝ b'✝ : SKI\ni' : I ⭢ₚ a'✝\na' : a✝ ⭢ₚ b'✝\n⊢ Join ParallelReduction a✝ (a'✝ ⬝ b'✝)"
+          ],
+          "kind": "tactic",
+          "start": 12577
+        }
+      },
+      {
+        "severity": "error",
+        "position": {
+          "column": 48,
+          "line": 154
+        },
+        "end_position": {
+          "column": 50,
+          "line": 154
+        },
+        "message": "Unknown identifier `hi`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "Unknown identifier `hi`",
+          "endPos": {
+            "column": 50,
+            "line": 154
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "lean.unknownIdentifier._namedError",
+          "pos": {
+            "column": 48,
+            "line": 154
+          },
+          "severity": "error"
+        },
+        "source_line": "          have hi' : i' = I := I_irreducible i' hi",
+        "start_offset": 5243,
+        "start_byte_offset": 5484,
+        "end_offset": 5245,
+        "end_byte_offset": 5486,
+        "source_text": "hi",
+        "failed_tactic": "have hi' : i' = I := I_irreducible i' hi",
+        "tactic_range": {
+          "position": {
+            "line": 154,
+            "column": 10
+          },
+          "end_position": {
+            "line": 154,
+            "column": 50
+          },
+          "start_offset": 5205,
+          "end_offset": 5245
+        },
+        "goals": [
+          "Join ParallelReduction a✝ (a'✝ ⬝ b'✝)"
+        ],
+        "local_context": [
+          "case red_I.par\na b a✝ a'✝ b'✝ : SKI\ni' : I ⭢ₚ a'✝\na' : a✝ ⭢ₚ b'✝"
+        ],
+        "proof_state_source": "lean_infotree_before_tactic",
+        "proof_state_raw": {
+          "depth": 24,
+          "end": 12617,
+          "goals_after": [
+            "case red_I.par\na b a✝ a'✝ b'✝ : SKI\ni' : I ⭢ₚ a'✝\na' : a✝ ⭢ₚ b'✝\nhi' : sorry\n⊢ Join ParallelReduction a✝ (a'✝ ⬝ b'✝)"
+          ],
+          "goals_before": [
+            "case red_I.par\na b a✝ a'✝ b'✝ : SKI\ni' : I ⭢ₚ a'✝\na' : a✝ ⭢ₚ b'✝\n⊢ Join ParallelReduction a✝ (a'✝ ⬝ b'✝)"
+          ],
+          "kind": "tactic",
+          "start": 12577
+        }
+      },
+      {
+        "severity": "error",
+        "position": {
+          "column": 10,
+          "line": 155
+        },
+        "end_position": {
+          "column": 18,
+          "line": 155
+        },
+        "message": "Tactic `subst` failed: did not find equation for eliminating 'i''\n\ncase red_I.par\na b a✝ a'✝ b'✝ : SKI\ni' : I ⭢ₚ a'✝\na' : a✝ ⭢ₚ b'✝\nhi' : sorry\n⊢ Join ParallelReduction a✝ (a'✝ ⬝ b'✝)",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "Tactic `subst` failed: did not find equation for eliminating 'i''\n\ncase red_I.par\na b a✝ a'✝ b'✝ : SKI\ni' : I ⭢ₚ a'✝\na' : a✝ ⭢ₚ b'✝\nhi' : sorry\n⊢ Join ParallelReduction a✝ (a'✝ ⬝ b'✝)",
+          "endPos": {
+            "column": 18,
+            "line": 155
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 10,
+            "line": 155
+          },
+          "severity": "error"
+        },
+        "source_line": "          subst i'",
+        "start_offset": 5256,
+        "start_byte_offset": 5497,
+        "end_offset": 5264,
+        "end_byte_offset": 5505,
+        "source_text": "subst i'",
+        "failed_tactic": "subst i'",
+        "tactic_range": {
+          "position": {
+            "line": 155,
+            "column": 10
+          },
+          "end_position": {
+            "line": 155,
+            "column": 18
+          },
+          "start_offset": 5256,
+          "end_offset": 5264
+        },
+        "goals": [
+          "Join ParallelReduction a✝ (a'✝ ⬝ b'✝)"
+        ],
+        "local_context": [
+          "case red_I.par\na b a✝ a'✝ b'✝ : SKI\ni' : I ⭢ₚ a'✝\na' : a✝ ⭢ₚ b'✝\nhi' : sorry"
+        ],
+        "proof_state_source": "lean_infotree_before_tactic",
+        "proof_state_raw": {
+          "depth": 16,
+          "end": 12636,
+          "goals_after": [
+            "case red_I.par\na b a✝ a'✝ b'✝ : SKI\ni' : I ⭢ₚ a'✝\na' : a✝ ⭢ₚ b'✝\nhi' : sorry\n⊢ Join ParallelReduction a✝ (a'✝ ⬝ b'✝)"
+          ],
+          "goals_before": [
+            "case red_I.par\na b a✝ a'✝ b'✝ : SKI\ni' : I ⭢ₚ a'✝\na' : a✝ ⭢ₚ b'✝\nhi' : sorry\n⊢ Join ParallelReduction a✝ (a'✝ ⬝ b'✝)"
+          ],
+          "kind": "tactic",
+          "start": 12628
+        }
+      },
+      {
+        "severity": "error",
+        "position": {
+          "column": 6,
+          "line": 163
+        },
+        "end_position": {
+          "column": 36,
+          "line": 166
+        },
+        "message": "Too many variable names provided at alternative `par`: 4 provided, but 2 expected",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "Too many variable names provided at alternative `par`: 4 provided, but 2 expected",
+          "endPos": {
+            "column": 36,
+            "line": 166
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 6,
+            "line": 163
+          },
+          "severity": "error"
+        },
+        "source_line": "      | par k' b' hk hb =>",
+        "start_offset": 5455,
+        "start_byte_offset": 5708,
+        "end_offset": 5587,
+        "end_byte_offset": 5848,
+        "source_text": "| par k' b' hk hb =>\n          obtain ⟨x, hx, hk'⟩ := Ka_irreducible _ k' hk\n          subst k'\n          exact ⟨x, hx, .red_K x b'⟩",
+        "failed_tactic": "| par k' b' hk hb =>",
+        "tactic_range": {
+          "position": {
+            "line": 163,
+            "column": 6
+          },
+          "end_position": {
+            "line": 163,
+            "column": 26
+          },
+          "start_offset": 5455,
+          "end_offset": 5475
+        },
+        "goals": [
+          "Join ParallelReduction a✝ (a'✝ ⬝ b'✝)"
+        ],
+        "local_context": [
+          "case red_K.par\na b a✝ b✝ a'✝ b'✝ : SKI\nk' : (K ⬝ a✝) ⭢ₚ a'✝\nb' : b✝ ⭢ₚ b'✝"
+        ],
+        "proof_state_source": "lean_infotree_before_tactic",
+        "proof_state_raw": {
+          "depth": 13,
+          "end": 12859,
+          "goals_after": [
+            "case red_K.par\na b a✝ b✝ a'✝ b'✝ : SKI\nk' : (K ⬝ a✝) ⭢ₚ a'✝\nb' : b✝ ⭢ₚ b'✝\nx : SKI\nhx : ?m.372 ⭢ₚ x\nhk' : sorry = K ⬝ x\n⊢ Join ParallelReduction a✝ (a'✝ ⬝ b'✝)"
+          ],
+          "goals_before": [
+            "case red_K.par\na b a✝ b✝ a'✝ b'✝ : SKI\nk' : (K ⬝ a✝) ⭢ₚ a'✝\nb' : b✝ ⭢ₚ b'✝\n⊢ Join ParallelReduction a✝ (a'✝ ⬝ b'✝)"
+          ],
+          "kind": "tactic",
+          "start": 12839
+        }
+      },
+      {
+        "severity": "error",
+        "position": {
+          "column": 50,
+          "line": 164
+        },
+        "end_position": {
+          "column": 52,
+          "line": 164
+        },
+        "message": "Application type mismatch: The argument\n  k'\nhas type\n  (K ⬝ a✝) ⭢ₚ a'✝\nof sort `Prop` but is expected to have type\n  SKI\nof sort `Type` in the application\n  Ka_irreducible ?m.372 k'",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "Application type mismatch: The argument\n  k'\nhas type\n  (K ⬝ a✝) ⭢ₚ a'✝\nof sort `Prop` but is expected to have type\n  SKI\nof sort `Type` in the application\n  Ka_irreducible ?m.372 k'",
+          "endPos": {
+            "column": 52,
+            "line": 164
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 50,
+            "line": 164
+          },
+          "severity": "error"
+        },
+        "source_line": "          obtain ⟨x, hx, hk'⟩ := Ka_irreducible _ k' hk",
+        "start_offset": 5526,
+        "start_byte_offset": 5783,
+        "end_offset": 5528,
+        "end_byte_offset": 5785,
+        "source_text": "k'",
+        "failed_tactic": "obtain ⟨x, hx, hk'⟩ := Ka_irreducible _ k' hk",
+        "tactic_range": {
+          "position": {
+            "line": 164,
+            "column": 10
+          },
+          "end_position": {
+            "line": 164,
+            "column": 55
+          },
+          "start_offset": 5486,
+          "end_offset": 5531
+        },
+        "goals": [
+          "Join ParallelReduction a✝ (a'✝ ⬝ b'✝)"
+        ],
+        "local_context": [
+          "case red_K.par\na b a✝ b✝ a'✝ b'✝ : SKI\nk' : (K ⬝ a✝) ⭢ₚ a'✝\nb' : b✝ ⭢ₚ b'✝"
+        ],
+        "proof_state_source": "lean_infotree_before_tactic",
+        "proof_state_raw": {
+          "depth": 16,
+          "end": 12919,
+          "goals_after": [
+            "case red_K.par\na b a✝ b✝ a'✝ b'✝ : SKI\nk' : (K ⬝ a✝) ⭢ₚ a'✝\nb' : b✝ ⭢ₚ b'✝\nx : SKI\nhx : ?m.372 ⭢ₚ x\nhk' : sorry = K ⬝ x\n⊢ Join ParallelReduction a✝ (a'✝ ⬝ b'✝)"
+          ],
+          "goals_before": [
+            "case red_K.par\na b a✝ b✝ a'✝ b'✝ : SKI\nk' : (K ⬝ a✝) ⭢ₚ a'✝\nb' : b✝ ⭢ₚ b'✝\n⊢ Join ParallelReduction a✝ (a'✝ ⬝ b'✝)"
+          ],
+          "kind": "tactic",
+          "start": 12870
+        }
+      },
+      {
+        "severity": "error",
+        "position": {
+          "column": 53,
+          "line": 164
+        },
+        "end_position": {
+          "column": 55,
+          "line": 164
+        },
+        "message": "Unknown identifier `hk`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "Unknown identifier `hk`",
+          "endPos": {
+            "column": 55,
+            "line": 164
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "lean.unknownIdentifier._namedError",
+          "pos": {
+            "column": 53,
+            "line": 164
+          },
+          "severity": "error"
+        },
+        "source_line": "          obtain ⟨x, hx, hk'⟩ := Ka_irreducible _ k' hk",
+        "start_offset": 5529,
+        "start_byte_offset": 5786,
+        "end_offset": 5531,
+        "end_byte_offset": 5788,
+        "source_text": "hk",
+        "failed_tactic": "obtain ⟨x, hx, hk'⟩ := Ka_irreducible _ k' hk",
+        "tactic_range": {
+          "position": {
+            "line": 164,
+            "column": 10
+          },
+          "end_position": {
+            "line": 164,
+            "column": 55
+          },
+          "start_offset": 5486,
+          "end_offset": 5531
+        },
+        "goals": [
+          "Join ParallelReduction a✝ (a'✝ ⬝ b'✝)"
+        ],
+        "local_context": [
+          "case red_K.par\na b a✝ b✝ a'✝ b'✝ : SKI\nk' : (K ⬝ a✝) ⭢ₚ a'✝\nb' : b✝ ⭢ₚ b'✝"
+        ],
+        "proof_state_source": "lean_infotree_before_tactic",
+        "proof_state_raw": {
+          "depth": 16,
+          "end": 12919,
+          "goals_after": [
+            "case red_K.par\na b a✝ b✝ a'✝ b'✝ : SKI\nk' : (K ⬝ a✝) ⭢ₚ a'✝\nb' : b✝ ⭢ₚ b'✝\nx : SKI\nhx : ?m.372 ⭢ₚ x\nhk' : sorry = K ⬝ x\n⊢ Join ParallelReduction a✝ (a'✝ ⬝ b'✝)"
+          ],
+          "goals_before": [
+            "case red_K.par\na b a✝ b✝ a'✝ b'✝ : SKI\nk' : (K ⬝ a✝) ⭢ₚ a'✝\nb' : b✝ ⭢ₚ b'✝\n⊢ Join ParallelReduction a✝ (a'✝ ⬝ b'✝)"
+          ],
+          "kind": "tactic",
+          "start": 12870
+        }
+      },
+      {
+        "severity": "error",
+        "position": {
+          "column": 10,
+          "line": 165
+        },
+        "end_position": {
+          "column": 18,
+          "line": 165
+        },
+        "message": "Tactic `subst` failed: did not find equation for eliminating 'k''\n\ncase red_K.par\na b a✝ b✝ a'✝ b'✝ : SKI\nk' : (K ⬝ a✝) ⭢ₚ a'✝\nb' : b✝ ⭢ₚ b'✝\nx : SKI\nhx : ?m.372 ⭢ₚ x\nhk' : sorry = K ⬝ x\n⊢ Join ParallelReduction a✝ (a'✝ ⬝ b'✝)",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "Tactic `subst` failed: did not find equation for eliminating 'k''\n\ncase red_K.par\na b a✝ b✝ a'✝ b'✝ : SKI\nk' : (K ⬝ a✝) ⭢ₚ a'✝\nb' : b✝ ⭢ₚ b'✝\nx : SKI\nhx : ?m.372 ⭢ₚ x\nhk' : sorry = K ⬝ x\n⊢ Join ParallelReduction a✝ (a'✝ ⬝ b'✝)",
+          "endPos": {
+            "column": 18,
+            "line": 165
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 10,
+            "line": 165
+          },
+          "severity": "error"
+        },
+        "source_line": "          subst k'",
+        "start_offset": 5542,
+        "start_byte_offset": 5799,
+        "end_offset": 5550,
+        "end_byte_offset": 5807,
+        "source_text": "subst k'",
+        "failed_tactic": "subst k'",
+        "tactic_range": {
+          "position": {
+            "line": 165,
+            "column": 10
+          },
+          "end_position": {
+            "line": 165,
+            "column": 18
+          },
+          "start_offset": 5542,
+          "end_offset": 5550
+        },
+        "goals": [
+          "Join ParallelReduction a✝ (a'✝ ⬝ b'✝)"
+        ],
+        "local_context": [
+          "case red_K.par\na b a✝ b✝ a'✝ b'✝ : SKI\nk' : (K ⬝ a✝) ⭢ₚ a'✝\nb' : b✝ ⭢ₚ b'✝\nx : SKI\nhx : ?m.372 ⭢ₚ x\nhk' : sorry = K ⬝ x"
+        ],
+        "proof_state_source": "lean_infotree_before_tactic",
+        "proof_state_raw": {
+          "depth": 16,
+          "end": 12938,
+          "goals_after": [
+            "case red_K.par\na b a✝ b✝ a'✝ b'✝ : SKI\nk' : (K ⬝ a✝) ⭢ₚ a'✝\nb' : b✝ ⭢ₚ b'✝\nx : SKI\nhx : ?m.372 ⭢ₚ x\nhk' : sorry = K ⬝ x\n⊢ Join ParallelReduction a✝ (a'✝ ⬝ b'✝)"
+          ],
+          "goals_before": [
+            "case red_K.par\na b a✝ b✝ a'✝ b'✝ : SKI\nk' : (K ⬝ a✝) ⭢ₚ a'✝\nb' : b✝ ⭢ₚ b'✝\nx : SKI\nhx : ?m.372 ⭢ₚ x\nhk' : sorry = K ⬝ x\n⊢ Join ParallelReduction a✝ (a'✝ ⬝ b'✝)"
+          ],
+          "kind": "tactic",
+          "start": 12930
+        }
+      },
+      {
+        "severity": "error",
+        "position": {
+          "column": 6,
+          "line": 173
+        },
+        "end_position": {
+          "column": 28,
+          "line": 179
+        },
+        "message": "Too many variable names provided at alternative `par`: 4 provided, but 2 expected",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "Too many variable names provided at alternative `par`: 4 provided, but 2 expected",
+          "endPos": {
+            "column": 28,
+            "line": 179
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 6,
+            "line": 173
+          },
+          "severity": "error"
+        },
+        "source_line": "      | par s' c' hs hc =>",
+        "start_offset": 5748,
+        "start_byte_offset": 6017,
+        "end_offset": 5976,
+        "end_byte_offset": 6259,
+        "source_text": "| par s' c' hs hc =>\n          obtain ⟨x, y, hx, hy, hs'⟩ := Sab_irreducible _ _ s' hs\n          subst s'\n          exact\n            ⟨x ⬝ c' ⬝ (y ⬝ c'),\n              .par (.par hx hc) (.par hy hc),\n              .red_S x y c'⟩",
+        "failed_tactic": "| par s' c' hs hc =>",
+        "tactic_range": {
+          "position": {
+            "line": 173,
+            "column": 6
+          },
+          "end_position": {
+            "line": 173,
+            "column": 26
+          },
+          "start_offset": 5748,
+          "end_offset": 5768
+        },
+        "goals": [
+          "Join ParallelReduction (a✝ ⬝ c✝ ⬝ (b✝ ⬝ c✝)) (a'✝ ⬝ b'✝)"
+        ],
+        "local_context": [
+          "case red_S.par\na b a✝ b✝ c✝ a'✝ b'✝ : SKI\ns' : (S ⬝ a✝ ⬝ b✝) ⭢ₚ a'✝\nc' : c✝ ⭢ₚ b'✝"
+        ],
+        "proof_state_source": "lean_infotree_before_tactic",
+        "proof_state_raw": {
+          "depth": 13,
+          "end": 13168,
+          "goals_after": [
+            "case red_S.par\na b a✝ b✝ c✝ a'✝ b'✝ : SKI\ns' : (S ⬝ a✝ ⬝ b✝) ⭢ₚ a'✝\nc' : c✝ ⭢ₚ b'✝\nx y : SKI\nhx : ?m.588 ⭢ₚ x\nhy : ?m.589 ⭢ₚ y\nhs' : sorry = S ⬝ x ⬝ y\n⊢ Join ParallelReduction (a✝ ⬝ c✝ ⬝ (b✝ ⬝ c✝)) (a'✝ ⬝ b'✝)"
+          ],
+          "goals_before": [
+            "case red_S.par\na b a✝ b✝ c✝ a'✝ b'✝ : SKI\ns' : (S ⬝ a✝ ⬝ b✝) ⭢ₚ a'✝\nc' : c✝ ⭢ₚ b'✝\n⊢ Join ParallelReduction (a✝ ⬝ c✝ ⬝ (b✝ ⬝ c✝)) (a'✝ ⬝ b'✝)"
+          ],
+          "kind": "tactic",
+          "start": 13148
+        }
+      },
+      {
+        "severity": "error",
+        "position": {
+          "column": 60,
+          "line": 174
+        },
+        "end_position": {
+          "column": 62,
+          "line": 174
+        },
+        "message": "Application type mismatch: The argument\n  s'\nhas type\n  (S ⬝ a✝ ⬝ b✝) ⭢ₚ a'✝\nof sort `Prop` but is expected to have type\n  SKI\nof sort `Type` in the application\n  Sab_irreducible ?m.588 ?m.589 s'",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "Application type mismatch: The argument\n  s'\nhas type\n  (S ⬝ a✝ ⬝ b✝) ⭢ₚ a'✝\nof sort `Prop` but is expected to have type\n  SKI\nof sort `Type` in the application\n  Sab_irreducible ?m.588 ?m.589 s'",
+          "endPos": {
+            "column": 62,
+            "line": 174
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 60,
+            "line": 174
+          },
+          "severity": "error"
+        },
+        "source_line": "          obtain ⟨x, y, hx, hy, hs'⟩ := Sab_irreducible _ _ s' hs",
+        "start_offset": 5829,
+        "start_byte_offset": 6102,
+        "end_offset": 5831,
+        "end_byte_offset": 6104,
+        "source_text": "s'",
+        "failed_tactic": "obtain ⟨x, y, hx, hy, hs'⟩ := Sab_irreducible _ _ s' hs",
+        "tactic_range": {
+          "position": {
+            "line": 174,
+            "column": 10
+          },
+          "end_position": {
+            "line": 174,
+            "column": 65
+          },
+          "start_offset": 5779,
+          "end_offset": 5834
+        },
+        "goals": [
+          "Join ParallelReduction (a✝ ⬝ c✝ ⬝ (b✝ ⬝ c✝)) (a'✝ ⬝ b'✝)"
+        ],
+        "local_context": [
+          "case red_S.par\na b a✝ b✝ c✝ a'✝ b'✝ : SKI\ns' : (S ⬝ a✝ ⬝ b✝) ⭢ₚ a'✝\nc' : c✝ ⭢ₚ b'✝"
+        ],
+        "proof_state_source": "lean_infotree_before_tactic",
+        "proof_state_raw": {
+          "depth": 16,
+          "end": 13238,
+          "goals_after": [
+            "case red_S.par\na b a✝ b✝ c✝ a'✝ b'✝ : SKI\ns' : (S ⬝ a✝ ⬝ b✝) ⭢ₚ a'✝\nc' : c✝ ⭢ₚ b'✝\nx y : SKI\nhx : ?m.588 ⭢ₚ x\nhy : ?m.589 ⭢ₚ y\nhs' : sorry = S ⬝ x ⬝ y\n⊢ Join ParallelReduction (a✝ ⬝ c✝ ⬝ (b✝ ⬝ c✝)) (a'✝ ⬝ b'✝)"
+          ],
+          "goals_before": [
+            "case red_S.par\na b a✝ b✝ c✝ a'✝ b'✝ : SKI\ns' : (S ⬝ a✝ ⬝ b✝) ⭢ₚ a'✝\nc' : c✝ ⭢ₚ b'✝\n⊢ Join ParallelReduction (a✝ ⬝ c✝ ⬝ (b✝ ⬝ c✝)) (a'✝ ⬝ b'✝)"
+          ],
+          "kind": "tactic",
+          "start": 13179
+        }
+      },
+      {
+        "severity": "error",
+        "position": {
+          "column": 63,
+          "line": 174
+        },
+        "end_position": {
+          "column": 65,
+          "line": 174
+        },
+        "message": "Unknown identifier `hs`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "Unknown identifier `hs`",
+          "endPos": {
+            "column": 65,
+            "line": 174
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "lean.unknownIdentifier._namedError",
+          "pos": {
+            "column": 63,
+            "line": 174
+          },
+          "severity": "error"
+        },
+        "source_line": "          obtain ⟨x, y, hx, hy, hs'⟩ := Sab_irreducible _ _ s' hs",
+        "start_offset": 5832,
+        "start_byte_offset": 6105,
+        "end_offset": 5834,
+        "end_byte_offset": 6107,
+        "source_text": "hs",
+        "failed_tactic": "obtain ⟨x, y, hx, hy, hs'⟩ := Sab_irreducible _ _ s' hs",
+        "tactic_range": {
+          "position": {
+            "line": 174,
+            "column": 10
+          },
+          "end_position": {
+            "line": 174,
+            "column": 65
+          },
+          "start_offset": 5779,
+          "end_offset": 5834
+        },
+        "goals": [
+          "Join ParallelReduction (a✝ ⬝ c✝ ⬝ (b✝ ⬝ c✝)) (a'✝ ⬝ b'✝)"
+        ],
+        "local_context": [
+          "case red_S.par\na b a✝ b✝ c✝ a'✝ b'✝ : SKI\ns' : (S ⬝ a✝ ⬝ b✝) ⭢ₚ a'✝\nc' : c✝ ⭢ₚ b'✝"
+        ],
+        "proof_state_source": "lean_infotree_before_tactic",
+        "proof_state_raw": {
+          "depth": 16,
+          "end": 13238,
+          "goals_after": [
+            "case red_S.par\na b a✝ b✝ c✝ a'✝ b'✝ : SKI\ns' : (S ⬝ a✝ ⬝ b✝) ⭢ₚ a'✝\nc' : c✝ ⭢ₚ b'✝\nx y : SKI\nhx : ?m.588 ⭢ₚ x\nhy : ?m.589 ⭢ₚ y\nhs' : sorry = S ⬝ x ⬝ y\n⊢ Join ParallelReduction (a✝ ⬝ c✝ ⬝ (b✝ ⬝ c✝)) (a'✝ ⬝ b'✝)"
+          ],
+          "goals_before": [
+            "case red_S.par\na b a✝ b✝ c✝ a'✝ b'✝ : SKI\ns' : (S ⬝ a✝ ⬝ b✝) ⭢ₚ a'✝\nc' : c✝ ⭢ₚ b'✝\n⊢ Join ParallelReduction (a✝ ⬝ c✝ ⬝ (b✝ ⬝ c✝)) (a'✝ ⬝ b'✝)"
+          ],
+          "kind": "tactic",
+          "start": 13179
+        }
+      },
+      {
+        "severity": "error",
+        "position": {
+          "column": 10,
+          "line": 175
+        },
+        "end_position": {
+          "column": 18,
+          "line": 175
+        },
+        "message": "Tactic `subst` failed: did not find equation for eliminating 's''\n\ncase red_S.par\na b a✝ b✝ c✝ a'✝ b'✝ : SKI\ns' : (S ⬝ a✝ ⬝ b✝) ⭢ₚ a'✝\nc' : c✝ ⭢ₚ b'✝\nx y : SKI\nhx : ?m.588 ⭢ₚ x\nhy : ?m.589 ⭢ₚ y\nhs' : sorry = S ⬝ x ⬝ y\n⊢ Join ParallelReduction (a✝ ⬝ c✝ ⬝ (b✝ ⬝ c✝)) (a'✝ ⬝ b'✝)",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "Tactic `subst` failed: did not find equation for eliminating 's''\n\ncase red_S.par\na b a✝ b✝ c✝ a'✝ b'✝ : SKI\ns' : (S ⬝ a✝ ⬝ b✝) ⭢ₚ a'✝\nc' : c✝ ⭢ₚ b'✝\nx y : SKI\nhx : ?m.588 ⭢ₚ x\nhy : ?m.589 ⭢ₚ y\nhs' : sorry = S ⬝ x ⬝ y\n⊢ Join ParallelReduction (a✝ ⬝ c✝ ⬝ (b✝ ⬝ c✝)) (a'✝ ⬝ b'✝)",
+          "endPos": {
+            "column": 18,
+            "line": 175
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 10,
+            "line": 175
+          },
+          "severity": "error"
+        },
+        "source_line": "          subst s'",
+        "start_offset": 5845,
+        "start_byte_offset": 6118,
+        "end_offset": 5853,
+        "end_byte_offset": 6126,
+        "source_text": "subst s'",
+        "failed_tactic": "subst s'",
+        "tactic_range": {
+          "position": {
+            "line": 175,
+            "column": 10
+          },
+          "end_position": {
+            "line": 175,
+            "column": 18
+          },
+          "start_offset": 5845,
+          "end_offset": 5853
+        },
+        "goals": [
+          "Join ParallelReduction (a✝ ⬝ c✝ ⬝ (b✝ ⬝ c✝)) (a'✝ ⬝ b'✝)"
+        ],
+        "local_context": [
+          "case red_S.par\na b a✝ b✝ c✝ a'✝ b'✝ : SKI\ns' : (S ⬝ a✝ ⬝ b✝) ⭢ₚ a'✝\nc' : c✝ ⭢ₚ b'✝\nx y : SKI\nhx : ?m.588 ⭢ₚ x\nhy : ?m.589 ⭢ₚ y\nhs' : sorry = S ⬝ x ⬝ y"
+        ],
+        "proof_state_source": "lean_infotree_before_tactic",
+        "proof_state_raw": {
+          "depth": 16,
+          "end": 13257,
+          "goals_after": [
+            "case red_S.par\na b a✝ b✝ c✝ a'✝ b'✝ : SKI\ns' : (S ⬝ a✝ ⬝ b✝) ⭢ₚ a'✝\nc' : c✝ ⭢ₚ b'✝\nx y : SKI\nhx : ?m.588 ⭢ₚ x\nhy : ?m.589 ⭢ₚ y\nhs' : sorry = S ⬝ x ⬝ y\n⊢ Join ParallelReduction (a✝ ⬝ c✝ ⬝ (b✝ ⬝ c✝)) (a'✝ ⬝ b'✝)"
+          ],
+          "goals_before": [
+            "case red_S.par\na b a✝ b✝ c✝ a'✝ b'✝ : SKI\ns' : (S ⬝ a✝ ⬝ b✝) ⭢ₚ a'✝\nc' : c✝ ⭢ₚ b'✝\nx y : SKI\nhx : ?m.588 ⭢ₚ x\nhy : ?m.589 ⭢ₚ y\nhs' : sorry = S ⬝ x ⬝ y\n⊢ Join ParallelReduction (a✝ ⬝ c✝ ⬝ (b✝ ⬝ c✝)) (a'✝ ⬝ b'✝)"
+          ],
+          "kind": "tactic",
+          "start": 13249
+        }
+      },
+      {
+        "severity": "error",
+        "position": {
+          "column": 2,
+          "line": 180
+        },
+        "end_position": {
+          "column": 51,
+          "line": 202
+        },
+        "message": "Too many variable names provided at alternative `par`: 8 provided, but 4 expected",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "Too many variable names provided at alternative `par`: 8 provided, but 4 expected",
+          "endPos": {
+            "column": 51,
+            "line": 202
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 2,
+            "line": 180
+          },
+          "severity": "error"
+        },
+        "source_line": "  | par a a' b b' ha hb iha ihb =>",
+        "start_offset": 5979,
+        "start_byte_offset": 6262,
+        "end_offset": 6737,
+        "end_byte_offset": 7082,
+        "source_text": "| par a a' b b' ha hb iha ihb =>\n      cases hac with\n      | refl =>\n          exact ⟨a' ⬝ b', .refl _, .par ha hb⟩\n      | red_I =>\n          have ha' : a' = I := I_irreducible a' ha\n          subst a'\n          exact ⟨b', .red_I b', hb⟩\n      | red_K =>\n          obtain ⟨x, hx, ha'⟩ := Ka_irreducible _ a' ha\n          subst a'\n          exact ⟨x, .red_K x b', hx⟩\n      | red_S _ _ =>\n          obtain ⟨x, y, hx, hy, ha'⟩ := Sab_irreducible _ _ a' ha\n          subst a'\n          exact\n            ⟨x ⬝ b' ⬝ (y ⬝ b'),\n              .red_S x y b',\n              .par (.par hx hb) (.par hy hb)⟩\n      | par c' d' hc hd =>\n          obtain ⟨x, hx₁, hx₂⟩ := iha hc\n          obtain ⟨y, hy₁, hy₂⟩ := ihb hd\n          exact ⟨x ⬝ y, .par hx₁ hy₁, .par hx₂ hy₂⟩",
+        "failed_tactic": "| par a a' b b' ha hb iha ihb =>",
+        "tactic_range": {
+          "position": {
+            "line": 180,
+            "column": 2
+          },
+          "end_position": {
+            "line": 180,
+            "column": 34
+          },
+          "start_offset": 5979,
+          "end_offset": 6011
+        },
+        "goals": [
+          "Join ParallelReduction (a'✝ ⬝ b'✝) c"
+        ],
+        "local_context": [
+          "case par\na✝¹ b✝¹ a✝ a'✝ b✝ b'✝ : SKI\na : a✝ ⭢ₚ a'✝\na' : b✝ ⭢ₚ b'✝\nb : ∀ {c : SKI}, a✝ ⭢ₚ c → Join ParallelReduction a'✝ c\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\nc : SKI\nhac : (a✝ ⬝ b✝) ⭢ₚ c"
+        ],
+        "proof_state_source": "lean_infotree_before_tactic",
+        "proof_state_raw": {
+          "depth": 8,
+          "end": 13425,
+          "goals_after": [],
+          "goals_before": [
+            "case par\na✝¹ b✝¹ a✝ a'✝ b✝ b'✝ : SKI\na : a✝ ⭢ₚ a'✝\na' : b✝ ⭢ₚ b'✝\nb : ∀ {c : SKI}, a✝ ⭢ₚ c → Join ParallelReduction a'✝ c\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\nc : SKI\nhac : (a✝ ⬝ b✝) ⭢ₚ c\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) c"
+          ],
+          "kind": "tactic",
+          "start": 13393
+        }
+      },
+      {
+        "severity": "error",
+        "position": {
+          "column": 17,
+          "line": 183
+        },
+        "end_position": {
+          "column": 19,
+          "line": 183
+        },
+        "message": "Application type mismatch: The argument\n  a'\nhas type\n  b✝ ⭢ₚ b'✝\nof sort `Prop` but is expected to have type\n  SKI\nof sort `Type` in the application\n  app a'",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "Application type mismatch: The argument\n  a'\nhas type\n  b✝ ⭢ₚ b'✝\nof sort `Prop` but is expected to have type\n  SKI\nof sort `Type` in the application\n  app a'",
+          "endPos": {
+            "column": 19,
+            "line": 183
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 17,
+            "line": 183
+          },
+          "severity": "error"
+        },
+        "source_line": "          exact ⟨a' ⬝ b', .refl _, .par ha hb⟩",
+        "start_offset": 6066,
+        "start_byte_offset": 6351,
+        "end_offset": 6068,
+        "end_byte_offset": 6353,
+        "source_text": "a'",
+        "failed_tactic": "exact ⟨a' ⬝ b', .refl _, .par ha hb⟩",
+        "tactic_range": {
+          "position": {
+            "line": 183,
+            "column": 10
+          },
+          "end_position": {
+            "line": 183,
+            "column": 46
+          },
+          "start_offset": 6059,
+          "end_offset": 6095
+        },
+        "goals": [
+          "Join ParallelReduction (a'✝ ⬝ b'✝) (a✝ ⬝ b✝)"
+        ],
+        "local_context": [
+          "case par.refl\na✝¹ b✝¹ a✝ a'✝ b✝ b'✝ : SKI\na : a✝ ⭢ₚ a'✝\na' : b✝ ⭢ₚ b'✝\nb : ∀ {c : SKI}, a✝ ⭢ₚ c → Join ParallelReduction a'✝ c\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c"
+        ],
+        "proof_state_source": "lean_infotree_before_tactic",
+        "proof_state_raw": {
+          "depth": 16,
+          "end": 13515,
+          "goals_after": [
+            "case par.refl\na✝¹ b✝¹ a✝ a'✝ b✝ b'✝ : SKI\na : a✝ ⭢ₚ a'✝\na' : b✝ ⭢ₚ b'✝\nb : ∀ {c : SKI}, a✝ ⭢ₚ c → Join ParallelReduction a'✝ c\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) (a✝ ⬝ b✝)"
+          ],
+          "goals_before": [
+            "case par.refl\na✝¹ b✝¹ a✝ a'✝ b✝ b'✝ : SKI\na : a✝ ⭢ₚ a'✝\na' : b✝ ⭢ₚ b'✝\nb : ∀ {c : SKI}, a✝ ⭢ₚ c → Join ParallelReduction a'✝ c\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) (a✝ ⬝ b✝)"
+          ],
+          "kind": "tactic",
+          "start": 13473
+        }
+      },
+      {
+        "severity": "error",
+        "position": {
+          "column": 40,
+          "line": 183
+        },
+        "end_position": {
+          "column": 42,
+          "line": 183
+        },
+        "message": "Unknown identifier `ha`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "Unknown identifier `ha`",
+          "endPos": {
+            "column": 42,
+            "line": 183
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "lean.unknownIdentifier._namedError",
+          "pos": {
+            "column": 40,
+            "line": 183
+          },
+          "severity": "error"
+        },
+        "source_line": "          exact ⟨a' ⬝ b', .refl _, .par ha hb⟩",
+        "start_offset": 6089,
+        "start_byte_offset": 6376,
+        "end_offset": 6091,
+        "end_byte_offset": 6378,
+        "source_text": "ha",
+        "failed_tactic": "exact ⟨a' ⬝ b', .refl _, .par ha hb⟩",
+        "tactic_range": {
+          "position": {
+            "line": 183,
+            "column": 10
+          },
+          "end_position": {
+            "line": 183,
+            "column": 46
+          },
+          "start_offset": 6059,
+          "end_offset": 6095
+        },
+        "goals": [
+          "Join ParallelReduction (a'✝ ⬝ b'✝) (a✝ ⬝ b✝)"
+        ],
+        "local_context": [
+          "case par.refl\na✝¹ b✝¹ a✝ a'✝ b✝ b'✝ : SKI\na : a✝ ⭢ₚ a'✝\na' : b✝ ⭢ₚ b'✝\nb : ∀ {c : SKI}, a✝ ⭢ₚ c → Join ParallelReduction a'✝ c\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c"
+        ],
+        "proof_state_source": "lean_infotree_before_tactic",
+        "proof_state_raw": {
+          "depth": 16,
+          "end": 13515,
+          "goals_after": [
+            "case par.refl\na✝¹ b✝¹ a✝ a'✝ b✝ b'✝ : SKI\na : a✝ ⭢ₚ a'✝\na' : b✝ ⭢ₚ b'✝\nb : ∀ {c : SKI}, a✝ ⭢ₚ c → Join ParallelReduction a'✝ c\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) (a✝ ⬝ b✝)"
+          ],
+          "goals_before": [
+            "case par.refl\na✝¹ b✝¹ a✝ a'✝ b✝ b'✝ : SKI\na : a✝ ⭢ₚ a'✝\na' : b✝ ⭢ₚ b'✝\nb : ∀ {c : SKI}, a✝ ⭢ₚ c → Join ParallelReduction a'✝ c\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) (a✝ ⬝ b✝)"
+          ],
+          "kind": "tactic",
+          "start": 13473
+        }
+      },
+      {
+        "severity": "error",
+        "position": {
+          "column": 43,
+          "line": 183
+        },
+        "end_position": {
+          "column": 45,
+          "line": 183
+        },
+        "message": "Unknown identifier `hb`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "Unknown identifier `hb`",
+          "endPos": {
+            "column": 45,
+            "line": 183
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "lean.unknownIdentifier._namedError",
+          "pos": {
+            "column": 43,
+            "line": 183
+          },
+          "severity": "error"
+        },
+        "source_line": "          exact ⟨a' ⬝ b', .refl _, .par ha hb⟩",
+        "start_offset": 6092,
+        "start_byte_offset": 6379,
+        "end_offset": 6094,
+        "end_byte_offset": 6381,
+        "source_text": "hb",
+        "failed_tactic": "exact ⟨a' ⬝ b', .refl _, .par ha hb⟩",
+        "tactic_range": {
+          "position": {
+            "line": 183,
+            "column": 10
+          },
+          "end_position": {
+            "line": 183,
+            "column": 46
+          },
+          "start_offset": 6059,
+          "end_offset": 6095
+        },
+        "goals": [
+          "Join ParallelReduction (a'✝ ⬝ b'✝) (a✝ ⬝ b✝)"
+        ],
+        "local_context": [
+          "case par.refl\na✝¹ b✝¹ a✝ a'✝ b✝ b'✝ : SKI\na : a✝ ⭢ₚ a'✝\na' : b✝ ⭢ₚ b'✝\nb : ∀ {c : SKI}, a✝ ⭢ₚ c → Join ParallelReduction a'✝ c\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c"
+        ],
+        "proof_state_source": "lean_infotree_before_tactic",
+        "proof_state_raw": {
+          "depth": 16,
+          "end": 13515,
+          "goals_after": [
+            "case par.refl\na✝¹ b✝¹ a✝ a'✝ b✝ b'✝ : SKI\na : a✝ ⭢ₚ a'✝\na' : b✝ ⭢ₚ b'✝\nb : ∀ {c : SKI}, a✝ ⭢ₚ c → Join ParallelReduction a'✝ c\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) (a✝ ⬝ b✝)"
+          ],
+          "goals_before": [
+            "case par.refl\na✝¹ b✝¹ a✝ a'✝ b✝ b'✝ : SKI\na : a✝ ⭢ₚ a'✝\na' : b✝ ⭢ₚ b'✝\nb : ∀ {c : SKI}, a✝ ⭢ₚ c → Join ParallelReduction a'✝ c\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) (a✝ ⬝ b✝)"
+          ],
+          "kind": "tactic",
+          "start": 13473
+        }
+      },
+      {
+        "severity": "error",
+        "position": {
+          "column": 26,
+          "line": 185
+        },
+        "end_position": {
+          "column": 27,
+          "line": 185
+        },
+        "message": "Type mismatch\n  I\nhas type\n  SKI\nof sort `Type` but is expected to have type\n  b✝ ⭢ₚ b'✝\nof sort `Prop`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "Type mismatch\n  I\nhas type\n  SKI\nof sort `Type` but is expected to have type\n  b✝ ⭢ₚ b'✝\nof sort `Prop`",
+          "endPos": {
+            "column": 27,
+            "line": 185
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 26,
+            "line": 185
+          },
+          "severity": "error"
+        },
+        "source_line": "          have ha' : a' = I := I_irreducible a' ha",
+        "start_offset": 6139,
+        "start_byte_offset": 6428,
+        "end_offset": 6140,
+        "end_byte_offset": 6429,
+        "source_text": "I",
+        "failed_tactic": "have ha' : a' = I := I_irreducible a' ha",
+        "tactic_range": {
+          "position": {
+            "line": 185,
+            "column": 10
+          },
+          "end_position": {
+            "line": 185,
+            "column": 50
+          },
+          "start_offset": 6123,
+          "end_offset": 6163
+        },
+        "goals": [
+          "Join ParallelReduction (a'✝ ⬝ b'✝) b✝"
+        ],
+        "local_context": [
+          "case par.red_I\na✝ b✝¹ a'✝ b✝ b'✝ : SKI\na' : b✝ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\na : I ⭢ₚ a'✝\nb : ∀ {c : SKI}, I ⭢ₚ c → Join ParallelReduction a'✝ c"
+        ],
+        "proof_state_source": "lean_infotree_before_tactic",
+        "proof_state_raw": {
+          "depth": 24,
+          "end": 13583,
+          "goals_after": [
+            "case par.red_I\na✝ b✝¹ a'✝ b✝ b'✝ : SKI\na' : b✝ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\na : I ⭢ₚ a'✝\nb : ∀ {c : SKI}, I ⭢ₚ c → Join ParallelReduction a'✝ c\nha' : sorry\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) b✝"
+          ],
+          "goals_before": [
+            "case par.red_I\na✝ b✝¹ a'✝ b✝ b'✝ : SKI\na' : b✝ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\na : I ⭢ₚ a'✝\nb : ∀ {c : SKI}, I ⭢ₚ c → Join ParallelReduction a'✝ c\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) b✝"
+          ],
+          "kind": "tactic",
+          "start": 13543
+        }
+      },
+      {
+        "severity": "error",
+        "position": {
+          "column": 45,
+          "line": 185
+        },
+        "end_position": {
+          "column": 47,
+          "line": 185
+        },
+        "message": "Application type mismatch: The argument\n  a'\nhas type\n  b✝ ⭢ₚ b'✝\nof sort `Prop` but is expected to have type\n  SKI\nof sort `Type` in the application\n  I_irreducible a'",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "Application type mismatch: The argument\n  a'\nhas type\n  b✝ ⭢ₚ b'✝\nof sort `Prop` but is expected to have type\n  SKI\nof sort `Type` in the application\n  I_irreducible a'",
+          "endPos": {
+            "column": 47,
+            "line": 185
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 45,
+            "line": 185
+          },
+          "severity": "error"
+        },
+        "source_line": "          have ha' : a' = I := I_irreducible a' ha",
+        "start_offset": 6158,
+        "start_byte_offset": 6447,
+        "end_offset": 6160,
+        "end_byte_offset": 6449,
+        "source_text": "a'",
+        "failed_tactic": "have ha' : a' = I := I_irreducible a' ha",
+        "tactic_range": {
+          "position": {
+            "line": 185,
+            "column": 10
+          },
+          "end_position": {
+            "line": 185,
+            "column": 50
+          },
+          "start_offset": 6123,
+          "end_offset": 6163
+        },
+        "goals": [
+          "Join ParallelReduction (a'✝ ⬝ b'✝) b✝"
+        ],
+        "local_context": [
+          "case par.red_I\na✝ b✝¹ a'✝ b✝ b'✝ : SKI\na' : b✝ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\na : I ⭢ₚ a'✝\nb : ∀ {c : SKI}, I ⭢ₚ c → Join ParallelReduction a'✝ c"
+        ],
+        "proof_state_source": "lean_infotree_before_tactic",
+        "proof_state_raw": {
+          "depth": 24,
+          "end": 13583,
+          "goals_after": [
+            "case par.red_I\na✝ b✝¹ a'✝ b✝ b'✝ : SKI\na' : b✝ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\na : I ⭢ₚ a'✝\nb : ∀ {c : SKI}, I ⭢ₚ c → Join ParallelReduction a'✝ c\nha' : sorry\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) b✝"
+          ],
+          "goals_before": [
+            "case par.red_I\na✝ b✝¹ a'✝ b✝ b'✝ : SKI\na' : b✝ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\na : I ⭢ₚ a'✝\nb : ∀ {c : SKI}, I ⭢ₚ c → Join ParallelReduction a'✝ c\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) b✝"
+          ],
+          "kind": "tactic",
+          "start": 13543
+        }
+      },
+      {
+        "severity": "error",
+        "position": {
+          "column": 48,
+          "line": 185
+        },
+        "end_position": {
+          "column": 50,
+          "line": 185
+        },
+        "message": "Unknown identifier `ha`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "Unknown identifier `ha`",
+          "endPos": {
+            "column": 50,
+            "line": 185
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "lean.unknownIdentifier._namedError",
+          "pos": {
+            "column": 48,
+            "line": 185
+          },
+          "severity": "error"
+        },
+        "source_line": "          have ha' : a' = I := I_irreducible a' ha",
+        "start_offset": 6161,
+        "start_byte_offset": 6450,
+        "end_offset": 6163,
+        "end_byte_offset": 6452,
+        "source_text": "ha",
+        "failed_tactic": "have ha' : a' = I := I_irreducible a' ha",
+        "tactic_range": {
+          "position": {
+            "line": 185,
+            "column": 10
+          },
+          "end_position": {
+            "line": 185,
+            "column": 50
+          },
+          "start_offset": 6123,
+          "end_offset": 6163
+        },
+        "goals": [
+          "Join ParallelReduction (a'✝ ⬝ b'✝) b✝"
+        ],
+        "local_context": [
+          "case par.red_I\na✝ b✝¹ a'✝ b✝ b'✝ : SKI\na' : b✝ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\na : I ⭢ₚ a'✝\nb : ∀ {c : SKI}, I ⭢ₚ c → Join ParallelReduction a'✝ c"
+        ],
+        "proof_state_source": "lean_infotree_before_tactic",
+        "proof_state_raw": {
+          "depth": 24,
+          "end": 13583,
+          "goals_after": [
+            "case par.red_I\na✝ b✝¹ a'✝ b✝ b'✝ : SKI\na' : b✝ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\na : I ⭢ₚ a'✝\nb : ∀ {c : SKI}, I ⭢ₚ c → Join ParallelReduction a'✝ c\nha' : sorry\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) b✝"
+          ],
+          "goals_before": [
+            "case par.red_I\na✝ b✝¹ a'✝ b✝ b'✝ : SKI\na' : b✝ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\na : I ⭢ₚ a'✝\nb : ∀ {c : SKI}, I ⭢ₚ c → Join ParallelReduction a'✝ c\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) b✝"
+          ],
+          "kind": "tactic",
+          "start": 13543
+        }
+      },
+      {
+        "severity": "error",
+        "position": {
+          "column": 10,
+          "line": 186
+        },
+        "end_position": {
+          "column": 18,
+          "line": 186
+        },
+        "message": "Tactic `subst` failed: did not find equation for eliminating 'a''\n\ncase par.red_I\na✝ b✝¹ a'✝ b✝ b'✝ : SKI\na' : b✝ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\na : I ⭢ₚ a'✝\nb : ∀ {c : SKI}, I ⭢ₚ c → Join ParallelReduction a'✝ c\nha' : sorry\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) b✝",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "Tactic `subst` failed: did not find equation for eliminating 'a''\n\ncase par.red_I\na✝ b✝¹ a'✝ b✝ b'✝ : SKI\na' : b✝ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\na : I ⭢ₚ a'✝\nb : ∀ {c : SKI}, I ⭢ₚ c → Join ParallelReduction a'✝ c\nha' : sorry\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) b✝",
+          "endPos": {
+            "column": 18,
+            "line": 186
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 10,
+            "line": 186
+          },
+          "severity": "error"
+        },
+        "source_line": "          subst a'",
+        "start_offset": 6174,
+        "start_byte_offset": 6463,
+        "end_offset": 6182,
+        "end_byte_offset": 6471,
+        "source_text": "subst a'",
+        "failed_tactic": "subst a'",
+        "tactic_range": {
+          "position": {
+            "line": 186,
+            "column": 10
+          },
+          "end_position": {
+            "line": 186,
+            "column": 18
+          },
+          "start_offset": 6174,
+          "end_offset": 6182
+        },
+        "goals": [
+          "Join ParallelReduction (a'✝ ⬝ b'✝) b✝"
+        ],
+        "local_context": [
+          "case par.red_I\na✝ b✝¹ a'✝ b✝ b'✝ : SKI\na' : b✝ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\na : I ⭢ₚ a'✝\nb : ∀ {c : SKI}, I ⭢ₚ c → Join ParallelReduction a'✝ c\nha' : sorry"
+        ],
+        "proof_state_source": "lean_infotree_before_tactic",
+        "proof_state_raw": {
+          "depth": 16,
+          "end": 13602,
+          "goals_after": [
+            "case par.red_I\na✝ b✝¹ a'✝ b✝ b'✝ : SKI\na' : b✝ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\na : I ⭢ₚ a'✝\nb : ∀ {c : SKI}, I ⭢ₚ c → Join ParallelReduction a'✝ c\nha' : sorry\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) b✝"
+          ],
+          "goals_before": [
+            "case par.red_I\na✝ b✝¹ a'✝ b✝ b'✝ : SKI\na' : b✝ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\na : I ⭢ₚ a'✝\nb : ∀ {c : SKI}, I ⭢ₚ c → Join ParallelReduction a'✝ c\nha' : sorry\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) b✝"
+          ],
+          "kind": "tactic",
+          "start": 13594
+        }
+      },
+      {
+        "severity": "error",
+        "position": {
+          "column": 50,
+          "line": 189
+        },
+        "end_position": {
+          "column": 52,
+          "line": 189
+        },
+        "message": "Application type mismatch: The argument\n  a'\nhas type\n  b✝ ⭢ₚ b'✝\nof sort `Prop` but is expected to have type\n  SKI\nof sort `Type` in the application\n  Ka_irreducible ?m.797 a'",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "Application type mismatch: The argument\n  a'\nhas type\n  b✝ ⭢ₚ b'✝\nof sort `Prop` but is expected to have type\n  SKI\nof sort `Type` in the application\n  Ka_irreducible ?m.797 a'",
+          "endPos": {
+            "column": 52,
+            "line": 189
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 50,
+            "line": 189
+          },
+          "severity": "error"
+        },
+        "source_line": "          obtain ⟨x, hx, ha'⟩ := Ka_irreducible _ a' ha",
+        "start_offset": 6286,
+        "start_byte_offset": 6583,
+        "end_offset": 6288,
+        "end_byte_offset": 6585,
+        "source_text": "a'",
+        "failed_tactic": "obtain ⟨x, hx, ha'⟩ := Ka_irreducible _ a' ha",
+        "tactic_range": {
+          "position": {
+            "line": 189,
+            "column": 10
+          },
+          "end_position": {
+            "line": 189,
+            "column": 55
+          },
+          "start_offset": 6246,
+          "end_offset": 6291
+        },
+        "goals": [
+          "Join ParallelReduction (a'✝ ⬝ b'✝) c"
+        ],
+        "local_context": [
+          "case par.red_K\na✝ b✝¹ a'✝ b✝ b'✝ : SKI\na' : b✝ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\nc : SKI\na : (K ⬝ c) ⭢ₚ a'✝\nb : ∀ {c_1 : SKI}, (K ⬝ c) ⭢ₚ c_1 → Join ParallelReduction a'✝ c_1"
+        ],
+        "proof_state_source": "lean_infotree_before_tactic",
+        "proof_state_raw": {
+          "depth": 16,
+          "end": 13719,
+          "goals_after": [
+            "case par.red_K\na✝ b✝¹ a'✝ b✝ b'✝ : SKI\na' : b✝ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\nc : SKI\na : (K ⬝ c) ⭢ₚ a'✝\nb : ∀ {c_1 : SKI}, (K ⬝ c) ⭢ₚ c_1 → Join ParallelReduction a'✝ c_1\nx : SKI\nhx : ?m.797 ⭢ₚ x\nha' : sorry = K ⬝ x\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) c"
+          ],
+          "goals_before": [
+            "case par.red_K\na✝ b✝¹ a'✝ b✝ b'✝ : SKI\na' : b✝ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\nc : SKI\na : (K ⬝ c) ⭢ₚ a'✝\nb : ∀ {c_1 : SKI}, (K ⬝ c) ⭢ₚ c_1 → Join ParallelReduction a'✝ c_1\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) c"
+          ],
+          "kind": "tactic",
+          "start": 13670
+        }
+      },
+      {
+        "severity": "error",
+        "position": {
+          "column": 53,
+          "line": 189
+        },
+        "end_position": {
+          "column": 55,
+          "line": 189
+        },
+        "message": "Unknown identifier `ha`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "Unknown identifier `ha`",
+          "endPos": {
+            "column": 55,
+            "line": 189
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "lean.unknownIdentifier._namedError",
+          "pos": {
+            "column": 53,
+            "line": 189
+          },
+          "severity": "error"
+        },
+        "source_line": "          obtain ⟨x, hx, ha'⟩ := Ka_irreducible _ a' ha",
+        "start_offset": 6289,
+        "start_byte_offset": 6586,
+        "end_offset": 6291,
+        "end_byte_offset": 6588,
+        "source_text": "ha",
+        "failed_tactic": "obtain ⟨x, hx, ha'⟩ := Ka_irreducible _ a' ha",
+        "tactic_range": {
+          "position": {
+            "line": 189,
+            "column": 10
+          },
+          "end_position": {
+            "line": 189,
+            "column": 55
+          },
+          "start_offset": 6246,
+          "end_offset": 6291
+        },
+        "goals": [
+          "Join ParallelReduction (a'✝ ⬝ b'✝) c"
+        ],
+        "local_context": [
+          "case par.red_K\na✝ b✝¹ a'✝ b✝ b'✝ : SKI\na' : b✝ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\nc : SKI\na : (K ⬝ c) ⭢ₚ a'✝\nb : ∀ {c_1 : SKI}, (K ⬝ c) ⭢ₚ c_1 → Join ParallelReduction a'✝ c_1"
+        ],
+        "proof_state_source": "lean_infotree_before_tactic",
+        "proof_state_raw": {
+          "depth": 16,
+          "end": 13719,
+          "goals_after": [
+            "case par.red_K\na✝ b✝¹ a'✝ b✝ b'✝ : SKI\na' : b✝ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\nc : SKI\na : (K ⬝ c) ⭢ₚ a'✝\nb : ∀ {c_1 : SKI}, (K ⬝ c) ⭢ₚ c_1 → Join ParallelReduction a'✝ c_1\nx : SKI\nhx : ?m.797 ⭢ₚ x\nha' : sorry = K ⬝ x\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) c"
+          ],
+          "goals_before": [
+            "case par.red_K\na✝ b✝¹ a'✝ b✝ b'✝ : SKI\na' : b✝ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\nc : SKI\na : (K ⬝ c) ⭢ₚ a'✝\nb : ∀ {c_1 : SKI}, (K ⬝ c) ⭢ₚ c_1 → Join ParallelReduction a'✝ c_1\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) c"
+          ],
+          "kind": "tactic",
+          "start": 13670
+        }
+      },
+      {
+        "severity": "error",
+        "position": {
+          "column": 10,
+          "line": 190
+        },
+        "end_position": {
+          "column": 18,
+          "line": 190
+        },
+        "message": "Tactic `subst` failed: did not find equation for eliminating 'a''\n\ncase par.red_K\na✝ b✝¹ a'✝ b✝ b'✝ : SKI\na' : b✝ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\nc : SKI\na : (K ⬝ c) ⭢ₚ a'✝\nb : ∀ {c_1 : SKI}, (K ⬝ c) ⭢ₚ c_1 → Join ParallelReduction a'✝ c_1\nx : SKI\nhx : ?m.797 ⭢ₚ x\nha' : sorry = K ⬝ x\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) c",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "Tactic `subst` failed: did not find equation for eliminating 'a''\n\ncase par.red_K\na✝ b✝¹ a'✝ b✝ b'✝ : SKI\na' : b✝ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\nc : SKI\na : (K ⬝ c) ⭢ₚ a'✝\nb : ∀ {c_1 : SKI}, (K ⬝ c) ⭢ₚ c_1 → Join ParallelReduction a'✝ c_1\nx : SKI\nhx : ?m.797 ⭢ₚ x\nha' : sorry = K ⬝ x\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) c",
+          "endPos": {
+            "column": 18,
+            "line": 190
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 10,
+            "line": 190
+          },
+          "severity": "error"
+        },
+        "source_line": "          subst a'",
+        "start_offset": 6302,
+        "start_byte_offset": 6599,
+        "end_offset": 6310,
+        "end_byte_offset": 6607,
+        "source_text": "subst a'",
+        "failed_tactic": "subst a'",
+        "tactic_range": {
+          "position": {
+            "line": 190,
+            "column": 10
+          },
+          "end_position": {
+            "line": 190,
+            "column": 18
+          },
+          "start_offset": 6302,
+          "end_offset": 6310
+        },
+        "goals": [
+          "Join ParallelReduction (a'✝ ⬝ b'✝) c"
+        ],
+        "local_context": [
+          "case par.red_K\na✝ b✝¹ a'✝ b✝ b'✝ : SKI\na' : b✝ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\nc : SKI\na : (K ⬝ c) ⭢ₚ a'✝\nb : ∀ {c_1 : SKI}, (K ⬝ c) ⭢ₚ c_1 → Join ParallelReduction a'✝ c_1\nx : SKI\nhx : ?m.797 ⭢ₚ x\nha' : sorry = K ⬝ x"
+        ],
+        "proof_state_source": "lean_infotree_before_tactic",
+        "proof_state_raw": {
+          "depth": 16,
+          "end": 13738,
+          "goals_after": [
+            "case par.red_K\na✝ b✝¹ a'✝ b✝ b'✝ : SKI\na' : b✝ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\nc : SKI\na : (K ⬝ c) ⭢ₚ a'✝\nb : ∀ {c_1 : SKI}, (K ⬝ c) ⭢ₚ c_1 → Join ParallelReduction a'✝ c_1\nx : SKI\nhx : ?m.797 ⭢ₚ x\nha' : sorry = K ⬝ x\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) c"
+          ],
+          "goals_before": [
+            "case par.red_K\na✝ b✝¹ a'✝ b✝ b'✝ : SKI\na' : b✝ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\nc : SKI\na : (K ⬝ c) ⭢ₚ a'✝\nb : ∀ {c_1 : SKI}, (K ⬝ c) ⭢ₚ c_1 → Join ParallelReduction a'✝ c_1\nx : SKI\nhx : ?m.797 ⭢ₚ x\nha' : sorry = K ⬝ x\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) c"
+          ],
+          "kind": "tactic",
+          "start": 13730
+        }
+      },
+      {
+        "severity": "error",
+        "position": {
+          "column": 60,
+          "line": 193
+        },
+        "end_position": {
+          "column": 62,
+          "line": 193
+        },
+        "message": "Application type mismatch: The argument\n  a'\nhas type\n  b✝¹ ⭢ₚ b'✝\nof sort `Prop` but is expected to have type\n  SKI\nof sort `Type` in the application\n  Sab_irreducible ?m.860 ?m.861 a'",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "Application type mismatch: The argument\n  a'\nhas type\n  b✝¹ ⭢ₚ b'✝\nof sort `Prop` but is expected to have type\n  SKI\nof sort `Type` in the application\n  Sab_irreducible ?m.860 ?m.861 a'",
+          "endPos": {
+            "column": 62,
+            "line": 193
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 60,
+            "line": 193
+          },
+          "severity": "error"
+        },
+        "source_line": "          obtain ⟨x, y, hx, hy, ha'⟩ := Sab_irreducible _ _ a' ha",
+        "start_offset": 6429,
+        "start_byte_offset": 6734,
+        "end_offset": 6431,
+        "end_byte_offset": 6736,
+        "source_text": "a'",
+        "failed_tactic": "obtain ⟨x, y, hx, hy, ha'⟩ := Sab_irreducible _ _ a' ha",
+        "tactic_range": {
+          "position": {
+            "line": 193,
+            "column": 10
+          },
+          "end_position": {
+            "line": 193,
+            "column": 65
+          },
+          "start_offset": 6379,
+          "end_offset": 6434
+        },
+        "goals": [
+          "Join ParallelReduction (a'✝ ⬝ b'✝) (a✝ ⬝ b✝¹ ⬝ (b✝ ⬝ b✝¹))"
+        ],
+        "local_context": [
+          "case par.red_S\na✝¹ b✝² a'✝ b✝¹ b'✝ : SKI\na' : b✝¹ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝¹ ⭢ₚ c → Join ParallelReduction b'✝ c\na✝ b✝ : SKI\na : (S ⬝ a✝ ⬝ b✝) ⭢ₚ a'✝\nb : ∀ {c : SKI}, (S ⬝ a✝ ⬝ b✝) ⭢ₚ c → Join ParallelReduction a'✝ c"
+        ],
+        "proof_state_source": "lean_infotree_before_tactic",
+        "proof_state_raw": {
+          "depth": 16,
+          "end": 13870,
+          "goals_after": [
+            "case par.red_S\na✝¹ b✝² a'✝ b✝¹ b'✝ : SKI\na' : b✝¹ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝¹ ⭢ₚ c → Join ParallelReduction b'✝ c\na✝ b✝ : SKI\na : (S ⬝ a✝ ⬝ b✝) ⭢ₚ a'✝\nb : ∀ {c : SKI}, (S ⬝ a✝ ⬝ b✝) ⭢ₚ c → Join ParallelReduction a'✝ c\nx y : SKI\nhx : ?m.860 ⭢ₚ x\nhy : ?m.861 ⭢ₚ y\nha' : sorry = S ⬝ x ⬝ y\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) (a✝ ⬝ b✝¹ ⬝ (b✝ ⬝ b✝¹))"
+          ],
+          "goals_before": [
+            "case par.red_S\na✝¹ b✝² a'✝ b✝¹ b'✝ : SKI\na' : b✝¹ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝¹ ⭢ₚ c → Join ParallelReduction b'✝ c\na✝ b✝ : SKI\na : (S ⬝ a✝ ⬝ b✝) ⭢ₚ a'✝\nb : ∀ {c : SKI}, (S ⬝ a✝ ⬝ b✝) ⭢ₚ c → Join ParallelReduction a'✝ c\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) (a✝ ⬝ b✝¹ ⬝ (b✝ ⬝ b✝¹))"
+          ],
+          "kind": "tactic",
+          "start": 13811
+        }
+      },
+      {
+        "severity": "error",
+        "position": {
+          "column": 63,
+          "line": 193
+        },
+        "end_position": {
+          "column": 65,
+          "line": 193
+        },
+        "message": "Unknown identifier `ha`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "Unknown identifier `ha`",
+          "endPos": {
+            "column": 65,
+            "line": 193
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "lean.unknownIdentifier._namedError",
+          "pos": {
+            "column": 63,
+            "line": 193
+          },
+          "severity": "error"
+        },
+        "source_line": "          obtain ⟨x, y, hx, hy, ha'⟩ := Sab_irreducible _ _ a' ha",
+        "start_offset": 6432,
+        "start_byte_offset": 6737,
+        "end_offset": 6434,
+        "end_byte_offset": 6739,
+        "source_text": "ha",
+        "failed_tactic": "obtain ⟨x, y, hx, hy, ha'⟩ := Sab_irreducible _ _ a' ha",
+        "tactic_range": {
+          "position": {
+            "line": 193,
+            "column": 10
+          },
+          "end_position": {
+            "line": 193,
+            "column": 65
+          },
+          "start_offset": 6379,
+          "end_offset": 6434
+        },
+        "goals": [
+          "Join ParallelReduction (a'✝ ⬝ b'✝) (a✝ ⬝ b✝¹ ⬝ (b✝ ⬝ b✝¹))"
+        ],
+        "local_context": [
+          "case par.red_S\na✝¹ b✝² a'✝ b✝¹ b'✝ : SKI\na' : b✝¹ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝¹ ⭢ₚ c → Join ParallelReduction b'✝ c\na✝ b✝ : SKI\na : (S ⬝ a✝ ⬝ b✝) ⭢ₚ a'✝\nb : ∀ {c : SKI}, (S ⬝ a✝ ⬝ b✝) ⭢ₚ c → Join ParallelReduction a'✝ c"
+        ],
+        "proof_state_source": "lean_infotree_before_tactic",
+        "proof_state_raw": {
+          "depth": 16,
+          "end": 13870,
+          "goals_after": [
+            "case par.red_S\na✝¹ b✝² a'✝ b✝¹ b'✝ : SKI\na' : b✝¹ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝¹ ⭢ₚ c → Join ParallelReduction b'✝ c\na✝ b✝ : SKI\na : (S ⬝ a✝ ⬝ b✝) ⭢ₚ a'✝\nb : ∀ {c : SKI}, (S ⬝ a✝ ⬝ b✝) ⭢ₚ c → Join ParallelReduction a'✝ c\nx y : SKI\nhx : ?m.860 ⭢ₚ x\nhy : ?m.861 ⭢ₚ y\nha' : sorry = S ⬝ x ⬝ y\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) (a✝ ⬝ b✝¹ ⬝ (b✝ ⬝ b✝¹))"
+          ],
+          "goals_before": [
+            "case par.red_S\na✝¹ b✝² a'✝ b✝¹ b'✝ : SKI\na' : b✝¹ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝¹ ⭢ₚ c → Join ParallelReduction b'✝ c\na✝ b✝ : SKI\na : (S ⬝ a✝ ⬝ b✝) ⭢ₚ a'✝\nb : ∀ {c : SKI}, (S ⬝ a✝ ⬝ b✝) ⭢ₚ c → Join ParallelReduction a'✝ c\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) (a✝ ⬝ b✝¹ ⬝ (b✝ ⬝ b✝¹))"
+          ],
+          "kind": "tactic",
+          "start": 13811
+        }
+      },
+      {
+        "severity": "error",
+        "position": {
+          "column": 10,
+          "line": 194
+        },
+        "end_position": {
+          "column": 18,
+          "line": 194
+        },
+        "message": "Tactic `subst` failed: did not find equation for eliminating 'a''\n\ncase par.red_S\na✝¹ b✝² a'✝ b✝¹ b'✝ : SKI\na' : b✝¹ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝¹ ⭢ₚ c → Join ParallelReduction b'✝ c\na✝ b✝ : SKI\na : (S ⬝ a✝ ⬝ b✝) ⭢ₚ a'✝\nb : ∀ {c : SKI}, (S ⬝ a✝ ⬝ b✝) ⭢ₚ c → Join ParallelReduction a'✝ c\nx y : SKI\nhx : ?m.860 ⭢ₚ x\nhy : ?m.861 ⭢ₚ y\nha' : sorry = S ⬝ x ⬝ y\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) (a✝ ⬝ b✝¹ ⬝ (b✝ ⬝ b✝¹))",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "Tactic `subst` failed: did not find equation for eliminating 'a''\n\ncase par.red_S\na✝¹ b✝² a'✝ b✝¹ b'✝ : SKI\na' : b✝¹ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝¹ ⭢ₚ c → Join ParallelReduction b'✝ c\na✝ b✝ : SKI\na : (S ⬝ a✝ ⬝ b✝) ⭢ₚ a'✝\nb : ∀ {c : SKI}, (S ⬝ a✝ ⬝ b✝) ⭢ₚ c → Join ParallelReduction a'✝ c\nx y : SKI\nhx : ?m.860 ⭢ₚ x\nhy : ?m.861 ⭢ₚ y\nha' : sorry = S ⬝ x ⬝ y\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) (a✝ ⬝ b✝¹ ⬝ (b✝ ⬝ b✝¹))",
+          "endPos": {
+            "column": 18,
+            "line": 194
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 10,
+            "line": 194
+          },
+          "severity": "error"
+        },
+        "source_line": "          subst a'",
+        "start_offset": 6445,
+        "start_byte_offset": 6750,
+        "end_offset": 6453,
+        "end_byte_offset": 6758,
+        "source_text": "subst a'",
+        "failed_tactic": "subst a'",
+        "tactic_range": {
+          "position": {
+            "line": 194,
+            "column": 10
+          },
+          "end_position": {
+            "line": 194,
+            "column": 18
+          },
+          "start_offset": 6445,
+          "end_offset": 6453
+        },
+        "goals": [
+          "Join ParallelReduction (a'✝ ⬝ b'✝) (a✝ ⬝ b✝¹ ⬝ (b✝ ⬝ b✝¹))"
+        ],
+        "local_context": [
+          "case par.red_S\na✝¹ b✝² a'✝ b✝¹ b'✝ : SKI\na' : b✝¹ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝¹ ⭢ₚ c → Join ParallelReduction b'✝ c\na✝ b✝ : SKI\na : (S ⬝ a✝ ⬝ b✝) ⭢ₚ a'✝\nb : ∀ {c : SKI}, (S ⬝ a✝ ⬝ b✝) ⭢ₚ c → Join ParallelReduction a'✝ c\nx y : SKI\nhx : ?m.860 ⭢ₚ x\nhy : ?m.861 ⭢ₚ y\nha' : sorry = S ⬝ x ⬝ y"
+        ],
+        "proof_state_source": "lean_infotree_before_tactic",
+        "proof_state_raw": {
+          "depth": 16,
+          "end": 13889,
+          "goals_after": [
+            "case par.red_S\na✝¹ b✝² a'✝ b✝¹ b'✝ : SKI\na' : b✝¹ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝¹ ⭢ₚ c → Join ParallelReduction b'✝ c\na✝ b✝ : SKI\na : (S ⬝ a✝ ⬝ b✝) ⭢ₚ a'✝\nb : ∀ {c : SKI}, (S ⬝ a✝ ⬝ b✝) ⭢ₚ c → Join ParallelReduction a'✝ c\nx y : SKI\nhx : ?m.860 ⭢ₚ x\nhy : ?m.861 ⭢ₚ y\nha' : sorry = S ⬝ x ⬝ y\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) (a✝ ⬝ b✝¹ ⬝ (b✝ ⬝ b✝¹))"
+          ],
+          "goals_before": [
+            "case par.red_S\na✝¹ b✝² a'✝ b✝¹ b'✝ : SKI\na' : b✝¹ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝¹ ⭢ₚ c → Join ParallelReduction b'✝ c\na✝ b✝ : SKI\na : (S ⬝ a✝ ⬝ b✝) ⭢ₚ a'✝\nb : ∀ {c : SKI}, (S ⬝ a✝ ⬝ b✝) ⭢ₚ c → Join ParallelReduction a'✝ c\nx y : SKI\nhx : ?m.860 ⭢ₚ x\nhy : ?m.861 ⭢ₚ y\nha' : sorry = S ⬝ x ⬝ y\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) (a✝ ⬝ b✝¹ ⬝ (b✝ ⬝ b✝¹))"
+          ],
+          "kind": "tactic",
+          "start": 13881
+        }
+      },
+      {
+        "severity": "error",
+        "position": {
+          "column": 6,
+          "line": 199
+        },
+        "end_position": {
+          "column": 51,
+          "line": 202
+        },
+        "message": "Too many variable names provided at alternative `par`: 4 provided, but 2 expected",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "Too many variable names provided at alternative `par`: 4 provided, but 2 expected",
+          "endPos": {
+            "column": 51,
+            "line": 202
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 6,
+            "line": 199
+          },
+          "severity": "error"
+        },
+        "source_line": "      | par c' d' hc hd =>",
+        "start_offset": 6583,
+        "start_byte_offset": 6898,
+        "end_offset": 6737,
+        "end_byte_offset": 7082,
+        "source_text": "| par c' d' hc hd =>\n          obtain ⟨x, hx₁, hx₂⟩ := iha hc\n          obtain ⟨y, hy₁, hy₂⟩ := ihb hd\n          exact ⟨x ⬝ y, .par hx₁ hy₁, .par hx₂ hy₂⟩",
+        "failed_tactic": "| par c' d' hc hd =>",
+        "tactic_range": {
+          "position": {
+            "line": 199,
+            "column": 6
+          },
+          "end_position": {
+            "line": 199,
+            "column": 26
+          },
+          "start_offset": 6583,
+          "end_offset": 6603
+        },
+        "goals": [
+          "Join ParallelReduction (a'✝¹ ⬝ b'✝¹) (a'✝ ⬝ b'✝)"
+        ],
+        "local_context": [
+          "case par.par\na✝¹ b✝¹ a✝ a'✝¹ b✝ b'✝¹ : SKI\na : a✝ ⭢ₚ a'✝¹\na' : b✝ ⭢ₚ b'✝¹\nb : ∀ {c : SKI}, a✝ ⭢ₚ c → Join ParallelReduction a'✝¹ c\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝¹ c\na'✝ b'✝ : SKI\nc' : a✝ ⭢ₚ a'✝\nd' : b✝ ⭢ₚ b'✝"
+        ],
+        "proof_state_source": "lean_infotree_before_tactic",
+        "proof_state_raw": {
+          "depth": 13,
+          "end": 14049,
+          "goals_after": [],
+          "goals_before": [
+            "case par.par\na✝¹ b✝¹ a✝ a'✝¹ b✝ b'✝¹ : SKI\na : a✝ ⭢ₚ a'✝¹\na' : b✝ ⭢ₚ b'✝¹\nb : ∀ {c : SKI}, a✝ ⭢ₚ c → Join ParallelReduction a'✝¹ c\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝¹ c\na'✝ b'✝ : SKI\nc' : a✝ ⭢ₚ a'✝\nd' : b✝ ⭢ₚ b'✝\n⊢ Join ParallelReduction (a'✝¹ ⬝ b'✝¹) (a'✝ ⬝ b'✝)"
+          ],
+          "kind": "tactic",
+          "start": 14029
+        }
+      },
+      {
+        "severity": "error",
+        "position": {
+          "column": 34,
+          "line": 200
+        },
+        "end_position": {
+          "column": 37,
+          "line": 200
+        },
+        "message": "Unknown identifier `iha`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "Unknown identifier `iha`",
+          "endPos": {
+            "column": 37,
+            "line": 200
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "lean.unknownIdentifier._namedError",
+          "pos": {
+            "column": 34,
+            "line": 200
+          },
+          "severity": "error"
+        },
+        "source_line": "          obtain ⟨x, hx₁, hx₂⟩ := iha hc",
+        "start_offset": 6638,
+        "start_byte_offset": 6961,
+        "end_offset": 6641,
+        "end_byte_offset": 6964,
+        "source_text": "iha",
+        "failed_tactic": "obtain ⟨x, hx₁, hx₂⟩ := iha hc",
+        "tactic_range": {
+          "position": {
+            "line": 200,
+            "column": 10
+          },
+          "end_position": {
+            "line": 200,
+            "column": 40
+          },
+          "start_offset": 6614,
+          "end_offset": 6644
+        },
+        "goals": [
+          "Join ParallelReduction (a'✝¹ ⬝ b'✝¹) (a'✝ ⬝ b'✝)"
+        ],
+        "local_context": [
+          "case par.par\na✝¹ b✝¹ a✝ a'✝¹ b✝ b'✝¹ : SKI\na : a✝ ⭢ₚ a'✝¹\na' : b✝ ⭢ₚ b'✝¹\nb : ∀ {c : SKI}, a✝ ⭢ₚ c → Join ParallelReduction a'✝¹ c\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝¹ c\na'✝ b'✝ : SKI\nc' : a✝ ⭢ₚ a'✝\nd' : b✝ ⭢ₚ b'✝"
+        ],
+        "proof_state_source": "lean_infotree_before_tactic",
+        "proof_state_raw": {
+          "depth": 16,
+          "end": 14098,
+          "goals_after": [],
+          "goals_before": [
+            "case par.par\na✝¹ b✝¹ a✝ a'✝¹ b✝ b'✝¹ : SKI\na : a✝ ⭢ₚ a'✝¹\na' : b✝ ⭢ₚ b'✝¹\nb : ∀ {c : SKI}, a✝ ⭢ₚ c → Join ParallelReduction a'✝¹ c\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝¹ c\na'✝ b'✝ : SKI\nc' : a✝ ⭢ₚ a'✝\nd' : b✝ ⭢ₚ b'✝\n⊢ Join ParallelReduction (a'✝¹ ⬝ b'✝¹) (a'✝ ⬝ b'✝)"
+          ],
+          "kind": "tactic",
+          "start": 14060
+        }
+      },
+      {
+        "severity": "error",
+        "position": {
+          "column": 17,
+          "line": 200
+        },
+        "end_position": {
+          "column": 30,
+          "line": 200
+        },
+        "message": "Tactic `rcases` failed: `x✝ : ?m.940` is not an inductive datatype",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "Tactic `rcases` failed: `x✝ : ?m.940` is not an inductive datatype",
+          "endPos": {
+            "column": 30,
+            "line": 200
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 17,
+            "line": 200
+          },
+          "severity": "error"
+        },
+        "source_line": "          obtain ⟨x, hx₁, hx₂⟩ := iha hc",
+        "start_offset": 6621,
+        "start_byte_offset": 6936,
+        "end_offset": 6634,
+        "end_byte_offset": 6957,
+        "source_text": "⟨x, hx₁, hx₂⟩",
+        "failed_tactic": "obtain ⟨x, hx₁, hx₂⟩ := iha hc",
+        "tactic_range": {
+          "position": {
+            "line": 200,
+            "column": 10
+          },
+          "end_position": {
+            "line": 200,
+            "column": 40
+          },
+          "start_offset": 6614,
+          "end_offset": 6644
+        },
+        "goals": [
+          "Join ParallelReduction (a'✝¹ ⬝ b'✝¹) (a'✝ ⬝ b'✝)"
+        ],
+        "local_context": [
+          "case par.par\na✝¹ b✝¹ a✝ a'✝¹ b✝ b'✝¹ : SKI\na : a✝ ⭢ₚ a'✝¹\na' : b✝ ⭢ₚ b'✝¹\nb : ∀ {c : SKI}, a✝ ⭢ₚ c → Join ParallelReduction a'✝¹ c\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝¹ c\na'✝ b'✝ : SKI\nc' : a✝ ⭢ₚ a'✝\nd' : b✝ ⭢ₚ b'✝"
+        ],
+        "proof_state_source": "lean_infotree_before_tactic",
+        "proof_state_raw": {
+          "depth": 16,
+          "end": 14098,
+          "goals_after": [],
+          "goals_before": [
+            "case par.par\na✝¹ b✝¹ a✝ a'✝¹ b✝ b'✝¹ : SKI\na : a✝ ⭢ₚ a'✝¹\na' : b✝ ⭢ₚ b'✝¹\nb : ∀ {c : SKI}, a✝ ⭢ₚ c → Join ParallelReduction a'✝¹ c\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝¹ c\na'✝ b'✝ : SKI\nc' : a✝ ⭢ₚ a'✝\nd' : b✝ ⭢ₚ b'✝\n⊢ Join ParallelReduction (a'✝¹ ⬝ b'✝¹) (a'✝ ⬝ b'✝)"
+          ],
+          "kind": "tactic",
+          "start": 14060
+        }
+      },
+      {
+        "severity": "information",
+        "position": {
+          "column": 0,
+          "line": 224
+        },
+        "end_position": {
+          "column": 6,
+          "line": 224
+        },
+        "message": "Cslib.SKI.parallelReduction_diamond : Relation.Diamond Cslib.SKI.ParallelReduction",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "Cslib.SKI.parallelReduction_diamond : Relation.Diamond Cslib.SKI.ParallelReduction",
+          "endPos": {
+            "column": 6,
+            "line": 224
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 0,
+            "line": 224
+          },
+          "severity": "information"
+        }
+      },
+      {
+        "severity": "information",
+        "position": {
+          "column": 0,
+          "line": 225
+        },
+        "end_position": {
+          "column": 6,
+          "line": 225
+        },
+        "message": "'Cslib.SKI.parallelReduction_diamond' depends on axioms: [sorryAx]",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "'Cslib.SKI.parallelReduction_diamond' depends on axioms: [sorryAx]",
+          "endPos": {
+            "column": 6,
+            "line": 225
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 0,
+            "line": 225
+          },
+          "severity": "information"
+        }
+      }
+    ],
+    "goals": [
+      "Join ParallelReduction a✝ (a'✝ ⬝ b'✝)"
+    ],
+    "local_context": [
+      "case red_I.par\na b a✝ a'✝ b'✝ : SKI\ni' : I ⭢ₚ a'✝\na' : a✝ ⭢ₚ b'✝"
+    ],
+    "sorries": [
+      {
+        "kind": "transitive_dependency",
+        "axiom": "sorryAx",
+        "position": null,
+        "end_position": null
+      }
+    ],
+    "axioms": [
+      "sorryAx"
+    ],
+    "detail": null,
+    "raw_lean_output": "{\"caption\":\"\",\"data\":\"Too many variable names provided at alternative `par`: 4 provided, but 2 expected\",\"endPos\":{\"column\":35,\"line\":156},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"[anonymous]\",\"pos\":{\"column\":6,\"line\":153},\"severity\":\"error\"}\n{\"caption\":\"\",\"data\":\"Type mismatch\\n  I\\nhas type\\n  SKI\\nof sort `Type` but is expected to have type\\n  I ⭢ₚ a'✝\\nof sort `Prop`\",\"endPos\":{\"column\":27,\"line\":154},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"[anonymous]\",\"pos\":{\"column\":26,\"line\":154},\"severity\":\"error\"}\n{\"caption\":\"\",\"data\":\"Application type mismatch: The argument\\n  i'\\nhas type\\n  I ⭢ₚ a'✝\\nof sort `Prop` but is expected to have type\\n  SKI\\nof sort `Type` in the application\\n  I_irreducible i'\",\"endPos\":{\"column\":47,\"line\":154},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"[anonymous]\",\"pos\":{\"column\":45,\"line\":154},\"severity\":\"error\"}\n{\"caption\":\"\",\"data\":\"Unknown identifier `hi`\",\"endPos\":{\"column\":50,\"line\":154},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"lean.unknownIdentifier._namedError\",\"pos\":{\"column\":48,\"line\":154},\"severity\":\"error\"}\n{\"caption\":\"\",\"data\":\"Tactic `subst` failed: did not find equation for eliminating 'i''\\n\\ncase red_I.par\\na b a✝ a'✝ b'✝ : SKI\\ni' : I ⭢ₚ a'✝\\na' : a✝ ⭢ₚ b'✝\\nhi' : sorry\\n⊢ Join ParallelReduction a✝ (a'✝ ⬝ b'✝)\",\"endPos\":{\"column\":18,\"line\":155},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"[anonymous]\",\"pos\":{\"column\":10,\"line\":155},\"severity\":\"error\"}\n{\"caption\":\"\",\"data\":\"Too many variable names provided at alternative `par`: 4 provided, but 2 expected\",\"endPos\":{\"column\":36,\"line\":166},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"[anonymous]\",\"pos\":{\"column\":6,\"line\":163},\"severity\":\"error\"}\n{\"caption\":\"\",\"data\":\"Application type mismatch: The argument\\n  k'\\nhas type\\n  (K ⬝ a✝) ⭢ₚ a'✝\\nof sort `Prop` but is expected to have type\\n  SKI\\nof sort `Type` in the application\\n  Ka_irreducible ?m.372 k'\",\"endPos\":{\"column\":52,\"line\":164},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"[anonymous]\",\"pos\":{\"column\":50,\"line\":164},\"severity\":\"error\"}\n{\"caption\":\"\",\"data\":\"Unknown identifier `hk`\",\"endPos\":{\"column\":55,\"line\":164},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"lean.unknownIdentifier._namedError\",\"pos\":{\"column\":53,\"line\":164},\"severity\":\"error\"}\n{\"caption\":\"\",\"data\":\"Tactic `subst` failed: did not find equation for eliminating 'k''\\n\\ncase red_K.par\\na b a✝ b✝ a'✝ b'✝ : SKI\\nk' : (K ⬝ a✝) ⭢ₚ a'✝\\nb' : b✝ ⭢ₚ b'✝\\nx : SKI\\nhx : ?m.372 ⭢ₚ x\\nhk' : sorry = K ⬝ x\\n⊢ Join ParallelReduction a✝ (a'✝ ⬝ b'✝)\",\"endPos\":{\"column\":18,\"line\":165},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"[anonymous]\",\"pos\":{\"column\":10,\"line\":165},\"severity\":\"error\"}\n{\"caption\":\"\",\"data\":\"Too many variable names provided at alternative `par`: 4 provided, but 2 expected\",\"endPos\":{\"column\":28,\"line\":179},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"[anonymous]\",\"pos\":{\"column\":6,\"line\":173},\"severity\":\"error\"}\n{\"caption\":\"\",\"data\":\"Application type mismatch: The argument\\n  s'\\nhas type\\n  (S ⬝ a✝ ⬝ b✝) ⭢ₚ a'✝\\nof sort `Prop` but is expected to have type\\n  SKI\\nof sort `Type` in the application\\n  Sab_irreducible ?m.588 ?m.589 s'\",\"endPos\":{\"column\":62,\"line\":174},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"[anonymous]\",\"pos\":{\"column\":60,\"line\":174},\"severity\":\"error\"}\n{\"caption\":\"\",\"data\":\"Unknown identifier `hs`\",\"endPos\":{\"column\":65,\"line\":174},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"lean.unknownIdentifier._namedError\",\"pos\":{\"column\":63,\"line\":174},\"severity\":\"error\"}\n{\"caption\":\"\",\"data\":\"Tactic `subst` failed: did not find equation for eliminating 's''\\n\\ncase red_S.par\\na b a✝ b✝ c✝ a'✝ b'✝ : SKI\\ns' : (S ⬝ a✝ ⬝ b✝) ⭢ₚ a'✝\\nc' : c✝ ⭢ₚ b'✝\\nx y : SKI\\nhx : ?m.588 ⭢ₚ x\\nhy : ?m.589 ⭢ₚ y\\nhs' : sorry = S ⬝ x ⬝ y\\n⊢ Join ParallelReduction (a✝ ⬝ c✝ ⬝ (b✝ ⬝ c✝)) (a'✝ ⬝ b'✝)\",\"endPos\":{\"column\":18,\"line\":175},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"[anonymous]\",\"pos\":{\"column\":10,\"line\":175},\"severity\":\"error\"}\n{\"caption\":\"\",\"data\":\"Too many variable names provided at alternative `par`: 8 provided, but 4 expected\",\"endPos\":{\"column\":51,\"line\":202},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"[anonymous]\",\"pos\":{\"column\":2,\"line\":180},\"severity\":\"error\"}\n{\"caption\":\"\",\"data\":\"Application type mismatch: The argument\\n  a'\\nhas type\\n  b✝ ⭢ₚ b'✝\\nof sort `Prop` but is expected to have type\\n  SKI\\nof sort `Type` in the application\\n  app a'\",\"endPos\":{\"column\":19,\"line\":183},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"[anonymous]\",\"pos\":{\"column\":17,\"line\":183},\"severity\":\"error\"}\n{\"caption\":\"\",\"data\":\"Unknown identifier `ha`\",\"endPos\":{\"column\":42,\"line\":183},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"lean.unknownIdentifier._namedError\",\"pos\":{\"column\":40,\"line\":183},\"severity\":\"error\"}\n{\"caption\":\"\",\"data\":\"Unknown identifier `hb`\",\"endPos\":{\"column\":45,\"line\":183},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"lean.unknownIdentifier._namedError\",\"pos\":{\"column\":43,\"line\":183},\"severity\":\"error\"}\n{\"caption\":\"\",\"data\":\"Type mismatch\\n  I\\nhas type\\n  SKI\\nof sort `Type` but is expected to have type\\n  b✝ ⭢ₚ b'✝\\nof sort `Prop`\",\"endPos\":{\"column\":27,\"line\":185},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"[anonymous]\",\"pos\":{\"column\":26,\"line\":185},\"severity\":\"error\"}\n{\"caption\":\"\",\"data\":\"Application type mismatch: The argument\\n  a'\\nhas type\\n  b✝ ⭢ₚ b'✝\\nof sort `Prop` but is expected to have type\\n  SKI\\nof sort `Type` in the application\\n  I_irreducible a'\",\"endPos\":{\"column\":47,\"line\":185},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"[anonymous]\",\"pos\":{\"column\":45,\"line\":185},\"severity\":\"error\"}\n{\"caption\":\"\",\"data\":\"Unknown identifier `ha`\",\"endPos\":{\"column\":50,\"line\":185},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"lean.unknownIdentifier._namedError\",\"pos\":{\"column\":48,\"line\":185},\"severity\":\"error\"}\n{\"caption\":\"\",\"data\":\"Tactic `subst` failed: did not find equation for eliminating 'a''\\n\\ncase par.red_I\\na✝ b✝¹ a'✝ b✝ b'✝ : SKI\\na' : b✝ ⭢ₚ b'✝\\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\\na : I ⭢ₚ a'✝\\nb : ∀ {c : SKI}, I ⭢ₚ c → Join ParallelReduction a'✝ c\\nha' : sorry\\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) b✝\",\"endPos\":{\"column\":18,\"line\":186},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"[anonymous]\",\"pos\":{\"column\":10,\"line\":186},\"severity\":\"error\"}\n{\"caption\":\"\",\"data\":\"Application type mismatch: The argument\\n  a'\\nhas type\\n  b✝ ⭢ₚ b'✝\\nof sort `Prop` but is expected to have type\\n  SKI\\nof sort `Type` in the application\\n  Ka_irreducible ?m.797 a'\",\"endPos\":{\"column\":52,\"line\":189},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"[anonymous]\",\"pos\":{\"column\":50,\"line\":189},\"severity\":\"error\"}\n{\"caption\":\"\",\"data\":\"Unknown identifier `ha`\",\"endPos\":{\"column\":55,\"line\":189},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"lean.unknownIdentifier._namedError\",\"pos\":{\"column\":53,\"line\":189},\"severity\":\"error\"}\n{\"caption\":\"\",\"data\":\"Tactic `subst` failed: did not find equation for eliminating 'a''\\n\\ncase par.red_K\\na✝ b✝¹ a'✝ b✝ b'✝ : SKI\\na' : b✝ ⭢ₚ b'✝\\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\\nc : SKI\\na : (K ⬝ c) ⭢ₚ a'✝\\nb : ∀ {c_1 : SKI}, (K ⬝ c) ⭢ₚ c_1 → Join ParallelReduction a'✝ c_1\\nx : SKI\\nhx : ?m.797 ⭢ₚ x\\nha' : sorry = K ⬝ x\\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) c\",\"endPos\":{\"column\":18,\"line\":190},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"[anonymous]\",\"pos\":{\"column\":10,\"line\":190},\"severity\":\"error\"}\n{\"caption\":\"\",\"data\":\"Application type mismatch: The argument\\n  a'\\nhas type\\n  b✝¹ ⭢ₚ b'✝\\nof sort `Prop` but is expected to have type\\n  SKI\\nof sort `Type` in the application\\n  Sab_irreducible ?m.860 ?m.861 a'\",\"endPos\":{\"column\":62,\"line\":193},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"[anonymous]\",\"pos\":{\"column\":60,\"line\":193},\"severity\":\"error\"}\n{\"caption\":\"\",\"data\":\"Unknown identifier `ha`\",\"endPos\":{\"column\":65,\"line\":193},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"lean.unknownIdentifier._namedError\",\"pos\":{\"column\":63,\"line\":193},\"severity\":\"error\"}\n{\"caption\":\"\",\"data\":\"Tactic `subst` failed: did not find equation for eliminating 'a''\\n\\ncase par.red_S\\na✝¹ b✝² a'✝ b✝¹ b'✝ : SKI\\na' : b✝¹ ⭢ₚ b'✝\\nb' : ∀ {c : SKI}, b✝¹ ⭢ₚ c → Join ParallelReduction b'✝ c\\na✝ b✝ : SKI\\na : (S ⬝ a✝ ⬝ b✝) ⭢ₚ a'✝\\nb : ∀ {c : SKI}, (S ⬝ a✝ ⬝ b✝) ⭢ₚ c → Join ParallelReduction a'✝ c\\nx y : SKI\\nhx : ?m.860 ⭢ₚ x\\nhy : ?m.861 ⭢ₚ y\\nha' : sorry = S ⬝ x ⬝ y\\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) (a✝ ⬝ b✝¹ ⬝ (b✝ ⬝ b✝¹))\",\"endPos\":{\"column\":18,\"line\":194},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"[anonymous]\",\"pos\":{\"column\":10,\"line\":194},\"severity\":\"error\"}\n{\"caption\":\"\",\"data\":\"Too many variable names provided at alternative `par`: 4 provided, but 2 expected\",\"endPos\":{\"column\":51,\"line\":202},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"[anonymous]\",\"pos\":{\"column\":6,\"line\":199},\"severity\":\"error\"}\n{\"caption\":\"\",\"data\":\"Unknown identifier `iha`\",\"endPos\":{\"column\":37,\"line\":200},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"lean.unknownIdentifier._namedError\",\"pos\":{\"column\":34,\"line\":200},\"severity\":\"error\"}\n{\"caption\":\"\",\"data\":\"Tactic `rcases` failed: `x✝ : ?m.940` is not an inductive datatype\",\"endPos\":{\"column\":30,\"line\":200},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"[anonymous]\",\"pos\":{\"column\":17,\"line\":200},\"severity\":\"error\"}\n{\"caption\":\"\",\"data\":\"Cslib.SKI.parallelReduction_diamond : Relation.Diamond Cslib.SKI.ParallelReduction\",\"endPos\":{\"column\":6,\"line\":224},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"[anonymous]\",\"pos\":{\"column\":0,\"line\":224},\"severity\":\"information\"}\n{\"caption\":\"\",\"data\":\"'Cslib.SKI.parallelReduction_diamond' depends on axioms: [sorryAx]\",\"endPos\":{\"column\":6,\"line\":225},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"[anonymous]\",\"pos\":{\"column\":0,\"line\":225},\"severity\":\"information\"}\n"
+  },
+  "guidance": "Repair the failed tactic using expected/actual types, goals and local context.",
+  "previous_diagnoses": [
+    "The theorem body was only `skip`. The repair proves the diamond property by induction on the first parallel reduction, analyzing the second reduction and resolving primitive-redex/application overlaps with the supplied irreducibility lemmas."
+  ]
+}

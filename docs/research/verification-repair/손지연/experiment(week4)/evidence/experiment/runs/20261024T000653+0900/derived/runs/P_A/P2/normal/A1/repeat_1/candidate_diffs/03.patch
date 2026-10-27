@@ -1,0 +1,112 @@
+--- original_input.proof.lean
++++ candidate_03.proof.lean
+@@ -1,78 +1,47 @@
+ by
+-  intros Hnorm
++  intro Hnorm
+   induction post <;>
+     simp [Imperative.HasVarsPure.getVars, extractOldExprVars,
+-          Lambda.LExpr.LExpr.getVars] at * <;>
++      Lambda.LExpr.LExpr.getVars] at * <;>
+     try simp_all
+   case app fn e fn_ih e_ih =>
+     unfold extractOldExprVars
+     split
+-    . simp [Lambda.LExpr.LExpr.getVars]
+-      intros x Hin
++    · simp [Lambda.LExpr.LExpr.getVars]
++      intro x Hin
+       exact Hin
+-    . next Hfalse =>
++    · next Hfalse =>
+       cases Hnorm with
+-      | app H1 H2 Hn =>
+-      exfalso
+-      specialize Hn ?_
+-      constructor
+-      cases Hn
+-      apply Hfalse
+-      rfl
+-    . cases Hnorm with
+-      | app H1 H2 Hn =>
+-      apply List.Subset.app
+-      . apply List.Subset.trans
+-        apply fn_ih
+-        exact H1
+-        intros x Hin
+-        simp_all
+-      . apply List.Subset.trans
+-        apply e_ih
+-        exact H2
+-        intros x Hin
+-        simp_all
++      | app Hfn He Hnold =>
++        exfalso
++        specialize Hnold (by constructor)
++        cases Hnold
++        exact Hfalse rfl
++    · cases Hnorm with
++      | app Hfn He _ =>
++        apply List.append_subset.mpr
++        exact ⟨fn_ih Hfn, e_ih He⟩
+   case abs ih =>
+     cases Hnorm
+     apply ih <;> assumption
+   case quant trih eih =>
+     cases Hnorm
+-    rename_i e_normalized
+-    rename_i tr_normalized
+-    rename_i tr e ty k
+-    apply List.Subset.app
+-    . apply List.Subset.trans
+-      apply trih <;> assumption
+-      intros x Hin
+-      simp_all
+-    . apply List.Subset.trans
+-      apply eih <;> assumption
+-      intros x Hin
+-      simp_all
++    apply List.append_subset.mpr
++    constructor
++    · apply trih <;> assumption
++    · apply eih <;> assumption
+   case ite cih tih eih =>
+     cases Hnorm
+-    apply List.Subset.app
+-    . apply List.Subset.trans
+-      apply cih <;> assumption
+-      intros x Hin
+-      simp_all
+-    apply List.Subset.app
+-    . apply List.Subset.trans
+-      apply tih <;> assumption
+-      intros x Hin
+-      simp_all
+-    . apply List.Subset.trans
+-      apply eih <;> assumption
+-      intros x Hin
+-      simp_all
++    apply List.append_subset.mpr
++    constructor
++    · apply cih <;> assumption
++    · apply List.append_subset.mpr
++      constructor
++      · apply tih <;> assumption
++      · apply eih <;> assumption
+   case eq ih1 ih2 =>
+     cases Hnorm
+-    apply List.Subset.app
+-    . apply List.Subset.trans
+-      apply ih1 <;> assumption
+-      intros x Hin
+-      simp_all
+-    . apply List.Subset.trans
+-      apply ih2 <;> assumption
+-      intros x Hin
+-      simp_all
+\ No newline at end of file
++    apply List.append_subset.mpr
++    constructor
++    · apply ih1 <;> assumption
++    · apply ih2 <;> assumption
+\ No newline at end of file

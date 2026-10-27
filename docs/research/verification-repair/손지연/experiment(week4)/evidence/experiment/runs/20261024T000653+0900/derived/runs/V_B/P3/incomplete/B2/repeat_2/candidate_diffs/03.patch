@@ -1,0 +1,39 @@
+--- candidate_02.proof.lean
++++ candidate_03.proof.lean
+@@ -16,15 +16,33 @@
+   have Hinit' :
+       InitStates σ ks' vs' (updatedStates σ ks' vs') :=
+     updatedStatesInit Hlen' Hndef Hnd'
+-  have Hdef' : isDefined (updatedStates σ ks' vs') ks :=
+-    InitStatesDefMonotone Hdef Hinit'
++  have Hdef' : isDefined (updatedStates σ ks' vs') ks := by
++    simpa [updatedStates] using
++      (updatedStatesDefMonotone (ves := ks'.zip vs') Hdef)
+   have Hup' :
+       UpdateStates (updatedStates σ ks' vs') ks vs
+         (updatedStates (updatedStates σ ks' vs') ks vs) :=
+     updatedStatesUpdate Hlen Hdef'
++  have zip_fst :
++      ∀ (as : List P.Ident) (bs : List P.Expr),
++        as.length = bs.length →
++        (as.zip bs).unzip.1 = as := by
++    intro as
++    induction as with
++    | nil =>
++      intro bs H
++      cases bs <;> simp_all
++    | cons a as ih =>
++      intro bs H
++      cases bs with
++      | nil => simp at H
++      | cons b bs =>
++        simp at H
++        simp [ih bs H]
+   have Hzipdisj :
+       List.Disjoint (ks.zip vs).unzip.1 (ks'.zip vs').unzip.1 := by
+-    simpa [Hlen, Hlen'] using Hdisj
++    rw [zip_fst ks vs Hlen, zip_fst ks' vs' Hlen']
++    exact Hdisj
+   have Hcomm :=
+     updatedStatesComm (σ := σ) (kvs := ks.zip vs)
+       (kvs' := ks'.zip vs') Hzipdisj

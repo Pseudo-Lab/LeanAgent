@@ -1,0 +1,33 @@
+by
+  intro hpq
+  exists @ChoiceBisim _ _ defs
+  constructor
+  · exact ChoiceBisim.choice hpq
+  intro s1 s2 hr μ
+  constructor
+  · intro s1' htr
+    cases hr with
+    | choice h =>
+      cases htr with
+      | choiceL htr =>
+        obtain ⟨q', htr', hbisim⟩ := h.follow_fst htr
+        exact ⟨q', Tr.choiceL htr', ChoiceBisim.bisim hbisim⟩
+      | choiceR htr =>
+        refine ⟨s1', Tr.choiceR htr, ChoiceBisim.bisim ?_⟩
+        apply HomBisimilarity.refl
+    | bisim h =>
+      obtain ⟨s2', htr', hbisim⟩ := h.follow_fst htr
+      exact ⟨s2', htr', ChoiceBisim.bisim hbisim⟩
+  · intro s2' htr
+    cases hr with
+    | choice h =>
+      cases htr with
+      | choiceL htr =>
+        obtain ⟨p', htr', hbisim⟩ := h.follow_snd htr
+        exact ⟨p', Tr.choiceL htr', ChoiceBisim.bisim hbisim⟩
+      | choiceR htr =>
+        refine ⟨s2', Tr.choiceR htr, ChoiceBisim.bisim ?_⟩
+        apply HomBisimilarity.refl
+    | bisim h =>
+      obtain ⟨s1', htr', hbisim⟩ := h.follow_snd htr
+      exact ⟨s1', htr', ChoiceBisim.bisim hbisim⟩

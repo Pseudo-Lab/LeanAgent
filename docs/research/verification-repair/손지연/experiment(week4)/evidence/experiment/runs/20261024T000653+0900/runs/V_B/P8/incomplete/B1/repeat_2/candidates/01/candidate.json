@@ -1,0 +1,1041 @@
+{
+  "call": 1,
+  "origin": "generated",
+  "body": "by\n  intro a b c hab hac\n  induction hab generalizing c with\n  case refl a =>\n    exact ⟨c, hac, ParallelReduction.refl c⟩\n  case red_I a =>\n    cases hac with\n    | refl =>\n        exact ⟨a, ParallelReduction.refl a, ParallelReduction.red_I a⟩\n    | red_I =>\n        exact ⟨a, ParallelReduction.refl a, ParallelReduction.refl a⟩\n    | par a' b' hI ha =>\n        rw [I_irreducible a' hI]\n        exact ⟨b', ha, ParallelReduction.red_I b'⟩\n  case red_K a b =>\n    cases hac with\n    | refl =>\n        exact ⟨a, ParallelReduction.refl a, ParallelReduction.red_K a b⟩\n    | red_K =>\n        exact ⟨a, ParallelReduction.refl a, ParallelReduction.refl a⟩\n    | par c' b' hKa hb =>\n        obtain ⟨a', ha, hKa'⟩ := Ka_irreducible a c' hKa\n        rw [hKa']\n        exact ⟨a', ha, ParallelReduction.red_K a' b'⟩\n  case red_S a b c =>\n    cases hac with\n    | refl =>\n        exact ⟨a ⬝ c ⬝ (b ⬝ c), ParallelReduction.refl _,\n          ParallelReduction.red_S a b c⟩\n    | red_S =>\n        exact ⟨a ⬝ c ⬝ (b ⬝ c), ParallelReduction.refl _,\n          ParallelReduction.refl _⟩\n    | par ab' c' hSab hc =>\n        obtain ⟨a', b', ha, hb, hSab'⟩ := Sab_irreducible a b ab' hSab\n        rw [hSab']\n        exact ⟨a' ⬝ c' ⬝ (b' ⬝ c'),\n          ParallelReduction.par (ParallelReduction.par ha hc)\n            (ParallelReduction.par hb hc),\n          ParallelReduction.red_S a' b' c'⟩\n  case par a a' b b' ha hb iha ihb =>\n    cases hac with\n    | refl =>\n        exact ⟨a' ⬝ b', ParallelReduction.refl _, ParallelReduction.par ha hb⟩\n    | red_I =>\n        rw [I_irreducible a' ha]\n        exact ⟨b', ParallelReduction.red_I b', hb⟩\n    | red_K =>\n        obtain ⟨x, hx, ha'⟩ := Ka_irreducible _ a' ha\n        rw [ha']\n        exact ⟨x, ParallelReduction.red_K x b', hx⟩\n    | red_S =>\n        obtain ⟨x, y, hx, hy, ha'⟩ := Sab_irreducible _ _ a' ha\n        rw [ha']\n        exact ⟨x ⬝ b' ⬝ (y ⬝ b'), ParallelReduction.red_S x y b',\n          ParallelReduction.par (ParallelReduction.par hx hb)\n            (ParallelReduction.par hy hb)⟩\n    | par c c' hc hc' =>\n        obtain ⟨d, had, hcd⟩ := iha hc\n        obtain ⟨d', hbd, hc'd⟩ := ihb hc'\n        exact ⟨d ⬝ d', ParallelReduction.par had hbd,\n          ParallelReduction.par hcd hc'd⟩",
+  "proof_sha256": "d0a0162d1946d58b7e6fb636a14d885a18d63b2f99a23c4b7f4d4f9f89fc4fc7",
+  "full_source_sha256": "d26fdd6ea11a70e62c06aab97a9dfe854dec759d9d2c4ea3ad7c0ce88da4a340",
+  "eligible": false,
+  "verification": {
+    "task_id": "P8",
+    "attempt": "candidate_01",
+    "candidate_hash": "d26fdd6ea11a70e62c06aab97a9dfe854dec759d9d2c4ea3ad7c0ce88da4a340",
+    "environment_id": "539810be844b4918624a39f96635209e5268d60962b8f167956106aaa6dbee0f",
+    "check_kind": "candidate",
+    "status": "proof_error",
+    "process_exit_code": 1,
+    "diagnostics": [
+      {
+        "severity": "error",
+        "position": {
+          "column": 2,
+          "line": 144
+        },
+        "end_position": {
+          "column": 11,
+          "line": 144
+        },
+        "message": "Alternative `refl` has not been provided",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "Alternative `refl` has not been provided",
+          "endPos": {
+            "column": 11,
+            "line": 144
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P8/incomplete/B1/repeat_2/validation/lean/002_candidate_01/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 2,
+            "line": 144
+          },
+          "severity": "error"
+        },
+        "source_line": "  induction hab generalizing c with",
+        "start_offset": 4948,
+        "start_byte_offset": 5177,
+        "end_offset": 4957,
+        "end_byte_offset": 5186,
+        "source_text": "induction",
+        "failed_tactic": "induction hab generalizing c with",
+        "tactic_range": {
+          "position": {
+            "line": 144,
+            "column": 2
+          },
+          "end_position": {
+            "line": 144,
+            "column": 35
+          },
+          "start_offset": 4948,
+          "end_offset": 4981
+        },
+        "goals": [
+          "Join ParallelReduction b c"
+        ],
+        "local_context": [
+          "a b c : SKI\nhab : a ⭢ₚ b\nhac : a ⭢ₚ c"
+        ],
+        "proof_state_source": "lean_infotree_before_tactic",
+        "proof_state_raw": {
+          "depth": 7,
+          "end": 12341,
+          "goals_after": [
+            "case refl\na b a✝ c : SKI\nhac : a✝ ⭢ₚ c\n⊢ Join ParallelReduction a✝ c",
+            "case red_I\na b a✝ c : SKI\nhac : (I ⬝ a✝) ⭢ₚ c\n⊢ Join ParallelReduction a✝ c",
+            "case red_K\na b a✝ b✝ c : SKI\nhac : (K ⬝ a✝ ⬝ b✝) ⭢ₚ c\n⊢ Join ParallelReduction a✝ c",
+            "case red_S\na b a✝ b✝ c✝ c : SKI\nhac : (S ⬝ a✝ ⬝ b✝ ⬝ c✝) ⭢ₚ c\n⊢ Join ParallelReduction (a✝ ⬝ c✝ ⬝ (b✝ ⬝ c✝)) c",
+            "case par\na b a✝² a'✝ b✝ b'✝ : SKI\na✝¹ : a✝² ⭢ₚ a'✝\na✝ : b✝ ⭢ₚ b'✝\na_ih✝¹ : ∀ {c : SKI}, a✝² ⭢ₚ c → Join ParallelReduction a'✝ c\na_ih✝ : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\nc : SKI\nhac : (a✝² ⬝ b✝) ⭢ₚ c\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) c"
+          ],
+          "goals_before": [
+            "a b c : SKI\nhab : a ⭢ₚ b\nhac : a ⭢ₚ c\n⊢ Join ParallelReduction b c"
+          ],
+          "kind": "tactic",
+          "start": 12308
+        }
+      },
+      {
+        "severity": "error",
+        "position": {
+          "column": 2,
+          "line": 144
+        },
+        "end_position": {
+          "column": 11,
+          "line": 144
+        },
+        "message": "Alternative `red_I` has not been provided",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "Alternative `red_I` has not been provided",
+          "endPos": {
+            "column": 11,
+            "line": 144
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P8/incomplete/B1/repeat_2/validation/lean/002_candidate_01/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 2,
+            "line": 144
+          },
+          "severity": "error"
+        },
+        "source_line": "  induction hab generalizing c with",
+        "start_offset": 4948,
+        "start_byte_offset": 5177,
+        "end_offset": 4957,
+        "end_byte_offset": 5186,
+        "source_text": "induction",
+        "failed_tactic": "induction hab generalizing c with",
+        "tactic_range": {
+          "position": {
+            "line": 144,
+            "column": 2
+          },
+          "end_position": {
+            "line": 144,
+            "column": 35
+          },
+          "start_offset": 4948,
+          "end_offset": 4981
+        },
+        "goals": [
+          "Join ParallelReduction b c"
+        ],
+        "local_context": [
+          "a b c : SKI\nhab : a ⭢ₚ b\nhac : a ⭢ₚ c"
+        ],
+        "proof_state_source": "lean_infotree_before_tactic",
+        "proof_state_raw": {
+          "depth": 7,
+          "end": 12341,
+          "goals_after": [
+            "case refl\na b a✝ c : SKI\nhac : a✝ ⭢ₚ c\n⊢ Join ParallelReduction a✝ c",
+            "case red_I\na b a✝ c : SKI\nhac : (I ⬝ a✝) ⭢ₚ c\n⊢ Join ParallelReduction a✝ c",
+            "case red_K\na b a✝ b✝ c : SKI\nhac : (K ⬝ a✝ ⬝ b✝) ⭢ₚ c\n⊢ Join ParallelReduction a✝ c",
+            "case red_S\na b a✝ b✝ c✝ c : SKI\nhac : (S ⬝ a✝ ⬝ b✝ ⬝ c✝) ⭢ₚ c\n⊢ Join ParallelReduction (a✝ ⬝ c✝ ⬝ (b✝ ⬝ c✝)) c",
+            "case par\na b a✝² a'✝ b✝ b'✝ : SKI\na✝¹ : a✝² ⭢ₚ a'✝\na✝ : b✝ ⭢ₚ b'✝\na_ih✝¹ : ∀ {c : SKI}, a✝² ⭢ₚ c → Join ParallelReduction a'✝ c\na_ih✝ : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\nc : SKI\nhac : (a✝² ⬝ b✝) ⭢ₚ c\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) c"
+          ],
+          "goals_before": [
+            "a b c : SKI\nhab : a ⭢ₚ b\nhac : a ⭢ₚ c\n⊢ Join ParallelReduction b c"
+          ],
+          "kind": "tactic",
+          "start": 12308
+        }
+      },
+      {
+        "severity": "error",
+        "position": {
+          "column": 2,
+          "line": 144
+        },
+        "end_position": {
+          "column": 11,
+          "line": 144
+        },
+        "message": "Alternative `red_K` has not been provided",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "Alternative `red_K` has not been provided",
+          "endPos": {
+            "column": 11,
+            "line": 144
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P8/incomplete/B1/repeat_2/validation/lean/002_candidate_01/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 2,
+            "line": 144
+          },
+          "severity": "error"
+        },
+        "source_line": "  induction hab generalizing c with",
+        "start_offset": 4948,
+        "start_byte_offset": 5177,
+        "end_offset": 4957,
+        "end_byte_offset": 5186,
+        "source_text": "induction",
+        "failed_tactic": "induction hab generalizing c with",
+        "tactic_range": {
+          "position": {
+            "line": 144,
+            "column": 2
+          },
+          "end_position": {
+            "line": 144,
+            "column": 35
+          },
+          "start_offset": 4948,
+          "end_offset": 4981
+        },
+        "goals": [
+          "Join ParallelReduction b c"
+        ],
+        "local_context": [
+          "a b c : SKI\nhab : a ⭢ₚ b\nhac : a ⭢ₚ c"
+        ],
+        "proof_state_source": "lean_infotree_before_tactic",
+        "proof_state_raw": {
+          "depth": 7,
+          "end": 12341,
+          "goals_after": [
+            "case refl\na b a✝ c : SKI\nhac : a✝ ⭢ₚ c\n⊢ Join ParallelReduction a✝ c",
+            "case red_I\na b a✝ c : SKI\nhac : (I ⬝ a✝) ⭢ₚ c\n⊢ Join ParallelReduction a✝ c",
+            "case red_K\na b a✝ b✝ c : SKI\nhac : (K ⬝ a✝ ⬝ b✝) ⭢ₚ c\n⊢ Join ParallelReduction a✝ c",
+            "case red_S\na b a✝ b✝ c✝ c : SKI\nhac : (S ⬝ a✝ ⬝ b✝ ⬝ c✝) ⭢ₚ c\n⊢ Join ParallelReduction (a✝ ⬝ c✝ ⬝ (b✝ ⬝ c✝)) c",
+            "case par\na b a✝² a'✝ b✝ b'✝ : SKI\na✝¹ : a✝² ⭢ₚ a'✝\na✝ : b✝ ⭢ₚ b'✝\na_ih✝¹ : ∀ {c : SKI}, a✝² ⭢ₚ c → Join ParallelReduction a'✝ c\na_ih✝ : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\nc : SKI\nhac : (a✝² ⬝ b✝) ⭢ₚ c\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) c"
+          ],
+          "goals_before": [
+            "a b c : SKI\nhab : a ⭢ₚ b\nhac : a ⭢ₚ c\n⊢ Join ParallelReduction b c"
+          ],
+          "kind": "tactic",
+          "start": 12308
+        }
+      },
+      {
+        "severity": "error",
+        "position": {
+          "column": 2,
+          "line": 144
+        },
+        "end_position": {
+          "column": 11,
+          "line": 144
+        },
+        "message": "Alternative `red_S` has not been provided",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "Alternative `red_S` has not been provided",
+          "endPos": {
+            "column": 11,
+            "line": 144
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P8/incomplete/B1/repeat_2/validation/lean/002_candidate_01/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 2,
+            "line": 144
+          },
+          "severity": "error"
+        },
+        "source_line": "  induction hab generalizing c with",
+        "start_offset": 4948,
+        "start_byte_offset": 5177,
+        "end_offset": 4957,
+        "end_byte_offset": 5186,
+        "source_text": "induction",
+        "failed_tactic": "induction hab generalizing c with",
+        "tactic_range": {
+          "position": {
+            "line": 144,
+            "column": 2
+          },
+          "end_position": {
+            "line": 144,
+            "column": 35
+          },
+          "start_offset": 4948,
+          "end_offset": 4981
+        },
+        "goals": [
+          "Join ParallelReduction b c"
+        ],
+        "local_context": [
+          "a b c : SKI\nhab : a ⭢ₚ b\nhac : a ⭢ₚ c"
+        ],
+        "proof_state_source": "lean_infotree_before_tactic",
+        "proof_state_raw": {
+          "depth": 7,
+          "end": 12341,
+          "goals_after": [
+            "case refl\na b a✝ c : SKI\nhac : a✝ ⭢ₚ c\n⊢ Join ParallelReduction a✝ c",
+            "case red_I\na b a✝ c : SKI\nhac : (I ⬝ a✝) ⭢ₚ c\n⊢ Join ParallelReduction a✝ c",
+            "case red_K\na b a✝ b✝ c : SKI\nhac : (K ⬝ a✝ ⬝ b✝) ⭢ₚ c\n⊢ Join ParallelReduction a✝ c",
+            "case red_S\na b a✝ b✝ c✝ c : SKI\nhac : (S ⬝ a✝ ⬝ b✝ ⬝ c✝) ⭢ₚ c\n⊢ Join ParallelReduction (a✝ ⬝ c✝ ⬝ (b✝ ⬝ c✝)) c",
+            "case par\na b a✝² a'✝ b✝ b'✝ : SKI\na✝¹ : a✝² ⭢ₚ a'✝\na✝ : b✝ ⭢ₚ b'✝\na_ih✝¹ : ∀ {c : SKI}, a✝² ⭢ₚ c → Join ParallelReduction a'✝ c\na_ih✝ : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\nc : SKI\nhac : (a✝² ⬝ b✝) ⭢ₚ c\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) c"
+          ],
+          "goals_before": [
+            "a b c : SKI\nhab : a ⭢ₚ b\nhac : a ⭢ₚ c\n⊢ Join ParallelReduction b c"
+          ],
+          "kind": "tactic",
+          "start": 12308
+        }
+      },
+      {
+        "severity": "error",
+        "position": {
+          "column": 2,
+          "line": 144
+        },
+        "end_position": {
+          "column": 11,
+          "line": 144
+        },
+        "message": "Alternative `par` has not been provided",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "Alternative `par` has not been provided",
+          "endPos": {
+            "column": 11,
+            "line": 144
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P8/incomplete/B1/repeat_2/validation/lean/002_candidate_01/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 2,
+            "line": 144
+          },
+          "severity": "error"
+        },
+        "source_line": "  induction hab generalizing c with",
+        "start_offset": 4948,
+        "start_byte_offset": 5177,
+        "end_offset": 4957,
+        "end_byte_offset": 5186,
+        "source_text": "induction",
+        "failed_tactic": "induction hab generalizing c with",
+        "tactic_range": {
+          "position": {
+            "line": 144,
+            "column": 2
+          },
+          "end_position": {
+            "line": 144,
+            "column": 35
+          },
+          "start_offset": 4948,
+          "end_offset": 4981
+        },
+        "goals": [
+          "Join ParallelReduction b c"
+        ],
+        "local_context": [
+          "a b c : SKI\nhab : a ⭢ₚ b\nhac : a ⭢ₚ c"
+        ],
+        "proof_state_source": "lean_infotree_before_tactic",
+        "proof_state_raw": {
+          "depth": 7,
+          "end": 12341,
+          "goals_after": [
+            "case refl\na b a✝ c : SKI\nhac : a✝ ⭢ₚ c\n⊢ Join ParallelReduction a✝ c",
+            "case red_I\na b a✝ c : SKI\nhac : (I ⬝ a✝) ⭢ₚ c\n⊢ Join ParallelReduction a✝ c",
+            "case red_K\na b a✝ b✝ c : SKI\nhac : (K ⬝ a✝ ⬝ b✝) ⭢ₚ c\n⊢ Join ParallelReduction a✝ c",
+            "case red_S\na b a✝ b✝ c✝ c : SKI\nhac : (S ⬝ a✝ ⬝ b✝ ⬝ c✝) ⭢ₚ c\n⊢ Join ParallelReduction (a✝ ⬝ c✝ ⬝ (b✝ ⬝ c✝)) c",
+            "case par\na b a✝² a'✝ b✝ b'✝ : SKI\na✝¹ : a✝² ⭢ₚ a'✝\na✝ : b✝ ⭢ₚ b'✝\na_ih✝¹ : ∀ {c : SKI}, a✝² ⭢ₚ c → Join ParallelReduction a'✝ c\na_ih✝ : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\nc : SKI\nhac : (a✝² ⬝ b✝) ⭢ₚ c\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) c"
+          ],
+          "goals_before": [
+            "a b c : SKI\nhab : a ⭢ₚ b\nhac : a ⭢ₚ c\n⊢ Join ParallelReduction b c"
+          ],
+          "kind": "tactic",
+          "start": 12308
+        }
+      },
+      {
+        "severity": "error",
+        "position": {
+          "column": 2,
+          "line": 145
+        },
+        "end_position": {
+          "column": 44,
+          "line": 146
+        },
+        "message": "Case tag `refl` not found.\n\nNote: There are no cases to select.",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "Case tag `refl` not found.\n\nNote: There are no cases to select.",
+          "endPos": {
+            "column": 44,
+            "line": 146
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P8/incomplete/B1/repeat_2/validation/lean/002_candidate_01/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 2,
+            "line": 145
+          },
+          "severity": "error"
+        },
+        "source_line": "  case refl a =>",
+        "start_offset": 4984,
+        "start_byte_offset": 5213,
+        "end_offset": 5043,
+        "end_byte_offset": 5276,
+        "source_text": "case refl a =>\n    exact ⟨c, hac, ParallelReduction.refl c⟩",
+        "failed_tactic": "case refl a =>\n    exact ⟨c, hac, ParallelReduction.refl c⟩",
+        "tactic_range": {
+          "position": {
+            "line": 145,
+            "column": 2
+          },
+          "end_position": {
+            "line": 146,
+            "column": 44
+          },
+          "start_offset": 4984,
+          "end_offset": 5043
+        },
+        "goals": [],
+        "local_context": [],
+        "proof_state_source": "lean_infotree_before_tactic",
+        "proof_state_raw": {
+          "depth": 6,
+          "end": 12407,
+          "goals_after": [],
+          "goals_before": [],
+          "kind": "tactic",
+          "start": 12344
+        }
+      },
+      {
+        "severity": "information",
+        "position": {
+          "column": 0,
+          "line": 224
+        },
+        "end_position": {
+          "column": 6,
+          "line": 224
+        },
+        "message": "Cslib.SKI.parallelReduction_diamond : Relation.Diamond Cslib.SKI.ParallelReduction",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "Cslib.SKI.parallelReduction_diamond : Relation.Diamond Cslib.SKI.ParallelReduction",
+          "endPos": {
+            "column": 6,
+            "line": 224
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P8/incomplete/B1/repeat_2/validation/lean/002_candidate_01/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 0,
+            "line": 224
+          },
+          "severity": "information"
+        }
+      },
+      {
+        "severity": "information",
+        "position": {
+          "column": 0,
+          "line": 225
+        },
+        "end_position": {
+          "column": 6,
+          "line": 225
+        },
+        "message": "'Cslib.SKI.parallelReduction_diamond' depends on axioms: [sorryAx]",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "'Cslib.SKI.parallelReduction_diamond' depends on axioms: [sorryAx]",
+          "endPos": {
+            "column": 6,
+            "line": 225
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P8/incomplete/B1/repeat_2/validation/lean/002_candidate_01/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 0,
+            "line": 225
+          },
+          "severity": "information"
+        }
+      }
+    ],
+    "goals": [
+      "Join ParallelReduction b c"
+    ],
+    "local_context": [
+      "a b c : SKI\nhab : a ⭢ₚ b\nhac : a ⭢ₚ c"
+    ],
+    "sorries": [
+      {
+        "kind": "transitive_dependency",
+        "axiom": "sorryAx",
+        "position": null,
+        "end_position": null
+      }
+    ],
+    "backend_proof_status": null,
+    "statement_check": "fixed_context_preserved",
+    "axioms": [
+      "sorryAx"
+    ],
+    "metrics": {
+      "proof_tokens": 435
+    },
+    "elapsed_ms": 3529,
+    "raw_log_path": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P8/incomplete/B1/repeat_2/validation/lean/002_candidate_01/stdout.log",
+    "detail": null,
+    "failure_kind": "proof_error"
+  },
+  "measurement": {
+    "proof_tokens": 435,
+    "raw_heartbeats": null,
+    "token_reduction_pct": 4.185022026431717,
+    "heartbeat_reduction_pct": null,
+    "search_score": null
+  },
+  "facts": {
+    "diagnostics": [
+      {
+        "severity": "error",
+        "position": {
+          "column": 2,
+          "line": 144
+        },
+        "end_position": {
+          "column": 11,
+          "line": 144
+        },
+        "message": "Alternative `refl` has not been provided",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "Alternative `refl` has not been provided",
+          "endPos": {
+            "column": 11,
+            "line": 144
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 2,
+            "line": 144
+          },
+          "severity": "error"
+        },
+        "source_line": "  induction hab generalizing c with",
+        "start_offset": 4948,
+        "start_byte_offset": 5177,
+        "end_offset": 4957,
+        "end_byte_offset": 5186,
+        "source_text": "induction",
+        "failed_tactic": "induction hab generalizing c with",
+        "tactic_range": {
+          "position": {
+            "line": 144,
+            "column": 2
+          },
+          "end_position": {
+            "line": 144,
+            "column": 35
+          },
+          "start_offset": 4948,
+          "end_offset": 4981
+        },
+        "goals": [
+          "Join ParallelReduction b c"
+        ],
+        "local_context": [
+          "a b c : SKI\nhab : a ⭢ₚ b\nhac : a ⭢ₚ c"
+        ],
+        "proof_state_source": "lean_infotree_before_tactic",
+        "proof_state_raw": {
+          "depth": 7,
+          "end": 12341,
+          "goals_after": [
+            "case refl\na b a✝ c : SKI\nhac : a✝ ⭢ₚ c\n⊢ Join ParallelReduction a✝ c",
+            "case red_I\na b a✝ c : SKI\nhac : (I ⬝ a✝) ⭢ₚ c\n⊢ Join ParallelReduction a✝ c",
+            "case red_K\na b a✝ b✝ c : SKI\nhac : (K ⬝ a✝ ⬝ b✝) ⭢ₚ c\n⊢ Join ParallelReduction a✝ c",
+            "case red_S\na b a✝ b✝ c✝ c : SKI\nhac : (S ⬝ a✝ ⬝ b✝ ⬝ c✝) ⭢ₚ c\n⊢ Join ParallelReduction (a✝ ⬝ c✝ ⬝ (b✝ ⬝ c✝)) c",
+            "case par\na b a✝² a'✝ b✝ b'✝ : SKI\na✝¹ : a✝² ⭢ₚ a'✝\na✝ : b✝ ⭢ₚ b'✝\na_ih✝¹ : ∀ {c : SKI}, a✝² ⭢ₚ c → Join ParallelReduction a'✝ c\na_ih✝ : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\nc : SKI\nhac : (a✝² ⬝ b✝) ⭢ₚ c\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) c"
+          ],
+          "goals_before": [
+            "a b c : SKI\nhab : a ⭢ₚ b\nhac : a ⭢ₚ c\n⊢ Join ParallelReduction b c"
+          ],
+          "kind": "tactic",
+          "start": 12308
+        }
+      },
+      {
+        "severity": "error",
+        "position": {
+          "column": 2,
+          "line": 144
+        },
+        "end_position": {
+          "column": 11,
+          "line": 144
+        },
+        "message": "Alternative `red_I` has not been provided",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "Alternative `red_I` has not been provided",
+          "endPos": {
+            "column": 11,
+            "line": 144
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 2,
+            "line": 144
+          },
+          "severity": "error"
+        },
+        "source_line": "  induction hab generalizing c with",
+        "start_offset": 4948,
+        "start_byte_offset": 5177,
+        "end_offset": 4957,
+        "end_byte_offset": 5186,
+        "source_text": "induction",
+        "failed_tactic": "induction hab generalizing c with",
+        "tactic_range": {
+          "position": {
+            "line": 144,
+            "column": 2
+          },
+          "end_position": {
+            "line": 144,
+            "column": 35
+          },
+          "start_offset": 4948,
+          "end_offset": 4981
+        },
+        "goals": [
+          "Join ParallelReduction b c"
+        ],
+        "local_context": [
+          "a b c : SKI\nhab : a ⭢ₚ b\nhac : a ⭢ₚ c"
+        ],
+        "proof_state_source": "lean_infotree_before_tactic",
+        "proof_state_raw": {
+          "depth": 7,
+          "end": 12341,
+          "goals_after": [
+            "case refl\na b a✝ c : SKI\nhac : a✝ ⭢ₚ c\n⊢ Join ParallelReduction a✝ c",
+            "case red_I\na b a✝ c : SKI\nhac : (I ⬝ a✝) ⭢ₚ c\n⊢ Join ParallelReduction a✝ c",
+            "case red_K\na b a✝ b✝ c : SKI\nhac : (K ⬝ a✝ ⬝ b✝) ⭢ₚ c\n⊢ Join ParallelReduction a✝ c",
+            "case red_S\na b a✝ b✝ c✝ c : SKI\nhac : (S ⬝ a✝ ⬝ b✝ ⬝ c✝) ⭢ₚ c\n⊢ Join ParallelReduction (a✝ ⬝ c✝ ⬝ (b✝ ⬝ c✝)) c",
+            "case par\na b a✝² a'✝ b✝ b'✝ : SKI\na✝¹ : a✝² ⭢ₚ a'✝\na✝ : b✝ ⭢ₚ b'✝\na_ih✝¹ : ∀ {c : SKI}, a✝² ⭢ₚ c → Join ParallelReduction a'✝ c\na_ih✝ : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\nc : SKI\nhac : (a✝² ⬝ b✝) ⭢ₚ c\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) c"
+          ],
+          "goals_before": [
+            "a b c : SKI\nhab : a ⭢ₚ b\nhac : a ⭢ₚ c\n⊢ Join ParallelReduction b c"
+          ],
+          "kind": "tactic",
+          "start": 12308
+        }
+      },
+      {
+        "severity": "error",
+        "position": {
+          "column": 2,
+          "line": 144
+        },
+        "end_position": {
+          "column": 11,
+          "line": 144
+        },
+        "message": "Alternative `red_K` has not been provided",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "Alternative `red_K` has not been provided",
+          "endPos": {
+            "column": 11,
+            "line": 144
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 2,
+            "line": 144
+          },
+          "severity": "error"
+        },
+        "source_line": "  induction hab generalizing c with",
+        "start_offset": 4948,
+        "start_byte_offset": 5177,
+        "end_offset": 4957,
+        "end_byte_offset": 5186,
+        "source_text": "induction",
+        "failed_tactic": "induction hab generalizing c with",
+        "tactic_range": {
+          "position": {
+            "line": 144,
+            "column": 2
+          },
+          "end_position": {
+            "line": 144,
+            "column": 35
+          },
+          "start_offset": 4948,
+          "end_offset": 4981
+        },
+        "goals": [
+          "Join ParallelReduction b c"
+        ],
+        "local_context": [
+          "a b c : SKI\nhab : a ⭢ₚ b\nhac : a ⭢ₚ c"
+        ],
+        "proof_state_source": "lean_infotree_before_tactic",
+        "proof_state_raw": {
+          "depth": 7,
+          "end": 12341,
+          "goals_after": [
+            "case refl\na b a✝ c : SKI\nhac : a✝ ⭢ₚ c\n⊢ Join ParallelReduction a✝ c",
+            "case red_I\na b a✝ c : SKI\nhac : (I ⬝ a✝) ⭢ₚ c\n⊢ Join ParallelReduction a✝ c",
+            "case red_K\na b a✝ b✝ c : SKI\nhac : (K ⬝ a✝ ⬝ b✝) ⭢ₚ c\n⊢ Join ParallelReduction a✝ c",
+            "case red_S\na b a✝ b✝ c✝ c : SKI\nhac : (S ⬝ a✝ ⬝ b✝ ⬝ c✝) ⭢ₚ c\n⊢ Join ParallelReduction (a✝ ⬝ c✝ ⬝ (b✝ ⬝ c✝)) c",
+            "case par\na b a✝² a'✝ b✝ b'✝ : SKI\na✝¹ : a✝² ⭢ₚ a'✝\na✝ : b✝ ⭢ₚ b'✝\na_ih✝¹ : ∀ {c : SKI}, a✝² ⭢ₚ c → Join ParallelReduction a'✝ c\na_ih✝ : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\nc : SKI\nhac : (a✝² ⬝ b✝) ⭢ₚ c\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) c"
+          ],
+          "goals_before": [
+            "a b c : SKI\nhab : a ⭢ₚ b\nhac : a ⭢ₚ c\n⊢ Join ParallelReduction b c"
+          ],
+          "kind": "tactic",
+          "start": 12308
+        }
+      },
+      {
+        "severity": "error",
+        "position": {
+          "column": 2,
+          "line": 144
+        },
+        "end_position": {
+          "column": 11,
+          "line": 144
+        },
+        "message": "Alternative `red_S` has not been provided",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "Alternative `red_S` has not been provided",
+          "endPos": {
+            "column": 11,
+            "line": 144
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 2,
+            "line": 144
+          },
+          "severity": "error"
+        },
+        "source_line": "  induction hab generalizing c with",
+        "start_offset": 4948,
+        "start_byte_offset": 5177,
+        "end_offset": 4957,
+        "end_byte_offset": 5186,
+        "source_text": "induction",
+        "failed_tactic": "induction hab generalizing c with",
+        "tactic_range": {
+          "position": {
+            "line": 144,
+            "column": 2
+          },
+          "end_position": {
+            "line": 144,
+            "column": 35
+          },
+          "start_offset": 4948,
+          "end_offset": 4981
+        },
+        "goals": [
+          "Join ParallelReduction b c"
+        ],
+        "local_context": [
+          "a b c : SKI\nhab : a ⭢ₚ b\nhac : a ⭢ₚ c"
+        ],
+        "proof_state_source": "lean_infotree_before_tactic",
+        "proof_state_raw": {
+          "depth": 7,
+          "end": 12341,
+          "goals_after": [
+            "case refl\na b a✝ c : SKI\nhac : a✝ ⭢ₚ c\n⊢ Join ParallelReduction a✝ c",
+            "case red_I\na b a✝ c : SKI\nhac : (I ⬝ a✝) ⭢ₚ c\n⊢ Join ParallelReduction a✝ c",
+            "case red_K\na b a✝ b✝ c : SKI\nhac : (K ⬝ a✝ ⬝ b✝) ⭢ₚ c\n⊢ Join ParallelReduction a✝ c",
+            "case red_S\na b a✝ b✝ c✝ c : SKI\nhac : (S ⬝ a✝ ⬝ b✝ ⬝ c✝) ⭢ₚ c\n⊢ Join ParallelReduction (a✝ ⬝ c✝ ⬝ (b✝ ⬝ c✝)) c",
+            "case par\na b a✝² a'✝ b✝ b'✝ : SKI\na✝¹ : a✝² ⭢ₚ a'✝\na✝ : b✝ ⭢ₚ b'✝\na_ih✝¹ : ∀ {c : SKI}, a✝² ⭢ₚ c → Join ParallelReduction a'✝ c\na_ih✝ : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\nc : SKI\nhac : (a✝² ⬝ b✝) ⭢ₚ c\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) c"
+          ],
+          "goals_before": [
+            "a b c : SKI\nhab : a ⭢ₚ b\nhac : a ⭢ₚ c\n⊢ Join ParallelReduction b c"
+          ],
+          "kind": "tactic",
+          "start": 12308
+        }
+      },
+      {
+        "severity": "error",
+        "position": {
+          "column": 2,
+          "line": 144
+        },
+        "end_position": {
+          "column": 11,
+          "line": 144
+        },
+        "message": "Alternative `par` has not been provided",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "Alternative `par` has not been provided",
+          "endPos": {
+            "column": 11,
+            "line": 144
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 2,
+            "line": 144
+          },
+          "severity": "error"
+        },
+        "source_line": "  induction hab generalizing c with",
+        "start_offset": 4948,
+        "start_byte_offset": 5177,
+        "end_offset": 4957,
+        "end_byte_offset": 5186,
+        "source_text": "induction",
+        "failed_tactic": "induction hab generalizing c with",
+        "tactic_range": {
+          "position": {
+            "line": 144,
+            "column": 2
+          },
+          "end_position": {
+            "line": 144,
+            "column": 35
+          },
+          "start_offset": 4948,
+          "end_offset": 4981
+        },
+        "goals": [
+          "Join ParallelReduction b c"
+        ],
+        "local_context": [
+          "a b c : SKI\nhab : a ⭢ₚ b\nhac : a ⭢ₚ c"
+        ],
+        "proof_state_source": "lean_infotree_before_tactic",
+        "proof_state_raw": {
+          "depth": 7,
+          "end": 12341,
+          "goals_after": [
+            "case refl\na b a✝ c : SKI\nhac : a✝ ⭢ₚ c\n⊢ Join ParallelReduction a✝ c",
+            "case red_I\na b a✝ c : SKI\nhac : (I ⬝ a✝) ⭢ₚ c\n⊢ Join ParallelReduction a✝ c",
+            "case red_K\na b a✝ b✝ c : SKI\nhac : (K ⬝ a✝ ⬝ b✝) ⭢ₚ c\n⊢ Join ParallelReduction a✝ c",
+            "case red_S\na b a✝ b✝ c✝ c : SKI\nhac : (S ⬝ a✝ ⬝ b✝ ⬝ c✝) ⭢ₚ c\n⊢ Join ParallelReduction (a✝ ⬝ c✝ ⬝ (b✝ ⬝ c✝)) c",
+            "case par\na b a✝² a'✝ b✝ b'✝ : SKI\na✝¹ : a✝² ⭢ₚ a'✝\na✝ : b✝ ⭢ₚ b'✝\na_ih✝¹ : ∀ {c : SKI}, a✝² ⭢ₚ c → Join ParallelReduction a'✝ c\na_ih✝ : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\nc : SKI\nhac : (a✝² ⬝ b✝) ⭢ₚ c\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) c"
+          ],
+          "goals_before": [
+            "a b c : SKI\nhab : a ⭢ₚ b\nhac : a ⭢ₚ c\n⊢ Join ParallelReduction b c"
+          ],
+          "kind": "tactic",
+          "start": 12308
+        }
+      },
+      {
+        "severity": "error",
+        "position": {
+          "column": 2,
+          "line": 145
+        },
+        "end_position": {
+          "column": 44,
+          "line": 146
+        },
+        "message": "Case tag `refl` not found.\n\nNote: There are no cases to select.",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "Case tag `refl` not found.\n\nNote: There are no cases to select.",
+          "endPos": {
+            "column": 44,
+            "line": 146
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 2,
+            "line": 145
+          },
+          "severity": "error"
+        },
+        "source_line": "  case refl a =>",
+        "start_offset": 4984,
+        "start_byte_offset": 5213,
+        "end_offset": 5043,
+        "end_byte_offset": 5276,
+        "source_text": "case refl a =>\n    exact ⟨c, hac, ParallelReduction.refl c⟩",
+        "failed_tactic": "case refl a =>\n    exact ⟨c, hac, ParallelReduction.refl c⟩",
+        "tactic_range": {
+          "position": {
+            "line": 145,
+            "column": 2
+          },
+          "end_position": {
+            "line": 146,
+            "column": 44
+          },
+          "start_offset": 4984,
+          "end_offset": 5043
+        },
+        "goals": [],
+        "local_context": [],
+        "proof_state_source": "lean_infotree_before_tactic",
+        "proof_state_raw": {
+          "depth": 6,
+          "end": 12407,
+          "goals_after": [],
+          "goals_before": [],
+          "kind": "tactic",
+          "start": 12344
+        }
+      },
+      {
+        "severity": "information",
+        "position": {
+          "column": 0,
+          "line": 224
+        },
+        "end_position": {
+          "column": 6,
+          "line": 224
+        },
+        "message": "Cslib.SKI.parallelReduction_diamond : Relation.Diamond Cslib.SKI.ParallelReduction",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "Cslib.SKI.parallelReduction_diamond : Relation.Diamond Cslib.SKI.ParallelReduction",
+          "endPos": {
+            "column": 6,
+            "line": 224
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 0,
+            "line": 224
+          },
+          "severity": "information"
+        }
+      },
+      {
+        "severity": "information",
+        "position": {
+          "column": 0,
+          "line": 225
+        },
+        "end_position": {
+          "column": 6,
+          "line": 225
+        },
+        "message": "'Cslib.SKI.parallelReduction_diamond' depends on axioms: [sorryAx]",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "'Cslib.SKI.parallelReduction_diamond' depends on axioms: [sorryAx]",
+          "endPos": {
+            "column": 6,
+            "line": 225
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 0,
+            "line": 225
+          },
+          "severity": "information"
+        }
+      }
+    ],
+    "goals": [
+      "Join ParallelReduction b c"
+    ],
+    "local_context": [
+      "a b c : SKI\nhab : a ⭢ₚ b\nhac : a ⭢ₚ c"
+    ],
+    "sorries": [
+      {
+        "kind": "transitive_dependency",
+        "axiom": "sorryAx",
+        "position": null,
+        "end_position": null
+      }
+    ],
+    "axioms": [
+      "sorryAx"
+    ],
+    "detail": null,
+    "raw_lean_output": "{\"caption\":\"\",\"data\":\"Alternative `refl` has not been provided\",\"endPos\":{\"column\":11,\"line\":144},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"[anonymous]\",\"pos\":{\"column\":2,\"line\":144},\"severity\":\"error\"}\n{\"caption\":\"\",\"data\":\"Alternative `red_I` has not been provided\",\"endPos\":{\"column\":11,\"line\":144},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"[anonymous]\",\"pos\":{\"column\":2,\"line\":144},\"severity\":\"error\"}\n{\"caption\":\"\",\"data\":\"Alternative `red_K` has not been provided\",\"endPos\":{\"column\":11,\"line\":144},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"[anonymous]\",\"pos\":{\"column\":2,\"line\":144},\"severity\":\"error\"}\n{\"caption\":\"\",\"data\":\"Alternative `red_S` has not been provided\",\"endPos\":{\"column\":11,\"line\":144},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"[anonymous]\",\"pos\":{\"column\":2,\"line\":144},\"severity\":\"error\"}\n{\"caption\":\"\",\"data\":\"Alternative `par` has not been provided\",\"endPos\":{\"column\":11,\"line\":144},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"[anonymous]\",\"pos\":{\"column\":2,\"line\":144},\"severity\":\"error\"}\n{\"caption\":\"\",\"data\":\"Case tag `refl` not found.\\n\\nNote: There are no cases to select.\",\"endPos\":{\"column\":44,\"line\":146},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"[anonymous]\",\"pos\":{\"column\":2,\"line\":145},\"severity\":\"error\"}\n{\"caption\":\"\",\"data\":\"Cslib.SKI.parallelReduction_diamond : Relation.Diamond Cslib.SKI.ParallelReduction\",\"endPos\":{\"column\":6,\"line\":224},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"[anonymous]\",\"pos\":{\"column\":0,\"line\":224},\"severity\":\"information\"}\n{\"caption\":\"\",\"data\":\"'Cslib.SKI.parallelReduction_diamond' depends on axioms: [sorryAx]\",\"endPos\":{\"column\":6,\"line\":225},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"[anonymous]\",\"pos\":{\"column\":0,\"line\":225},\"severity\":\"information\"}\n"
+  },
+  "diagnosis": "The theorem body contains only `skip`, leaving the diamond-property goal unproved. The repair performs induction on the first parallel reduction and analyzes the second, using irreducibility of partial combinator applications in the overlapping-redex cases.",
+  "duplicate_cache": false,
+  "available_at": 1792773732.110286,
+  "cumulative_calls": 1,
+  "cumulative_tokens": 19117,
+  "api_spend_usd": null
+}

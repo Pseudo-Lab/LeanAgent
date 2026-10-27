@@ -1,0 +1,3973 @@
+{
+  "records": [
+    {
+      "depth": 2,
+      "end": 7082,
+      "goals_after": [],
+      "goals_before": [
+        "⊢ Diamond ParallelReduction"
+      ],
+      "kind": "tactic",
+      "start": 5150,
+      "raw": {
+        "depth": 2,
+        "end": 14213,
+        "goals_after": [],
+        "goals_before": [
+          "⊢ Diamond ParallelReduction"
+        ],
+        "kind": "tactic",
+        "start": 12281
+      },
+      "start_offset": 4921,
+      "end_offset": 6737,
+      "position": {
+        "line": 142,
+        "column": 65
+      },
+      "end_position": {
+        "line": 202,
+        "column": 51
+      },
+      "source_text": "by\n  intro a b c hab hac\n  induction hab generalizing c with\n  | refl =>\n      exact ⟨c, hac, .refl c⟩\n  | red_I =>\n      cases hac with\n      | refl =>\n          exact ⟨_, .refl _, .red_I _⟩\n      | red_I =>\n          exact ⟨_, .refl _, .refl _⟩\n      | par i' a' hi ha =>\n          have hi' : i' = I := I_irreducible i' hi\n          subst i'\n          exact ⟨a', ha, .red_I a'⟩\n  | red_K _ =>\n      cases hac with\n      | refl =>\n          exact ⟨_, .refl _, .red_K _ _⟩\n      | red_K =>\n          exact ⟨_, .refl _, .refl _⟩\n      | par k' b' hk hb =>\n          obtain ⟨x, hx, hk'⟩ := Ka_irreducible _ k' hk\n          subst k'\n          exact ⟨x, hx, .red_K x b'⟩\n  | red_S _ _ _ =>\n      cases hac with\n      | refl =>\n          exact ⟨_, .refl _, .red_S _ _ _⟩\n      | red_S =>\n          exact ⟨_, .refl _, .refl _⟩\n      | par s' c' hs hc =>\n          obtain ⟨x, y, hx, hy, hs'⟩ := Sab_irreducible _ _ s' hs\n          subst s'\n          exact\n            ⟨x ⬝ c' ⬝ (y ⬝ c'),\n              .par (.par hx hc) (.par hy hc),\n              .red_S x y c'⟩\n  | par a a' b b' ha hb iha ihb =>\n      cases hac with\n      | refl =>\n          exact ⟨a' ⬝ b', .refl _, .par ha hb⟩\n      | red_I =>\n          have ha' : a' = I := I_irreducible a' ha\n          subst a'\n          exact ⟨b', .red_I b', hb⟩\n      | red_K =>\n          obtain ⟨x, hx, ha'⟩ := Ka_irreducible _ a' ha\n          subst a'\n          exact ⟨x, .red_K x b', hx⟩\n      | red_S _ _ =>\n          obtain ⟨x, y, hx, hy, ha'⟩ := Sab_irreducible _ _ a' ha\n          subst a'\n          exact\n            ⟨x ⬝ b' ⬝ (y ⬝ b'),\n              .red_S x y b',\n              .par (.par hx hb) (.par hy hb)⟩\n      | par c' d' hc hd =>\n          obtain ⟨x, hx₁, hx₂⟩ := iha hc\n          obtain ⟨y, hy₁, hy₂⟩ := ihb hd\n          exact ⟨x ⬝ y, .par hx₁ hy₁, .par hx₂ hy₂⟩"
+    },
+    {
+      "depth": 3,
+      "end": 5152,
+      "goals_after": [],
+      "goals_before": [
+        "⊢ Diamond ParallelReduction"
+      ],
+      "kind": "tactic",
+      "start": 5150,
+      "raw": {
+        "depth": 3,
+        "end": 12283,
+        "goals_after": [],
+        "goals_before": [
+          "⊢ Diamond ParallelReduction"
+        ],
+        "kind": "tactic",
+        "start": 12281
+      },
+      "start_offset": 4921,
+      "end_offset": 4923,
+      "position": {
+        "line": 142,
+        "column": 65
+      },
+      "end_position": {
+        "line": 142,
+        "column": 67
+      },
+      "source_text": "by"
+    },
+    {
+      "depth": 4,
+      "end": 7082,
+      "goals_after": [],
+      "goals_before": [
+        "⊢ Diamond ParallelReduction"
+      ],
+      "kind": "tactic",
+      "start": 5155,
+      "raw": {
+        "depth": 4,
+        "end": 14213,
+        "goals_after": [],
+        "goals_before": [
+          "⊢ Diamond ParallelReduction"
+        ],
+        "kind": "tactic",
+        "start": 12286
+      },
+      "start_offset": 4926,
+      "end_offset": 6737,
+      "position": {
+        "line": 143,
+        "column": 2
+      },
+      "end_position": {
+        "line": 202,
+        "column": 51
+      },
+      "source_text": "intro a b c hab hac\n  induction hab generalizing c with\n  | refl =>\n      exact ⟨c, hac, .refl c⟩\n  | red_I =>\n      cases hac with\n      | refl =>\n          exact ⟨_, .refl _, .red_I _⟩\n      | red_I =>\n          exact ⟨_, .refl _, .refl _⟩\n      | par i' a' hi ha =>\n          have hi' : i' = I := I_irreducible i' hi\n          subst i'\n          exact ⟨a', ha, .red_I a'⟩\n  | red_K _ =>\n      cases hac with\n      | refl =>\n          exact ⟨_, .refl _, .red_K _ _⟩\n      | red_K =>\n          exact ⟨_, .refl _, .refl _⟩\n      | par k' b' hk hb =>\n          obtain ⟨x, hx, hk'⟩ := Ka_irreducible _ k' hk\n          subst k'\n          exact ⟨x, hx, .red_K x b'⟩\n  | red_S _ _ _ =>\n      cases hac with\n      | refl =>\n          exact ⟨_, .refl _, .red_S _ _ _⟩\n      | red_S =>\n          exact ⟨_, .refl _, .refl _⟩\n      | par s' c' hs hc =>\n          obtain ⟨x, y, hx, hy, hs'⟩ := Sab_irreducible _ _ s' hs\n          subst s'\n          exact\n            ⟨x ⬝ c' ⬝ (y ⬝ c'),\n              .par (.par hx hc) (.par hy hc),\n              .red_S x y c'⟩\n  | par a a' b b' ha hb iha ihb =>\n      cases hac with\n      | refl =>\n          exact ⟨a' ⬝ b', .refl _, .par ha hb⟩\n      | red_I =>\n          have ha' : a' = I := I_irreducible a' ha\n          subst a'\n          exact ⟨b', .red_I b', hb⟩\n      | red_K =>\n          obtain ⟨x, hx, ha'⟩ := Ka_irreducible _ a' ha\n          subst a'\n          exact ⟨x, .red_K x b', hx⟩\n      | red_S _ _ =>\n          obtain ⟨x, y, hx, hy, ha'⟩ := Sab_irreducible _ _ a' ha\n          subst a'\n          exact\n            ⟨x ⬝ b' ⬝ (y ⬝ b'),\n              .red_S x y b',\n              .par (.par hx hb) (.par hy hb)⟩\n      | par c' d' hc hd =>\n          obtain ⟨x, hx₁, hx₂⟩ := iha hc\n          obtain ⟨y, hy₁, hy₂⟩ := ihb hd\n          exact ⟨x ⬝ y, .par hx₁ hy₁, .par hx₂ hy₂⟩"
+    },
+    {
+      "depth": 5,
+      "end": 7082,
+      "goals_after": [],
+      "goals_before": [
+        "⊢ Diamond ParallelReduction"
+      ],
+      "kind": "tactic",
+      "start": 5155,
+      "raw": {
+        "depth": 5,
+        "end": 14213,
+        "goals_after": [],
+        "goals_before": [
+          "⊢ Diamond ParallelReduction"
+        ],
+        "kind": "tactic",
+        "start": 12286
+      },
+      "start_offset": 4926,
+      "end_offset": 6737,
+      "position": {
+        "line": 143,
+        "column": 2
+      },
+      "end_position": {
+        "line": 202,
+        "column": 51
+      },
+      "source_text": "intro a b c hab hac\n  induction hab generalizing c with\n  | refl =>\n      exact ⟨c, hac, .refl c⟩\n  | red_I =>\n      cases hac with\n      | refl =>\n          exact ⟨_, .refl _, .red_I _⟩\n      | red_I =>\n          exact ⟨_, .refl _, .refl _⟩\n      | par i' a' hi ha =>\n          have hi' : i' = I := I_irreducible i' hi\n          subst i'\n          exact ⟨a', ha, .red_I a'⟩\n  | red_K _ =>\n      cases hac with\n      | refl =>\n          exact ⟨_, .refl _, .red_K _ _⟩\n      | red_K =>\n          exact ⟨_, .refl _, .refl _⟩\n      | par k' b' hk hb =>\n          obtain ⟨x, hx, hk'⟩ := Ka_irreducible _ k' hk\n          subst k'\n          exact ⟨x, hx, .red_K x b'⟩\n  | red_S _ _ _ =>\n      cases hac with\n      | refl =>\n          exact ⟨_, .refl _, .red_S _ _ _⟩\n      | red_S =>\n          exact ⟨_, .refl _, .refl _⟩\n      | par s' c' hs hc =>\n          obtain ⟨x, y, hx, hy, hs'⟩ := Sab_irreducible _ _ s' hs\n          subst s'\n          exact\n            ⟨x ⬝ c' ⬝ (y ⬝ c'),\n              .par (.par hx hc) (.par hy hc),\n              .red_S x y c'⟩\n  | par a a' b b' ha hb iha ihb =>\n      cases hac with\n      | refl =>\n          exact ⟨a' ⬝ b', .refl _, .par ha hb⟩\n      | red_I =>\n          have ha' : a' = I := I_irreducible a' ha\n          subst a'\n          exact ⟨b', .red_I b', hb⟩\n      | red_K =>\n          obtain ⟨x, hx, ha'⟩ := Ka_irreducible _ a' ha\n          subst a'\n          exact ⟨x, .red_K x b', hx⟩\n      | red_S _ _ =>\n          obtain ⟨x, y, hx, hy, ha'⟩ := Sab_irreducible _ _ a' ha\n          subst a'\n          exact\n            ⟨x ⬝ b' ⬝ (y ⬝ b'),\n              .red_S x y b',\n              .par (.par hx hb) (.par hy hb)⟩\n      | par c' d' hc hd =>\n          obtain ⟨x, hx₁, hx₂⟩ := iha hc\n          obtain ⟨y, hy₁, hy₂⟩ := ihb hd\n          exact ⟨x ⬝ y, .par hx₁ hy₁, .par hx₂ hy₂⟩"
+    },
+    {
+      "depth": 6,
+      "end": 5174,
+      "goals_after": [
+        "a b c : SKI\nhab : a ⭢ₚ b\nhac : a ⭢ₚ c\n⊢ Join ParallelReduction b c"
+      ],
+      "goals_before": [
+        "⊢ Diamond ParallelReduction"
+      ],
+      "kind": "tactic",
+      "start": 5155,
+      "raw": {
+        "depth": 6,
+        "end": 12305,
+        "goals_after": [
+          "a b c : SKI\nhab : a ⭢ₚ b\nhac : a ⭢ₚ c\n⊢ Join ParallelReduction b c"
+        ],
+        "goals_before": [
+          "⊢ Diamond ParallelReduction"
+        ],
+        "kind": "tactic",
+        "start": 12286
+      },
+      "start_offset": 4926,
+      "end_offset": 4945,
+      "position": {
+        "line": 143,
+        "column": 2
+      },
+      "end_position": {
+        "line": 143,
+        "column": 21
+      },
+      "source_text": "intro a b c hab hac"
+    },
+    {
+      "depth": 7,
+      "end": 5162,
+      "goals_after": [
+        "a : SKI\n⊢ ∀ {b c : SKI}, a ⭢ₚ b → a ⭢ₚ c → Join ParallelReduction b c"
+      ],
+      "goals_before": [
+        "⊢ Diamond ParallelReduction"
+      ],
+      "kind": "tactic",
+      "start": 5155,
+      "raw": {
+        "depth": 7,
+        "end": 12293,
+        "goals_after": [
+          "a : SKI\n⊢ ∀ {b c : SKI}, a ⭢ₚ b → a ⭢ₚ c → Join ParallelReduction b c"
+        ],
+        "goals_before": [
+          "⊢ Diamond ParallelReduction"
+        ],
+        "kind": "tactic",
+        "start": 12286
+      },
+      "start_offset": 4926,
+      "end_offset": 4933,
+      "position": {
+        "line": 143,
+        "column": 2
+      },
+      "end_position": {
+        "line": 143,
+        "column": 9
+      },
+      "source_text": "intro a"
+    },
+    {
+      "depth": 7,
+      "end": 5164,
+      "goals_after": [
+        "a b : SKI\n⊢ ∀ {c : SKI}, a ⭢ₚ b → a ⭢ₚ c → Join ParallelReduction b c"
+      ],
+      "goals_before": [
+        "a : SKI\n⊢ ∀ {b c : SKI}, a ⭢ₚ b → a ⭢ₚ c → Join ParallelReduction b c"
+      ],
+      "kind": "tactic",
+      "start": 5163,
+      "raw": {
+        "depth": 7,
+        "end": 12295,
+        "goals_after": [
+          "a b : SKI\n⊢ ∀ {c : SKI}, a ⭢ₚ b → a ⭢ₚ c → Join ParallelReduction b c"
+        ],
+        "goals_before": [
+          "a : SKI\n⊢ ∀ {b c : SKI}, a ⭢ₚ b → a ⭢ₚ c → Join ParallelReduction b c"
+        ],
+        "kind": "tactic",
+        "start": 12294
+      },
+      "start_offset": 4934,
+      "end_offset": 4935,
+      "position": {
+        "line": 143,
+        "column": 10
+      },
+      "end_position": {
+        "line": 143,
+        "column": 11
+      },
+      "source_text": "b"
+    },
+    {
+      "depth": 7,
+      "end": 5166,
+      "goals_after": [
+        "a b c : SKI\n⊢ a ⭢ₚ b → a ⭢ₚ c → Join ParallelReduction b c"
+      ],
+      "goals_before": [
+        "a b : SKI\n⊢ ∀ {c : SKI}, a ⭢ₚ b → a ⭢ₚ c → Join ParallelReduction b c"
+      ],
+      "kind": "tactic",
+      "start": 5165,
+      "raw": {
+        "depth": 7,
+        "end": 12297,
+        "goals_after": [
+          "a b c : SKI\n⊢ a ⭢ₚ b → a ⭢ₚ c → Join ParallelReduction b c"
+        ],
+        "goals_before": [
+          "a b : SKI\n⊢ ∀ {c : SKI}, a ⭢ₚ b → a ⭢ₚ c → Join ParallelReduction b c"
+        ],
+        "kind": "tactic",
+        "start": 12296
+      },
+      "start_offset": 4936,
+      "end_offset": 4937,
+      "position": {
+        "line": 143,
+        "column": 12
+      },
+      "end_position": {
+        "line": 143,
+        "column": 13
+      },
+      "source_text": "c"
+    },
+    {
+      "depth": 7,
+      "end": 5170,
+      "goals_after": [
+        "a b c : SKI\nhab : a ⭢ₚ b\n⊢ a ⭢ₚ c → Join ParallelReduction b c"
+      ],
+      "goals_before": [
+        "a b c : SKI\n⊢ a ⭢ₚ b → a ⭢ₚ c → Join ParallelReduction b c"
+      ],
+      "kind": "tactic",
+      "start": 5167,
+      "raw": {
+        "depth": 7,
+        "end": 12301,
+        "goals_after": [
+          "a b c : SKI\nhab : a ⭢ₚ b\n⊢ a ⭢ₚ c → Join ParallelReduction b c"
+        ],
+        "goals_before": [
+          "a b c : SKI\n⊢ a ⭢ₚ b → a ⭢ₚ c → Join ParallelReduction b c"
+        ],
+        "kind": "tactic",
+        "start": 12298
+      },
+      "start_offset": 4938,
+      "end_offset": 4941,
+      "position": {
+        "line": 143,
+        "column": 14
+      },
+      "end_position": {
+        "line": 143,
+        "column": 17
+      },
+      "source_text": "hab"
+    },
+    {
+      "depth": 7,
+      "end": 5174,
+      "goals_after": [
+        "a b c : SKI\nhab : a ⭢ₚ b\nhac : a ⭢ₚ c\n⊢ Join ParallelReduction b c"
+      ],
+      "goals_before": [
+        "a b c : SKI\nhab : a ⭢ₚ b\n⊢ a ⭢ₚ c → Join ParallelReduction b c"
+      ],
+      "kind": "tactic",
+      "start": 5171,
+      "raw": {
+        "depth": 7,
+        "end": 12305,
+        "goals_after": [
+          "a b c : SKI\nhab : a ⭢ₚ b\nhac : a ⭢ₚ c\n⊢ Join ParallelReduction b c"
+        ],
+        "goals_before": [
+          "a b c : SKI\nhab : a ⭢ₚ b\n⊢ a ⭢ₚ c → Join ParallelReduction b c"
+        ],
+        "kind": "tactic",
+        "start": 12302
+      },
+      "start_offset": 4942,
+      "end_offset": 4945,
+      "position": {
+        "line": 143,
+        "column": 18
+      },
+      "end_position": {
+        "line": 143,
+        "column": 21
+      },
+      "source_text": "hac"
+    },
+    {
+      "depth": 6,
+      "end": 7082,
+      "goals_after": [],
+      "goals_before": [
+        "a b c : SKI\nhab : a ⭢ₚ b\nhac : a ⭢ₚ c\n⊢ Join ParallelReduction b c"
+      ],
+      "kind": "tactic",
+      "start": 5177,
+      "raw": {
+        "depth": 6,
+        "end": 14213,
+        "goals_after": [],
+        "goals_before": [
+          "a b c : SKI\nhab : a ⭢ₚ b\nhac : a ⭢ₚ c\n⊢ Join ParallelReduction b c"
+        ],
+        "kind": "tactic",
+        "start": 12308
+      },
+      "start_offset": 4948,
+      "end_offset": 6737,
+      "position": {
+        "line": 144,
+        "column": 2
+      },
+      "end_position": {
+        "line": 202,
+        "column": 51
+      },
+      "source_text": "induction hab generalizing c with\n  | refl =>\n      exact ⟨c, hac, .refl c⟩\n  | red_I =>\n      cases hac with\n      | refl =>\n          exact ⟨_, .refl _, .red_I _⟩\n      | red_I =>\n          exact ⟨_, .refl _, .refl _⟩\n      | par i' a' hi ha =>\n          have hi' : i' = I := I_irreducible i' hi\n          subst i'\n          exact ⟨a', ha, .red_I a'⟩\n  | red_K _ =>\n      cases hac with\n      | refl =>\n          exact ⟨_, .refl _, .red_K _ _⟩\n      | red_K =>\n          exact ⟨_, .refl _, .refl _⟩\n      | par k' b' hk hb =>\n          obtain ⟨x, hx, hk'⟩ := Ka_irreducible _ k' hk\n          subst k'\n          exact ⟨x, hx, .red_K x b'⟩\n  | red_S _ _ _ =>\n      cases hac with\n      | refl =>\n          exact ⟨_, .refl _, .red_S _ _ _⟩\n      | red_S =>\n          exact ⟨_, .refl _, .refl _⟩\n      | par s' c' hs hc =>\n          obtain ⟨x, y, hx, hy, hs'⟩ := Sab_irreducible _ _ s' hs\n          subst s'\n          exact\n            ⟨x ⬝ c' ⬝ (y ⬝ c'),\n              .par (.par hx hc) (.par hy hc),\n              .red_S x y c'⟩\n  | par a a' b b' ha hb iha ihb =>\n      cases hac with\n      | refl =>\n          exact ⟨a' ⬝ b', .refl _, .par ha hb⟩\n      | red_I =>\n          have ha' : a' = I := I_irreducible a' ha\n          subst a'\n          exact ⟨b', .red_I b', hb⟩\n      | red_K =>\n          obtain ⟨x, hx, ha'⟩ := Ka_irreducible _ a' ha\n          subst a'\n          exact ⟨x, .red_K x b', hx⟩\n      | red_S _ _ =>\n          obtain ⟨x, y, hx, hy, ha'⟩ := Sab_irreducible _ _ a' ha\n          subst a'\n          exact\n            ⟨x ⬝ b' ⬝ (y ⬝ b'),\n              .red_S x y b',\n              .par (.par hx hb) (.par hy hb)⟩\n      | par c' d' hc hd =>\n          obtain ⟨x, hx₁, hx₂⟩ := iha hc\n          obtain ⟨y, hy₁, hy₂⟩ := ihb hd\n          exact ⟨x ⬝ y, .par hx₁ hy₁, .par hx₂ hy₂⟩"
+    },
+    {
+      "depth": 7,
+      "end": 5210,
+      "goals_after": [],
+      "goals_before": [
+        "a b c : SKI\nhab : a ⭢ₚ b\nhac : a ⭢ₚ c\n⊢ Join ParallelReduction b c"
+      ],
+      "kind": "tactic",
+      "start": 5177,
+      "raw": {
+        "depth": 7,
+        "end": 12341,
+        "goals_after": [],
+        "goals_before": [
+          "a b c : SKI\nhab : a ⭢ₚ b\nhac : a ⭢ₚ c\n⊢ Join ParallelReduction b c"
+        ],
+        "kind": "tactic",
+        "start": 12308
+      },
+      "start_offset": 4948,
+      "end_offset": 4981,
+      "position": {
+        "line": 144,
+        "column": 2
+      },
+      "end_position": {
+        "line": 144,
+        "column": 35
+      },
+      "source_text": "induction hab generalizing c with"
+    },
+    {
+      "depth": 8,
+      "end": 5222,
+      "goals_after": [],
+      "goals_before": [
+        "case refl\na b a✝ c : SKI\nhac : a✝ ⭢ₚ c\n⊢ Join ParallelReduction a✝ c"
+      ],
+      "kind": "tactic",
+      "start": 5213,
+      "raw": {
+        "depth": 8,
+        "end": 12353,
+        "goals_after": [],
+        "goals_before": [
+          "case refl\na b a✝ c : SKI\nhac : a✝ ⭢ₚ c\n⊢ Join ParallelReduction a✝ c"
+        ],
+        "kind": "tactic",
+        "start": 12344
+      },
+      "start_offset": 4984,
+      "end_offset": 4993,
+      "position": {
+        "line": 145,
+        "column": 2
+      },
+      "end_position": {
+        "line": 145,
+        "column": 11
+      },
+      "source_text": "| refl =>"
+    },
+    {
+      "depth": 9,
+      "end": 5256,
+      "goals_after": [],
+      "goals_before": [
+        "case refl\na b a✝ c : SKI\nhac : a✝ ⭢ₚ c\n⊢ Join ParallelReduction a✝ c"
+      ],
+      "kind": "tactic",
+      "start": 5229,
+      "raw": {
+        "depth": 9,
+        "end": 12387,
+        "goals_after": [],
+        "goals_before": [
+          "case refl\na b a✝ c : SKI\nhac : a✝ ⭢ₚ c\n⊢ Join ParallelReduction a✝ c"
+        ],
+        "kind": "tactic",
+        "start": 12360
+      },
+      "start_offset": 5000,
+      "end_offset": 5023,
+      "position": {
+        "line": 146,
+        "column": 6
+      },
+      "end_position": {
+        "line": 146,
+        "column": 29
+      },
+      "source_text": "exact ⟨c, hac, .refl c⟩"
+    },
+    {
+      "depth": 10,
+      "end": 5256,
+      "goals_after": [],
+      "goals_before": [
+        "case refl\na b a✝ c : SKI\nhac : a✝ ⭢ₚ c\n⊢ Join ParallelReduction a✝ c"
+      ],
+      "kind": "tactic",
+      "start": 5229,
+      "raw": {
+        "depth": 10,
+        "end": 12387,
+        "goals_after": [],
+        "goals_before": [
+          "case refl\na b a✝ c : SKI\nhac : a✝ ⭢ₚ c\n⊢ Join ParallelReduction a✝ c"
+        ],
+        "kind": "tactic",
+        "start": 12360
+      },
+      "start_offset": 5000,
+      "end_offset": 5023,
+      "position": {
+        "line": 146,
+        "column": 6
+      },
+      "end_position": {
+        "line": 146,
+        "column": 29
+      },
+      "source_text": "exact ⟨c, hac, .refl c⟩"
+    },
+    {
+      "depth": 11,
+      "end": 5256,
+      "goals_after": [],
+      "goals_before": [
+        "case refl\na b a✝ c : SKI\nhac : a✝ ⭢ₚ c\n⊢ Join ParallelReduction a✝ c"
+      ],
+      "kind": "tactic",
+      "start": 5229,
+      "raw": {
+        "depth": 11,
+        "end": 12387,
+        "goals_after": [],
+        "goals_before": [
+          "case refl\na b a✝ c : SKI\nhac : a✝ ⭢ₚ c\n⊢ Join ParallelReduction a✝ c"
+        ],
+        "kind": "tactic",
+        "start": 12360
+      },
+      "start_offset": 5000,
+      "end_offset": 5023,
+      "position": {
+        "line": 146,
+        "column": 6
+      },
+      "end_position": {
+        "line": 146,
+        "column": 29
+      },
+      "source_text": "exact ⟨c, hac, .refl c⟩"
+    },
+    {
+      "depth": 8,
+      "end": 5269,
+      "goals_after": [],
+      "goals_before": [
+        "case red_I\na b a✝ c : SKI\nhac : (I ⬝ a✝) ⭢ₚ c\n⊢ Join ParallelReduction a✝ c"
+      ],
+      "kind": "tactic",
+      "start": 5259,
+      "raw": {
+        "depth": 8,
+        "end": 12400,
+        "goals_after": [],
+        "goals_before": [
+          "case red_I\na b a✝ c : SKI\nhac : (I ⬝ a✝) ⭢ₚ c\n⊢ Join ParallelReduction a✝ c"
+        ],
+        "kind": "tactic",
+        "start": 12390
+      },
+      "start_offset": 5026,
+      "end_offset": 5036,
+      "position": {
+        "line": 147,
+        "column": 2
+      },
+      "end_position": {
+        "line": 147,
+        "column": 12
+      },
+      "source_text": "| red_I =>"
+    },
+    {
+      "depth": 9,
+      "end": 5545,
+      "goals_after": [],
+      "goals_before": [
+        "case red_I\na b a✝ c : SKI\nhac : (I ⬝ a✝) ⭢ₚ c\n⊢ Join ParallelReduction a✝ c"
+      ],
+      "kind": "tactic",
+      "start": 5276,
+      "raw": {
+        "depth": 9,
+        "end": 12676,
+        "goals_after": [],
+        "goals_before": [
+          "case red_I\na b a✝ c : SKI\nhac : (I ⬝ a✝) ⭢ₚ c\n⊢ Join ParallelReduction a✝ c"
+        ],
+        "kind": "tactic",
+        "start": 12407
+      },
+      "start_offset": 5043,
+      "end_offset": 5300,
+      "position": {
+        "line": 148,
+        "column": 6
+      },
+      "end_position": {
+        "line": 156,
+        "column": 35
+      },
+      "source_text": "cases hac with\n      | refl =>\n          exact ⟨_, .refl _, .red_I _⟩\n      | red_I =>\n          exact ⟨_, .refl _, .refl _⟩\n      | par i' a' hi ha =>\n          have hi' : i' = I := I_irreducible i' hi\n          subst i'\n          exact ⟨a', ha, .red_I a'⟩"
+    },
+    {
+      "depth": 10,
+      "end": 5545,
+      "goals_after": [],
+      "goals_before": [
+        "case red_I\na b a✝ c : SKI\nhac : (I ⬝ a✝) ⭢ₚ c\n⊢ Join ParallelReduction a✝ c"
+      ],
+      "kind": "tactic",
+      "start": 5276,
+      "raw": {
+        "depth": 10,
+        "end": 12676,
+        "goals_after": [],
+        "goals_before": [
+          "case red_I\na b a✝ c : SKI\nhac : (I ⬝ a✝) ⭢ₚ c\n⊢ Join ParallelReduction a✝ c"
+        ],
+        "kind": "tactic",
+        "start": 12407
+      },
+      "start_offset": 5043,
+      "end_offset": 5300,
+      "position": {
+        "line": 148,
+        "column": 6
+      },
+      "end_position": {
+        "line": 156,
+        "column": 35
+      },
+      "source_text": "cases hac with\n      | refl =>\n          exact ⟨_, .refl _, .red_I _⟩\n      | red_I =>\n          exact ⟨_, .refl _, .refl _⟩\n      | par i' a' hi ha =>\n          have hi' : i' = I := I_irreducible i' hi\n          subst i'\n          exact ⟨a', ha, .red_I a'⟩"
+    },
+    {
+      "depth": 11,
+      "end": 5545,
+      "goals_after": [],
+      "goals_before": [
+        "case red_I\na b a✝ c : SKI\nhac : (I ⬝ a✝) ⭢ₚ c\n⊢ Join ParallelReduction a✝ c"
+      ],
+      "kind": "tactic",
+      "start": 5276,
+      "raw": {
+        "depth": 11,
+        "end": 12676,
+        "goals_after": [],
+        "goals_before": [
+          "case red_I\na b a✝ c : SKI\nhac : (I ⬝ a✝) ⭢ₚ c\n⊢ Join ParallelReduction a✝ c"
+        ],
+        "kind": "tactic",
+        "start": 12407
+      },
+      "start_offset": 5043,
+      "end_offset": 5300,
+      "position": {
+        "line": 148,
+        "column": 6
+      },
+      "end_position": {
+        "line": 156,
+        "column": 35
+      },
+      "source_text": "cases hac with\n      | refl =>\n          exact ⟨_, .refl _, .red_I _⟩\n      | red_I =>\n          exact ⟨_, .refl _, .refl _⟩\n      | par i' a' hi ha =>\n          have hi' : i' = I := I_irreducible i' hi\n          subst i'\n          exact ⟨a', ha, .red_I a'⟩"
+    },
+    {
+      "depth": 12,
+      "end": 5290,
+      "goals_after": [],
+      "goals_before": [
+        "case red_I\na b a✝ c : SKI\nhac : (I ⬝ a✝) ⭢ₚ c\n⊢ Join ParallelReduction a✝ c"
+      ],
+      "kind": "tactic",
+      "start": 5276,
+      "raw": {
+        "depth": 12,
+        "end": 12421,
+        "goals_after": [],
+        "goals_before": [
+          "case red_I\na b a✝ c : SKI\nhac : (I ⬝ a✝) ⭢ₚ c\n⊢ Join ParallelReduction a✝ c"
+        ],
+        "kind": "tactic",
+        "start": 12407
+      },
+      "start_offset": 5043,
+      "end_offset": 5057,
+      "position": {
+        "line": 148,
+        "column": 6
+      },
+      "end_position": {
+        "line": 148,
+        "column": 20
+      },
+      "source_text": "cases hac with"
+    },
+    {
+      "depth": 13,
+      "end": 5306,
+      "goals_after": [],
+      "goals_before": [
+        "case red_I.refl\na b a✝ : SKI\n⊢ Join ParallelReduction a✝ (I ⬝ a✝)"
+      ],
+      "kind": "tactic",
+      "start": 5297,
+      "raw": {
+        "depth": 13,
+        "end": 12437,
+        "goals_after": [],
+        "goals_before": [
+          "case red_I.refl\na b a✝ : SKI\n⊢ Join ParallelReduction a✝ (I ⬝ a✝)"
+        ],
+        "kind": "tactic",
+        "start": 12428
+      },
+      "start_offset": 5064,
+      "end_offset": 5073,
+      "position": {
+        "line": 149,
+        "column": 6
+      },
+      "end_position": {
+        "line": 149,
+        "column": 15
+      },
+      "source_text": "| refl =>"
+    },
+    {
+      "depth": 14,
+      "end": 5349,
+      "goals_after": [],
+      "goals_before": [
+        "case red_I.refl\na b a✝ : SKI\n⊢ Join ParallelReduction a✝ (I ⬝ a✝)"
+      ],
+      "kind": "tactic",
+      "start": 5317,
+      "raw": {
+        "depth": 14,
+        "end": 12480,
+        "goals_after": [],
+        "goals_before": [
+          "case red_I.refl\na b a✝ : SKI\n⊢ Join ParallelReduction a✝ (I ⬝ a✝)"
+        ],
+        "kind": "tactic",
+        "start": 12448
+      },
+      "start_offset": 5084,
+      "end_offset": 5112,
+      "position": {
+        "line": 150,
+        "column": 10
+      },
+      "end_position": {
+        "line": 150,
+        "column": 38
+      },
+      "source_text": "exact ⟨_, .refl _, .red_I _⟩"
+    },
+    {
+      "depth": 15,
+      "end": 5349,
+      "goals_after": [],
+      "goals_before": [
+        "case red_I.refl\na b a✝ : SKI\n⊢ Join ParallelReduction a✝ (I ⬝ a✝)"
+      ],
+      "kind": "tactic",
+      "start": 5317,
+      "raw": {
+        "depth": 15,
+        "end": 12480,
+        "goals_after": [],
+        "goals_before": [
+          "case red_I.refl\na b a✝ : SKI\n⊢ Join ParallelReduction a✝ (I ⬝ a✝)"
+        ],
+        "kind": "tactic",
+        "start": 12448
+      },
+      "start_offset": 5084,
+      "end_offset": 5112,
+      "position": {
+        "line": 150,
+        "column": 10
+      },
+      "end_position": {
+        "line": 150,
+        "column": 38
+      },
+      "source_text": "exact ⟨_, .refl _, .red_I _⟩"
+    },
+    {
+      "depth": 16,
+      "end": 5349,
+      "goals_after": [],
+      "goals_before": [
+        "case red_I.refl\na b a✝ : SKI\n⊢ Join ParallelReduction a✝ (I ⬝ a✝)"
+      ],
+      "kind": "tactic",
+      "start": 5317,
+      "raw": {
+        "depth": 16,
+        "end": 12480,
+        "goals_after": [],
+        "goals_before": [
+          "case red_I.refl\na b a✝ : SKI\n⊢ Join ParallelReduction a✝ (I ⬝ a✝)"
+        ],
+        "kind": "tactic",
+        "start": 12448
+      },
+      "start_offset": 5084,
+      "end_offset": 5112,
+      "position": {
+        "line": 150,
+        "column": 10
+      },
+      "end_position": {
+        "line": 150,
+        "column": 38
+      },
+      "source_text": "exact ⟨_, .refl _, .red_I _⟩"
+    },
+    {
+      "depth": 13,
+      "end": 5366,
+      "goals_after": [],
+      "goals_before": [
+        "case red_I.red_I\na b a✝ : SKI\n⊢ Join ParallelReduction a✝ a✝"
+      ],
+      "kind": "tactic",
+      "start": 5356,
+      "raw": {
+        "depth": 13,
+        "end": 12497,
+        "goals_after": [],
+        "goals_before": [
+          "case red_I.red_I\na b a✝ : SKI\n⊢ Join ParallelReduction a✝ a✝"
+        ],
+        "kind": "tactic",
+        "start": 12487
+      },
+      "start_offset": 5119,
+      "end_offset": 5129,
+      "position": {
+        "line": 151,
+        "column": 6
+      },
+      "end_position": {
+        "line": 151,
+        "column": 16
+      },
+      "source_text": "| red_I =>"
+    },
+    {
+      "depth": 14,
+      "end": 5408,
+      "goals_after": [],
+      "goals_before": [
+        "case red_I.red_I\na b a✝ : SKI\n⊢ Join ParallelReduction a✝ a✝"
+      ],
+      "kind": "tactic",
+      "start": 5377,
+      "raw": {
+        "depth": 14,
+        "end": 12539,
+        "goals_after": [],
+        "goals_before": [
+          "case red_I.red_I\na b a✝ : SKI\n⊢ Join ParallelReduction a✝ a✝"
+        ],
+        "kind": "tactic",
+        "start": 12508
+      },
+      "start_offset": 5140,
+      "end_offset": 5167,
+      "position": {
+        "line": 152,
+        "column": 10
+      },
+      "end_position": {
+        "line": 152,
+        "column": 37
+      },
+      "source_text": "exact ⟨_, .refl _, .refl _⟩"
+    },
+    {
+      "depth": 15,
+      "end": 5408,
+      "goals_after": [],
+      "goals_before": [
+        "case red_I.red_I\na b a✝ : SKI\n⊢ Join ParallelReduction a✝ a✝"
+      ],
+      "kind": "tactic",
+      "start": 5377,
+      "raw": {
+        "depth": 15,
+        "end": 12539,
+        "goals_after": [],
+        "goals_before": [
+          "case red_I.red_I\na b a✝ : SKI\n⊢ Join ParallelReduction a✝ a✝"
+        ],
+        "kind": "tactic",
+        "start": 12508
+      },
+      "start_offset": 5140,
+      "end_offset": 5167,
+      "position": {
+        "line": 152,
+        "column": 10
+      },
+      "end_position": {
+        "line": 152,
+        "column": 37
+      },
+      "source_text": "exact ⟨_, .refl _, .refl _⟩"
+    },
+    {
+      "depth": 16,
+      "end": 5408,
+      "goals_after": [],
+      "goals_before": [
+        "case red_I.red_I\na b a✝ : SKI\n⊢ Join ParallelReduction a✝ a✝"
+      ],
+      "kind": "tactic",
+      "start": 5377,
+      "raw": {
+        "depth": 16,
+        "end": 12539,
+        "goals_after": [],
+        "goals_before": [
+          "case red_I.red_I\na b a✝ : SKI\n⊢ Join ParallelReduction a✝ a✝"
+        ],
+        "kind": "tactic",
+        "start": 12508
+      },
+      "start_offset": 5140,
+      "end_offset": 5167,
+      "position": {
+        "line": 152,
+        "column": 10
+      },
+      "end_position": {
+        "line": 152,
+        "column": 37
+      },
+      "source_text": "exact ⟨_, .refl _, .refl _⟩"
+    },
+    {
+      "depth": 13,
+      "end": 5435,
+      "goals_after": [
+        "case red_I.par\na b a✝ a'✝ b'✝ : SKI\ni' : I ⭢ₚ a'✝\na' : a✝ ⭢ₚ b'✝\nhi' : sorry\n⊢ Join ParallelReduction a✝ (a'✝ ⬝ b'✝)"
+      ],
+      "goals_before": [
+        "case red_I.par\na b a✝ a'✝ b'✝ : SKI\ni' : I ⭢ₚ a'✝\na' : a✝ ⭢ₚ b'✝\n⊢ Join ParallelReduction a✝ (a'✝ ⬝ b'✝)"
+      ],
+      "kind": "tactic",
+      "start": 5415,
+      "raw": {
+        "depth": 13,
+        "end": 12566,
+        "goals_after": [
+          "case red_I.par\na b a✝ a'✝ b'✝ : SKI\ni' : I ⭢ₚ a'✝\na' : a✝ ⭢ₚ b'✝\nhi' : sorry\n⊢ Join ParallelReduction a✝ (a'✝ ⬝ b'✝)"
+        ],
+        "goals_before": [
+          "case red_I.par\na b a✝ a'✝ b'✝ : SKI\ni' : I ⭢ₚ a'✝\na' : a✝ ⭢ₚ b'✝\n⊢ Join ParallelReduction a✝ (a'✝ ⬝ b'✝)"
+        ],
+        "kind": "tactic",
+        "start": 12546
+      },
+      "start_offset": 5174,
+      "end_offset": 5194,
+      "position": {
+        "line": 153,
+        "column": 6
+      },
+      "end_position": {
+        "line": 153,
+        "column": 26
+      },
+      "source_text": "| par i' a' hi ha =>"
+    },
+    {
+      "depth": 14,
+      "end": 5545,
+      "goals_after": [
+        "case red_I.par\na b a✝ a'✝ b'✝ : SKI\ni' : I ⭢ₚ a'✝\na' : a✝ ⭢ₚ b'✝\nhi' : sorry\n⊢ Join ParallelReduction a✝ (a'✝ ⬝ b'✝)"
+      ],
+      "goals_before": [
+        "case red_I.par\na b a✝ a'✝ b'✝ : SKI\ni' : I ⭢ₚ a'✝\na' : a✝ ⭢ₚ b'✝\n⊢ Join ParallelReduction a✝ (a'✝ ⬝ b'✝)"
+      ],
+      "kind": "tactic",
+      "start": 5446,
+      "raw": {
+        "depth": 14,
+        "end": 12676,
+        "goals_after": [
+          "case red_I.par\na b a✝ a'✝ b'✝ : SKI\ni' : I ⭢ₚ a'✝\na' : a✝ ⭢ₚ b'✝\nhi' : sorry\n⊢ Join ParallelReduction a✝ (a'✝ ⬝ b'✝)"
+        ],
+        "goals_before": [
+          "case red_I.par\na b a✝ a'✝ b'✝ : SKI\ni' : I ⭢ₚ a'✝\na' : a✝ ⭢ₚ b'✝\n⊢ Join ParallelReduction a✝ (a'✝ ⬝ b'✝)"
+        ],
+        "kind": "tactic",
+        "start": 12577
+      },
+      "start_offset": 5205,
+      "end_offset": 5300,
+      "position": {
+        "line": 154,
+        "column": 10
+      },
+      "end_position": {
+        "line": 156,
+        "column": 35
+      },
+      "source_text": "have hi' : i' = I := I_irreducible i' hi\n          subst i'\n          exact ⟨a', ha, .red_I a'⟩"
+    },
+    {
+      "depth": 15,
+      "end": 5545,
+      "goals_after": [
+        "case red_I.par\na b a✝ a'✝ b'✝ : SKI\ni' : I ⭢ₚ a'✝\na' : a✝ ⭢ₚ b'✝\nhi' : sorry\n⊢ Join ParallelReduction a✝ (a'✝ ⬝ b'✝)"
+      ],
+      "goals_before": [
+        "case red_I.par\na b a✝ a'✝ b'✝ : SKI\ni' : I ⭢ₚ a'✝\na' : a✝ ⭢ₚ b'✝\n⊢ Join ParallelReduction a✝ (a'✝ ⬝ b'✝)"
+      ],
+      "kind": "tactic",
+      "start": 5446,
+      "raw": {
+        "depth": 15,
+        "end": 12676,
+        "goals_after": [
+          "case red_I.par\na b a✝ a'✝ b'✝ : SKI\ni' : I ⭢ₚ a'✝\na' : a✝ ⭢ₚ b'✝\nhi' : sorry\n⊢ Join ParallelReduction a✝ (a'✝ ⬝ b'✝)"
+        ],
+        "goals_before": [
+          "case red_I.par\na b a✝ a'✝ b'✝ : SKI\ni' : I ⭢ₚ a'✝\na' : a✝ ⭢ₚ b'✝\n⊢ Join ParallelReduction a✝ (a'✝ ⬝ b'✝)"
+        ],
+        "kind": "tactic",
+        "start": 12577
+      },
+      "start_offset": 5205,
+      "end_offset": 5300,
+      "position": {
+        "line": 154,
+        "column": 10
+      },
+      "end_position": {
+        "line": 156,
+        "column": 35
+      },
+      "source_text": "have hi' : i' = I := I_irreducible i' hi\n          subst i'\n          exact ⟨a', ha, .red_I a'⟩"
+    },
+    {
+      "depth": 16,
+      "end": 5486,
+      "goals_after": [
+        "case red_I.par\na b a✝ a'✝ b'✝ : SKI\ni' : I ⭢ₚ a'✝\na' : a✝ ⭢ₚ b'✝\nhi' : sorry\n⊢ Join ParallelReduction a✝ (a'✝ ⬝ b'✝)"
+      ],
+      "goals_before": [
+        "case red_I.par\na b a✝ a'✝ b'✝ : SKI\ni' : I ⭢ₚ a'✝\na' : a✝ ⭢ₚ b'✝\n⊢ Join ParallelReduction a✝ (a'✝ ⬝ b'✝)"
+      ],
+      "kind": "tactic",
+      "start": 5446,
+      "raw": {
+        "depth": 16,
+        "end": 12617,
+        "goals_after": [
+          "case red_I.par\na b a✝ a'✝ b'✝ : SKI\ni' : I ⭢ₚ a'✝\na' : a✝ ⭢ₚ b'✝\nhi' : sorry\n⊢ Join ParallelReduction a✝ (a'✝ ⬝ b'✝)"
+        ],
+        "goals_before": [
+          "case red_I.par\na b a✝ a'✝ b'✝ : SKI\ni' : I ⭢ₚ a'✝\na' : a✝ ⭢ₚ b'✝\n⊢ Join ParallelReduction a✝ (a'✝ ⬝ b'✝)"
+        ],
+        "kind": "tactic",
+        "start": 12577
+      },
+      "start_offset": 5205,
+      "end_offset": 5245,
+      "position": {
+        "line": 154,
+        "column": 10
+      },
+      "end_position": {
+        "line": 154,
+        "column": 50
+      },
+      "source_text": "have hi' : i' = I := I_irreducible i' hi"
+    },
+    {
+      "depth": 17,
+      "end": 5486,
+      "goals_after": [
+        "case red_I.par\na b a✝ a'✝ b'✝ : SKI\ni' : I ⭢ₚ a'✝\na' : a✝ ⭢ₚ b'✝\nhi' : sorry\n⊢ Join ParallelReduction a✝ (a'✝ ⬝ b'✝)"
+      ],
+      "goals_before": [
+        "case red_I.par\na b a✝ a'✝ b'✝ : SKI\ni' : I ⭢ₚ a'✝\na' : a✝ ⭢ₚ b'✝\n⊢ Join ParallelReduction a✝ (a'✝ ⬝ b'✝)"
+      ],
+      "kind": "tactic",
+      "start": 5446,
+      "raw": {
+        "depth": 17,
+        "end": 12617,
+        "goals_after": [
+          "case red_I.par\na b a✝ a'✝ b'✝ : SKI\ni' : I ⭢ₚ a'✝\na' : a✝ ⭢ₚ b'✝\nhi' : sorry\n⊢ Join ParallelReduction a✝ (a'✝ ⬝ b'✝)"
+        ],
+        "goals_before": [
+          "case red_I.par\na b a✝ a'✝ b'✝ : SKI\ni' : I ⭢ₚ a'✝\na' : a✝ ⭢ₚ b'✝\n⊢ Join ParallelReduction a✝ (a'✝ ⬝ b'✝)"
+        ],
+        "kind": "tactic",
+        "start": 12577
+      },
+      "start_offset": 5205,
+      "end_offset": 5245,
+      "position": {
+        "line": 154,
+        "column": 10
+      },
+      "end_position": {
+        "line": 154,
+        "column": 50
+      },
+      "source_text": "have hi' : i' = I := I_irreducible i' hi"
+    },
+    {
+      "depth": 18,
+      "end": 5486,
+      "goals_after": [
+        "case red_I.par\na b a✝ a'✝ b'✝ : SKI\ni' : I ⭢ₚ a'✝\na' : a✝ ⭢ₚ b'✝\nhi' : sorry\n⊢ Join ParallelReduction a✝ (a'✝ ⬝ b'✝)"
+      ],
+      "goals_before": [
+        "case red_I.par\na b a✝ a'✝ b'✝ : SKI\ni' : I ⭢ₚ a'✝\na' : a✝ ⭢ₚ b'✝\n⊢ Join ParallelReduction a✝ (a'✝ ⬝ b'✝)"
+      ],
+      "kind": "tactic",
+      "start": 5446,
+      "raw": {
+        "depth": 18,
+        "end": 12617,
+        "goals_after": [
+          "case red_I.par\na b a✝ a'✝ b'✝ : SKI\ni' : I ⭢ₚ a'✝\na' : a✝ ⭢ₚ b'✝\nhi' : sorry\n⊢ Join ParallelReduction a✝ (a'✝ ⬝ b'✝)"
+        ],
+        "goals_before": [
+          "case red_I.par\na b a✝ a'✝ b'✝ : SKI\ni' : I ⭢ₚ a'✝\na' : a✝ ⭢ₚ b'✝\n⊢ Join ParallelReduction a✝ (a'✝ ⬝ b'✝)"
+        ],
+        "kind": "tactic",
+        "start": 12577
+      },
+      "start_offset": 5205,
+      "end_offset": 5245,
+      "position": {
+        "line": 154,
+        "column": 10
+      },
+      "end_position": {
+        "line": 154,
+        "column": 50
+      },
+      "source_text": "have hi' : i' = I := I_irreducible i' hi"
+    },
+    {
+      "depth": 19,
+      "end": 5486,
+      "goals_after": [
+        "case red_I.par\na b a✝ a'✝ b'✝ : SKI\ni' : I ⭢ₚ a'✝\na' : a✝ ⭢ₚ b'✝\n⊢ Join ParallelReduction a✝ (a'✝ ⬝ b'✝)"
+      ],
+      "goals_before": [
+        "case red_I.par\na b a✝ a'✝ b'✝ : SKI\ni' : I ⭢ₚ a'✝\na' : a✝ ⭢ₚ b'✝\n⊢ Join ParallelReduction a✝ (a'✝ ⬝ b'✝)"
+      ],
+      "kind": "tactic",
+      "start": 5446,
+      "raw": {
+        "depth": 19,
+        "end": 12617,
+        "goals_after": [
+          "case red_I.par\na b a✝ a'✝ b'✝ : SKI\ni' : I ⭢ₚ a'✝\na' : a✝ ⭢ₚ b'✝\n⊢ Join ParallelReduction a✝ (a'✝ ⬝ b'✝)"
+        ],
+        "goals_before": [
+          "case red_I.par\na b a✝ a'✝ b'✝ : SKI\ni' : I ⭢ₚ a'✝\na' : a✝ ⭢ₚ b'✝\n⊢ Join ParallelReduction a✝ (a'✝ ⬝ b'✝)"
+        ],
+        "kind": "tactic",
+        "start": 12577
+      },
+      "start_offset": 5205,
+      "end_offset": 5245,
+      "position": {
+        "line": 154,
+        "column": 10
+      },
+      "end_position": {
+        "line": 154,
+        "column": 50
+      },
+      "source_text": "have hi' : i' = I := I_irreducible i' hi"
+    },
+    {
+      "depth": 19,
+      "end": 5486,
+      "goals_after": [
+        "case red_I.par\na b a✝ a'✝ b'✝ : SKI\ni' : I ⭢ₚ a'✝\na' : a✝ ⭢ₚ b'✝\nhi' : sorry\n⊢ Join ParallelReduction a✝ (a'✝ ⬝ b'✝)"
+      ],
+      "goals_before": [
+        "case red_I.par\na b a✝ a'✝ b'✝ : SKI\ni' : I ⭢ₚ a'✝\na' : a✝ ⭢ₚ b'✝\n⊢ Join ParallelReduction a✝ (a'✝ ⬝ b'✝)"
+      ],
+      "kind": "tactic",
+      "start": 5446,
+      "raw": {
+        "depth": 19,
+        "end": 12617,
+        "goals_after": [
+          "case red_I.par\na b a✝ a'✝ b'✝ : SKI\ni' : I ⭢ₚ a'✝\na' : a✝ ⭢ₚ b'✝\nhi' : sorry\n⊢ Join ParallelReduction a✝ (a'✝ ⬝ b'✝)"
+        ],
+        "goals_before": [
+          "case red_I.par\na b a✝ a'✝ b'✝ : SKI\ni' : I ⭢ₚ a'✝\na' : a✝ ⭢ₚ b'✝\n⊢ Join ParallelReduction a✝ (a'✝ ⬝ b'✝)"
+        ],
+        "kind": "tactic",
+        "start": 12577
+      },
+      "start_offset": 5205,
+      "end_offset": 5245,
+      "position": {
+        "line": 154,
+        "column": 10
+      },
+      "end_position": {
+        "line": 154,
+        "column": 50
+      },
+      "source_text": "have hi' : i' = I := I_irreducible i' hi"
+    },
+    {
+      "depth": 20,
+      "end": 5486,
+      "goals_after": [
+        "case red_I.par\na b a✝ a'✝ b'✝ : SKI\ni' : I ⭢ₚ a'✝\na' : a✝ ⭢ₚ b'✝\nhi' : sorry\n⊢ Join ParallelReduction a✝ (a'✝ ⬝ b'✝)"
+      ],
+      "goals_before": [
+        "case red_I.par\na b a✝ a'✝ b'✝ : SKI\ni' : I ⭢ₚ a'✝\na' : a✝ ⭢ₚ b'✝\n⊢ Join ParallelReduction a✝ (a'✝ ⬝ b'✝)"
+      ],
+      "kind": "tactic",
+      "start": 5446,
+      "raw": {
+        "depth": 20,
+        "end": 12617,
+        "goals_after": [
+          "case red_I.par\na b a✝ a'✝ b'✝ : SKI\ni' : I ⭢ₚ a'✝\na' : a✝ ⭢ₚ b'✝\nhi' : sorry\n⊢ Join ParallelReduction a✝ (a'✝ ⬝ b'✝)"
+        ],
+        "goals_before": [
+          "case red_I.par\na b a✝ a'✝ b'✝ : SKI\ni' : I ⭢ₚ a'✝\na' : a✝ ⭢ₚ b'✝\n⊢ Join ParallelReduction a✝ (a'✝ ⬝ b'✝)"
+        ],
+        "kind": "tactic",
+        "start": 12577
+      },
+      "start_offset": 5205,
+      "end_offset": 5245,
+      "position": {
+        "line": 154,
+        "column": 10
+      },
+      "end_position": {
+        "line": 154,
+        "column": 50
+      },
+      "source_text": "have hi' : i' = I := I_irreducible i' hi"
+    },
+    {
+      "depth": 21,
+      "end": 5486,
+      "goals_after": [
+        "case red_I.par\na b a✝ a'✝ b'✝ : SKI\ni' : I ⭢ₚ a'✝\na' : a✝ ⭢ₚ b'✝\nhi' : sorry\n⊢ Join ParallelReduction a✝ (a'✝ ⬝ b'✝)"
+      ],
+      "goals_before": [
+        "case red_I.par\na b a✝ a'✝ b'✝ : SKI\ni' : I ⭢ₚ a'✝\na' : a✝ ⭢ₚ b'✝\n⊢ Join ParallelReduction a✝ (a'✝ ⬝ b'✝)"
+      ],
+      "kind": "tactic",
+      "start": 5446,
+      "raw": {
+        "depth": 21,
+        "end": 12617,
+        "goals_after": [
+          "case red_I.par\na b a✝ a'✝ b'✝ : SKI\ni' : I ⭢ₚ a'✝\na' : a✝ ⭢ₚ b'✝\nhi' : sorry\n⊢ Join ParallelReduction a✝ (a'✝ ⬝ b'✝)"
+        ],
+        "goals_before": [
+          "case red_I.par\na b a✝ a'✝ b'✝ : SKI\ni' : I ⭢ₚ a'✝\na' : a✝ ⭢ₚ b'✝\n⊢ Join ParallelReduction a✝ (a'✝ ⬝ b'✝)"
+        ],
+        "kind": "tactic",
+        "start": 12577
+      },
+      "start_offset": 5205,
+      "end_offset": 5245,
+      "position": {
+        "line": 154,
+        "column": 10
+      },
+      "end_position": {
+        "line": 154,
+        "column": 50
+      },
+      "source_text": "have hi' : i' = I := I_irreducible i' hi"
+    },
+    {
+      "depth": 22,
+      "end": 5486,
+      "goals_after": [
+        "case red_I.par\na b a✝ a'✝ b'✝ : SKI\ni' : I ⭢ₚ a'✝\na' : a✝ ⭢ₚ b'✝\nhi' : sorry\n⊢ Join ParallelReduction a✝ (a'✝ ⬝ b'✝)"
+      ],
+      "goals_before": [
+        "case red_I.par\na b a✝ a'✝ b'✝ : SKI\ni' : I ⭢ₚ a'✝\na' : a✝ ⭢ₚ b'✝\n⊢ Join ParallelReduction a✝ (a'✝ ⬝ b'✝)"
+      ],
+      "kind": "tactic",
+      "start": 5446,
+      "raw": {
+        "depth": 22,
+        "end": 12617,
+        "goals_after": [
+          "case red_I.par\na b a✝ a'✝ b'✝ : SKI\ni' : I ⭢ₚ a'✝\na' : a✝ ⭢ₚ b'✝\nhi' : sorry\n⊢ Join ParallelReduction a✝ (a'✝ ⬝ b'✝)"
+        ],
+        "goals_before": [
+          "case red_I.par\na b a✝ a'✝ b'✝ : SKI\ni' : I ⭢ₚ a'✝\na' : a✝ ⭢ₚ b'✝\n⊢ Join ParallelReduction a✝ (a'✝ ⬝ b'✝)"
+        ],
+        "kind": "tactic",
+        "start": 12577
+      },
+      "start_offset": 5205,
+      "end_offset": 5245,
+      "position": {
+        "line": 154,
+        "column": 10
+      },
+      "end_position": {
+        "line": 154,
+        "column": 50
+      },
+      "source_text": "have hi' : i' = I := I_irreducible i' hi"
+    },
+    {
+      "depth": 23,
+      "end": 5486,
+      "goals_after": [
+        "case red_I.par\na b a✝ a'✝ b'✝ : SKI\ni' : I ⭢ₚ a'✝\na' : a✝ ⭢ₚ b'✝\nhi' : sorry\n⊢ Join ParallelReduction a✝ (a'✝ ⬝ b'✝)"
+      ],
+      "goals_before": [
+        "case red_I.par\na b a✝ a'✝ b'✝ : SKI\ni' : I ⭢ₚ a'✝\na' : a✝ ⭢ₚ b'✝\n⊢ Join ParallelReduction a✝ (a'✝ ⬝ b'✝)"
+      ],
+      "kind": "tactic",
+      "start": 5446,
+      "raw": {
+        "depth": 23,
+        "end": 12617,
+        "goals_after": [
+          "case red_I.par\na b a✝ a'✝ b'✝ : SKI\ni' : I ⭢ₚ a'✝\na' : a✝ ⭢ₚ b'✝\nhi' : sorry\n⊢ Join ParallelReduction a✝ (a'✝ ⬝ b'✝)"
+        ],
+        "goals_before": [
+          "case red_I.par\na b a✝ a'✝ b'✝ : SKI\ni' : I ⭢ₚ a'✝\na' : a✝ ⭢ₚ b'✝\n⊢ Join ParallelReduction a✝ (a'✝ ⬝ b'✝)"
+        ],
+        "kind": "tactic",
+        "start": 12577
+      },
+      "start_offset": 5205,
+      "end_offset": 5245,
+      "position": {
+        "line": 154,
+        "column": 10
+      },
+      "end_position": {
+        "line": 154,
+        "column": 50
+      },
+      "source_text": "have hi' : i' = I := I_irreducible i' hi"
+    },
+    {
+      "depth": 24,
+      "end": 5486,
+      "goals_after": [
+        "case red_I.par\na b a✝ a'✝ b'✝ : SKI\ni' : I ⭢ₚ a'✝\na' : a✝ ⭢ₚ b'✝\nhi' : sorry\n⊢ Join ParallelReduction a✝ (a'✝ ⬝ b'✝)"
+      ],
+      "goals_before": [
+        "case red_I.par\na b a✝ a'✝ b'✝ : SKI\ni' : I ⭢ₚ a'✝\na' : a✝ ⭢ₚ b'✝\n⊢ Join ParallelReduction a✝ (a'✝ ⬝ b'✝)"
+      ],
+      "kind": "tactic",
+      "start": 5446,
+      "raw": {
+        "depth": 24,
+        "end": 12617,
+        "goals_after": [
+          "case red_I.par\na b a✝ a'✝ b'✝ : SKI\ni' : I ⭢ₚ a'✝\na' : a✝ ⭢ₚ b'✝\nhi' : sorry\n⊢ Join ParallelReduction a✝ (a'✝ ⬝ b'✝)"
+        ],
+        "goals_before": [
+          "case red_I.par\na b a✝ a'✝ b'✝ : SKI\ni' : I ⭢ₚ a'✝\na' : a✝ ⭢ₚ b'✝\n⊢ Join ParallelReduction a✝ (a'✝ ⬝ b'✝)"
+        ],
+        "kind": "tactic",
+        "start": 12577
+      },
+      "start_offset": 5205,
+      "end_offset": 5245,
+      "position": {
+        "line": 154,
+        "column": 10
+      },
+      "end_position": {
+        "line": 154,
+        "column": 50
+      },
+      "source_text": "have hi' : i' = I := I_irreducible i' hi"
+    },
+    {
+      "depth": 24,
+      "end": 5486,
+      "goals_after": [
+        "case red_I.par\na b a✝ a'✝ b'✝ : SKI\ni' : I ⭢ₚ a'✝\na' : a✝ ⭢ₚ b'✝\nhi' : sorry\n⊢ Join ParallelReduction a✝ (a'✝ ⬝ b'✝)"
+      ],
+      "goals_before": [
+        "case red_I.par\na b a✝ a'✝ b'✝ : SKI\ni' : I ⭢ₚ a'✝\na' : a✝ ⭢ₚ b'✝\nhi' : sorry\n⊢ Join ParallelReduction a✝ (a'✝ ⬝ b'✝)"
+      ],
+      "kind": "tactic",
+      "start": 5446,
+      "raw": {
+        "depth": 24,
+        "end": 12617,
+        "goals_after": [
+          "case red_I.par\na b a✝ a'✝ b'✝ : SKI\ni' : I ⭢ₚ a'✝\na' : a✝ ⭢ₚ b'✝\nhi' : sorry\n⊢ Join ParallelReduction a✝ (a'✝ ⬝ b'✝)"
+        ],
+        "goals_before": [
+          "case red_I.par\na b a✝ a'✝ b'✝ : SKI\ni' : I ⭢ₚ a'✝\na' : a✝ ⭢ₚ b'✝\nhi' : sorry\n⊢ Join ParallelReduction a✝ (a'✝ ⬝ b'✝)"
+        ],
+        "kind": "tactic",
+        "start": 12577
+      },
+      "start_offset": 5205,
+      "end_offset": 5245,
+      "position": {
+        "line": 154,
+        "column": 10
+      },
+      "end_position": {
+        "line": 154,
+        "column": 50
+      },
+      "source_text": "have hi' : i' = I := I_irreducible i' hi"
+    },
+    {
+      "depth": 24,
+      "end": 5486,
+      "goals_after": [
+        "case red_I.par\na b a✝ a'✝ b'✝ : SKI\ni' : I ⭢ₚ a'✝\na' : a✝ ⭢ₚ b'✝\nhi' : sorry\n⊢ Join ParallelReduction a✝ (a'✝ ⬝ b'✝)"
+      ],
+      "goals_before": [
+        "case red_I.par\na b a✝ a'✝ b'✝ : SKI\ni' : I ⭢ₚ a'✝\na' : a✝ ⭢ₚ b'✝\nhi' : sorry\n⊢ Join ParallelReduction a✝ (a'✝ ⬝ b'✝)"
+      ],
+      "kind": "tactic",
+      "start": 5446,
+      "raw": {
+        "depth": 24,
+        "end": 12617,
+        "goals_after": [
+          "case red_I.par\na b a✝ a'✝ b'✝ : SKI\ni' : I ⭢ₚ a'✝\na' : a✝ ⭢ₚ b'✝\nhi' : sorry\n⊢ Join ParallelReduction a✝ (a'✝ ⬝ b'✝)"
+        ],
+        "goals_before": [
+          "case red_I.par\na b a✝ a'✝ b'✝ : SKI\ni' : I ⭢ₚ a'✝\na' : a✝ ⭢ₚ b'✝\nhi' : sorry\n⊢ Join ParallelReduction a✝ (a'✝ ⬝ b'✝)"
+        ],
+        "kind": "tactic",
+        "start": 12577
+      },
+      "start_offset": 5205,
+      "end_offset": 5245,
+      "position": {
+        "line": 154,
+        "column": 10
+      },
+      "end_position": {
+        "line": 154,
+        "column": 50
+      },
+      "source_text": "have hi' : i' = I := I_irreducible i' hi"
+    },
+    {
+      "depth": 16,
+      "end": 5505,
+      "goals_after": [
+        "case red_I.par\na b a✝ a'✝ b'✝ : SKI\ni' : I ⭢ₚ a'✝\na' : a✝ ⭢ₚ b'✝\nhi' : sorry\n⊢ Join ParallelReduction a✝ (a'✝ ⬝ b'✝)"
+      ],
+      "goals_before": [
+        "case red_I.par\na b a✝ a'✝ b'✝ : SKI\ni' : I ⭢ₚ a'✝\na' : a✝ ⭢ₚ b'✝\nhi' : sorry\n⊢ Join ParallelReduction a✝ (a'✝ ⬝ b'✝)"
+      ],
+      "kind": "tactic",
+      "start": 5497,
+      "raw": {
+        "depth": 16,
+        "end": 12636,
+        "goals_after": [
+          "case red_I.par\na b a✝ a'✝ b'✝ : SKI\ni' : I ⭢ₚ a'✝\na' : a✝ ⭢ₚ b'✝\nhi' : sorry\n⊢ Join ParallelReduction a✝ (a'✝ ⬝ b'✝)"
+        ],
+        "goals_before": [
+          "case red_I.par\na b a✝ a'✝ b'✝ : SKI\ni' : I ⭢ₚ a'✝\na' : a✝ ⭢ₚ b'✝\nhi' : sorry\n⊢ Join ParallelReduction a✝ (a'✝ ⬝ b'✝)"
+        ],
+        "kind": "tactic",
+        "start": 12628
+      },
+      "start_offset": 5256,
+      "end_offset": 5264,
+      "position": {
+        "line": 155,
+        "column": 10
+      },
+      "end_position": {
+        "line": 155,
+        "column": 18
+      },
+      "source_text": "subst i'"
+    },
+    {
+      "depth": 8,
+      "end": 5560,
+      "goals_after": [],
+      "goals_before": [
+        "case red_K\na b a✝ b✝ c : SKI\nhac : (K ⬝ a✝ ⬝ b✝) ⭢ₚ c\n⊢ Join ParallelReduction a✝ c"
+      ],
+      "kind": "tactic",
+      "start": 5548,
+      "raw": {
+        "depth": 8,
+        "end": 12691,
+        "goals_after": [],
+        "goals_before": [
+          "case red_K\na b a✝ b✝ c : SKI\nhac : (K ⬝ a✝ ⬝ b✝) ⭢ₚ c\n⊢ Join ParallelReduction a✝ c"
+        ],
+        "kind": "tactic",
+        "start": 12679
+      },
+      "start_offset": 5303,
+      "end_offset": 5315,
+      "position": {
+        "line": 157,
+        "column": 2
+      },
+      "end_position": {
+        "line": 157,
+        "column": 14
+      },
+      "source_text": "| red_K _ =>"
+    },
+    {
+      "depth": 9,
+      "end": 5848,
+      "goals_after": [],
+      "goals_before": [
+        "case red_K\na b a✝ b✝ c : SKI\nhac : (K ⬝ a✝ ⬝ b✝) ⭢ₚ c\n⊢ Join ParallelReduction a✝ c"
+      ],
+      "kind": "tactic",
+      "start": 5567,
+      "raw": {
+        "depth": 9,
+        "end": 12979,
+        "goals_after": [],
+        "goals_before": [
+          "case red_K\na b a✝ b✝ c : SKI\nhac : (K ⬝ a✝ ⬝ b✝) ⭢ₚ c\n⊢ Join ParallelReduction a✝ c"
+        ],
+        "kind": "tactic",
+        "start": 12698
+      },
+      "start_offset": 5322,
+      "end_offset": 5587,
+      "position": {
+        "line": 158,
+        "column": 6
+      },
+      "end_position": {
+        "line": 166,
+        "column": 36
+      },
+      "source_text": "cases hac with\n      | refl =>\n          exact ⟨_, .refl _, .red_K _ _⟩\n      | red_K =>\n          exact ⟨_, .refl _, .refl _⟩\n      | par k' b' hk hb =>\n          obtain ⟨x, hx, hk'⟩ := Ka_irreducible _ k' hk\n          subst k'\n          exact ⟨x, hx, .red_K x b'⟩"
+    },
+    {
+      "depth": 10,
+      "end": 5848,
+      "goals_after": [],
+      "goals_before": [
+        "case red_K\na b a✝ b✝ c : SKI\nhac : (K ⬝ a✝ ⬝ b✝) ⭢ₚ c\n⊢ Join ParallelReduction a✝ c"
+      ],
+      "kind": "tactic",
+      "start": 5567,
+      "raw": {
+        "depth": 10,
+        "end": 12979,
+        "goals_after": [],
+        "goals_before": [
+          "case red_K\na b a✝ b✝ c : SKI\nhac : (K ⬝ a✝ ⬝ b✝) ⭢ₚ c\n⊢ Join ParallelReduction a✝ c"
+        ],
+        "kind": "tactic",
+        "start": 12698
+      },
+      "start_offset": 5322,
+      "end_offset": 5587,
+      "position": {
+        "line": 158,
+        "column": 6
+      },
+      "end_position": {
+        "line": 166,
+        "column": 36
+      },
+      "source_text": "cases hac with\n      | refl =>\n          exact ⟨_, .refl _, .red_K _ _⟩\n      | red_K =>\n          exact ⟨_, .refl _, .refl _⟩\n      | par k' b' hk hb =>\n          obtain ⟨x, hx, hk'⟩ := Ka_irreducible _ k' hk\n          subst k'\n          exact ⟨x, hx, .red_K x b'⟩"
+    },
+    {
+      "depth": 11,
+      "end": 5848,
+      "goals_after": [],
+      "goals_before": [
+        "case red_K\na b a✝ b✝ c : SKI\nhac : (K ⬝ a✝ ⬝ b✝) ⭢ₚ c\n⊢ Join ParallelReduction a✝ c"
+      ],
+      "kind": "tactic",
+      "start": 5567,
+      "raw": {
+        "depth": 11,
+        "end": 12979,
+        "goals_after": [],
+        "goals_before": [
+          "case red_K\na b a✝ b✝ c : SKI\nhac : (K ⬝ a✝ ⬝ b✝) ⭢ₚ c\n⊢ Join ParallelReduction a✝ c"
+        ],
+        "kind": "tactic",
+        "start": 12698
+      },
+      "start_offset": 5322,
+      "end_offset": 5587,
+      "position": {
+        "line": 158,
+        "column": 6
+      },
+      "end_position": {
+        "line": 166,
+        "column": 36
+      },
+      "source_text": "cases hac with\n      | refl =>\n          exact ⟨_, .refl _, .red_K _ _⟩\n      | red_K =>\n          exact ⟨_, .refl _, .refl _⟩\n      | par k' b' hk hb =>\n          obtain ⟨x, hx, hk'⟩ := Ka_irreducible _ k' hk\n          subst k'\n          exact ⟨x, hx, .red_K x b'⟩"
+    },
+    {
+      "depth": 12,
+      "end": 5581,
+      "goals_after": [],
+      "goals_before": [
+        "case red_K\na b a✝ b✝ c : SKI\nhac : (K ⬝ a✝ ⬝ b✝) ⭢ₚ c\n⊢ Join ParallelReduction a✝ c"
+      ],
+      "kind": "tactic",
+      "start": 5567,
+      "raw": {
+        "depth": 12,
+        "end": 12712,
+        "goals_after": [],
+        "goals_before": [
+          "case red_K\na b a✝ b✝ c : SKI\nhac : (K ⬝ a✝ ⬝ b✝) ⭢ₚ c\n⊢ Join ParallelReduction a✝ c"
+        ],
+        "kind": "tactic",
+        "start": 12698
+      },
+      "start_offset": 5322,
+      "end_offset": 5336,
+      "position": {
+        "line": 158,
+        "column": 6
+      },
+      "end_position": {
+        "line": 158,
+        "column": 20
+      },
+      "source_text": "cases hac with"
+    },
+    {
+      "depth": 13,
+      "end": 5597,
+      "goals_after": [],
+      "goals_before": [
+        "case red_K.refl\na b a✝ b✝ : SKI\n⊢ Join ParallelReduction a✝ (K ⬝ a✝ ⬝ b✝)"
+      ],
+      "kind": "tactic",
+      "start": 5588,
+      "raw": {
+        "depth": 13,
+        "end": 12728,
+        "goals_after": [],
+        "goals_before": [
+          "case red_K.refl\na b a✝ b✝ : SKI\n⊢ Join ParallelReduction a✝ (K ⬝ a✝ ⬝ b✝)"
+        ],
+        "kind": "tactic",
+        "start": 12719
+      },
+      "start_offset": 5343,
+      "end_offset": 5352,
+      "position": {
+        "line": 159,
+        "column": 6
+      },
+      "end_position": {
+        "line": 159,
+        "column": 15
+      },
+      "source_text": "| refl =>"
+    },
+    {
+      "depth": 14,
+      "end": 5642,
+      "goals_after": [],
+      "goals_before": [
+        "case red_K.refl\na b a✝ b✝ : SKI\n⊢ Join ParallelReduction a✝ (K ⬝ a✝ ⬝ b✝)"
+      ],
+      "kind": "tactic",
+      "start": 5608,
+      "raw": {
+        "depth": 14,
+        "end": 12773,
+        "goals_after": [],
+        "goals_before": [
+          "case red_K.refl\na b a✝ b✝ : SKI\n⊢ Join ParallelReduction a✝ (K ⬝ a✝ ⬝ b✝)"
+        ],
+        "kind": "tactic",
+        "start": 12739
+      },
+      "start_offset": 5363,
+      "end_offset": 5393,
+      "position": {
+        "line": 160,
+        "column": 10
+      },
+      "end_position": {
+        "line": 160,
+        "column": 40
+      },
+      "source_text": "exact ⟨_, .refl _, .red_K _ _⟩"
+    },
+    {
+      "depth": 15,
+      "end": 5642,
+      "goals_after": [],
+      "goals_before": [
+        "case red_K.refl\na b a✝ b✝ : SKI\n⊢ Join ParallelReduction a✝ (K ⬝ a✝ ⬝ b✝)"
+      ],
+      "kind": "tactic",
+      "start": 5608,
+      "raw": {
+        "depth": 15,
+        "end": 12773,
+        "goals_after": [],
+        "goals_before": [
+          "case red_K.refl\na b a✝ b✝ : SKI\n⊢ Join ParallelReduction a✝ (K ⬝ a✝ ⬝ b✝)"
+        ],
+        "kind": "tactic",
+        "start": 12739
+      },
+      "start_offset": 5363,
+      "end_offset": 5393,
+      "position": {
+        "line": 160,
+        "column": 10
+      },
+      "end_position": {
+        "line": 160,
+        "column": 40
+      },
+      "source_text": "exact ⟨_, .refl _, .red_K _ _⟩"
+    },
+    {
+      "depth": 16,
+      "end": 5642,
+      "goals_after": [],
+      "goals_before": [
+        "case red_K.refl\na b a✝ b✝ : SKI\n⊢ Join ParallelReduction a✝ (K ⬝ a✝ ⬝ b✝)"
+      ],
+      "kind": "tactic",
+      "start": 5608,
+      "raw": {
+        "depth": 16,
+        "end": 12773,
+        "goals_after": [],
+        "goals_before": [
+          "case red_K.refl\na b a✝ b✝ : SKI\n⊢ Join ParallelReduction a✝ (K ⬝ a✝ ⬝ b✝)"
+        ],
+        "kind": "tactic",
+        "start": 12739
+      },
+      "start_offset": 5363,
+      "end_offset": 5393,
+      "position": {
+        "line": 160,
+        "column": 10
+      },
+      "end_position": {
+        "line": 160,
+        "column": 40
+      },
+      "source_text": "exact ⟨_, .refl _, .red_K _ _⟩"
+    },
+    {
+      "depth": 13,
+      "end": 5659,
+      "goals_after": [],
+      "goals_before": [
+        "case red_K.red_K\na b a✝ b✝ : SKI\n⊢ Join ParallelReduction a✝ a✝"
+      ],
+      "kind": "tactic",
+      "start": 5649,
+      "raw": {
+        "depth": 13,
+        "end": 12790,
+        "goals_after": [],
+        "goals_before": [
+          "case red_K.red_K\na b a✝ b✝ : SKI\n⊢ Join ParallelReduction a✝ a✝"
+        ],
+        "kind": "tactic",
+        "start": 12780
+      },
+      "start_offset": 5400,
+      "end_offset": 5410,
+      "position": {
+        "line": 161,
+        "column": 6
+      },
+      "end_position": {
+        "line": 161,
+        "column": 16
+      },
+      "source_text": "| red_K =>"
+    },
+    {
+      "depth": 14,
+      "end": 5701,
+      "goals_after": [],
+      "goals_before": [
+        "case red_K.red_K\na b a✝ b✝ : SKI\n⊢ Join ParallelReduction a✝ a✝"
+      ],
+      "kind": "tactic",
+      "start": 5670,
+      "raw": {
+        "depth": 14,
+        "end": 12832,
+        "goals_after": [],
+        "goals_before": [
+          "case red_K.red_K\na b a✝ b✝ : SKI\n⊢ Join ParallelReduction a✝ a✝"
+        ],
+        "kind": "tactic",
+        "start": 12801
+      },
+      "start_offset": 5421,
+      "end_offset": 5448,
+      "position": {
+        "line": 162,
+        "column": 10
+      },
+      "end_position": {
+        "line": 162,
+        "column": 37
+      },
+      "source_text": "exact ⟨_, .refl _, .refl _⟩"
+    },
+    {
+      "depth": 15,
+      "end": 5701,
+      "goals_after": [],
+      "goals_before": [
+        "case red_K.red_K\na b a✝ b✝ : SKI\n⊢ Join ParallelReduction a✝ a✝"
+      ],
+      "kind": "tactic",
+      "start": 5670,
+      "raw": {
+        "depth": 15,
+        "end": 12832,
+        "goals_after": [],
+        "goals_before": [
+          "case red_K.red_K\na b a✝ b✝ : SKI\n⊢ Join ParallelReduction a✝ a✝"
+        ],
+        "kind": "tactic",
+        "start": 12801
+      },
+      "start_offset": 5421,
+      "end_offset": 5448,
+      "position": {
+        "line": 162,
+        "column": 10
+      },
+      "end_position": {
+        "line": 162,
+        "column": 37
+      },
+      "source_text": "exact ⟨_, .refl _, .refl _⟩"
+    },
+    {
+      "depth": 16,
+      "end": 5701,
+      "goals_after": [],
+      "goals_before": [
+        "case red_K.red_K\na b a✝ b✝ : SKI\n⊢ Join ParallelReduction a✝ a✝"
+      ],
+      "kind": "tactic",
+      "start": 5670,
+      "raw": {
+        "depth": 16,
+        "end": 12832,
+        "goals_after": [],
+        "goals_before": [
+          "case red_K.red_K\na b a✝ b✝ : SKI\n⊢ Join ParallelReduction a✝ a✝"
+        ],
+        "kind": "tactic",
+        "start": 12801
+      },
+      "start_offset": 5421,
+      "end_offset": 5448,
+      "position": {
+        "line": 162,
+        "column": 10
+      },
+      "end_position": {
+        "line": 162,
+        "column": 37
+      },
+      "source_text": "exact ⟨_, .refl _, .refl _⟩"
+    },
+    {
+      "depth": 13,
+      "end": 5728,
+      "goals_after": [
+        "case red_K.par\na b a✝ b✝ a'✝ b'✝ : SKI\nk' : (K ⬝ a✝) ⭢ₚ a'✝\nb' : b✝ ⭢ₚ b'✝\nx : SKI\nhx : ?m.372 ⭢ₚ x\nhk' : sorry = K ⬝ x\n⊢ Join ParallelReduction a✝ (a'✝ ⬝ b'✝)"
+      ],
+      "goals_before": [
+        "case red_K.par\na b a✝ b✝ a'✝ b'✝ : SKI\nk' : (K ⬝ a✝) ⭢ₚ a'✝\nb' : b✝ ⭢ₚ b'✝\n⊢ Join ParallelReduction a✝ (a'✝ ⬝ b'✝)"
+      ],
+      "kind": "tactic",
+      "start": 5708,
+      "raw": {
+        "depth": 13,
+        "end": 12859,
+        "goals_after": [
+          "case red_K.par\na b a✝ b✝ a'✝ b'✝ : SKI\nk' : (K ⬝ a✝) ⭢ₚ a'✝\nb' : b✝ ⭢ₚ b'✝\nx : SKI\nhx : ?m.372 ⭢ₚ x\nhk' : sorry = K ⬝ x\n⊢ Join ParallelReduction a✝ (a'✝ ⬝ b'✝)"
+        ],
+        "goals_before": [
+          "case red_K.par\na b a✝ b✝ a'✝ b'✝ : SKI\nk' : (K ⬝ a✝) ⭢ₚ a'✝\nb' : b✝ ⭢ₚ b'✝\n⊢ Join ParallelReduction a✝ (a'✝ ⬝ b'✝)"
+        ],
+        "kind": "tactic",
+        "start": 12839
+      },
+      "start_offset": 5455,
+      "end_offset": 5475,
+      "position": {
+        "line": 163,
+        "column": 6
+      },
+      "end_position": {
+        "line": 163,
+        "column": 26
+      },
+      "source_text": "| par k' b' hk hb =>"
+    },
+    {
+      "depth": 14,
+      "end": 5848,
+      "goals_after": [
+        "case red_K.par\na b a✝ b✝ a'✝ b'✝ : SKI\nk' : (K ⬝ a✝) ⭢ₚ a'✝\nb' : b✝ ⭢ₚ b'✝\nx : SKI\nhx : ?m.372 ⭢ₚ x\nhk' : sorry = K ⬝ x\n⊢ Join ParallelReduction a✝ (a'✝ ⬝ b'✝)"
+      ],
+      "goals_before": [
+        "case red_K.par\na b a✝ b✝ a'✝ b'✝ : SKI\nk' : (K ⬝ a✝) ⭢ₚ a'✝\nb' : b✝ ⭢ₚ b'✝\n⊢ Join ParallelReduction a✝ (a'✝ ⬝ b'✝)"
+      ],
+      "kind": "tactic",
+      "start": 5739,
+      "raw": {
+        "depth": 14,
+        "end": 12979,
+        "goals_after": [
+          "case red_K.par\na b a✝ b✝ a'✝ b'✝ : SKI\nk' : (K ⬝ a✝) ⭢ₚ a'✝\nb' : b✝ ⭢ₚ b'✝\nx : SKI\nhx : ?m.372 ⭢ₚ x\nhk' : sorry = K ⬝ x\n⊢ Join ParallelReduction a✝ (a'✝ ⬝ b'✝)"
+        ],
+        "goals_before": [
+          "case red_K.par\na b a✝ b✝ a'✝ b'✝ : SKI\nk' : (K ⬝ a✝) ⭢ₚ a'✝\nb' : b✝ ⭢ₚ b'✝\n⊢ Join ParallelReduction a✝ (a'✝ ⬝ b'✝)"
+        ],
+        "kind": "tactic",
+        "start": 12870
+      },
+      "start_offset": 5486,
+      "end_offset": 5587,
+      "position": {
+        "line": 164,
+        "column": 10
+      },
+      "end_position": {
+        "line": 166,
+        "column": 36
+      },
+      "source_text": "obtain ⟨x, hx, hk'⟩ := Ka_irreducible _ k' hk\n          subst k'\n          exact ⟨x, hx, .red_K x b'⟩"
+    },
+    {
+      "depth": 15,
+      "end": 5848,
+      "goals_after": [
+        "case red_K.par\na b a✝ b✝ a'✝ b'✝ : SKI\nk' : (K ⬝ a✝) ⭢ₚ a'✝\nb' : b✝ ⭢ₚ b'✝\nx : SKI\nhx : ?m.372 ⭢ₚ x\nhk' : sorry = K ⬝ x\n⊢ Join ParallelReduction a✝ (a'✝ ⬝ b'✝)"
+      ],
+      "goals_before": [
+        "case red_K.par\na b a✝ b✝ a'✝ b'✝ : SKI\nk' : (K ⬝ a✝) ⭢ₚ a'✝\nb' : b✝ ⭢ₚ b'✝\n⊢ Join ParallelReduction a✝ (a'✝ ⬝ b'✝)"
+      ],
+      "kind": "tactic",
+      "start": 5739,
+      "raw": {
+        "depth": 15,
+        "end": 12979,
+        "goals_after": [
+          "case red_K.par\na b a✝ b✝ a'✝ b'✝ : SKI\nk' : (K ⬝ a✝) ⭢ₚ a'✝\nb' : b✝ ⭢ₚ b'✝\nx : SKI\nhx : ?m.372 ⭢ₚ x\nhk' : sorry = K ⬝ x\n⊢ Join ParallelReduction a✝ (a'✝ ⬝ b'✝)"
+        ],
+        "goals_before": [
+          "case red_K.par\na b a✝ b✝ a'✝ b'✝ : SKI\nk' : (K ⬝ a✝) ⭢ₚ a'✝\nb' : b✝ ⭢ₚ b'✝\n⊢ Join ParallelReduction a✝ (a'✝ ⬝ b'✝)"
+        ],
+        "kind": "tactic",
+        "start": 12870
+      },
+      "start_offset": 5486,
+      "end_offset": 5587,
+      "position": {
+        "line": 164,
+        "column": 10
+      },
+      "end_position": {
+        "line": 166,
+        "column": 36
+      },
+      "source_text": "obtain ⟨x, hx, hk'⟩ := Ka_irreducible _ k' hk\n          subst k'\n          exact ⟨x, hx, .red_K x b'⟩"
+    },
+    {
+      "depth": 16,
+      "end": 5788,
+      "goals_after": [
+        "case red_K.par\na b a✝ b✝ a'✝ b'✝ : SKI\nk' : (K ⬝ a✝) ⭢ₚ a'✝\nb' : b✝ ⭢ₚ b'✝\nx : SKI\nhx : ?m.372 ⭢ₚ x\nhk' : sorry = K ⬝ x\n⊢ Join ParallelReduction a✝ (a'✝ ⬝ b'✝)"
+      ],
+      "goals_before": [
+        "case red_K.par\na b a✝ b✝ a'✝ b'✝ : SKI\nk' : (K ⬝ a✝) ⭢ₚ a'✝\nb' : b✝ ⭢ₚ b'✝\n⊢ Join ParallelReduction a✝ (a'✝ ⬝ b'✝)"
+      ],
+      "kind": "tactic",
+      "start": 5739,
+      "raw": {
+        "depth": 16,
+        "end": 12919,
+        "goals_after": [
+          "case red_K.par\na b a✝ b✝ a'✝ b'✝ : SKI\nk' : (K ⬝ a✝) ⭢ₚ a'✝\nb' : b✝ ⭢ₚ b'✝\nx : SKI\nhx : ?m.372 ⭢ₚ x\nhk' : sorry = K ⬝ x\n⊢ Join ParallelReduction a✝ (a'✝ ⬝ b'✝)"
+        ],
+        "goals_before": [
+          "case red_K.par\na b a✝ b✝ a'✝ b'✝ : SKI\nk' : (K ⬝ a✝) ⭢ₚ a'✝\nb' : b✝ ⭢ₚ b'✝\n⊢ Join ParallelReduction a✝ (a'✝ ⬝ b'✝)"
+        ],
+        "kind": "tactic",
+        "start": 12870
+      },
+      "start_offset": 5486,
+      "end_offset": 5531,
+      "position": {
+        "line": 164,
+        "column": 10
+      },
+      "end_position": {
+        "line": 164,
+        "column": 55
+      },
+      "source_text": "obtain ⟨x, hx, hk'⟩ := Ka_irreducible _ k' hk"
+    },
+    {
+      "depth": 16,
+      "end": 5807,
+      "goals_after": [
+        "case red_K.par\na b a✝ b✝ a'✝ b'✝ : SKI\nk' : (K ⬝ a✝) ⭢ₚ a'✝\nb' : b✝ ⭢ₚ b'✝\nx : SKI\nhx : ?m.372 ⭢ₚ x\nhk' : sorry = K ⬝ x\n⊢ Join ParallelReduction a✝ (a'✝ ⬝ b'✝)"
+      ],
+      "goals_before": [
+        "case red_K.par\na b a✝ b✝ a'✝ b'✝ : SKI\nk' : (K ⬝ a✝) ⭢ₚ a'✝\nb' : b✝ ⭢ₚ b'✝\nx : SKI\nhx : ?m.372 ⭢ₚ x\nhk' : sorry = K ⬝ x\n⊢ Join ParallelReduction a✝ (a'✝ ⬝ b'✝)"
+      ],
+      "kind": "tactic",
+      "start": 5799,
+      "raw": {
+        "depth": 16,
+        "end": 12938,
+        "goals_after": [
+          "case red_K.par\na b a✝ b✝ a'✝ b'✝ : SKI\nk' : (K ⬝ a✝) ⭢ₚ a'✝\nb' : b✝ ⭢ₚ b'✝\nx : SKI\nhx : ?m.372 ⭢ₚ x\nhk' : sorry = K ⬝ x\n⊢ Join ParallelReduction a✝ (a'✝ ⬝ b'✝)"
+        ],
+        "goals_before": [
+          "case red_K.par\na b a✝ b✝ a'✝ b'✝ : SKI\nk' : (K ⬝ a✝) ⭢ₚ a'✝\nb' : b✝ ⭢ₚ b'✝\nx : SKI\nhx : ?m.372 ⭢ₚ x\nhk' : sorry = K ⬝ x\n⊢ Join ParallelReduction a✝ (a'✝ ⬝ b'✝)"
+        ],
+        "kind": "tactic",
+        "start": 12930
+      },
+      "start_offset": 5542,
+      "end_offset": 5550,
+      "position": {
+        "line": 165,
+        "column": 10
+      },
+      "end_position": {
+        "line": 165,
+        "column": 18
+      },
+      "source_text": "subst k'"
+    },
+    {
+      "depth": 8,
+      "end": 5867,
+      "goals_after": [],
+      "goals_before": [
+        "case red_S\na b a✝ b✝ c✝ c : SKI\nhac : (S ⬝ a✝ ⬝ b✝ ⬝ c✝) ⭢ₚ c\n⊢ Join ParallelReduction (a✝ ⬝ c✝ ⬝ (b✝ ⬝ c✝)) c"
+      ],
+      "kind": "tactic",
+      "start": 5851,
+      "raw": {
+        "depth": 8,
+        "end": 12998,
+        "goals_after": [],
+        "goals_before": [
+          "case red_S\na b a✝ b✝ c✝ c : SKI\nhac : (S ⬝ a✝ ⬝ b✝ ⬝ c✝) ⭢ₚ c\n⊢ Join ParallelReduction (a✝ ⬝ c✝ ⬝ (b✝ ⬝ c✝)) c"
+        ],
+        "kind": "tactic",
+        "start": 12982
+      },
+      "start_offset": 5590,
+      "end_offset": 5606,
+      "position": {
+        "line": 167,
+        "column": 2
+      },
+      "end_position": {
+        "line": 167,
+        "column": 18
+      },
+      "source_text": "| red_S _ _ _ =>"
+    },
+    {
+      "depth": 9,
+      "end": 6259,
+      "goals_after": [],
+      "goals_before": [
+        "case red_S\na b a✝ b✝ c✝ c : SKI\nhac : (S ⬝ a✝ ⬝ b✝ ⬝ c✝) ⭢ₚ c\n⊢ Join ParallelReduction (a✝ ⬝ c✝ ⬝ (b✝ ⬝ c✝)) c"
+      ],
+      "kind": "tactic",
+      "start": 5874,
+      "raw": {
+        "depth": 9,
+        "end": 13390,
+        "goals_after": [],
+        "goals_before": [
+          "case red_S\na b a✝ b✝ c✝ c : SKI\nhac : (S ⬝ a✝ ⬝ b✝ ⬝ c✝) ⭢ₚ c\n⊢ Join ParallelReduction (a✝ ⬝ c✝ ⬝ (b✝ ⬝ c✝)) c"
+        ],
+        "kind": "tactic",
+        "start": 13005
+      },
+      "start_offset": 5613,
+      "end_offset": 5976,
+      "position": {
+        "line": 168,
+        "column": 6
+      },
+      "end_position": {
+        "line": 179,
+        "column": 28
+      },
+      "source_text": "cases hac with\n      | refl =>\n          exact ⟨_, .refl _, .red_S _ _ _⟩\n      | red_S =>\n          exact ⟨_, .refl _, .refl _⟩\n      | par s' c' hs hc =>\n          obtain ⟨x, y, hx, hy, hs'⟩ := Sab_irreducible _ _ s' hs\n          subst s'\n          exact\n            ⟨x ⬝ c' ⬝ (y ⬝ c'),\n              .par (.par hx hc) (.par hy hc),\n              .red_S x y c'⟩"
+    },
+    {
+      "depth": 10,
+      "end": 6259,
+      "goals_after": [],
+      "goals_before": [
+        "case red_S\na b a✝ b✝ c✝ c : SKI\nhac : (S ⬝ a✝ ⬝ b✝ ⬝ c✝) ⭢ₚ c\n⊢ Join ParallelReduction (a✝ ⬝ c✝ ⬝ (b✝ ⬝ c✝)) c"
+      ],
+      "kind": "tactic",
+      "start": 5874,
+      "raw": {
+        "depth": 10,
+        "end": 13390,
+        "goals_after": [],
+        "goals_before": [
+          "case red_S\na b a✝ b✝ c✝ c : SKI\nhac : (S ⬝ a✝ ⬝ b✝ ⬝ c✝) ⭢ₚ c\n⊢ Join ParallelReduction (a✝ ⬝ c✝ ⬝ (b✝ ⬝ c✝)) c"
+        ],
+        "kind": "tactic",
+        "start": 13005
+      },
+      "start_offset": 5613,
+      "end_offset": 5976,
+      "position": {
+        "line": 168,
+        "column": 6
+      },
+      "end_position": {
+        "line": 179,
+        "column": 28
+      },
+      "source_text": "cases hac with\n      | refl =>\n          exact ⟨_, .refl _, .red_S _ _ _⟩\n      | red_S =>\n          exact ⟨_, .refl _, .refl _⟩\n      | par s' c' hs hc =>\n          obtain ⟨x, y, hx, hy, hs'⟩ := Sab_irreducible _ _ s' hs\n          subst s'\n          exact\n            ⟨x ⬝ c' ⬝ (y ⬝ c'),\n              .par (.par hx hc) (.par hy hc),\n              .red_S x y c'⟩"
+    },
+    {
+      "depth": 11,
+      "end": 6259,
+      "goals_after": [],
+      "goals_before": [
+        "case red_S\na b a✝ b✝ c✝ c : SKI\nhac : (S ⬝ a✝ ⬝ b✝ ⬝ c✝) ⭢ₚ c\n⊢ Join ParallelReduction (a✝ ⬝ c✝ ⬝ (b✝ ⬝ c✝)) c"
+      ],
+      "kind": "tactic",
+      "start": 5874,
+      "raw": {
+        "depth": 11,
+        "end": 13390,
+        "goals_after": [],
+        "goals_before": [
+          "case red_S\na b a✝ b✝ c✝ c : SKI\nhac : (S ⬝ a✝ ⬝ b✝ ⬝ c✝) ⭢ₚ c\n⊢ Join ParallelReduction (a✝ ⬝ c✝ ⬝ (b✝ ⬝ c✝)) c"
+        ],
+        "kind": "tactic",
+        "start": 13005
+      },
+      "start_offset": 5613,
+      "end_offset": 5976,
+      "position": {
+        "line": 168,
+        "column": 6
+      },
+      "end_position": {
+        "line": 179,
+        "column": 28
+      },
+      "source_text": "cases hac with\n      | refl =>\n          exact ⟨_, .refl _, .red_S _ _ _⟩\n      | red_S =>\n          exact ⟨_, .refl _, .refl _⟩\n      | par s' c' hs hc =>\n          obtain ⟨x, y, hx, hy, hs'⟩ := Sab_irreducible _ _ s' hs\n          subst s'\n          exact\n            ⟨x ⬝ c' ⬝ (y ⬝ c'),\n              .par (.par hx hc) (.par hy hc),\n              .red_S x y c'⟩"
+    },
+    {
+      "depth": 12,
+      "end": 5888,
+      "goals_after": [],
+      "goals_before": [
+        "case red_S\na b a✝ b✝ c✝ c : SKI\nhac : (S ⬝ a✝ ⬝ b✝ ⬝ c✝) ⭢ₚ c\n⊢ Join ParallelReduction (a✝ ⬝ c✝ ⬝ (b✝ ⬝ c✝)) c"
+      ],
+      "kind": "tactic",
+      "start": 5874,
+      "raw": {
+        "depth": 12,
+        "end": 13019,
+        "goals_after": [],
+        "goals_before": [
+          "case red_S\na b a✝ b✝ c✝ c : SKI\nhac : (S ⬝ a✝ ⬝ b✝ ⬝ c✝) ⭢ₚ c\n⊢ Join ParallelReduction (a✝ ⬝ c✝ ⬝ (b✝ ⬝ c✝)) c"
+        ],
+        "kind": "tactic",
+        "start": 13005
+      },
+      "start_offset": 5613,
+      "end_offset": 5627,
+      "position": {
+        "line": 168,
+        "column": 6
+      },
+      "end_position": {
+        "line": 168,
+        "column": 20
+      },
+      "source_text": "cases hac with"
+    },
+    {
+      "depth": 13,
+      "end": 5904,
+      "goals_after": [],
+      "goals_before": [
+        "case red_S.refl\na b a✝ b✝ c✝ : SKI\n⊢ Join ParallelReduction (a✝ ⬝ c✝ ⬝ (b✝ ⬝ c✝)) (S ⬝ a✝ ⬝ b✝ ⬝ c✝)"
+      ],
+      "kind": "tactic",
+      "start": 5895,
+      "raw": {
+        "depth": 13,
+        "end": 13035,
+        "goals_after": [],
+        "goals_before": [
+          "case red_S.refl\na b a✝ b✝ c✝ : SKI\n⊢ Join ParallelReduction (a✝ ⬝ c✝ ⬝ (b✝ ⬝ c✝)) (S ⬝ a✝ ⬝ b✝ ⬝ c✝)"
+        ],
+        "kind": "tactic",
+        "start": 13026
+      },
+      "start_offset": 5634,
+      "end_offset": 5643,
+      "position": {
+        "line": 169,
+        "column": 6
+      },
+      "end_position": {
+        "line": 169,
+        "column": 15
+      },
+      "source_text": "| refl =>"
+    },
+    {
+      "depth": 14,
+      "end": 5951,
+      "goals_after": [],
+      "goals_before": [
+        "case red_S.refl\na b a✝ b✝ c✝ : SKI\n⊢ Join ParallelReduction (a✝ ⬝ c✝ ⬝ (b✝ ⬝ c✝)) (S ⬝ a✝ ⬝ b✝ ⬝ c✝)"
+      ],
+      "kind": "tactic",
+      "start": 5915,
+      "raw": {
+        "depth": 14,
+        "end": 13082,
+        "goals_after": [],
+        "goals_before": [
+          "case red_S.refl\na b a✝ b✝ c✝ : SKI\n⊢ Join ParallelReduction (a✝ ⬝ c✝ ⬝ (b✝ ⬝ c✝)) (S ⬝ a✝ ⬝ b✝ ⬝ c✝)"
+        ],
+        "kind": "tactic",
+        "start": 13046
+      },
+      "start_offset": 5654,
+      "end_offset": 5686,
+      "position": {
+        "line": 170,
+        "column": 10
+      },
+      "end_position": {
+        "line": 170,
+        "column": 42
+      },
+      "source_text": "exact ⟨_, .refl _, .red_S _ _ _⟩"
+    },
+    {
+      "depth": 15,
+      "end": 5951,
+      "goals_after": [],
+      "goals_before": [
+        "case red_S.refl\na b a✝ b✝ c✝ : SKI\n⊢ Join ParallelReduction (a✝ ⬝ c✝ ⬝ (b✝ ⬝ c✝)) (S ⬝ a✝ ⬝ b✝ ⬝ c✝)"
+      ],
+      "kind": "tactic",
+      "start": 5915,
+      "raw": {
+        "depth": 15,
+        "end": 13082,
+        "goals_after": [],
+        "goals_before": [
+          "case red_S.refl\na b a✝ b✝ c✝ : SKI\n⊢ Join ParallelReduction (a✝ ⬝ c✝ ⬝ (b✝ ⬝ c✝)) (S ⬝ a✝ ⬝ b✝ ⬝ c✝)"
+        ],
+        "kind": "tactic",
+        "start": 13046
+      },
+      "start_offset": 5654,
+      "end_offset": 5686,
+      "position": {
+        "line": 170,
+        "column": 10
+      },
+      "end_position": {
+        "line": 170,
+        "column": 42
+      },
+      "source_text": "exact ⟨_, .refl _, .red_S _ _ _⟩"
+    },
+    {
+      "depth": 16,
+      "end": 5951,
+      "goals_after": [],
+      "goals_before": [
+        "case red_S.refl\na b a✝ b✝ c✝ : SKI\n⊢ Join ParallelReduction (a✝ ⬝ c✝ ⬝ (b✝ ⬝ c✝)) (S ⬝ a✝ ⬝ b✝ ⬝ c✝)"
+      ],
+      "kind": "tactic",
+      "start": 5915,
+      "raw": {
+        "depth": 16,
+        "end": 13082,
+        "goals_after": [],
+        "goals_before": [
+          "case red_S.refl\na b a✝ b✝ c✝ : SKI\n⊢ Join ParallelReduction (a✝ ⬝ c✝ ⬝ (b✝ ⬝ c✝)) (S ⬝ a✝ ⬝ b✝ ⬝ c✝)"
+        ],
+        "kind": "tactic",
+        "start": 13046
+      },
+      "start_offset": 5654,
+      "end_offset": 5686,
+      "position": {
+        "line": 170,
+        "column": 10
+      },
+      "end_position": {
+        "line": 170,
+        "column": 42
+      },
+      "source_text": "exact ⟨_, .refl _, .red_S _ _ _⟩"
+    },
+    {
+      "depth": 13,
+      "end": 5968,
+      "goals_after": [],
+      "goals_before": [
+        "case red_S.red_S\na b a✝ b✝ c✝ : SKI\n⊢ Join ParallelReduction (a✝ ⬝ c✝ ⬝ (b✝ ⬝ c✝)) (a✝ ⬝ c✝ ⬝ (b✝ ⬝ c✝))"
+      ],
+      "kind": "tactic",
+      "start": 5958,
+      "raw": {
+        "depth": 13,
+        "end": 13099,
+        "goals_after": [],
+        "goals_before": [
+          "case red_S.red_S\na b a✝ b✝ c✝ : SKI\n⊢ Join ParallelReduction (a✝ ⬝ c✝ ⬝ (b✝ ⬝ c✝)) (a✝ ⬝ c✝ ⬝ (b✝ ⬝ c✝))"
+        ],
+        "kind": "tactic",
+        "start": 13089
+      },
+      "start_offset": 5693,
+      "end_offset": 5703,
+      "position": {
+        "line": 171,
+        "column": 6
+      },
+      "end_position": {
+        "line": 171,
+        "column": 16
+      },
+      "source_text": "| red_S =>"
+    },
+    {
+      "depth": 14,
+      "end": 6010,
+      "goals_after": [],
+      "goals_before": [
+        "case red_S.red_S\na b a✝ b✝ c✝ : SKI\n⊢ Join ParallelReduction (a✝ ⬝ c✝ ⬝ (b✝ ⬝ c✝)) (a✝ ⬝ c✝ ⬝ (b✝ ⬝ c✝))"
+      ],
+      "kind": "tactic",
+      "start": 5979,
+      "raw": {
+        "depth": 14,
+        "end": 13141,
+        "goals_after": [],
+        "goals_before": [
+          "case red_S.red_S\na b a✝ b✝ c✝ : SKI\n⊢ Join ParallelReduction (a✝ ⬝ c✝ ⬝ (b✝ ⬝ c✝)) (a✝ ⬝ c✝ ⬝ (b✝ ⬝ c✝))"
+        ],
+        "kind": "tactic",
+        "start": 13110
+      },
+      "start_offset": 5714,
+      "end_offset": 5741,
+      "position": {
+        "line": 172,
+        "column": 10
+      },
+      "end_position": {
+        "line": 172,
+        "column": 37
+      },
+      "source_text": "exact ⟨_, .refl _, .refl _⟩"
+    },
+    {
+      "depth": 15,
+      "end": 6010,
+      "goals_after": [],
+      "goals_before": [
+        "case red_S.red_S\na b a✝ b✝ c✝ : SKI\n⊢ Join ParallelReduction (a✝ ⬝ c✝ ⬝ (b✝ ⬝ c✝)) (a✝ ⬝ c✝ ⬝ (b✝ ⬝ c✝))"
+      ],
+      "kind": "tactic",
+      "start": 5979,
+      "raw": {
+        "depth": 15,
+        "end": 13141,
+        "goals_after": [],
+        "goals_before": [
+          "case red_S.red_S\na b a✝ b✝ c✝ : SKI\n⊢ Join ParallelReduction (a✝ ⬝ c✝ ⬝ (b✝ ⬝ c✝)) (a✝ ⬝ c✝ ⬝ (b✝ ⬝ c✝))"
+        ],
+        "kind": "tactic",
+        "start": 13110
+      },
+      "start_offset": 5714,
+      "end_offset": 5741,
+      "position": {
+        "line": 172,
+        "column": 10
+      },
+      "end_position": {
+        "line": 172,
+        "column": 37
+      },
+      "source_text": "exact ⟨_, .refl _, .refl _⟩"
+    },
+    {
+      "depth": 16,
+      "end": 6010,
+      "goals_after": [],
+      "goals_before": [
+        "case red_S.red_S\na b a✝ b✝ c✝ : SKI\n⊢ Join ParallelReduction (a✝ ⬝ c✝ ⬝ (b✝ ⬝ c✝)) (a✝ ⬝ c✝ ⬝ (b✝ ⬝ c✝))"
+      ],
+      "kind": "tactic",
+      "start": 5979,
+      "raw": {
+        "depth": 16,
+        "end": 13141,
+        "goals_after": [],
+        "goals_before": [
+          "case red_S.red_S\na b a✝ b✝ c✝ : SKI\n⊢ Join ParallelReduction (a✝ ⬝ c✝ ⬝ (b✝ ⬝ c✝)) (a✝ ⬝ c✝ ⬝ (b✝ ⬝ c✝))"
+        ],
+        "kind": "tactic",
+        "start": 13110
+      },
+      "start_offset": 5714,
+      "end_offset": 5741,
+      "position": {
+        "line": 172,
+        "column": 10
+      },
+      "end_position": {
+        "line": 172,
+        "column": 37
+      },
+      "source_text": "exact ⟨_, .refl _, .refl _⟩"
+    },
+    {
+      "depth": 13,
+      "end": 6037,
+      "goals_after": [
+        "case red_S.par\na b a✝ b✝ c✝ a'✝ b'✝ : SKI\ns' : (S ⬝ a✝ ⬝ b✝) ⭢ₚ a'✝\nc' : c✝ ⭢ₚ b'✝\nx y : SKI\nhx : ?m.588 ⭢ₚ x\nhy : ?m.589 ⭢ₚ y\nhs' : sorry = S ⬝ x ⬝ y\n⊢ Join ParallelReduction (a✝ ⬝ c✝ ⬝ (b✝ ⬝ c✝)) (a'✝ ⬝ b'✝)"
+      ],
+      "goals_before": [
+        "case red_S.par\na b a✝ b✝ c✝ a'✝ b'✝ : SKI\ns' : (S ⬝ a✝ ⬝ b✝) ⭢ₚ a'✝\nc' : c✝ ⭢ₚ b'✝\n⊢ Join ParallelReduction (a✝ ⬝ c✝ ⬝ (b✝ ⬝ c✝)) (a'✝ ⬝ b'✝)"
+      ],
+      "kind": "tactic",
+      "start": 6017,
+      "raw": {
+        "depth": 13,
+        "end": 13168,
+        "goals_after": [
+          "case red_S.par\na b a✝ b✝ c✝ a'✝ b'✝ : SKI\ns' : (S ⬝ a✝ ⬝ b✝) ⭢ₚ a'✝\nc' : c✝ ⭢ₚ b'✝\nx y : SKI\nhx : ?m.588 ⭢ₚ x\nhy : ?m.589 ⭢ₚ y\nhs' : sorry = S ⬝ x ⬝ y\n⊢ Join ParallelReduction (a✝ ⬝ c✝ ⬝ (b✝ ⬝ c✝)) (a'✝ ⬝ b'✝)"
+        ],
+        "goals_before": [
+          "case red_S.par\na b a✝ b✝ c✝ a'✝ b'✝ : SKI\ns' : (S ⬝ a✝ ⬝ b✝) ⭢ₚ a'✝\nc' : c✝ ⭢ₚ b'✝\n⊢ Join ParallelReduction (a✝ ⬝ c✝ ⬝ (b✝ ⬝ c✝)) (a'✝ ⬝ b'✝)"
+        ],
+        "kind": "tactic",
+        "start": 13148
+      },
+      "start_offset": 5748,
+      "end_offset": 5768,
+      "position": {
+        "line": 173,
+        "column": 6
+      },
+      "end_position": {
+        "line": 173,
+        "column": 26
+      },
+      "source_text": "| par s' c' hs hc =>"
+    },
+    {
+      "depth": 14,
+      "end": 6259,
+      "goals_after": [
+        "case red_S.par\na b a✝ b✝ c✝ a'✝ b'✝ : SKI\ns' : (S ⬝ a✝ ⬝ b✝) ⭢ₚ a'✝\nc' : c✝ ⭢ₚ b'✝\nx y : SKI\nhx : ?m.588 ⭢ₚ x\nhy : ?m.589 ⭢ₚ y\nhs' : sorry = S ⬝ x ⬝ y\n⊢ Join ParallelReduction (a✝ ⬝ c✝ ⬝ (b✝ ⬝ c✝)) (a'✝ ⬝ b'✝)"
+      ],
+      "goals_before": [
+        "case red_S.par\na b a✝ b✝ c✝ a'✝ b'✝ : SKI\ns' : (S ⬝ a✝ ⬝ b✝) ⭢ₚ a'✝\nc' : c✝ ⭢ₚ b'✝\n⊢ Join ParallelReduction (a✝ ⬝ c✝ ⬝ (b✝ ⬝ c✝)) (a'✝ ⬝ b'✝)"
+      ],
+      "kind": "tactic",
+      "start": 6048,
+      "raw": {
+        "depth": 14,
+        "end": 13390,
+        "goals_after": [
+          "case red_S.par\na b a✝ b✝ c✝ a'✝ b'✝ : SKI\ns' : (S ⬝ a✝ ⬝ b✝) ⭢ₚ a'✝\nc' : c✝ ⭢ₚ b'✝\nx y : SKI\nhx : ?m.588 ⭢ₚ x\nhy : ?m.589 ⭢ₚ y\nhs' : sorry = S ⬝ x ⬝ y\n⊢ Join ParallelReduction (a✝ ⬝ c✝ ⬝ (b✝ ⬝ c✝)) (a'✝ ⬝ b'✝)"
+        ],
+        "goals_before": [
+          "case red_S.par\na b a✝ b✝ c✝ a'✝ b'✝ : SKI\ns' : (S ⬝ a✝ ⬝ b✝) ⭢ₚ a'✝\nc' : c✝ ⭢ₚ b'✝\n⊢ Join ParallelReduction (a✝ ⬝ c✝ ⬝ (b✝ ⬝ c✝)) (a'✝ ⬝ b'✝)"
+        ],
+        "kind": "tactic",
+        "start": 13179
+      },
+      "start_offset": 5779,
+      "end_offset": 5976,
+      "position": {
+        "line": 174,
+        "column": 10
+      },
+      "end_position": {
+        "line": 179,
+        "column": 28
+      },
+      "source_text": "obtain ⟨x, y, hx, hy, hs'⟩ := Sab_irreducible _ _ s' hs\n          subst s'\n          exact\n            ⟨x ⬝ c' ⬝ (y ⬝ c'),\n              .par (.par hx hc) (.par hy hc),\n              .red_S x y c'⟩"
+    },
+    {
+      "depth": 15,
+      "end": 6259,
+      "goals_after": [
+        "case red_S.par\na b a✝ b✝ c✝ a'✝ b'✝ : SKI\ns' : (S ⬝ a✝ ⬝ b✝) ⭢ₚ a'✝\nc' : c✝ ⭢ₚ b'✝\nx y : SKI\nhx : ?m.588 ⭢ₚ x\nhy : ?m.589 ⭢ₚ y\nhs' : sorry = S ⬝ x ⬝ y\n⊢ Join ParallelReduction (a✝ ⬝ c✝ ⬝ (b✝ ⬝ c✝)) (a'✝ ⬝ b'✝)"
+      ],
+      "goals_before": [
+        "case red_S.par\na b a✝ b✝ c✝ a'✝ b'✝ : SKI\ns' : (S ⬝ a✝ ⬝ b✝) ⭢ₚ a'✝\nc' : c✝ ⭢ₚ b'✝\n⊢ Join ParallelReduction (a✝ ⬝ c✝ ⬝ (b✝ ⬝ c✝)) (a'✝ ⬝ b'✝)"
+      ],
+      "kind": "tactic",
+      "start": 6048,
+      "raw": {
+        "depth": 15,
+        "end": 13390,
+        "goals_after": [
+          "case red_S.par\na b a✝ b✝ c✝ a'✝ b'✝ : SKI\ns' : (S ⬝ a✝ ⬝ b✝) ⭢ₚ a'✝\nc' : c✝ ⭢ₚ b'✝\nx y : SKI\nhx : ?m.588 ⭢ₚ x\nhy : ?m.589 ⭢ₚ y\nhs' : sorry = S ⬝ x ⬝ y\n⊢ Join ParallelReduction (a✝ ⬝ c✝ ⬝ (b✝ ⬝ c✝)) (a'✝ ⬝ b'✝)"
+        ],
+        "goals_before": [
+          "case red_S.par\na b a✝ b✝ c✝ a'✝ b'✝ : SKI\ns' : (S ⬝ a✝ ⬝ b✝) ⭢ₚ a'✝\nc' : c✝ ⭢ₚ b'✝\n⊢ Join ParallelReduction (a✝ ⬝ c✝ ⬝ (b✝ ⬝ c✝)) (a'✝ ⬝ b'✝)"
+        ],
+        "kind": "tactic",
+        "start": 13179
+      },
+      "start_offset": 5779,
+      "end_offset": 5976,
+      "position": {
+        "line": 174,
+        "column": 10
+      },
+      "end_position": {
+        "line": 179,
+        "column": 28
+      },
+      "source_text": "obtain ⟨x, y, hx, hy, hs'⟩ := Sab_irreducible _ _ s' hs\n          subst s'\n          exact\n            ⟨x ⬝ c' ⬝ (y ⬝ c'),\n              .par (.par hx hc) (.par hy hc),\n              .red_S x y c'⟩"
+    },
+    {
+      "depth": 16,
+      "end": 6107,
+      "goals_after": [
+        "case red_S.par\na b a✝ b✝ c✝ a'✝ b'✝ : SKI\ns' : (S ⬝ a✝ ⬝ b✝) ⭢ₚ a'✝\nc' : c✝ ⭢ₚ b'✝\nx y : SKI\nhx : ?m.588 ⭢ₚ x\nhy : ?m.589 ⭢ₚ y\nhs' : sorry = S ⬝ x ⬝ y\n⊢ Join ParallelReduction (a✝ ⬝ c✝ ⬝ (b✝ ⬝ c✝)) (a'✝ ⬝ b'✝)"
+      ],
+      "goals_before": [
+        "case red_S.par\na b a✝ b✝ c✝ a'✝ b'✝ : SKI\ns' : (S ⬝ a✝ ⬝ b✝) ⭢ₚ a'✝\nc' : c✝ ⭢ₚ b'✝\n⊢ Join ParallelReduction (a✝ ⬝ c✝ ⬝ (b✝ ⬝ c✝)) (a'✝ ⬝ b'✝)"
+      ],
+      "kind": "tactic",
+      "start": 6048,
+      "raw": {
+        "depth": 16,
+        "end": 13238,
+        "goals_after": [
+          "case red_S.par\na b a✝ b✝ c✝ a'✝ b'✝ : SKI\ns' : (S ⬝ a✝ ⬝ b✝) ⭢ₚ a'✝\nc' : c✝ ⭢ₚ b'✝\nx y : SKI\nhx : ?m.588 ⭢ₚ x\nhy : ?m.589 ⭢ₚ y\nhs' : sorry = S ⬝ x ⬝ y\n⊢ Join ParallelReduction (a✝ ⬝ c✝ ⬝ (b✝ ⬝ c✝)) (a'✝ ⬝ b'✝)"
+        ],
+        "goals_before": [
+          "case red_S.par\na b a✝ b✝ c✝ a'✝ b'✝ : SKI\ns' : (S ⬝ a✝ ⬝ b✝) ⭢ₚ a'✝\nc' : c✝ ⭢ₚ b'✝\n⊢ Join ParallelReduction (a✝ ⬝ c✝ ⬝ (b✝ ⬝ c✝)) (a'✝ ⬝ b'✝)"
+        ],
+        "kind": "tactic",
+        "start": 13179
+      },
+      "start_offset": 5779,
+      "end_offset": 5834,
+      "position": {
+        "line": 174,
+        "column": 10
+      },
+      "end_position": {
+        "line": 174,
+        "column": 65
+      },
+      "source_text": "obtain ⟨x, y, hx, hy, hs'⟩ := Sab_irreducible _ _ s' hs"
+    },
+    {
+      "depth": 16,
+      "end": 6126,
+      "goals_after": [
+        "case red_S.par\na b a✝ b✝ c✝ a'✝ b'✝ : SKI\ns' : (S ⬝ a✝ ⬝ b✝) ⭢ₚ a'✝\nc' : c✝ ⭢ₚ b'✝\nx y : SKI\nhx : ?m.588 ⭢ₚ x\nhy : ?m.589 ⭢ₚ y\nhs' : sorry = S ⬝ x ⬝ y\n⊢ Join ParallelReduction (a✝ ⬝ c✝ ⬝ (b✝ ⬝ c✝)) (a'✝ ⬝ b'✝)"
+      ],
+      "goals_before": [
+        "case red_S.par\na b a✝ b✝ c✝ a'✝ b'✝ : SKI\ns' : (S ⬝ a✝ ⬝ b✝) ⭢ₚ a'✝\nc' : c✝ ⭢ₚ b'✝\nx y : SKI\nhx : ?m.588 ⭢ₚ x\nhy : ?m.589 ⭢ₚ y\nhs' : sorry = S ⬝ x ⬝ y\n⊢ Join ParallelReduction (a✝ ⬝ c✝ ⬝ (b✝ ⬝ c✝)) (a'✝ ⬝ b'✝)"
+      ],
+      "kind": "tactic",
+      "start": 6118,
+      "raw": {
+        "depth": 16,
+        "end": 13257,
+        "goals_after": [
+          "case red_S.par\na b a✝ b✝ c✝ a'✝ b'✝ : SKI\ns' : (S ⬝ a✝ ⬝ b✝) ⭢ₚ a'✝\nc' : c✝ ⭢ₚ b'✝\nx y : SKI\nhx : ?m.588 ⭢ₚ x\nhy : ?m.589 ⭢ₚ y\nhs' : sorry = S ⬝ x ⬝ y\n⊢ Join ParallelReduction (a✝ ⬝ c✝ ⬝ (b✝ ⬝ c✝)) (a'✝ ⬝ b'✝)"
+        ],
+        "goals_before": [
+          "case red_S.par\na b a✝ b✝ c✝ a'✝ b'✝ : SKI\ns' : (S ⬝ a✝ ⬝ b✝) ⭢ₚ a'✝\nc' : c✝ ⭢ₚ b'✝\nx y : SKI\nhx : ?m.588 ⭢ₚ x\nhy : ?m.589 ⭢ₚ y\nhs' : sorry = S ⬝ x ⬝ y\n⊢ Join ParallelReduction (a✝ ⬝ c✝ ⬝ (b✝ ⬝ c✝)) (a'✝ ⬝ b'✝)"
+        ],
+        "kind": "tactic",
+        "start": 13249
+      },
+      "start_offset": 5845,
+      "end_offset": 5853,
+      "position": {
+        "line": 175,
+        "column": 10
+      },
+      "end_position": {
+        "line": 175,
+        "column": 18
+      },
+      "source_text": "subst s'"
+    },
+    {
+      "depth": 8,
+      "end": 6294,
+      "goals_after": [],
+      "goals_before": [
+        "case par\na✝¹ b✝¹ a✝ a'✝ b✝ b'✝ : SKI\na : a✝ ⭢ₚ a'✝\na' : b✝ ⭢ₚ b'✝\nb : ∀ {c : SKI}, a✝ ⭢ₚ c → Join ParallelReduction a'✝ c\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\nc : SKI\nhac : (a✝ ⬝ b✝) ⭢ₚ c\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) c"
+      ],
+      "kind": "tactic",
+      "start": 6262,
+      "raw": {
+        "depth": 8,
+        "end": 13425,
+        "goals_after": [],
+        "goals_before": [
+          "case par\na✝¹ b✝¹ a✝ a'✝ b✝ b'✝ : SKI\na : a✝ ⭢ₚ a'✝\na' : b✝ ⭢ₚ b'✝\nb : ∀ {c : SKI}, a✝ ⭢ₚ c → Join ParallelReduction a'✝ c\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\nc : SKI\nhac : (a✝ ⬝ b✝) ⭢ₚ c\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) c"
+        ],
+        "kind": "tactic",
+        "start": 13393
+      },
+      "start_offset": 5979,
+      "end_offset": 6011,
+      "position": {
+        "line": 180,
+        "column": 2
+      },
+      "end_position": {
+        "line": 180,
+        "column": 34
+      },
+      "source_text": "| par a a' b b' ha hb iha ihb =>"
+    },
+    {
+      "depth": 9,
+      "end": 7082,
+      "goals_after": [],
+      "goals_before": [
+        "case par\na✝¹ b✝¹ a✝ a'✝ b✝ b'✝ : SKI\na : a✝ ⭢ₚ a'✝\na' : b✝ ⭢ₚ b'✝\nb : ∀ {c : SKI}, a✝ ⭢ₚ c → Join ParallelReduction a'✝ c\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\nc : SKI\nhac : (a✝ ⬝ b✝) ⭢ₚ c\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) c"
+      ],
+      "kind": "tactic",
+      "start": 6301,
+      "raw": {
+        "depth": 9,
+        "end": 14213,
+        "goals_after": [],
+        "goals_before": [
+          "case par\na✝¹ b✝¹ a✝ a'✝ b✝ b'✝ : SKI\na : a✝ ⭢ₚ a'✝\na' : b✝ ⭢ₚ b'✝\nb : ∀ {c : SKI}, a✝ ⭢ₚ c → Join ParallelReduction a'✝ c\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\nc : SKI\nhac : (a✝ ⬝ b✝) ⭢ₚ c\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) c"
+        ],
+        "kind": "tactic",
+        "start": 13432
+      },
+      "start_offset": 6018,
+      "end_offset": 6737,
+      "position": {
+        "line": 181,
+        "column": 6
+      },
+      "end_position": {
+        "line": 202,
+        "column": 51
+      },
+      "source_text": "cases hac with\n      | refl =>\n          exact ⟨a' ⬝ b', .refl _, .par ha hb⟩\n      | red_I =>\n          have ha' : a' = I := I_irreducible a' ha\n          subst a'\n          exact ⟨b', .red_I b', hb⟩\n      | red_K =>\n          obtain ⟨x, hx, ha'⟩ := Ka_irreducible _ a' ha\n          subst a'\n          exact ⟨x, .red_K x b', hx⟩\n      | red_S _ _ =>\n          obtain ⟨x, y, hx, hy, ha'⟩ := Sab_irreducible _ _ a' ha\n          subst a'\n          exact\n            ⟨x ⬝ b' ⬝ (y ⬝ b'),\n              .red_S x y b',\n              .par (.par hx hb) (.par hy hb)⟩\n      | par c' d' hc hd =>\n          obtain ⟨x, hx₁, hx₂⟩ := iha hc\n          obtain ⟨y, hy₁, hy₂⟩ := ihb hd\n          exact ⟨x ⬝ y, .par hx₁ hy₁, .par hx₂ hy₂⟩"
+    },
+    {
+      "depth": 10,
+      "end": 7082,
+      "goals_after": [],
+      "goals_before": [
+        "case par\na✝¹ b✝¹ a✝ a'✝ b✝ b'✝ : SKI\na : a✝ ⭢ₚ a'✝\na' : b✝ ⭢ₚ b'✝\nb : ∀ {c : SKI}, a✝ ⭢ₚ c → Join ParallelReduction a'✝ c\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\nc : SKI\nhac : (a✝ ⬝ b✝) ⭢ₚ c\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) c"
+      ],
+      "kind": "tactic",
+      "start": 6301,
+      "raw": {
+        "depth": 10,
+        "end": 14213,
+        "goals_after": [],
+        "goals_before": [
+          "case par\na✝¹ b✝¹ a✝ a'✝ b✝ b'✝ : SKI\na : a✝ ⭢ₚ a'✝\na' : b✝ ⭢ₚ b'✝\nb : ∀ {c : SKI}, a✝ ⭢ₚ c → Join ParallelReduction a'✝ c\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\nc : SKI\nhac : (a✝ ⬝ b✝) ⭢ₚ c\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) c"
+        ],
+        "kind": "tactic",
+        "start": 13432
+      },
+      "start_offset": 6018,
+      "end_offset": 6737,
+      "position": {
+        "line": 181,
+        "column": 6
+      },
+      "end_position": {
+        "line": 202,
+        "column": 51
+      },
+      "source_text": "cases hac with\n      | refl =>\n          exact ⟨a' ⬝ b', .refl _, .par ha hb⟩\n      | red_I =>\n          have ha' : a' = I := I_irreducible a' ha\n          subst a'\n          exact ⟨b', .red_I b', hb⟩\n      | red_K =>\n          obtain ⟨x, hx, ha'⟩ := Ka_irreducible _ a' ha\n          subst a'\n          exact ⟨x, .red_K x b', hx⟩\n      | red_S _ _ =>\n          obtain ⟨x, y, hx, hy, ha'⟩ := Sab_irreducible _ _ a' ha\n          subst a'\n          exact\n            ⟨x ⬝ b' ⬝ (y ⬝ b'),\n              .red_S x y b',\n              .par (.par hx hb) (.par hy hb)⟩\n      | par c' d' hc hd =>\n          obtain ⟨x, hx₁, hx₂⟩ := iha hc\n          obtain ⟨y, hy₁, hy₂⟩ := ihb hd\n          exact ⟨x ⬝ y, .par hx₁ hy₁, .par hx₂ hy₂⟩"
+    },
+    {
+      "depth": 11,
+      "end": 7082,
+      "goals_after": [],
+      "goals_before": [
+        "case par\na✝¹ b✝¹ a✝ a'✝ b✝ b'✝ : SKI\na : a✝ ⭢ₚ a'✝\na' : b✝ ⭢ₚ b'✝\nb : ∀ {c : SKI}, a✝ ⭢ₚ c → Join ParallelReduction a'✝ c\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\nc : SKI\nhac : (a✝ ⬝ b✝) ⭢ₚ c\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) c"
+      ],
+      "kind": "tactic",
+      "start": 6301,
+      "raw": {
+        "depth": 11,
+        "end": 14213,
+        "goals_after": [],
+        "goals_before": [
+          "case par\na✝¹ b✝¹ a✝ a'✝ b✝ b'✝ : SKI\na : a✝ ⭢ₚ a'✝\na' : b✝ ⭢ₚ b'✝\nb : ∀ {c : SKI}, a✝ ⭢ₚ c → Join ParallelReduction a'✝ c\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\nc : SKI\nhac : (a✝ ⬝ b✝) ⭢ₚ c\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) c"
+        ],
+        "kind": "tactic",
+        "start": 13432
+      },
+      "start_offset": 6018,
+      "end_offset": 6737,
+      "position": {
+        "line": 181,
+        "column": 6
+      },
+      "end_position": {
+        "line": 202,
+        "column": 51
+      },
+      "source_text": "cases hac with\n      | refl =>\n          exact ⟨a' ⬝ b', .refl _, .par ha hb⟩\n      | red_I =>\n          have ha' : a' = I := I_irreducible a' ha\n          subst a'\n          exact ⟨b', .red_I b', hb⟩\n      | red_K =>\n          obtain ⟨x, hx, ha'⟩ := Ka_irreducible _ a' ha\n          subst a'\n          exact ⟨x, .red_K x b', hx⟩\n      | red_S _ _ =>\n          obtain ⟨x, y, hx, hy, ha'⟩ := Sab_irreducible _ _ a' ha\n          subst a'\n          exact\n            ⟨x ⬝ b' ⬝ (y ⬝ b'),\n              .red_S x y b',\n              .par (.par hx hb) (.par hy hb)⟩\n      | par c' d' hc hd =>\n          obtain ⟨x, hx₁, hx₂⟩ := iha hc\n          obtain ⟨y, hy₁, hy₂⟩ := ihb hd\n          exact ⟨x ⬝ y, .par hx₁ hy₁, .par hx₂ hy₂⟩"
+    },
+    {
+      "depth": 12,
+      "end": 6315,
+      "goals_after": [],
+      "goals_before": [
+        "case par\na✝¹ b✝¹ a✝ a'✝ b✝ b'✝ : SKI\na : a✝ ⭢ₚ a'✝\na' : b✝ ⭢ₚ b'✝\nb : ∀ {c : SKI}, a✝ ⭢ₚ c → Join ParallelReduction a'✝ c\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\nc : SKI\nhac : (a✝ ⬝ b✝) ⭢ₚ c\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) c"
+      ],
+      "kind": "tactic",
+      "start": 6301,
+      "raw": {
+        "depth": 12,
+        "end": 13446,
+        "goals_after": [],
+        "goals_before": [
+          "case par\na✝¹ b✝¹ a✝ a'✝ b✝ b'✝ : SKI\na : a✝ ⭢ₚ a'✝\na' : b✝ ⭢ₚ b'✝\nb : ∀ {c : SKI}, a✝ ⭢ₚ c → Join ParallelReduction a'✝ c\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\nc : SKI\nhac : (a✝ ⬝ b✝) ⭢ₚ c\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) c"
+        ],
+        "kind": "tactic",
+        "start": 13432
+      },
+      "start_offset": 6018,
+      "end_offset": 6032,
+      "position": {
+        "line": 181,
+        "column": 6
+      },
+      "end_position": {
+        "line": 181,
+        "column": 20
+      },
+      "source_text": "cases hac with"
+    },
+    {
+      "depth": 13,
+      "end": 6331,
+      "goals_after": [
+        "case par.refl\na✝¹ b✝¹ a✝ a'✝ b✝ b'✝ : SKI\na : a✝ ⭢ₚ a'✝\na' : b✝ ⭢ₚ b'✝\nb : ∀ {c : SKI}, a✝ ⭢ₚ c → Join ParallelReduction a'✝ c\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) (a✝ ⬝ b✝)"
+      ],
+      "goals_before": [
+        "case par.refl\na✝¹ b✝¹ a✝ a'✝ b✝ b'✝ : SKI\na : a✝ ⭢ₚ a'✝\na' : b✝ ⭢ₚ b'✝\nb : ∀ {c : SKI}, a✝ ⭢ₚ c → Join ParallelReduction a'✝ c\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) (a✝ ⬝ b✝)"
+      ],
+      "kind": "tactic",
+      "start": 6322,
+      "raw": {
+        "depth": 13,
+        "end": 13462,
+        "goals_after": [
+          "case par.refl\na✝¹ b✝¹ a✝ a'✝ b✝ b'✝ : SKI\na : a✝ ⭢ₚ a'✝\na' : b✝ ⭢ₚ b'✝\nb : ∀ {c : SKI}, a✝ ⭢ₚ c → Join ParallelReduction a'✝ c\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) (a✝ ⬝ b✝)"
+        ],
+        "goals_before": [
+          "case par.refl\na✝¹ b✝¹ a✝ a'✝ b✝ b'✝ : SKI\na : a✝ ⭢ₚ a'✝\na' : b✝ ⭢ₚ b'✝\nb : ∀ {c : SKI}, a✝ ⭢ₚ c → Join ParallelReduction a'✝ c\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) (a✝ ⬝ b✝)"
+        ],
+        "kind": "tactic",
+        "start": 13453
+      },
+      "start_offset": 6039,
+      "end_offset": 6048,
+      "position": {
+        "line": 182,
+        "column": 6
+      },
+      "end_position": {
+        "line": 182,
+        "column": 15
+      },
+      "source_text": "| refl =>"
+    },
+    {
+      "depth": 14,
+      "end": 6384,
+      "goals_after": [
+        "case par.refl\na✝¹ b✝¹ a✝ a'✝ b✝ b'✝ : SKI\na : a✝ ⭢ₚ a'✝\na' : b✝ ⭢ₚ b'✝\nb : ∀ {c : SKI}, a✝ ⭢ₚ c → Join ParallelReduction a'✝ c\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) (a✝ ⬝ b✝)"
+      ],
+      "goals_before": [
+        "case par.refl\na✝¹ b✝¹ a✝ a'✝ b✝ b'✝ : SKI\na : a✝ ⭢ₚ a'✝\na' : b✝ ⭢ₚ b'✝\nb : ∀ {c : SKI}, a✝ ⭢ₚ c → Join ParallelReduction a'✝ c\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) (a✝ ⬝ b✝)"
+      ],
+      "kind": "tactic",
+      "start": 6342,
+      "raw": {
+        "depth": 14,
+        "end": 13515,
+        "goals_after": [
+          "case par.refl\na✝¹ b✝¹ a✝ a'✝ b✝ b'✝ : SKI\na : a✝ ⭢ₚ a'✝\na' : b✝ ⭢ₚ b'✝\nb : ∀ {c : SKI}, a✝ ⭢ₚ c → Join ParallelReduction a'✝ c\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) (a✝ ⬝ b✝)"
+        ],
+        "goals_before": [
+          "case par.refl\na✝¹ b✝¹ a✝ a'✝ b✝ b'✝ : SKI\na : a✝ ⭢ₚ a'✝\na' : b✝ ⭢ₚ b'✝\nb : ∀ {c : SKI}, a✝ ⭢ₚ c → Join ParallelReduction a'✝ c\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) (a✝ ⬝ b✝)"
+        ],
+        "kind": "tactic",
+        "start": 13473
+      },
+      "start_offset": 6059,
+      "end_offset": 6095,
+      "position": {
+        "line": 183,
+        "column": 10
+      },
+      "end_position": {
+        "line": 183,
+        "column": 46
+      },
+      "source_text": "exact ⟨a' ⬝ b', .refl _, .par ha hb⟩"
+    },
+    {
+      "depth": 15,
+      "end": 6384,
+      "goals_after": [
+        "case par.refl\na✝¹ b✝¹ a✝ a'✝ b✝ b'✝ : SKI\na : a✝ ⭢ₚ a'✝\na' : b✝ ⭢ₚ b'✝\nb : ∀ {c : SKI}, a✝ ⭢ₚ c → Join ParallelReduction a'✝ c\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) (a✝ ⬝ b✝)"
+      ],
+      "goals_before": [
+        "case par.refl\na✝¹ b✝¹ a✝ a'✝ b✝ b'✝ : SKI\na : a✝ ⭢ₚ a'✝\na' : b✝ ⭢ₚ b'✝\nb : ∀ {c : SKI}, a✝ ⭢ₚ c → Join ParallelReduction a'✝ c\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) (a✝ ⬝ b✝)"
+      ],
+      "kind": "tactic",
+      "start": 6342,
+      "raw": {
+        "depth": 15,
+        "end": 13515,
+        "goals_after": [
+          "case par.refl\na✝¹ b✝¹ a✝ a'✝ b✝ b'✝ : SKI\na : a✝ ⭢ₚ a'✝\na' : b✝ ⭢ₚ b'✝\nb : ∀ {c : SKI}, a✝ ⭢ₚ c → Join ParallelReduction a'✝ c\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) (a✝ ⬝ b✝)"
+        ],
+        "goals_before": [
+          "case par.refl\na✝¹ b✝¹ a✝ a'✝ b✝ b'✝ : SKI\na : a✝ ⭢ₚ a'✝\na' : b✝ ⭢ₚ b'✝\nb : ∀ {c : SKI}, a✝ ⭢ₚ c → Join ParallelReduction a'✝ c\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) (a✝ ⬝ b✝)"
+        ],
+        "kind": "tactic",
+        "start": 13473
+      },
+      "start_offset": 6059,
+      "end_offset": 6095,
+      "position": {
+        "line": 183,
+        "column": 10
+      },
+      "end_position": {
+        "line": 183,
+        "column": 46
+      },
+      "source_text": "exact ⟨a' ⬝ b', .refl _, .par ha hb⟩"
+    },
+    {
+      "depth": 16,
+      "end": 6384,
+      "goals_after": [
+        "case par.refl\na✝¹ b✝¹ a✝ a'✝ b✝ b'✝ : SKI\na : a✝ ⭢ₚ a'✝\na' : b✝ ⭢ₚ b'✝\nb : ∀ {c : SKI}, a✝ ⭢ₚ c → Join ParallelReduction a'✝ c\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) (a✝ ⬝ b✝)"
+      ],
+      "goals_before": [
+        "case par.refl\na✝¹ b✝¹ a✝ a'✝ b✝ b'✝ : SKI\na : a✝ ⭢ₚ a'✝\na' : b✝ ⭢ₚ b'✝\nb : ∀ {c : SKI}, a✝ ⭢ₚ c → Join ParallelReduction a'✝ c\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) (a✝ ⬝ b✝)"
+      ],
+      "kind": "tactic",
+      "start": 6342,
+      "raw": {
+        "depth": 16,
+        "end": 13515,
+        "goals_after": [
+          "case par.refl\na✝¹ b✝¹ a✝ a'✝ b✝ b'✝ : SKI\na : a✝ ⭢ₚ a'✝\na' : b✝ ⭢ₚ b'✝\nb : ∀ {c : SKI}, a✝ ⭢ₚ c → Join ParallelReduction a'✝ c\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) (a✝ ⬝ b✝)"
+        ],
+        "goals_before": [
+          "case par.refl\na✝¹ b✝¹ a✝ a'✝ b✝ b'✝ : SKI\na : a✝ ⭢ₚ a'✝\na' : b✝ ⭢ₚ b'✝\nb : ∀ {c : SKI}, a✝ ⭢ₚ c → Join ParallelReduction a'✝ c\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) (a✝ ⬝ b✝)"
+        ],
+        "kind": "tactic",
+        "start": 13473
+      },
+      "start_offset": 6059,
+      "end_offset": 6095,
+      "position": {
+        "line": 183,
+        "column": 10
+      },
+      "end_position": {
+        "line": 183,
+        "column": 46
+      },
+      "source_text": "exact ⟨a' ⬝ b', .refl _, .par ha hb⟩"
+    },
+    {
+      "depth": 13,
+      "end": 6401,
+      "goals_after": [
+        "case par.red_I\na✝ b✝¹ a'✝ b✝ b'✝ : SKI\na' : b✝ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\na : I ⭢ₚ a'✝\nb : ∀ {c : SKI}, I ⭢ₚ c → Join ParallelReduction a'✝ c\nha' : sorry\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) b✝"
+      ],
+      "goals_before": [
+        "case par.red_I\na✝ b✝¹ a'✝ b✝ b'✝ : SKI\na' : b✝ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\na : I ⭢ₚ a'✝\nb : ∀ {c : SKI}, I ⭢ₚ c → Join ParallelReduction a'✝ c\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) b✝"
+      ],
+      "kind": "tactic",
+      "start": 6391,
+      "raw": {
+        "depth": 13,
+        "end": 13532,
+        "goals_after": [
+          "case par.red_I\na✝ b✝¹ a'✝ b✝ b'✝ : SKI\na' : b✝ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\na : I ⭢ₚ a'✝\nb : ∀ {c : SKI}, I ⭢ₚ c → Join ParallelReduction a'✝ c\nha' : sorry\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) b✝"
+        ],
+        "goals_before": [
+          "case par.red_I\na✝ b✝¹ a'✝ b✝ b'✝ : SKI\na' : b✝ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\na : I ⭢ₚ a'✝\nb : ∀ {c : SKI}, I ⭢ₚ c → Join ParallelReduction a'✝ c\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) b✝"
+        ],
+        "kind": "tactic",
+        "start": 13522
+      },
+      "start_offset": 6102,
+      "end_offset": 6112,
+      "position": {
+        "line": 184,
+        "column": 6
+      },
+      "end_position": {
+        "line": 184,
+        "column": 16
+      },
+      "source_text": "| red_I =>"
+    },
+    {
+      "depth": 14,
+      "end": 6511,
+      "goals_after": [
+        "case par.red_I\na✝ b✝¹ a'✝ b✝ b'✝ : SKI\na' : b✝ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\na : I ⭢ₚ a'✝\nb : ∀ {c : SKI}, I ⭢ₚ c → Join ParallelReduction a'✝ c\nha' : sorry\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) b✝"
+      ],
+      "goals_before": [
+        "case par.red_I\na✝ b✝¹ a'✝ b✝ b'✝ : SKI\na' : b✝ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\na : I ⭢ₚ a'✝\nb : ∀ {c : SKI}, I ⭢ₚ c → Join ParallelReduction a'✝ c\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) b✝"
+      ],
+      "kind": "tactic",
+      "start": 6412,
+      "raw": {
+        "depth": 14,
+        "end": 13642,
+        "goals_after": [
+          "case par.red_I\na✝ b✝¹ a'✝ b✝ b'✝ : SKI\na' : b✝ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\na : I ⭢ₚ a'✝\nb : ∀ {c : SKI}, I ⭢ₚ c → Join ParallelReduction a'✝ c\nha' : sorry\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) b✝"
+        ],
+        "goals_before": [
+          "case par.red_I\na✝ b✝¹ a'✝ b✝ b'✝ : SKI\na' : b✝ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\na : I ⭢ₚ a'✝\nb : ∀ {c : SKI}, I ⭢ₚ c → Join ParallelReduction a'✝ c\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) b✝"
+        ],
+        "kind": "tactic",
+        "start": 13543
+      },
+      "start_offset": 6123,
+      "end_offset": 6218,
+      "position": {
+        "line": 185,
+        "column": 10
+      },
+      "end_position": {
+        "line": 187,
+        "column": 35
+      },
+      "source_text": "have ha' : a' = I := I_irreducible a' ha\n          subst a'\n          exact ⟨b', .red_I b', hb⟩"
+    },
+    {
+      "depth": 15,
+      "end": 6511,
+      "goals_after": [
+        "case par.red_I\na✝ b✝¹ a'✝ b✝ b'✝ : SKI\na' : b✝ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\na : I ⭢ₚ a'✝\nb : ∀ {c : SKI}, I ⭢ₚ c → Join ParallelReduction a'✝ c\nha' : sorry\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) b✝"
+      ],
+      "goals_before": [
+        "case par.red_I\na✝ b✝¹ a'✝ b✝ b'✝ : SKI\na' : b✝ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\na : I ⭢ₚ a'✝\nb : ∀ {c : SKI}, I ⭢ₚ c → Join ParallelReduction a'✝ c\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) b✝"
+      ],
+      "kind": "tactic",
+      "start": 6412,
+      "raw": {
+        "depth": 15,
+        "end": 13642,
+        "goals_after": [
+          "case par.red_I\na✝ b✝¹ a'✝ b✝ b'✝ : SKI\na' : b✝ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\na : I ⭢ₚ a'✝\nb : ∀ {c : SKI}, I ⭢ₚ c → Join ParallelReduction a'✝ c\nha' : sorry\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) b✝"
+        ],
+        "goals_before": [
+          "case par.red_I\na✝ b✝¹ a'✝ b✝ b'✝ : SKI\na' : b✝ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\na : I ⭢ₚ a'✝\nb : ∀ {c : SKI}, I ⭢ₚ c → Join ParallelReduction a'✝ c\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) b✝"
+        ],
+        "kind": "tactic",
+        "start": 13543
+      },
+      "start_offset": 6123,
+      "end_offset": 6218,
+      "position": {
+        "line": 185,
+        "column": 10
+      },
+      "end_position": {
+        "line": 187,
+        "column": 35
+      },
+      "source_text": "have ha' : a' = I := I_irreducible a' ha\n          subst a'\n          exact ⟨b', .red_I b', hb⟩"
+    },
+    {
+      "depth": 16,
+      "end": 6452,
+      "goals_after": [
+        "case par.red_I\na✝ b✝¹ a'✝ b✝ b'✝ : SKI\na' : b✝ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\na : I ⭢ₚ a'✝\nb : ∀ {c : SKI}, I ⭢ₚ c → Join ParallelReduction a'✝ c\nha' : sorry\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) b✝"
+      ],
+      "goals_before": [
+        "case par.red_I\na✝ b✝¹ a'✝ b✝ b'✝ : SKI\na' : b✝ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\na : I ⭢ₚ a'✝\nb : ∀ {c : SKI}, I ⭢ₚ c → Join ParallelReduction a'✝ c\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) b✝"
+      ],
+      "kind": "tactic",
+      "start": 6412,
+      "raw": {
+        "depth": 16,
+        "end": 13583,
+        "goals_after": [
+          "case par.red_I\na✝ b✝¹ a'✝ b✝ b'✝ : SKI\na' : b✝ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\na : I ⭢ₚ a'✝\nb : ∀ {c : SKI}, I ⭢ₚ c → Join ParallelReduction a'✝ c\nha' : sorry\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) b✝"
+        ],
+        "goals_before": [
+          "case par.red_I\na✝ b✝¹ a'✝ b✝ b'✝ : SKI\na' : b✝ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\na : I ⭢ₚ a'✝\nb : ∀ {c : SKI}, I ⭢ₚ c → Join ParallelReduction a'✝ c\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) b✝"
+        ],
+        "kind": "tactic",
+        "start": 13543
+      },
+      "start_offset": 6123,
+      "end_offset": 6163,
+      "position": {
+        "line": 185,
+        "column": 10
+      },
+      "end_position": {
+        "line": 185,
+        "column": 50
+      },
+      "source_text": "have ha' : a' = I := I_irreducible a' ha"
+    },
+    {
+      "depth": 17,
+      "end": 6452,
+      "goals_after": [
+        "case par.red_I\na✝ b✝¹ a'✝ b✝ b'✝ : SKI\na' : b✝ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\na : I ⭢ₚ a'✝\nb : ∀ {c : SKI}, I ⭢ₚ c → Join ParallelReduction a'✝ c\nha' : sorry\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) b✝"
+      ],
+      "goals_before": [
+        "case par.red_I\na✝ b✝¹ a'✝ b✝ b'✝ : SKI\na' : b✝ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\na : I ⭢ₚ a'✝\nb : ∀ {c : SKI}, I ⭢ₚ c → Join ParallelReduction a'✝ c\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) b✝"
+      ],
+      "kind": "tactic",
+      "start": 6412,
+      "raw": {
+        "depth": 17,
+        "end": 13583,
+        "goals_after": [
+          "case par.red_I\na✝ b✝¹ a'✝ b✝ b'✝ : SKI\na' : b✝ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\na : I ⭢ₚ a'✝\nb : ∀ {c : SKI}, I ⭢ₚ c → Join ParallelReduction a'✝ c\nha' : sorry\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) b✝"
+        ],
+        "goals_before": [
+          "case par.red_I\na✝ b✝¹ a'✝ b✝ b'✝ : SKI\na' : b✝ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\na : I ⭢ₚ a'✝\nb : ∀ {c : SKI}, I ⭢ₚ c → Join ParallelReduction a'✝ c\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) b✝"
+        ],
+        "kind": "tactic",
+        "start": 13543
+      },
+      "start_offset": 6123,
+      "end_offset": 6163,
+      "position": {
+        "line": 185,
+        "column": 10
+      },
+      "end_position": {
+        "line": 185,
+        "column": 50
+      },
+      "source_text": "have ha' : a' = I := I_irreducible a' ha"
+    },
+    {
+      "depth": 18,
+      "end": 6452,
+      "goals_after": [
+        "case par.red_I\na✝ b✝¹ a'✝ b✝ b'✝ : SKI\na' : b✝ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\na : I ⭢ₚ a'✝\nb : ∀ {c : SKI}, I ⭢ₚ c → Join ParallelReduction a'✝ c\nha' : sorry\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) b✝"
+      ],
+      "goals_before": [
+        "case par.red_I\na✝ b✝¹ a'✝ b✝ b'✝ : SKI\na' : b✝ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\na : I ⭢ₚ a'✝\nb : ∀ {c : SKI}, I ⭢ₚ c → Join ParallelReduction a'✝ c\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) b✝"
+      ],
+      "kind": "tactic",
+      "start": 6412,
+      "raw": {
+        "depth": 18,
+        "end": 13583,
+        "goals_after": [
+          "case par.red_I\na✝ b✝¹ a'✝ b✝ b'✝ : SKI\na' : b✝ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\na : I ⭢ₚ a'✝\nb : ∀ {c : SKI}, I ⭢ₚ c → Join ParallelReduction a'✝ c\nha' : sorry\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) b✝"
+        ],
+        "goals_before": [
+          "case par.red_I\na✝ b✝¹ a'✝ b✝ b'✝ : SKI\na' : b✝ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\na : I ⭢ₚ a'✝\nb : ∀ {c : SKI}, I ⭢ₚ c → Join ParallelReduction a'✝ c\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) b✝"
+        ],
+        "kind": "tactic",
+        "start": 13543
+      },
+      "start_offset": 6123,
+      "end_offset": 6163,
+      "position": {
+        "line": 185,
+        "column": 10
+      },
+      "end_position": {
+        "line": 185,
+        "column": 50
+      },
+      "source_text": "have ha' : a' = I := I_irreducible a' ha"
+    },
+    {
+      "depth": 19,
+      "end": 6452,
+      "goals_after": [
+        "case par.red_I\na✝ b✝¹ a'✝ b✝ b'✝ : SKI\na' : b✝ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\na : I ⭢ₚ a'✝\nb : ∀ {c : SKI}, I ⭢ₚ c → Join ParallelReduction a'✝ c\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) b✝"
+      ],
+      "goals_before": [
+        "case par.red_I\na✝ b✝¹ a'✝ b✝ b'✝ : SKI\na' : b✝ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\na : I ⭢ₚ a'✝\nb : ∀ {c : SKI}, I ⭢ₚ c → Join ParallelReduction a'✝ c\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) b✝"
+      ],
+      "kind": "tactic",
+      "start": 6412,
+      "raw": {
+        "depth": 19,
+        "end": 13583,
+        "goals_after": [
+          "case par.red_I\na✝ b✝¹ a'✝ b✝ b'✝ : SKI\na' : b✝ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\na : I ⭢ₚ a'✝\nb : ∀ {c : SKI}, I ⭢ₚ c → Join ParallelReduction a'✝ c\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) b✝"
+        ],
+        "goals_before": [
+          "case par.red_I\na✝ b✝¹ a'✝ b✝ b'✝ : SKI\na' : b✝ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\na : I ⭢ₚ a'✝\nb : ∀ {c : SKI}, I ⭢ₚ c → Join ParallelReduction a'✝ c\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) b✝"
+        ],
+        "kind": "tactic",
+        "start": 13543
+      },
+      "start_offset": 6123,
+      "end_offset": 6163,
+      "position": {
+        "line": 185,
+        "column": 10
+      },
+      "end_position": {
+        "line": 185,
+        "column": 50
+      },
+      "source_text": "have ha' : a' = I := I_irreducible a' ha"
+    },
+    {
+      "depth": 19,
+      "end": 6452,
+      "goals_after": [
+        "case par.red_I\na✝ b✝¹ a'✝ b✝ b'✝ : SKI\na' : b✝ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\na : I ⭢ₚ a'✝\nb : ∀ {c : SKI}, I ⭢ₚ c → Join ParallelReduction a'✝ c\nha' : sorry\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) b✝"
+      ],
+      "goals_before": [
+        "case par.red_I\na✝ b✝¹ a'✝ b✝ b'✝ : SKI\na' : b✝ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\na : I ⭢ₚ a'✝\nb : ∀ {c : SKI}, I ⭢ₚ c → Join ParallelReduction a'✝ c\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) b✝"
+      ],
+      "kind": "tactic",
+      "start": 6412,
+      "raw": {
+        "depth": 19,
+        "end": 13583,
+        "goals_after": [
+          "case par.red_I\na✝ b✝¹ a'✝ b✝ b'✝ : SKI\na' : b✝ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\na : I ⭢ₚ a'✝\nb : ∀ {c : SKI}, I ⭢ₚ c → Join ParallelReduction a'✝ c\nha' : sorry\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) b✝"
+        ],
+        "goals_before": [
+          "case par.red_I\na✝ b✝¹ a'✝ b✝ b'✝ : SKI\na' : b✝ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\na : I ⭢ₚ a'✝\nb : ∀ {c : SKI}, I ⭢ₚ c → Join ParallelReduction a'✝ c\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) b✝"
+        ],
+        "kind": "tactic",
+        "start": 13543
+      },
+      "start_offset": 6123,
+      "end_offset": 6163,
+      "position": {
+        "line": 185,
+        "column": 10
+      },
+      "end_position": {
+        "line": 185,
+        "column": 50
+      },
+      "source_text": "have ha' : a' = I := I_irreducible a' ha"
+    },
+    {
+      "depth": 20,
+      "end": 6452,
+      "goals_after": [
+        "case par.red_I\na✝ b✝¹ a'✝ b✝ b'✝ : SKI\na' : b✝ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\na : I ⭢ₚ a'✝\nb : ∀ {c : SKI}, I ⭢ₚ c → Join ParallelReduction a'✝ c\nha' : sorry\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) b✝"
+      ],
+      "goals_before": [
+        "case par.red_I\na✝ b✝¹ a'✝ b✝ b'✝ : SKI\na' : b✝ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\na : I ⭢ₚ a'✝\nb : ∀ {c : SKI}, I ⭢ₚ c → Join ParallelReduction a'✝ c\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) b✝"
+      ],
+      "kind": "tactic",
+      "start": 6412,
+      "raw": {
+        "depth": 20,
+        "end": 13583,
+        "goals_after": [
+          "case par.red_I\na✝ b✝¹ a'✝ b✝ b'✝ : SKI\na' : b✝ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\na : I ⭢ₚ a'✝\nb : ∀ {c : SKI}, I ⭢ₚ c → Join ParallelReduction a'✝ c\nha' : sorry\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) b✝"
+        ],
+        "goals_before": [
+          "case par.red_I\na✝ b✝¹ a'✝ b✝ b'✝ : SKI\na' : b✝ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\na : I ⭢ₚ a'✝\nb : ∀ {c : SKI}, I ⭢ₚ c → Join ParallelReduction a'✝ c\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) b✝"
+        ],
+        "kind": "tactic",
+        "start": 13543
+      },
+      "start_offset": 6123,
+      "end_offset": 6163,
+      "position": {
+        "line": 185,
+        "column": 10
+      },
+      "end_position": {
+        "line": 185,
+        "column": 50
+      },
+      "source_text": "have ha' : a' = I := I_irreducible a' ha"
+    },
+    {
+      "depth": 21,
+      "end": 6452,
+      "goals_after": [
+        "case par.red_I\na✝ b✝¹ a'✝ b✝ b'✝ : SKI\na' : b✝ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\na : I ⭢ₚ a'✝\nb : ∀ {c : SKI}, I ⭢ₚ c → Join ParallelReduction a'✝ c\nha' : sorry\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) b✝"
+      ],
+      "goals_before": [
+        "case par.red_I\na✝ b✝¹ a'✝ b✝ b'✝ : SKI\na' : b✝ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\na : I ⭢ₚ a'✝\nb : ∀ {c : SKI}, I ⭢ₚ c → Join ParallelReduction a'✝ c\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) b✝"
+      ],
+      "kind": "tactic",
+      "start": 6412,
+      "raw": {
+        "depth": 21,
+        "end": 13583,
+        "goals_after": [
+          "case par.red_I\na✝ b✝¹ a'✝ b✝ b'✝ : SKI\na' : b✝ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\na : I ⭢ₚ a'✝\nb : ∀ {c : SKI}, I ⭢ₚ c → Join ParallelReduction a'✝ c\nha' : sorry\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) b✝"
+        ],
+        "goals_before": [
+          "case par.red_I\na✝ b✝¹ a'✝ b✝ b'✝ : SKI\na' : b✝ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\na : I ⭢ₚ a'✝\nb : ∀ {c : SKI}, I ⭢ₚ c → Join ParallelReduction a'✝ c\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) b✝"
+        ],
+        "kind": "tactic",
+        "start": 13543
+      },
+      "start_offset": 6123,
+      "end_offset": 6163,
+      "position": {
+        "line": 185,
+        "column": 10
+      },
+      "end_position": {
+        "line": 185,
+        "column": 50
+      },
+      "source_text": "have ha' : a' = I := I_irreducible a' ha"
+    },
+    {
+      "depth": 22,
+      "end": 6452,
+      "goals_after": [
+        "case par.red_I\na✝ b✝¹ a'✝ b✝ b'✝ : SKI\na' : b✝ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\na : I ⭢ₚ a'✝\nb : ∀ {c : SKI}, I ⭢ₚ c → Join ParallelReduction a'✝ c\nha' : sorry\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) b✝"
+      ],
+      "goals_before": [
+        "case par.red_I\na✝ b✝¹ a'✝ b✝ b'✝ : SKI\na' : b✝ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\na : I ⭢ₚ a'✝\nb : ∀ {c : SKI}, I ⭢ₚ c → Join ParallelReduction a'✝ c\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) b✝"
+      ],
+      "kind": "tactic",
+      "start": 6412,
+      "raw": {
+        "depth": 22,
+        "end": 13583,
+        "goals_after": [
+          "case par.red_I\na✝ b✝¹ a'✝ b✝ b'✝ : SKI\na' : b✝ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\na : I ⭢ₚ a'✝\nb : ∀ {c : SKI}, I ⭢ₚ c → Join ParallelReduction a'✝ c\nha' : sorry\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) b✝"
+        ],
+        "goals_before": [
+          "case par.red_I\na✝ b✝¹ a'✝ b✝ b'✝ : SKI\na' : b✝ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\na : I ⭢ₚ a'✝\nb : ∀ {c : SKI}, I ⭢ₚ c → Join ParallelReduction a'✝ c\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) b✝"
+        ],
+        "kind": "tactic",
+        "start": 13543
+      },
+      "start_offset": 6123,
+      "end_offset": 6163,
+      "position": {
+        "line": 185,
+        "column": 10
+      },
+      "end_position": {
+        "line": 185,
+        "column": 50
+      },
+      "source_text": "have ha' : a' = I := I_irreducible a' ha"
+    },
+    {
+      "depth": 23,
+      "end": 6452,
+      "goals_after": [
+        "case par.red_I\na✝ b✝¹ a'✝ b✝ b'✝ : SKI\na' : b✝ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\na : I ⭢ₚ a'✝\nb : ∀ {c : SKI}, I ⭢ₚ c → Join ParallelReduction a'✝ c\nha' : sorry\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) b✝"
+      ],
+      "goals_before": [
+        "case par.red_I\na✝ b✝¹ a'✝ b✝ b'✝ : SKI\na' : b✝ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\na : I ⭢ₚ a'✝\nb : ∀ {c : SKI}, I ⭢ₚ c → Join ParallelReduction a'✝ c\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) b✝"
+      ],
+      "kind": "tactic",
+      "start": 6412,
+      "raw": {
+        "depth": 23,
+        "end": 13583,
+        "goals_after": [
+          "case par.red_I\na✝ b✝¹ a'✝ b✝ b'✝ : SKI\na' : b✝ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\na : I ⭢ₚ a'✝\nb : ∀ {c : SKI}, I ⭢ₚ c → Join ParallelReduction a'✝ c\nha' : sorry\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) b✝"
+        ],
+        "goals_before": [
+          "case par.red_I\na✝ b✝¹ a'✝ b✝ b'✝ : SKI\na' : b✝ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\na : I ⭢ₚ a'✝\nb : ∀ {c : SKI}, I ⭢ₚ c → Join ParallelReduction a'✝ c\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) b✝"
+        ],
+        "kind": "tactic",
+        "start": 13543
+      },
+      "start_offset": 6123,
+      "end_offset": 6163,
+      "position": {
+        "line": 185,
+        "column": 10
+      },
+      "end_position": {
+        "line": 185,
+        "column": 50
+      },
+      "source_text": "have ha' : a' = I := I_irreducible a' ha"
+    },
+    {
+      "depth": 24,
+      "end": 6452,
+      "goals_after": [
+        "case par.red_I\na✝ b✝¹ a'✝ b✝ b'✝ : SKI\na' : b✝ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\na : I ⭢ₚ a'✝\nb : ∀ {c : SKI}, I ⭢ₚ c → Join ParallelReduction a'✝ c\nha' : sorry\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) b✝"
+      ],
+      "goals_before": [
+        "case par.red_I\na✝ b✝¹ a'✝ b✝ b'✝ : SKI\na' : b✝ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\na : I ⭢ₚ a'✝\nb : ∀ {c : SKI}, I ⭢ₚ c → Join ParallelReduction a'✝ c\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) b✝"
+      ],
+      "kind": "tactic",
+      "start": 6412,
+      "raw": {
+        "depth": 24,
+        "end": 13583,
+        "goals_after": [
+          "case par.red_I\na✝ b✝¹ a'✝ b✝ b'✝ : SKI\na' : b✝ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\na : I ⭢ₚ a'✝\nb : ∀ {c : SKI}, I ⭢ₚ c → Join ParallelReduction a'✝ c\nha' : sorry\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) b✝"
+        ],
+        "goals_before": [
+          "case par.red_I\na✝ b✝¹ a'✝ b✝ b'✝ : SKI\na' : b✝ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\na : I ⭢ₚ a'✝\nb : ∀ {c : SKI}, I ⭢ₚ c → Join ParallelReduction a'✝ c\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) b✝"
+        ],
+        "kind": "tactic",
+        "start": 13543
+      },
+      "start_offset": 6123,
+      "end_offset": 6163,
+      "position": {
+        "line": 185,
+        "column": 10
+      },
+      "end_position": {
+        "line": 185,
+        "column": 50
+      },
+      "source_text": "have ha' : a' = I := I_irreducible a' ha"
+    },
+    {
+      "depth": 24,
+      "end": 6452,
+      "goals_after": [
+        "case par.red_I\na✝ b✝¹ a'✝ b✝ b'✝ : SKI\na' : b✝ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\na : I ⭢ₚ a'✝\nb : ∀ {c : SKI}, I ⭢ₚ c → Join ParallelReduction a'✝ c\nha' : sorry\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) b✝"
+      ],
+      "goals_before": [
+        "case par.red_I\na✝ b✝¹ a'✝ b✝ b'✝ : SKI\na' : b✝ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\na : I ⭢ₚ a'✝\nb : ∀ {c : SKI}, I ⭢ₚ c → Join ParallelReduction a'✝ c\nha' : sorry\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) b✝"
+      ],
+      "kind": "tactic",
+      "start": 6412,
+      "raw": {
+        "depth": 24,
+        "end": 13583,
+        "goals_after": [
+          "case par.red_I\na✝ b✝¹ a'✝ b✝ b'✝ : SKI\na' : b✝ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\na : I ⭢ₚ a'✝\nb : ∀ {c : SKI}, I ⭢ₚ c → Join ParallelReduction a'✝ c\nha' : sorry\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) b✝"
+        ],
+        "goals_before": [
+          "case par.red_I\na✝ b✝¹ a'✝ b✝ b'✝ : SKI\na' : b✝ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\na : I ⭢ₚ a'✝\nb : ∀ {c : SKI}, I ⭢ₚ c → Join ParallelReduction a'✝ c\nha' : sorry\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) b✝"
+        ],
+        "kind": "tactic",
+        "start": 13543
+      },
+      "start_offset": 6123,
+      "end_offset": 6163,
+      "position": {
+        "line": 185,
+        "column": 10
+      },
+      "end_position": {
+        "line": 185,
+        "column": 50
+      },
+      "source_text": "have ha' : a' = I := I_irreducible a' ha"
+    },
+    {
+      "depth": 24,
+      "end": 6452,
+      "goals_after": [
+        "case par.red_I\na✝ b✝¹ a'✝ b✝ b'✝ : SKI\na' : b✝ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\na : I ⭢ₚ a'✝\nb : ∀ {c : SKI}, I ⭢ₚ c → Join ParallelReduction a'✝ c\nha' : sorry\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) b✝"
+      ],
+      "goals_before": [
+        "case par.red_I\na✝ b✝¹ a'✝ b✝ b'✝ : SKI\na' : b✝ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\na : I ⭢ₚ a'✝\nb : ∀ {c : SKI}, I ⭢ₚ c → Join ParallelReduction a'✝ c\nha' : sorry\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) b✝"
+      ],
+      "kind": "tactic",
+      "start": 6412,
+      "raw": {
+        "depth": 24,
+        "end": 13583,
+        "goals_after": [
+          "case par.red_I\na✝ b✝¹ a'✝ b✝ b'✝ : SKI\na' : b✝ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\na : I ⭢ₚ a'✝\nb : ∀ {c : SKI}, I ⭢ₚ c → Join ParallelReduction a'✝ c\nha' : sorry\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) b✝"
+        ],
+        "goals_before": [
+          "case par.red_I\na✝ b✝¹ a'✝ b✝ b'✝ : SKI\na' : b✝ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\na : I ⭢ₚ a'✝\nb : ∀ {c : SKI}, I ⭢ₚ c → Join ParallelReduction a'✝ c\nha' : sorry\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) b✝"
+        ],
+        "kind": "tactic",
+        "start": 13543
+      },
+      "start_offset": 6123,
+      "end_offset": 6163,
+      "position": {
+        "line": 185,
+        "column": 10
+      },
+      "end_position": {
+        "line": 185,
+        "column": 50
+      },
+      "source_text": "have ha' : a' = I := I_irreducible a' ha"
+    },
+    {
+      "depth": 16,
+      "end": 6471,
+      "goals_after": [
+        "case par.red_I\na✝ b✝¹ a'✝ b✝ b'✝ : SKI\na' : b✝ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\na : I ⭢ₚ a'✝\nb : ∀ {c : SKI}, I ⭢ₚ c → Join ParallelReduction a'✝ c\nha' : sorry\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) b✝"
+      ],
+      "goals_before": [
+        "case par.red_I\na✝ b✝¹ a'✝ b✝ b'✝ : SKI\na' : b✝ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\na : I ⭢ₚ a'✝\nb : ∀ {c : SKI}, I ⭢ₚ c → Join ParallelReduction a'✝ c\nha' : sorry\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) b✝"
+      ],
+      "kind": "tactic",
+      "start": 6463,
+      "raw": {
+        "depth": 16,
+        "end": 13602,
+        "goals_after": [
+          "case par.red_I\na✝ b✝¹ a'✝ b✝ b'✝ : SKI\na' : b✝ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\na : I ⭢ₚ a'✝\nb : ∀ {c : SKI}, I ⭢ₚ c → Join ParallelReduction a'✝ c\nha' : sorry\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) b✝"
+        ],
+        "goals_before": [
+          "case par.red_I\na✝ b✝¹ a'✝ b✝ b'✝ : SKI\na' : b✝ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\na : I ⭢ₚ a'✝\nb : ∀ {c : SKI}, I ⭢ₚ c → Join ParallelReduction a'✝ c\nha' : sorry\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) b✝"
+        ],
+        "kind": "tactic",
+        "start": 13594
+      },
+      "start_offset": 6174,
+      "end_offset": 6182,
+      "position": {
+        "line": 186,
+        "column": 10
+      },
+      "end_position": {
+        "line": 186,
+        "column": 18
+      },
+      "source_text": "subst a'"
+    },
+    {
+      "depth": 13,
+      "end": 6528,
+      "goals_after": [
+        "case par.red_K\na✝ b✝¹ a'✝ b✝ b'✝ : SKI\na' : b✝ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\nc : SKI\na : (K ⬝ c) ⭢ₚ a'✝\nb : ∀ {c_1 : SKI}, (K ⬝ c) ⭢ₚ c_1 → Join ParallelReduction a'✝ c_1\nx : SKI\nhx : ?m.797 ⭢ₚ x\nha' : sorry = K ⬝ x\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) c"
+      ],
+      "goals_before": [
+        "case par.red_K\na✝ b✝¹ a'✝ b✝ b'✝ : SKI\na' : b✝ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\nc : SKI\na : (K ⬝ c) ⭢ₚ a'✝\nb : ∀ {c_1 : SKI}, (K ⬝ c) ⭢ₚ c_1 → Join ParallelReduction a'✝ c_1\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) c"
+      ],
+      "kind": "tactic",
+      "start": 6518,
+      "raw": {
+        "depth": 13,
+        "end": 13659,
+        "goals_after": [
+          "case par.red_K\na✝ b✝¹ a'✝ b✝ b'✝ : SKI\na' : b✝ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\nc : SKI\na : (K ⬝ c) ⭢ₚ a'✝\nb : ∀ {c_1 : SKI}, (K ⬝ c) ⭢ₚ c_1 → Join ParallelReduction a'✝ c_1\nx : SKI\nhx : ?m.797 ⭢ₚ x\nha' : sorry = K ⬝ x\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) c"
+        ],
+        "goals_before": [
+          "case par.red_K\na✝ b✝¹ a'✝ b✝ b'✝ : SKI\na' : b✝ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\nc : SKI\na : (K ⬝ c) ⭢ₚ a'✝\nb : ∀ {c_1 : SKI}, (K ⬝ c) ⭢ₚ c_1 → Join ParallelReduction a'✝ c_1\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) c"
+        ],
+        "kind": "tactic",
+        "start": 13649
+      },
+      "start_offset": 6225,
+      "end_offset": 6235,
+      "position": {
+        "line": 188,
+        "column": 6
+      },
+      "end_position": {
+        "line": 188,
+        "column": 16
+      },
+      "source_text": "| red_K =>"
+    },
+    {
+      "depth": 14,
+      "end": 6648,
+      "goals_after": [
+        "case par.red_K\na✝ b✝¹ a'✝ b✝ b'✝ : SKI\na' : b✝ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\nc : SKI\na : (K ⬝ c) ⭢ₚ a'✝\nb : ∀ {c_1 : SKI}, (K ⬝ c) ⭢ₚ c_1 → Join ParallelReduction a'✝ c_1\nx : SKI\nhx : ?m.797 ⭢ₚ x\nha' : sorry = K ⬝ x\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) c"
+      ],
+      "goals_before": [
+        "case par.red_K\na✝ b✝¹ a'✝ b✝ b'✝ : SKI\na' : b✝ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\nc : SKI\na : (K ⬝ c) ⭢ₚ a'✝\nb : ∀ {c_1 : SKI}, (K ⬝ c) ⭢ₚ c_1 → Join ParallelReduction a'✝ c_1\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) c"
+      ],
+      "kind": "tactic",
+      "start": 6539,
+      "raw": {
+        "depth": 14,
+        "end": 13779,
+        "goals_after": [
+          "case par.red_K\na✝ b✝¹ a'✝ b✝ b'✝ : SKI\na' : b✝ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\nc : SKI\na : (K ⬝ c) ⭢ₚ a'✝\nb : ∀ {c_1 : SKI}, (K ⬝ c) ⭢ₚ c_1 → Join ParallelReduction a'✝ c_1\nx : SKI\nhx : ?m.797 ⭢ₚ x\nha' : sorry = K ⬝ x\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) c"
+        ],
+        "goals_before": [
+          "case par.red_K\na✝ b✝¹ a'✝ b✝ b'✝ : SKI\na' : b✝ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\nc : SKI\na : (K ⬝ c) ⭢ₚ a'✝\nb : ∀ {c_1 : SKI}, (K ⬝ c) ⭢ₚ c_1 → Join ParallelReduction a'✝ c_1\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) c"
+        ],
+        "kind": "tactic",
+        "start": 13670
+      },
+      "start_offset": 6246,
+      "end_offset": 6347,
+      "position": {
+        "line": 189,
+        "column": 10
+      },
+      "end_position": {
+        "line": 191,
+        "column": 36
+      },
+      "source_text": "obtain ⟨x, hx, ha'⟩ := Ka_irreducible _ a' ha\n          subst a'\n          exact ⟨x, .red_K x b', hx⟩"
+    },
+    {
+      "depth": 15,
+      "end": 6648,
+      "goals_after": [
+        "case par.red_K\na✝ b✝¹ a'✝ b✝ b'✝ : SKI\na' : b✝ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\nc : SKI\na : (K ⬝ c) ⭢ₚ a'✝\nb : ∀ {c_1 : SKI}, (K ⬝ c) ⭢ₚ c_1 → Join ParallelReduction a'✝ c_1\nx : SKI\nhx : ?m.797 ⭢ₚ x\nha' : sorry = K ⬝ x\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) c"
+      ],
+      "goals_before": [
+        "case par.red_K\na✝ b✝¹ a'✝ b✝ b'✝ : SKI\na' : b✝ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\nc : SKI\na : (K ⬝ c) ⭢ₚ a'✝\nb : ∀ {c_1 : SKI}, (K ⬝ c) ⭢ₚ c_1 → Join ParallelReduction a'✝ c_1\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) c"
+      ],
+      "kind": "tactic",
+      "start": 6539,
+      "raw": {
+        "depth": 15,
+        "end": 13779,
+        "goals_after": [
+          "case par.red_K\na✝ b✝¹ a'✝ b✝ b'✝ : SKI\na' : b✝ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\nc : SKI\na : (K ⬝ c) ⭢ₚ a'✝\nb : ∀ {c_1 : SKI}, (K ⬝ c) ⭢ₚ c_1 → Join ParallelReduction a'✝ c_1\nx : SKI\nhx : ?m.797 ⭢ₚ x\nha' : sorry = K ⬝ x\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) c"
+        ],
+        "goals_before": [
+          "case par.red_K\na✝ b✝¹ a'✝ b✝ b'✝ : SKI\na' : b✝ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\nc : SKI\na : (K ⬝ c) ⭢ₚ a'✝\nb : ∀ {c_1 : SKI}, (K ⬝ c) ⭢ₚ c_1 → Join ParallelReduction a'✝ c_1\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) c"
+        ],
+        "kind": "tactic",
+        "start": 13670
+      },
+      "start_offset": 6246,
+      "end_offset": 6347,
+      "position": {
+        "line": 189,
+        "column": 10
+      },
+      "end_position": {
+        "line": 191,
+        "column": 36
+      },
+      "source_text": "obtain ⟨x, hx, ha'⟩ := Ka_irreducible _ a' ha\n          subst a'\n          exact ⟨x, .red_K x b', hx⟩"
+    },
+    {
+      "depth": 16,
+      "end": 6588,
+      "goals_after": [
+        "case par.red_K\na✝ b✝¹ a'✝ b✝ b'✝ : SKI\na' : b✝ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\nc : SKI\na : (K ⬝ c) ⭢ₚ a'✝\nb : ∀ {c_1 : SKI}, (K ⬝ c) ⭢ₚ c_1 → Join ParallelReduction a'✝ c_1\nx : SKI\nhx : ?m.797 ⭢ₚ x\nha' : sorry = K ⬝ x\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) c"
+      ],
+      "goals_before": [
+        "case par.red_K\na✝ b✝¹ a'✝ b✝ b'✝ : SKI\na' : b✝ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\nc : SKI\na : (K ⬝ c) ⭢ₚ a'✝\nb : ∀ {c_1 : SKI}, (K ⬝ c) ⭢ₚ c_1 → Join ParallelReduction a'✝ c_1\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) c"
+      ],
+      "kind": "tactic",
+      "start": 6539,
+      "raw": {
+        "depth": 16,
+        "end": 13719,
+        "goals_after": [
+          "case par.red_K\na✝ b✝¹ a'✝ b✝ b'✝ : SKI\na' : b✝ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\nc : SKI\na : (K ⬝ c) ⭢ₚ a'✝\nb : ∀ {c_1 : SKI}, (K ⬝ c) ⭢ₚ c_1 → Join ParallelReduction a'✝ c_1\nx : SKI\nhx : ?m.797 ⭢ₚ x\nha' : sorry = K ⬝ x\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) c"
+        ],
+        "goals_before": [
+          "case par.red_K\na✝ b✝¹ a'✝ b✝ b'✝ : SKI\na' : b✝ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\nc : SKI\na : (K ⬝ c) ⭢ₚ a'✝\nb : ∀ {c_1 : SKI}, (K ⬝ c) ⭢ₚ c_1 → Join ParallelReduction a'✝ c_1\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) c"
+        ],
+        "kind": "tactic",
+        "start": 13670
+      },
+      "start_offset": 6246,
+      "end_offset": 6291,
+      "position": {
+        "line": 189,
+        "column": 10
+      },
+      "end_position": {
+        "line": 189,
+        "column": 55
+      },
+      "source_text": "obtain ⟨x, hx, ha'⟩ := Ka_irreducible _ a' ha"
+    },
+    {
+      "depth": 16,
+      "end": 6607,
+      "goals_after": [
+        "case par.red_K\na✝ b✝¹ a'✝ b✝ b'✝ : SKI\na' : b✝ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\nc : SKI\na : (K ⬝ c) ⭢ₚ a'✝\nb : ∀ {c_1 : SKI}, (K ⬝ c) ⭢ₚ c_1 → Join ParallelReduction a'✝ c_1\nx : SKI\nhx : ?m.797 ⭢ₚ x\nha' : sorry = K ⬝ x\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) c"
+      ],
+      "goals_before": [
+        "case par.red_K\na✝ b✝¹ a'✝ b✝ b'✝ : SKI\na' : b✝ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\nc : SKI\na : (K ⬝ c) ⭢ₚ a'✝\nb : ∀ {c_1 : SKI}, (K ⬝ c) ⭢ₚ c_1 → Join ParallelReduction a'✝ c_1\nx : SKI\nhx : ?m.797 ⭢ₚ x\nha' : sorry = K ⬝ x\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) c"
+      ],
+      "kind": "tactic",
+      "start": 6599,
+      "raw": {
+        "depth": 16,
+        "end": 13738,
+        "goals_after": [
+          "case par.red_K\na✝ b✝¹ a'✝ b✝ b'✝ : SKI\na' : b✝ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\nc : SKI\na : (K ⬝ c) ⭢ₚ a'✝\nb : ∀ {c_1 : SKI}, (K ⬝ c) ⭢ₚ c_1 → Join ParallelReduction a'✝ c_1\nx : SKI\nhx : ?m.797 ⭢ₚ x\nha' : sorry = K ⬝ x\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) c"
+        ],
+        "goals_before": [
+          "case par.red_K\na✝ b✝¹ a'✝ b✝ b'✝ : SKI\na' : b✝ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝ c\nc : SKI\na : (K ⬝ c) ⭢ₚ a'✝\nb : ∀ {c_1 : SKI}, (K ⬝ c) ⭢ₚ c_1 → Join ParallelReduction a'✝ c_1\nx : SKI\nhx : ?m.797 ⭢ₚ x\nha' : sorry = K ⬝ x\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) c"
+        ],
+        "kind": "tactic",
+        "start": 13730
+      },
+      "start_offset": 6302,
+      "end_offset": 6310,
+      "position": {
+        "line": 190,
+        "column": 10
+      },
+      "end_position": {
+        "line": 190,
+        "column": 18
+      },
+      "source_text": "subst a'"
+    },
+    {
+      "depth": 13,
+      "end": 6669,
+      "goals_after": [
+        "case par.red_S\na✝¹ b✝² a'✝ b✝¹ b'✝ : SKI\na' : b✝¹ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝¹ ⭢ₚ c → Join ParallelReduction b'✝ c\na✝ b✝ : SKI\na : (S ⬝ a✝ ⬝ b✝) ⭢ₚ a'✝\nb : ∀ {c : SKI}, (S ⬝ a✝ ⬝ b✝) ⭢ₚ c → Join ParallelReduction a'✝ c\nx y : SKI\nhx : ?m.860 ⭢ₚ x\nhy : ?m.861 ⭢ₚ y\nha' : sorry = S ⬝ x ⬝ y\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) (a✝ ⬝ b✝¹ ⬝ (b✝ ⬝ b✝¹))"
+      ],
+      "goals_before": [
+        "case par.red_S\na✝¹ b✝² a'✝ b✝¹ b'✝ : SKI\na' : b✝¹ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝¹ ⭢ₚ c → Join ParallelReduction b'✝ c\na✝ b✝ : SKI\na : (S ⬝ a✝ ⬝ b✝) ⭢ₚ a'✝\nb : ∀ {c : SKI}, (S ⬝ a✝ ⬝ b✝) ⭢ₚ c → Join ParallelReduction a'✝ c\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) (a✝ ⬝ b✝¹ ⬝ (b✝ ⬝ b✝¹))"
+      ],
+      "kind": "tactic",
+      "start": 6655,
+      "raw": {
+        "depth": 13,
+        "end": 13800,
+        "goals_after": [
+          "case par.red_S\na✝¹ b✝² a'✝ b✝¹ b'✝ : SKI\na' : b✝¹ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝¹ ⭢ₚ c → Join ParallelReduction b'✝ c\na✝ b✝ : SKI\na : (S ⬝ a✝ ⬝ b✝) ⭢ₚ a'✝\nb : ∀ {c : SKI}, (S ⬝ a✝ ⬝ b✝) ⭢ₚ c → Join ParallelReduction a'✝ c\nx y : SKI\nhx : ?m.860 ⭢ₚ x\nhy : ?m.861 ⭢ₚ y\nha' : sorry = S ⬝ x ⬝ y\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) (a✝ ⬝ b✝¹ ⬝ (b✝ ⬝ b✝¹))"
+        ],
+        "goals_before": [
+          "case par.red_S\na✝¹ b✝² a'✝ b✝¹ b'✝ : SKI\na' : b✝¹ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝¹ ⭢ₚ c → Join ParallelReduction b'✝ c\na✝ b✝ : SKI\na : (S ⬝ a✝ ⬝ b✝) ⭢ₚ a'✝\nb : ∀ {c : SKI}, (S ⬝ a✝ ⬝ b✝) ⭢ₚ c → Join ParallelReduction a'✝ c\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) (a✝ ⬝ b✝¹ ⬝ (b✝ ⬝ b✝¹))"
+        ],
+        "kind": "tactic",
+        "start": 13786
+      },
+      "start_offset": 6354,
+      "end_offset": 6368,
+      "position": {
+        "line": 192,
+        "column": 6
+      },
+      "end_position": {
+        "line": 192,
+        "column": 20
+      },
+      "source_text": "| red_S _ _ =>"
+    },
+    {
+      "depth": 14,
+      "end": 6891,
+      "goals_after": [
+        "case par.red_S\na✝¹ b✝² a'✝ b✝¹ b'✝ : SKI\na' : b✝¹ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝¹ ⭢ₚ c → Join ParallelReduction b'✝ c\na✝ b✝ : SKI\na : (S ⬝ a✝ ⬝ b✝) ⭢ₚ a'✝\nb : ∀ {c : SKI}, (S ⬝ a✝ ⬝ b✝) ⭢ₚ c → Join ParallelReduction a'✝ c\nx y : SKI\nhx : ?m.860 ⭢ₚ x\nhy : ?m.861 ⭢ₚ y\nha' : sorry = S ⬝ x ⬝ y\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) (a✝ ⬝ b✝¹ ⬝ (b✝ ⬝ b✝¹))"
+      ],
+      "goals_before": [
+        "case par.red_S\na✝¹ b✝² a'✝ b✝¹ b'✝ : SKI\na' : b✝¹ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝¹ ⭢ₚ c → Join ParallelReduction b'✝ c\na✝ b✝ : SKI\na : (S ⬝ a✝ ⬝ b✝) ⭢ₚ a'✝\nb : ∀ {c : SKI}, (S ⬝ a✝ ⬝ b✝) ⭢ₚ c → Join ParallelReduction a'✝ c\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) (a✝ ⬝ b✝¹ ⬝ (b✝ ⬝ b✝¹))"
+      ],
+      "kind": "tactic",
+      "start": 6680,
+      "raw": {
+        "depth": 14,
+        "end": 14022,
+        "goals_after": [
+          "case par.red_S\na✝¹ b✝² a'✝ b✝¹ b'✝ : SKI\na' : b✝¹ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝¹ ⭢ₚ c → Join ParallelReduction b'✝ c\na✝ b✝ : SKI\na : (S ⬝ a✝ ⬝ b✝) ⭢ₚ a'✝\nb : ∀ {c : SKI}, (S ⬝ a✝ ⬝ b✝) ⭢ₚ c → Join ParallelReduction a'✝ c\nx y : SKI\nhx : ?m.860 ⭢ₚ x\nhy : ?m.861 ⭢ₚ y\nha' : sorry = S ⬝ x ⬝ y\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) (a✝ ⬝ b✝¹ ⬝ (b✝ ⬝ b✝¹))"
+        ],
+        "goals_before": [
+          "case par.red_S\na✝¹ b✝² a'✝ b✝¹ b'✝ : SKI\na' : b✝¹ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝¹ ⭢ₚ c → Join ParallelReduction b'✝ c\na✝ b✝ : SKI\na : (S ⬝ a✝ ⬝ b✝) ⭢ₚ a'✝\nb : ∀ {c : SKI}, (S ⬝ a✝ ⬝ b✝) ⭢ₚ c → Join ParallelReduction a'✝ c\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) (a✝ ⬝ b✝¹ ⬝ (b✝ ⬝ b✝¹))"
+        ],
+        "kind": "tactic",
+        "start": 13811
+      },
+      "start_offset": 6379,
+      "end_offset": 6576,
+      "position": {
+        "line": 193,
+        "column": 10
+      },
+      "end_position": {
+        "line": 198,
+        "column": 45
+      },
+      "source_text": "obtain ⟨x, y, hx, hy, ha'⟩ := Sab_irreducible _ _ a' ha\n          subst a'\n          exact\n            ⟨x ⬝ b' ⬝ (y ⬝ b'),\n              .red_S x y b',\n              .par (.par hx hb) (.par hy hb)⟩"
+    },
+    {
+      "depth": 15,
+      "end": 6891,
+      "goals_after": [
+        "case par.red_S\na✝¹ b✝² a'✝ b✝¹ b'✝ : SKI\na' : b✝¹ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝¹ ⭢ₚ c → Join ParallelReduction b'✝ c\na✝ b✝ : SKI\na : (S ⬝ a✝ ⬝ b✝) ⭢ₚ a'✝\nb : ∀ {c : SKI}, (S ⬝ a✝ ⬝ b✝) ⭢ₚ c → Join ParallelReduction a'✝ c\nx y : SKI\nhx : ?m.860 ⭢ₚ x\nhy : ?m.861 ⭢ₚ y\nha' : sorry = S ⬝ x ⬝ y\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) (a✝ ⬝ b✝¹ ⬝ (b✝ ⬝ b✝¹))"
+      ],
+      "goals_before": [
+        "case par.red_S\na✝¹ b✝² a'✝ b✝¹ b'✝ : SKI\na' : b✝¹ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝¹ ⭢ₚ c → Join ParallelReduction b'✝ c\na✝ b✝ : SKI\na : (S ⬝ a✝ ⬝ b✝) ⭢ₚ a'✝\nb : ∀ {c : SKI}, (S ⬝ a✝ ⬝ b✝) ⭢ₚ c → Join ParallelReduction a'✝ c\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) (a✝ ⬝ b✝¹ ⬝ (b✝ ⬝ b✝¹))"
+      ],
+      "kind": "tactic",
+      "start": 6680,
+      "raw": {
+        "depth": 15,
+        "end": 14022,
+        "goals_after": [
+          "case par.red_S\na✝¹ b✝² a'✝ b✝¹ b'✝ : SKI\na' : b✝¹ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝¹ ⭢ₚ c → Join ParallelReduction b'✝ c\na✝ b✝ : SKI\na : (S ⬝ a✝ ⬝ b✝) ⭢ₚ a'✝\nb : ∀ {c : SKI}, (S ⬝ a✝ ⬝ b✝) ⭢ₚ c → Join ParallelReduction a'✝ c\nx y : SKI\nhx : ?m.860 ⭢ₚ x\nhy : ?m.861 ⭢ₚ y\nha' : sorry = S ⬝ x ⬝ y\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) (a✝ ⬝ b✝¹ ⬝ (b✝ ⬝ b✝¹))"
+        ],
+        "goals_before": [
+          "case par.red_S\na✝¹ b✝² a'✝ b✝¹ b'✝ : SKI\na' : b✝¹ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝¹ ⭢ₚ c → Join ParallelReduction b'✝ c\na✝ b✝ : SKI\na : (S ⬝ a✝ ⬝ b✝) ⭢ₚ a'✝\nb : ∀ {c : SKI}, (S ⬝ a✝ ⬝ b✝) ⭢ₚ c → Join ParallelReduction a'✝ c\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) (a✝ ⬝ b✝¹ ⬝ (b✝ ⬝ b✝¹))"
+        ],
+        "kind": "tactic",
+        "start": 13811
+      },
+      "start_offset": 6379,
+      "end_offset": 6576,
+      "position": {
+        "line": 193,
+        "column": 10
+      },
+      "end_position": {
+        "line": 198,
+        "column": 45
+      },
+      "source_text": "obtain ⟨x, y, hx, hy, ha'⟩ := Sab_irreducible _ _ a' ha\n          subst a'\n          exact\n            ⟨x ⬝ b' ⬝ (y ⬝ b'),\n              .red_S x y b',\n              .par (.par hx hb) (.par hy hb)⟩"
+    },
+    {
+      "depth": 16,
+      "end": 6739,
+      "goals_after": [
+        "case par.red_S\na✝¹ b✝² a'✝ b✝¹ b'✝ : SKI\na' : b✝¹ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝¹ ⭢ₚ c → Join ParallelReduction b'✝ c\na✝ b✝ : SKI\na : (S ⬝ a✝ ⬝ b✝) ⭢ₚ a'✝\nb : ∀ {c : SKI}, (S ⬝ a✝ ⬝ b✝) ⭢ₚ c → Join ParallelReduction a'✝ c\nx y : SKI\nhx : ?m.860 ⭢ₚ x\nhy : ?m.861 ⭢ₚ y\nha' : sorry = S ⬝ x ⬝ y\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) (a✝ ⬝ b✝¹ ⬝ (b✝ ⬝ b✝¹))"
+      ],
+      "goals_before": [
+        "case par.red_S\na✝¹ b✝² a'✝ b✝¹ b'✝ : SKI\na' : b✝¹ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝¹ ⭢ₚ c → Join ParallelReduction b'✝ c\na✝ b✝ : SKI\na : (S ⬝ a✝ ⬝ b✝) ⭢ₚ a'✝\nb : ∀ {c : SKI}, (S ⬝ a✝ ⬝ b✝) ⭢ₚ c → Join ParallelReduction a'✝ c\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) (a✝ ⬝ b✝¹ ⬝ (b✝ ⬝ b✝¹))"
+      ],
+      "kind": "tactic",
+      "start": 6680,
+      "raw": {
+        "depth": 16,
+        "end": 13870,
+        "goals_after": [
+          "case par.red_S\na✝¹ b✝² a'✝ b✝¹ b'✝ : SKI\na' : b✝¹ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝¹ ⭢ₚ c → Join ParallelReduction b'✝ c\na✝ b✝ : SKI\na : (S ⬝ a✝ ⬝ b✝) ⭢ₚ a'✝\nb : ∀ {c : SKI}, (S ⬝ a✝ ⬝ b✝) ⭢ₚ c → Join ParallelReduction a'✝ c\nx y : SKI\nhx : ?m.860 ⭢ₚ x\nhy : ?m.861 ⭢ₚ y\nha' : sorry = S ⬝ x ⬝ y\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) (a✝ ⬝ b✝¹ ⬝ (b✝ ⬝ b✝¹))"
+        ],
+        "goals_before": [
+          "case par.red_S\na✝¹ b✝² a'✝ b✝¹ b'✝ : SKI\na' : b✝¹ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝¹ ⭢ₚ c → Join ParallelReduction b'✝ c\na✝ b✝ : SKI\na : (S ⬝ a✝ ⬝ b✝) ⭢ₚ a'✝\nb : ∀ {c : SKI}, (S ⬝ a✝ ⬝ b✝) ⭢ₚ c → Join ParallelReduction a'✝ c\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) (a✝ ⬝ b✝¹ ⬝ (b✝ ⬝ b✝¹))"
+        ],
+        "kind": "tactic",
+        "start": 13811
+      },
+      "start_offset": 6379,
+      "end_offset": 6434,
+      "position": {
+        "line": 193,
+        "column": 10
+      },
+      "end_position": {
+        "line": 193,
+        "column": 65
+      },
+      "source_text": "obtain ⟨x, y, hx, hy, ha'⟩ := Sab_irreducible _ _ a' ha"
+    },
+    {
+      "depth": 16,
+      "end": 6758,
+      "goals_after": [
+        "case par.red_S\na✝¹ b✝² a'✝ b✝¹ b'✝ : SKI\na' : b✝¹ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝¹ ⭢ₚ c → Join ParallelReduction b'✝ c\na✝ b✝ : SKI\na : (S ⬝ a✝ ⬝ b✝) ⭢ₚ a'✝\nb : ∀ {c : SKI}, (S ⬝ a✝ ⬝ b✝) ⭢ₚ c → Join ParallelReduction a'✝ c\nx y : SKI\nhx : ?m.860 ⭢ₚ x\nhy : ?m.861 ⭢ₚ y\nha' : sorry = S ⬝ x ⬝ y\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) (a✝ ⬝ b✝¹ ⬝ (b✝ ⬝ b✝¹))"
+      ],
+      "goals_before": [
+        "case par.red_S\na✝¹ b✝² a'✝ b✝¹ b'✝ : SKI\na' : b✝¹ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝¹ ⭢ₚ c → Join ParallelReduction b'✝ c\na✝ b✝ : SKI\na : (S ⬝ a✝ ⬝ b✝) ⭢ₚ a'✝\nb : ∀ {c : SKI}, (S ⬝ a✝ ⬝ b✝) ⭢ₚ c → Join ParallelReduction a'✝ c\nx y : SKI\nhx : ?m.860 ⭢ₚ x\nhy : ?m.861 ⭢ₚ y\nha' : sorry = S ⬝ x ⬝ y\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) (a✝ ⬝ b✝¹ ⬝ (b✝ ⬝ b✝¹))"
+      ],
+      "kind": "tactic",
+      "start": 6750,
+      "raw": {
+        "depth": 16,
+        "end": 13889,
+        "goals_after": [
+          "case par.red_S\na✝¹ b✝² a'✝ b✝¹ b'✝ : SKI\na' : b✝¹ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝¹ ⭢ₚ c → Join ParallelReduction b'✝ c\na✝ b✝ : SKI\na : (S ⬝ a✝ ⬝ b✝) ⭢ₚ a'✝\nb : ∀ {c : SKI}, (S ⬝ a✝ ⬝ b✝) ⭢ₚ c → Join ParallelReduction a'✝ c\nx y : SKI\nhx : ?m.860 ⭢ₚ x\nhy : ?m.861 ⭢ₚ y\nha' : sorry = S ⬝ x ⬝ y\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) (a✝ ⬝ b✝¹ ⬝ (b✝ ⬝ b✝¹))"
+        ],
+        "goals_before": [
+          "case par.red_S\na✝¹ b✝² a'✝ b✝¹ b'✝ : SKI\na' : b✝¹ ⭢ₚ b'✝\nb' : ∀ {c : SKI}, b✝¹ ⭢ₚ c → Join ParallelReduction b'✝ c\na✝ b✝ : SKI\na : (S ⬝ a✝ ⬝ b✝) ⭢ₚ a'✝\nb : ∀ {c : SKI}, (S ⬝ a✝ ⬝ b✝) ⭢ₚ c → Join ParallelReduction a'✝ c\nx y : SKI\nhx : ?m.860 ⭢ₚ x\nhy : ?m.861 ⭢ₚ y\nha' : sorry = S ⬝ x ⬝ y\n⊢ Join ParallelReduction (a'✝ ⬝ b'✝) (a✝ ⬝ b✝¹ ⬝ (b✝ ⬝ b✝¹))"
+        ],
+        "kind": "tactic",
+        "start": 13881
+      },
+      "start_offset": 6445,
+      "end_offset": 6453,
+      "position": {
+        "line": 194,
+        "column": 10
+      },
+      "end_position": {
+        "line": 194,
+        "column": 18
+      },
+      "source_text": "subst a'"
+    },
+    {
+      "depth": 13,
+      "end": 6918,
+      "goals_after": [],
+      "goals_before": [
+        "case par.par\na✝¹ b✝¹ a✝ a'✝¹ b✝ b'✝¹ : SKI\na : a✝ ⭢ₚ a'✝¹\na' : b✝ ⭢ₚ b'✝¹\nb : ∀ {c : SKI}, a✝ ⭢ₚ c → Join ParallelReduction a'✝¹ c\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝¹ c\na'✝ b'✝ : SKI\nc' : a✝ ⭢ₚ a'✝\nd' : b✝ ⭢ₚ b'✝\n⊢ Join ParallelReduction (a'✝¹ ⬝ b'✝¹) (a'✝ ⬝ b'✝)"
+      ],
+      "kind": "tactic",
+      "start": 6898,
+      "raw": {
+        "depth": 13,
+        "end": 14049,
+        "goals_after": [],
+        "goals_before": [
+          "case par.par\na✝¹ b✝¹ a✝ a'✝¹ b✝ b'✝¹ : SKI\na : a✝ ⭢ₚ a'✝¹\na' : b✝ ⭢ₚ b'✝¹\nb : ∀ {c : SKI}, a✝ ⭢ₚ c → Join ParallelReduction a'✝¹ c\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝¹ c\na'✝ b'✝ : SKI\nc' : a✝ ⭢ₚ a'✝\nd' : b✝ ⭢ₚ b'✝\n⊢ Join ParallelReduction (a'✝¹ ⬝ b'✝¹) (a'✝ ⬝ b'✝)"
+        ],
+        "kind": "tactic",
+        "start": 14029
+      },
+      "start_offset": 6583,
+      "end_offset": 6603,
+      "position": {
+        "line": 199,
+        "column": 6
+      },
+      "end_position": {
+        "line": 199,
+        "column": 26
+      },
+      "source_text": "| par c' d' hc hd =>"
+    },
+    {
+      "depth": 14,
+      "end": 7082,
+      "goals_after": [],
+      "goals_before": [
+        "case par.par\na✝¹ b✝¹ a✝ a'✝¹ b✝ b'✝¹ : SKI\na : a✝ ⭢ₚ a'✝¹\na' : b✝ ⭢ₚ b'✝¹\nb : ∀ {c : SKI}, a✝ ⭢ₚ c → Join ParallelReduction a'✝¹ c\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝¹ c\na'✝ b'✝ : SKI\nc' : a✝ ⭢ₚ a'✝\nd' : b✝ ⭢ₚ b'✝\n⊢ Join ParallelReduction (a'✝¹ ⬝ b'✝¹) (a'✝ ⬝ b'✝)"
+      ],
+      "kind": "tactic",
+      "start": 6929,
+      "raw": {
+        "depth": 14,
+        "end": 14213,
+        "goals_after": [],
+        "goals_before": [
+          "case par.par\na✝¹ b✝¹ a✝ a'✝¹ b✝ b'✝¹ : SKI\na : a✝ ⭢ₚ a'✝¹\na' : b✝ ⭢ₚ b'✝¹\nb : ∀ {c : SKI}, a✝ ⭢ₚ c → Join ParallelReduction a'✝¹ c\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝¹ c\na'✝ b'✝ : SKI\nc' : a✝ ⭢ₚ a'✝\nd' : b✝ ⭢ₚ b'✝\n⊢ Join ParallelReduction (a'✝¹ ⬝ b'✝¹) (a'✝ ⬝ b'✝)"
+        ],
+        "kind": "tactic",
+        "start": 14060
+      },
+      "start_offset": 6614,
+      "end_offset": 6737,
+      "position": {
+        "line": 200,
+        "column": 10
+      },
+      "end_position": {
+        "line": 202,
+        "column": 51
+      },
+      "source_text": "obtain ⟨x, hx₁, hx₂⟩ := iha hc\n          obtain ⟨y, hy₁, hy₂⟩ := ihb hd\n          exact ⟨x ⬝ y, .par hx₁ hy₁, .par hx₂ hy₂⟩"
+    },
+    {
+      "depth": 15,
+      "end": 7082,
+      "goals_after": [],
+      "goals_before": [
+        "case par.par\na✝¹ b✝¹ a✝ a'✝¹ b✝ b'✝¹ : SKI\na : a✝ ⭢ₚ a'✝¹\na' : b✝ ⭢ₚ b'✝¹\nb : ∀ {c : SKI}, a✝ ⭢ₚ c → Join ParallelReduction a'✝¹ c\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝¹ c\na'✝ b'✝ : SKI\nc' : a✝ ⭢ₚ a'✝\nd' : b✝ ⭢ₚ b'✝\n⊢ Join ParallelReduction (a'✝¹ ⬝ b'✝¹) (a'✝ ⬝ b'✝)"
+      ],
+      "kind": "tactic",
+      "start": 6929,
+      "raw": {
+        "depth": 15,
+        "end": 14213,
+        "goals_after": [],
+        "goals_before": [
+          "case par.par\na✝¹ b✝¹ a✝ a'✝¹ b✝ b'✝¹ : SKI\na : a✝ ⭢ₚ a'✝¹\na' : b✝ ⭢ₚ b'✝¹\nb : ∀ {c : SKI}, a✝ ⭢ₚ c → Join ParallelReduction a'✝¹ c\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝¹ c\na'✝ b'✝ : SKI\nc' : a✝ ⭢ₚ a'✝\nd' : b✝ ⭢ₚ b'✝\n⊢ Join ParallelReduction (a'✝¹ ⬝ b'✝¹) (a'✝ ⬝ b'✝)"
+        ],
+        "kind": "tactic",
+        "start": 14060
+      },
+      "start_offset": 6614,
+      "end_offset": 6737,
+      "position": {
+        "line": 200,
+        "column": 10
+      },
+      "end_position": {
+        "line": 202,
+        "column": 51
+      },
+      "source_text": "obtain ⟨x, hx₁, hx₂⟩ := iha hc\n          obtain ⟨y, hy₁, hy₂⟩ := ihb hd\n          exact ⟨x ⬝ y, .par hx₁ hy₁, .par hx₂ hy₂⟩"
+    },
+    {
+      "depth": 16,
+      "end": 6967,
+      "goals_after": [],
+      "goals_before": [
+        "case par.par\na✝¹ b✝¹ a✝ a'✝¹ b✝ b'✝¹ : SKI\na : a✝ ⭢ₚ a'✝¹\na' : b✝ ⭢ₚ b'✝¹\nb : ∀ {c : SKI}, a✝ ⭢ₚ c → Join ParallelReduction a'✝¹ c\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝¹ c\na'✝ b'✝ : SKI\nc' : a✝ ⭢ₚ a'✝\nd' : b✝ ⭢ₚ b'✝\n⊢ Join ParallelReduction (a'✝¹ ⬝ b'✝¹) (a'✝ ⬝ b'✝)"
+      ],
+      "kind": "tactic",
+      "start": 6929,
+      "raw": {
+        "depth": 16,
+        "end": 14098,
+        "goals_after": [],
+        "goals_before": [
+          "case par.par\na✝¹ b✝¹ a✝ a'✝¹ b✝ b'✝¹ : SKI\na : a✝ ⭢ₚ a'✝¹\na' : b✝ ⭢ₚ b'✝¹\nb : ∀ {c : SKI}, a✝ ⭢ₚ c → Join ParallelReduction a'✝¹ c\nb' : ∀ {c : SKI}, b✝ ⭢ₚ c → Join ParallelReduction b'✝¹ c\na'✝ b'✝ : SKI\nc' : a✝ ⭢ₚ a'✝\nd' : b✝ ⭢ₚ b'✝\n⊢ Join ParallelReduction (a'✝¹ ⬝ b'✝¹) (a'✝ ⬝ b'✝)"
+        ],
+        "kind": "tactic",
+        "start": 14060
+      },
+      "start_offset": 6614,
+      "end_offset": 6644,
+      "position": {
+        "line": 200,
+        "column": 10
+      },
+      "end_position": {
+        "line": 200,
+        "column": 40
+      },
+      "source_text": "obtain ⟨x, hx₁, hx₂⟩ := iha hc"
+    }
+  ],
+  "unavailable_reason": null
+}

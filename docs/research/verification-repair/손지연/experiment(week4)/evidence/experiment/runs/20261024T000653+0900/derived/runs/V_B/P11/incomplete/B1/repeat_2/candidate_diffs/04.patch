@@ -1,0 +1,23 @@
+--- candidate_03.proof.lean
++++ candidate_04.proof.lean
+@@ -6,16 +6,16 @@
+ 
+   have eval_sum (z : L) {α : Type} [DecidableEq α]
+       (s : Finset α) (g : α → L[X]) :
+-      Polynomial.eval z (∑ a in s, g a) =
+-        ∑ a in s, Polynomial.eval z (g a) := by
++      Polynomial.eval z (Finset.sum s g) =
++        Finset.sum s (fun a => Polynomial.eval z (g a)) := by
+     induction s using Finset.induction_on with
+     | empty => simp
+     | @insert a s ha ih => simp [ha, ih]
+ 
+   have eval_prod (z : L) {α : Type} [DecidableEq α]
+       (s : Finset α) (g : α → L[X]) :
+-      Polynomial.eval z (∏ a in s, g a) =
+-        ∏ a in s, Polynomial.eval z (g a) := by
++      Polynomial.eval z (Finset.prod s g) =
++        Finset.prod s (fun a => Polynomial.eval z (g a)) := by
+     induction s using Finset.induction_on with
+     | empty => simp
+     | @insert a s ha ih => simp [ha, ih]

@@ -1,0 +1,599 @@
+{
+  "family": "V_B",
+  "problem": 13,
+  "condition": "B2",
+  "repeat": 1,
+  "error_category": "proof_error",
+  "max_calls": 4,
+  "target": "putnam_1964_a4",
+  "prefix": "import Mathlib\nimport Aesop\n\nset_option maxHeartbeats 0\n\nopen Set Function\n\n\ntheorem putnam_1964_a4\n(u : ℕ → ℤ)\n(boundedu : ∃ B T : ℤ, ∀ n : ℕ, B ≤ u n ∧ u n ≤ T)\n(hu : ∀ n ≥ 4, u n = ((u (n - 1) + u (n - 2) + u (n - 3) * u (n - 4)) : ℝ) / (u (n - 1) * u (n - 2) + u (n - 3) + u (n - 4)) ∧ (u (n - 1) * u (n - 2) + u (n - 3) + u (n - 4)) ≠ 0)\n: (∃ N c : ℕ, c > 0 ∧ ∀ n ≥ N, u (n + c) = u n) := ",
+  "suffix": "\n",
+  "original_body": null,
+  "initial_body": "by \n  have h_main : ∃ (i j : ℕ), i < j ∧ (u i = u j ∧ u (i + 1) = u (j + 1) ∧ u (i + 2) = u (j + 2) ∧ u (i + 3) = u (j + 3)) := by\n    obtain ⟨B, T, hB⟩ := boundedu\n    have h₁ : ∃ (i j : ℕ), i < j ∧ (u i = u j ∧ u (i + 1) = u (j + 1) ∧ u (i + 2) = u (j + 2) ∧ u (i + 3) = u (j + 3)) := by\n      \n      classical\n      \n      let f : ℕ → (ℤ × ℤ × ℤ × ℤ) := fun n => (u n, u (n + 1), u (n + 2), u (n + 3))\n      have h₂ : Set.Finite (Set.range f) := by\n        have h₃ : Set.range f ⊆ Set.Icc (B, B, B, B) (T, T, T, T) := by\n          intro x hx\n          rcases hx with ⟨n, rfl⟩\n          have h₄ := hB n\n          have h₅ := hB (n + 1)\n          have h₆ := hB (n + 2)\n          have h₇ := hB (n + 3)\n          simp only [Set.mem_Icc, Prod.le_def] at h₄ h₅ h₆ h₇ ⊢\n          constructor <;>\n          (try constructor) <;>\n          (try constructor) <;>\n          (try constructor) <;>\n          (try simp_all [f]) <;>\n          (try nlinarith)\n        \n        have h₄ : Set.Finite (Set.Icc (B, B, B, B) (T, T, T, T)) := by\n          exact experiment_missing_lemma\n          intro x hx\n          simp_all [Set.mem_Icc]\n          <;>\n          (try aesop)\n        exact Set.Finite.subset h₄ h₃\n      \n      have h₃ : ∃ (i j : ℕ), i < j ∧ f i = f j := by\n        by_contra! h₄\n        have h₅ : Function.Injective f := by\n          intro i j h₆\n          by_cases h₇ : i = j\n          · exact h₇\n          · have h₈ : i < j ∨ j < i := by omega\n            cases h₈ with\n            | inl h₈ =>\n              have h₉ := h₄ i j h₈\n              simp_all\n            | inr h₈ =>\n              have h₉ := h₄ j i h₈\n              simp_all\n        have h₆ : Set.Infinite (Set.range f) := Set.infinite_range_of_injective h₅\n        exact Set.not_infinite.mpr h₂ h₆\n      \n      obtain ⟨i, j, h₄, h₅⟩ := h₃\n      refine' ⟨i, j, h₄, _⟩\n      simp [f] at h₅ ⊢\n      <;>\n      (try simp_all [Prod.ext_iff]) <;>\n      (try omega) <;>\n      (try aesop)\n    exact h₁\n  \n  have h_periodic : ∃ N c : ℕ, c > 0 ∧ ∀ n ≥ N, u (n + c) = u n := by\n    obtain ⟨i, j, hij, h_eq⟩ := h_main\n    have h₁ : ∀ m : ℕ, u (i + m) = u (j + m) := by\n      intro m\n      have h₂ : ∀ m : ℕ, u (i + m) = u (j + m) := by\n        intro m\n        induction m using Nat.strong_induction_on with\n        | h m ih =>\n          match m with\n          | 0 =>\n            have h₃ := h_eq.1\n            simp at h₃ ⊢\n            <;> simp_all [add_assoc]\n          | 1 =>\n            have h₃ := h_eq.2.1\n            simp at h₃ ⊢\n            <;> simp_all [add_assoc]\n            <;> ring_nf at *\n            <;> omega\n          | 2 =>\n            have h₃ := h_eq.2.2.1\n            simp at h₃ ⊢\n            <;> simp_all [add_assoc]\n            <;> ring_nf at *\n            <;> omega\n          | 3 =>\n            have h₃ := h_eq.2.2.2\n            simp at h₃ ⊢\n            <;> simp_all [add_assoc]\n            <;> ring_nf at *\n            <;> omega\n          | m + 4 =>\n            have h₃ : i + (m + 4) ≥ 4 := by\n              have h₄ : i ≥ 0 := by linarith\n              omega\n            have h₄ : u (i + (m + 4)) = ((u (i + (m + 4) - 1) + u (i + (m + 4) - 2) + u (i + (m + 4) - 3) * u (i + (m + 4) - 4)) : ℝ) / (u (i + (m + 4) - 1) * u (i + (m + 4) - 2) + u (i + (m + 4) - 3) + u (i + (m + 4) - 4)) := by\n              have h₅ := hu (i + (m + 4)) (by omega)\n              have h₆ := h₅.1\n              norm_cast at h₆ ⊢\n              <;> simp_all [add_assoc]\n              <;> ring_nf at *\n              <;> norm_num at *\n              <;> linarith\n            have h₅ : u (j + (m + 4)) = ((u (j + (m + 4) - 1) + u (j + (m + 4) - 2) + u (j + (m + 4) - 3) * u (j + (m + 4) - 4)) : ℝ) / (u (j + (m + 4) - 1) * u (j + (m + 4) - 2) + u (j + (m + 4) - 3) + u (j + (m + 4) - 4)) := by\n              have h₆ := hu (j + (m + 4)) (by\n                have h₇ : j ≥ i + 1 := by omega\n                omega\n              )\n              have h₇ := h₆.1\n              norm_cast at h₇ ⊢\n              <;> simp_all [add_assoc]\n              <;> ring_nf at *\n              <;> norm_num at *\n              <;> linarith\n            have h₆ : (i + (m + 4) - 1 : ℕ) = i + (m + 3) := by\n              omega\n            have h₇ : (i + (m + 4) - 2 : ℕ) = i + (m + 2) := by\n              omega\n            have h₈ : (i + (m + 4) - 3 : ℕ) = i + (m + 1) := by\n              omega\n            have h₉ : (i + (m + 4) - 4 : ℕ) = i + m := by\n              omega\n            have h₁₀ : (j + (m + 4) - 1 : ℕ) = j + (m + 3) := by\n              omega\n            have h₁₁ : (j + (m + 4) - 2 : ℕ) = j + (m + 2) := by\n              omega\n            have h₁₂ : (j + (m + 4) - 3 : ℕ) = j + (m + 1) := by\n              omega\n            have h₁₃ : (j + (m + 4) - 4 : ℕ) = j + m := by\n              omega\n            have h₁₄ : u (i + (m + 3)) = u (j + (m + 3)) := by\n              have h₁₅ := ih (m + 3) (by omega)\n              simp [add_assoc] at h₁₅ ⊢\n              <;> omega\n            have h₁₅ : u (i + (m + 2)) = u (j + (m + 2)) := by\n              have h₁₆ := ih (m + 2) (by omega)\n              simp [add_assoc] at h₁₆ ⊢\n              <;> omega\n            have h₁₆ : u (i + (m + 1)) = u (j + (m + 1)) := by\n              have h₁₇ := ih (m + 1) (by omega)\n              simp [add_assoc] at h₁₇ ⊢\n              <;> omega\n            have h₁₇ : u (i + m) = u (j + m) := by\n              have h₁₈ := ih m (by omega)\n              simp [add_assoc] at h₁₈ ⊢\n              <;> omega\n            have h₁₈ : (u (i + (m + 4)) : ℝ) = (u (j + (m + 4)) : ℝ) := by\n              rw [h₄, h₅]\n              simp [h₆, h₇, h₈, h₉, h₁₀, h₁₁, h₁₂, h₁₃] at *\n              norm_cast at *\n              <;>\n              (try simp_all [h₁₄, h₁₅, h₁₆, h₁₇]) <;>\n              (try ring_nf at *) <;>\n              (try field_simp at *) <;>\n              (try norm_cast at *) <;>\n              (try linarith)\n            norm_cast at h₁₈ ⊢\n            <;>\n            (try simp_all) <;>\n            (try linarith)\n      exact h₂ m\n    have h₂ : ∃ N c : ℕ, c > 0 ∧ ∀ n ≥ N, u (n + c) = u n := by\n      use i, (j - i)\n      have h₃ : j - i > 0 := by\n        omega\n      constructor\n      · exact h₃\n      · intro n hn\n        have h₄ : u (n + (j - i)) = u n := by\n          have h₅ : u (i + (n - i)) = u (j + (n - i)) := by\n            have h₆ := h₁ (n - i)\n            simp [add_assoc] at h₆ ⊢\n            <;> omega\n          have h₆ : i + (n - i) = n := by\n            omega\n          have h₇ : j + (n - i) = n + (j - i) := by\n            omega\n          rw [h₆] at h₅\n          rw [h₇] at h₅\n          linarith\n        exact h₄\n    exact h₂\n  \n  exact h_periodic",
+  "initial_status": "proof_error",
+  "initial_facts": {
+    "diagnostics": [
+      {
+        "severity": "error",
+        "position": {
+          "column": 16,
+          "line": 38
+        },
+        "end_position": {
+          "column": 40,
+          "line": 38
+        },
+        "message": "Unknown identifier `experiment_missing_lemma`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "Unknown identifier `experiment_missing_lemma`",
+          "endPos": {
+            "column": 40,
+            "line": 38
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "lean.unknownIdentifier._namedError",
+          "pos": {
+            "column": 16,
+            "line": 38
+          },
+          "severity": "error"
+        },
+        "source_line": "          exact experiment_missing_lemma",
+        "start_offset": 1436,
+        "start_byte_offset": 1551,
+        "end_offset": 1460,
+        "end_byte_offset": 1575,
+        "source_text": "experiment_missing_lemma",
+        "failed_tactic": "exact experiment_missing_lemma",
+        "tactic_range": {
+          "position": {
+            "line": 38,
+            "column": 10
+          },
+          "end_position": {
+            "line": 38,
+            "column": 40
+          },
+          "start_offset": 1430,
+          "end_offset": 1460
+        },
+        "goals": [
+          "(Icc (B, B, B, B) (T, T, T, T)).Finite"
+        ],
+        "local_context": [
+          "u : ℕ → ℤ\nhu :\n  ∀ n ≥ 4,\n    ↑(u n) =\n        (↑(u (n - 1)) + ↑(u (n - 2)) + ↑(u (n - 3)) * ↑(u (n - 4))) /\n          (↑(u (n - 1)) * ↑(u (n - 2)) + ↑(u (n - 3)) + ↑(u (n - 4))) ∧\n      u (n - 1) * u (n - 2) + u (n - 3) + u (n - 4) ≠ 0\nB T : ℤ\nhB : ∀ (n : ℕ), B ≤ u n ∧ u n ≤ T\nf : ℕ → ℤ × ℤ × ℤ × ℤ := fun n => (u n, u (n + 1), u (n + 2), u (n + 3))\nh₃ : range f ⊆ Icc (B, B, B, B) (T, T, T, T)"
+        ],
+        "proof_state_source": "lean_infotree_before_tactic",
+        "proof_state_raw": {
+          "depth": 61,
+          "end": 8706,
+          "goals_after": [],
+          "goals_before": [
+            "u : ℕ → ℤ\nhu :\n  ∀ n ≥ 4,\n    ↑(u n) =\n        (↑(u (n - 1)) + ↑(u (n - 2)) + ↑(u (n - 3)) * ↑(u (n - 4))) /\n          (↑(u (n - 1)) * ↑(u (n - 2)) + ↑(u (n - 3)) + ↑(u (n - 4))) ∧\n      u (n - 1) * u (n - 2) + u (n - 3) + u (n - 4) ≠ 0\nB T : ℤ\nhB : ∀ (n : ℕ), B ≤ u n ∧ u n ≤ T\nf : ℕ → ℤ × ℤ × ℤ × ℤ := fun n => (u n, u (n + 1), u (n + 2), u (n + 3))\nh₃ : range f ⊆ Icc (B, B, B, B) (T, T, T, T)\n⊢ (Icc (B, B, B, B) (T, T, T, T)).Finite"
+          ],
+          "kind": "tactic",
+          "start": 8676
+        }
+      },
+      {
+        "severity": "error",
+        "position": {
+          "column": 16,
+          "line": 39
+        },
+        "end_position": {
+          "column": 17,
+          "line": 39
+        },
+        "message": "No goals to be solved",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "No goals to be solved",
+          "endPos": {
+            "column": 17,
+            "line": 39
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 16,
+            "line": 39
+          },
+          "severity": "error"
+        },
+        "source_line": "          intro x hx",
+        "start_offset": 1477,
+        "start_byte_offset": 1592,
+        "end_offset": 1478,
+        "end_byte_offset": 1593,
+        "source_text": "x",
+        "failed_tactic": "intro x",
+        "tactic_range": {
+          "position": {
+            "line": 39,
+            "column": 10
+          },
+          "end_position": {
+            "line": 39,
+            "column": 17
+          },
+          "start_offset": 1471,
+          "end_offset": 1478
+        },
+        "goals": [],
+        "local_context": [],
+        "proof_state_source": "lean_infotree_before_tactic",
+        "proof_state_raw": {
+          "depth": 62,
+          "end": 8724,
+          "goals_after": [],
+          "goals_before": [],
+          "kind": "tactic",
+          "start": 8717
+        }
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 21,
+          "line": 66
+        },
+        "end_position": {
+          "column": 33,
+          "line": 66
+        },
+        "message": "This simp argument is unused:\n  Prod.ext_iff\n\nHint: Omit it from the simp argument list.\n  simp_all ̵[̵P̵r̵o̵d̵.̵e̵x̵t̵_̵i̵f̵f̵]̵\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "This simp argument is unused:\n  Prod.ext_iff\n\nHint: Omit it from the simp argument list.\n  simp_all ̵[̵P̵r̵o̵d̵.̵e̵x̵t̵_̵i̵f̵f̵]̵\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+          "endPos": {
+            "column": 33,
+            "line": 66
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unusedSimpArgs",
+          "pos": {
+            "column": 21,
+            "line": 66
+          },
+          "severity": "warning"
+        },
+        "source_line": "      (try simp_all [Prod.ext_iff]) <;>",
+        "start_offset": 2275,
+        "start_byte_offset": 2464,
+        "end_offset": 2287,
+        "end_byte_offset": 2476,
+        "source_text": "Prod.ext_iff"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 20,
+          "line": 143
+        },
+        "end_position": {
+          "column": 29,
+          "line": 143
+        },
+        "message": "This simp argument is unused:\n  add_assoc\n\nHint: Omit it from the simp argument list.\n  simp [̵a̵d̵d̵_̵a̵s̵s̵o̵c̵]̵ ̵at h₁₅ ⊢\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "This simp argument is unused:\n  add_assoc\n\nHint: Omit it from the simp argument list.\n  simp [̵a̵d̵d̵_̵a̵s̵s̵o̵c̵]̵ ̵at h₁₅ ⊢\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+          "endPos": {
+            "column": 29,
+            "line": 143
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unusedSimpArgs",
+          "pos": {
+            "column": 20,
+            "line": 143
+          },
+          "severity": "warning"
+        },
+        "source_line": "              simp [add_assoc] at h₁₅ ⊢",
+        "start_offset": 5242,
+        "start_byte_offset": 5571,
+        "end_offset": 5251,
+        "end_byte_offset": 5580,
+        "source_text": "add_assoc"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 20,
+          "line": 147
+        },
+        "end_position": {
+          "column": 29,
+          "line": 147
+        },
+        "message": "This simp argument is unused:\n  add_assoc\n\nHint: Omit it from the simp argument list.\n  simp [̵a̵d̵d̵_̵a̵s̵s̵o̵c̵]̵ ̵at h₁₆ ⊢\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "This simp argument is unused:\n  add_assoc\n\nHint: Omit it from the simp argument list.\n  simp [̵a̵d̵d̵_̵a̵s̵s̵o̵c̵]̵ ̵at h₁₆ ⊢\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+          "endPos": {
+            "column": 29,
+            "line": 147
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unusedSimpArgs",
+          "pos": {
+            "column": 20,
+            "line": 147
+          },
+          "severity": "warning"
+        },
+        "source_line": "              simp [add_assoc] at h₁₆ ⊢",
+        "start_offset": 5417,
+        "start_byte_offset": 5760,
+        "end_offset": 5426,
+        "end_byte_offset": 5769,
+        "source_text": "add_assoc"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 20,
+          "line": 151
+        },
+        "end_position": {
+          "column": 29,
+          "line": 151
+        },
+        "message": "This simp argument is unused:\n  add_assoc\n\nHint: Omit it from the simp argument list.\n  simp [̵a̵d̵d̵_̵a̵s̵s̵o̵c̵]̵ ̵at h₁₇ ⊢\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "This simp argument is unused:\n  add_assoc\n\nHint: Omit it from the simp argument list.\n  simp [̵a̵d̵d̵_̵a̵s̵s̵o̵c̵]̵ ̵at h₁₇ ⊢\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+          "endPos": {
+            "column": 29,
+            "line": 151
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unusedSimpArgs",
+          "pos": {
+            "column": 20,
+            "line": 151
+          },
+          "severity": "warning"
+        },
+        "source_line": "              simp [add_assoc] at h₁₇ ⊢",
+        "start_offset": 5592,
+        "start_byte_offset": 5949,
+        "end_offset": 5601,
+        "end_byte_offset": 5958,
+        "source_text": "add_assoc"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 20,
+          "line": 155
+        },
+        "end_position": {
+          "column": 29,
+          "line": 155
+        },
+        "message": "This simp argument is unused:\n  add_assoc\n\nHint: Omit it from the simp argument list.\n  simp [̵a̵d̵d̵_̵a̵s̵s̵o̵c̵]̵ ̵at h₁₈ ⊢\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "This simp argument is unused:\n  add_assoc\n\nHint: Omit it from the simp argument list.\n  simp [̵a̵d̵d̵_̵a̵s̵s̵o̵c̵]̵ ̵at h₁₈ ⊢\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+          "endPos": {
+            "column": 29,
+            "line": 155
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unusedSimpArgs",
+          "pos": {
+            "column": 20,
+            "line": 155
+          },
+          "severity": "warning"
+        },
+        "source_line": "              simp [add_assoc] at h₁₈ ⊢",
+        "start_offset": 5749,
+        "start_byte_offset": 6120,
+        "end_offset": 5758,
+        "end_byte_offset": 6129,
+        "source_text": "add_assoc"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 29,
+          "line": 162
+        },
+        "end_position": {
+          "column": 32,
+          "line": 162
+        },
+        "message": "This simp argument is unused:\n  h₁₄\n\nHint: Omit it from the simp argument list.\n  simp_all [h₁₄̵,̵ ̵h̵₁̵₅, h₁₆, h₁₇]\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "This simp argument is unused:\n  h₁₄\n\nHint: Omit it from the simp argument list.\n  simp_all [h₁₄̵,̵ ̵h̵₁̵₅, h₁₆, h₁₇]\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+          "endPos": {
+            "column": 32,
+            "line": 162
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unusedSimpArgs",
+          "pos": {
+            "column": 29,
+            "line": 162
+          },
+          "severity": "warning"
+        },
+        "source_line": "              (try simp_all [h₁₄, h₁₅, h₁₆, h₁₇]) <;>",
+        "start_offset": 6031,
+        "start_byte_offset": 6444,
+        "end_offset": 6034,
+        "end_byte_offset": 6451,
+        "source_text": "h₁₄"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 34,
+          "line": 162
+        },
+        "end_position": {
+          "column": 37,
+          "line": 162
+        },
+        "message": "This simp argument is unused:\n  h₁₅\n\nHint: Omit it from the simp argument list.\n  simp_all [h₁₄, h₁₅̵,̵ ̵h̵₁̵₆, h₁₇]\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "This simp argument is unused:\n  h₁₅\n\nHint: Omit it from the simp argument list.\n  simp_all [h₁₄, h₁₅̵,̵ ̵h̵₁̵₆, h₁₇]\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+          "endPos": {
+            "column": 37,
+            "line": 162
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unusedSimpArgs",
+          "pos": {
+            "column": 34,
+            "line": 162
+          },
+          "severity": "warning"
+        },
+        "source_line": "              (try simp_all [h₁₄, h₁₅, h₁₆, h₁₇]) <;>",
+        "start_offset": 6036,
+        "start_byte_offset": 6453,
+        "end_offset": 6039,
+        "end_byte_offset": 6460,
+        "source_text": "h₁₅"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 39,
+          "line": 162
+        },
+        "end_position": {
+          "column": 42,
+          "line": 162
+        },
+        "message": "This simp argument is unused:\n  h₁₆\n\nHint: Omit it from the simp argument list.\n  simp_all [h₁₄, h₁₅, h₁₆̵,̵ ̵h̵₁̵₇]\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "This simp argument is unused:\n  h₁₆\n\nHint: Omit it from the simp argument list.\n  simp_all [h₁₄, h₁₅, h₁₆̵,̵ ̵h̵₁̵₇]\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+          "endPos": {
+            "column": 42,
+            "line": 162
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unusedSimpArgs",
+          "pos": {
+            "column": 39,
+            "line": 162
+          },
+          "severity": "warning"
+        },
+        "source_line": "              (try simp_all [h₁₄, h₁₅, h₁₆, h₁₇]) <;>",
+        "start_offset": 6041,
+        "start_byte_offset": 6462,
+        "end_offset": 6044,
+        "end_byte_offset": 6469,
+        "source_text": "h₁₆"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 44,
+          "line": 162
+        },
+        "end_position": {
+          "column": 47,
+          "line": 162
+        },
+        "message": "This simp argument is unused:\n  h₁₇\n\nHint: Omit it from the simp argument list.\n  simp_all [h₁₄, h₁₅, h₁₆,̵ ̵h̵₁̵₇̵]\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "This simp argument is unused:\n  h₁₇\n\nHint: Omit it from the simp argument list.\n  simp_all [h₁₄, h₁₅, h₁₆,̵ ̵h̵₁̵₇̵]\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+          "endPos": {
+            "column": 47,
+            "line": 162
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unusedSimpArgs",
+          "pos": {
+            "column": 44,
+            "line": 162
+          },
+          "severity": "warning"
+        },
+        "source_line": "              (try simp_all [h₁₄, h₁₅, h₁₆, h₁₇]) <;>",
+        "start_offset": 6046,
+        "start_byte_offset": 6471,
+        "end_offset": 6049,
+        "end_byte_offset": 6478,
+        "source_text": "h₁₇"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 18,
+          "line": 182
+        },
+        "end_position": {
+          "column": 27,
+          "line": 182
+        },
+        "message": "This simp argument is unused:\n  add_assoc\n\nHint: Omit it from the simp argument list.\n  simp [̵a̵d̵d̵_̵a̵s̵s̵o̵c̵]̵ ̵at h₆ ⊢\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "This simp argument is unused:\n  add_assoc\n\nHint: Omit it from the simp argument list.\n  simp [̵a̵d̵d̵_̵a̵s̵s̵o̵c̵]̵ ̵at h₆ ⊢\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`",
+          "endPos": {
+            "column": 27,
+            "line": 182
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unusedSimpArgs",
+          "pos": {
+            "column": 18,
+            "line": 182
+          },
+          "severity": "warning"
+        },
+        "source_line": "            simp [add_assoc] at h₆ ⊢",
+        "start_offset": 6666,
+        "start_byte_offset": 7129,
+        "end_offset": 6675,
+        "end_byte_offset": 7138,
+        "source_text": "add_assoc"
+      },
+      {
+        "severity": "information",
+        "position": {
+          "column": 0,
+          "line": 196
+        },
+        "end_position": {
+          "column": 6,
+          "line": 196
+        },
+        "message": "putnam_1964_a4 (u : ℕ → ℤ) (boundedu : ∃ B T, ∀ (n : ℕ), B ≤ u n ∧ u n ≤ T)\n  (hu :\n    ∀ n ≥ 4,\n      ↑(u n) =\n          (↑(u (n - 1)) + ↑(u (n - 2)) + ↑(u (n - 3)) * ↑(u (n - 4))) /\n            (↑(u (n - 1)) * ↑(u (n - 2)) + ↑(u (n - 3)) + ↑(u (n - 4))) ∧\n        u (n - 1) * u (n - 2) + u (n - 3) + u (n - 4) ≠ 0) :\n  ∃ N, ∃ c > 0, ∀ n ≥ N, u (n + c) = u n",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "putnam_1964_a4 (u : ℕ → ℤ) (boundedu : ∃ B T, ∀ (n : ℕ), B ≤ u n ∧ u n ≤ T)\n  (hu :\n    ∀ n ≥ 4,\n      ↑(u n) =\n          (↑(u (n - 1)) + ↑(u (n - 2)) + ↑(u (n - 3)) * ↑(u (n - 4))) /\n            (↑(u (n - 1)) * ↑(u (n - 2)) + ↑(u (n - 3)) + ↑(u (n - 4))) ∧\n        u (n - 1) * u (n - 2) + u (n - 3) + u (n - 4) ≠ 0) :\n  ∃ N, ∃ c > 0, ∀ n ≥ N, u (n + c) = u n",
+          "endPos": {
+            "column": 6,
+            "line": 196
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 0,
+            "line": 196
+          },
+          "severity": "information"
+        }
+      },
+      {
+        "severity": "information",
+        "position": {
+          "column": 0,
+          "line": 197
+        },
+        "end_position": {
+          "column": 6,
+          "line": 197
+        },
+        "message": "'putnam_1964_a4' depends on axioms: [propext, sorryAx, Classical.choice, Quot.sound]",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "'putnam_1964_a4' depends on axioms: [propext, sorryAx, Classical.choice, Quot.sound]",
+          "endPos": {
+            "column": 6,
+            "line": 197
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 0,
+            "line": 197
+          },
+          "severity": "information"
+        }
+      }
+    ],
+    "goals": [
+      "(Icc (B, B, B, B) (T, T, T, T)).Finite"
+    ],
+    "local_context": [
+      "u : ℕ → ℤ\nhu :\n  ∀ n ≥ 4,\n    ↑(u n) =\n        (↑(u (n - 1)) + ↑(u (n - 2)) + ↑(u (n - 3)) * ↑(u (n - 4))) /\n          (↑(u (n - 1)) * ↑(u (n - 2)) + ↑(u (n - 3)) + ↑(u (n - 4))) ∧\n      u (n - 1) * u (n - 2) + u (n - 3) + u (n - 4) ≠ 0\nB T : ℤ\nhB : ∀ (n : ℕ), B ≤ u n ∧ u n ≤ T\nf : ℕ → ℤ × ℤ × ℤ × ℤ := fun n => (u n, u (n + 1), u (n + 2), u (n + 3))\nh₃ : range f ⊆ Icc (B, B, B, B) (T, T, T, T)"
+    ],
+    "sorries": [
+      {
+        "kind": "transitive_dependency",
+        "axiom": "sorryAx",
+        "position": null,
+        "end_position": null
+      }
+    ],
+    "axioms": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext",
+      "sorryAx"
+    ],
+    "detail": null,
+    "raw_lean_output": "{\"caption\":\"\",\"data\":\"Unknown identifier `experiment_missing_lemma`\",\"endPos\":{\"column\":40,\"line\":38},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"lean.unknownIdentifier._namedError\",\"pos\":{\"column\":16,\"line\":38},\"severity\":\"error\"}\n{\"caption\":\"\",\"data\":\"No goals to be solved\",\"endPos\":{\"column\":17,\"line\":39},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"[anonymous]\",\"pos\":{\"column\":16,\"line\":39},\"severity\":\"error\"}\n{\"caption\":\"\",\"data\":\"This simp argument is unused:\\n  Prod.ext_iff\\n\\nHint: Omit it from the simp argument list.\\n  simp_all ̵[̵P̵r̵o̵d̵.̵e̵x̵t̵_̵i̵f̵f̵]̵\\n\\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`\",\"endPos\":{\"column\":33,\"line\":66},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"linter.unusedSimpArgs\",\"pos\":{\"column\":21,\"line\":66},\"severity\":\"warning\"}\n{\"caption\":\"\",\"data\":\"This simp argument is unused:\\n  add_assoc\\n\\nHint: Omit it from the simp argument list.\\n  simp [̵a̵d̵d̵_̵a̵s̵s̵o̵c̵]̵ ̵at h₁₅ ⊢\\n\\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`\",\"endPos\":{\"column\":29,\"line\":143},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"linter.unusedSimpArgs\",\"pos\":{\"column\":20,\"line\":143},\"severity\":\"warning\"}\n{\"caption\":\"\",\"data\":\"This simp argument is unused:\\n  add_assoc\\n\\nHint: Omit it from the simp argument list.\\n  simp [̵a̵d̵d̵_̵a̵s̵s̵o̵c̵]̵ ̵at h₁₆ ⊢\\n\\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`\",\"endPos\":{\"column\":29,\"line\":147},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"linter.unusedSimpArgs\",\"pos\":{\"column\":20,\"line\":147},\"severity\":\"warning\"}\n{\"caption\":\"\",\"data\":\"This simp argument is unused:\\n  add_assoc\\n\\nHint: Omit it from the simp argument list.\\n  simp [̵a̵d̵d̵_̵a̵s̵s̵o̵c̵]̵ ̵at h₁₇ ⊢\\n\\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`\",\"endPos\":{\"column\":29,\"line\":151},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"linter.unusedSimpArgs\",\"pos\":{\"column\":20,\"line\":151},\"severity\":\"warning\"}\n{\"caption\":\"\",\"data\":\"This simp argument is unused:\\n  add_assoc\\n\\nHint: Omit it from the simp argument list.\\n  simp [̵a̵d̵d̵_̵a̵s̵s̵o̵c̵]̵ ̵at h₁₈ ⊢\\n\\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`\",\"endPos\":{\"column\":29,\"line\":155},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"linter.unusedSimpArgs\",\"pos\":{\"column\":20,\"line\":155},\"severity\":\"warning\"}\n{\"caption\":\"\",\"data\":\"This simp argument is unused:\\n  h₁₄\\n\\nHint: Omit it from the simp argument list.\\n  simp_all [h₁₄̵,̵ ̵h̵₁̵₅, h₁₆, h₁₇]\\n\\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`\",\"endPos\":{\"column\":32,\"line\":162},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"linter.unusedSimpArgs\",\"pos\":{\"column\":29,\"line\":162},\"severity\":\"warning\"}\n{\"caption\":\"\",\"data\":\"This simp argument is unused:\\n  h₁₅\\n\\nHint: Omit it from the simp argument list.\\n  simp_all [h₁₄, h₁₅̵,̵ ̵h̵₁̵₆, h₁₇]\\n\\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`\",\"endPos\":{\"column\":37,\"line\":162},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"linter.unusedSimpArgs\",\"pos\":{\"column\":34,\"line\":162},\"severity\":\"warning\"}\n{\"caption\":\"\",\"data\":\"This simp argument is unused:\\n  h₁₆\\n\\nHint: Omit it from the simp argument list.\\n  simp_all [h₁₄, h₁₅, h₁₆̵,̵ ̵h̵₁̵₇]\\n\\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`\",\"endPos\":{\"column\":42,\"line\":162},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"linter.unusedSimpArgs\",\"pos\":{\"column\":39,\"line\":162},\"severity\":\"warning\"}\n{\"caption\":\"\",\"data\":\"This simp argument is unused:\\n  h₁₇\\n\\nHint: Omit it from the simp argument list.\\n  simp_all [h₁₄, h₁₅, h₁₆,̵ ̵h̵₁̵₇̵]\\n\\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`\",\"endPos\":{\"column\":47,\"line\":162},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"linter.unusedSimpArgs\",\"pos\":{\"column\":44,\"line\":162},\"severity\":\"warning\"}\n{\"caption\":\"\",\"data\":\"This simp argument is unused:\\n  add_assoc\\n\\nHint: Omit it from the simp argument list.\\n  simp [̵a̵d̵d̵_̵a̵s̵s̵o̵c̵]̵ ̵at h₆ ⊢\\n\\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`\",\"endPos\":{\"column\":27,\"line\":182},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"linter.unusedSimpArgs\",\"pos\":{\"column\":18,\"line\":182},\"severity\":\"warning\"}\n{\"caption\":\"\",\"data\":\"putnam_1964_a4 (u : ℕ → ℤ) (boundedu : ∃ B T, ∀ (n : ℕ), B ≤ u n ∧ u n ≤ T)\\n  (hu :\\n    ∀ n ≥ 4,\\n      ↑(u n) =\\n          (↑(u (n - 1)) + ↑(u (n - 2)) + ↑(u (n - 3)) * ↑(u (n - 4))) /\\n            (↑(u (n - 1)) * ↑(u (n - 2)) + ↑(u (n - 3)) + ↑(u (n - 4))) ∧\\n        u (n - 1) * u (n - 2) + u (n - 3) + u (n - 4) ≠ 0) :\\n  ∃ N, ∃ c > 0, ∀ n ≥ N, u (n + c) = u n\",\"endPos\":{\"column\":6,\"line\":196},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"[anonymous]\",\"pos\":{\"column\":0,\"line\":196},\"severity\":\"information\"}\n{\"caption\":\"\",\"data\":\"'putnam_1964_a4' depends on axioms: [propext, sorryAx, Classical.choice, Quot.sound]\",\"endPos\":{\"column\":6,\"line\":197},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"[anonymous]\",\"pos\":{\"column\":0,\"line\":197},\"severity\":\"information\"}\n"
+  },
+  "baseline_metrics": {
+    "proof_tokens": 1784,
+    "raw_heartbeats": 115786506,
+    "heartbeats": 115786
+  },
+  "initial_measurement": {
+    "proof_tokens": 1760,
+    "raw_heartbeats": null,
+    "token_reduction_pct": 1.3452914798206317,
+    "heartbeat_reduction_pct": null,
+    "search_score": null
+  },
+  "original_candidate": null
+}

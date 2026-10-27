@@ -1,0 +1,29 @@
+--- candidate_02.proof.lean
++++ candidate_03.proof.lean
+@@ -141,14 +141,15 @@
+       intro j hj
+       have hj' : j.val < 2 ^ (ℓ - (↑i + 1)) := by
+         simpa only [Nat.sub_sub] using j.isLt
++      have h_exp : ℓ - (↑i + 1) < ℓ - ↑i := by omega
+       conv_lhs =>
+         enter [1]
+         rw [mul_comm (a := Polynomial.C (coeffs ⟨j.val * 2, by
+           rw [← Nat.add_zero (j.val * 2)]
+           apply mul_two_add_bit_lt_two_pow (c := ℓ - i) (a := j)
+             (b := ℓ - (↑i + 1)) (i := 0)
+-          · omega
+           · exact hj'
++          · exact h_exp
+         ⟩)), ← mul_assoc, mul_comm (a := Polynomial.C (1 - r_chal))]
+         rw [mul_assoc]
+       conv_lhs =>
+@@ -156,8 +157,8 @@
+         rw [mul_comm (a := Polynomial.C (coeffs ⟨j.val * 2 + 1, by
+           apply mul_two_add_bit_lt_two_pow (c := ℓ - i) (a := j)
+             (b := ℓ - (↑i + 1)) (i := 1)
+-          · omega
+           · exact hj'
++          · exact h_exp
+         ⟩)), ← mul_assoc, mul_comm (a := Polynomial.C r_chal)]
+         rw [mul_assoc]
+       conv_rhs => rw [mul_comm]

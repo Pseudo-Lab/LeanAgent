@@ -1,0 +1,67 @@
+--- initial.proof.lean
++++ candidate_01.proof.lean
+@@ -1,2 +1,61 @@
+ by
+-  skip
+\ No newline at end of file
++  intro a b c hab hac
++  induction hab generalizing c with
++  case refl a =>
++    exact ⟨c, hac, ParallelReduction.refl c⟩
++  case red_I a =>
++    cases hac with
++    | refl =>
++        exact ⟨a, ParallelReduction.refl a, ParallelReduction.red_I a⟩
++    | red_I =>
++        exact ⟨a, ParallelReduction.refl a, ParallelReduction.refl a⟩
++    | par a' b' hI ha =>
++        rw [I_irreducible a' hI]
++        exact ⟨b', ha, ParallelReduction.red_I b'⟩
++  case red_K a b =>
++    cases hac with
++    | refl =>
++        exact ⟨a, ParallelReduction.refl a, ParallelReduction.red_K a b⟩
++    | red_K =>
++        exact ⟨a, ParallelReduction.refl a, ParallelReduction.refl a⟩
++    | par c' b' hKa hb =>
++        obtain ⟨a', ha, hKa'⟩ := Ka_irreducible a c' hKa
++        rw [hKa']
++        exact ⟨a', ha, ParallelReduction.red_K a' b'⟩
++  case red_S a b c =>
++    cases hac with
++    | refl =>
++        exact ⟨a ⬝ c ⬝ (b ⬝ c), ParallelReduction.refl _,
++          ParallelReduction.red_S a b c⟩
++    | red_S =>
++        exact ⟨a ⬝ c ⬝ (b ⬝ c), ParallelReduction.refl _,
++          ParallelReduction.refl _⟩
++    | par ab' c' hSab hc =>
++        obtain ⟨a', b', ha, hb, hSab'⟩ := Sab_irreducible a b ab' hSab
++        rw [hSab']
++        exact ⟨a' ⬝ c' ⬝ (b' ⬝ c'),
++          ParallelReduction.par (ParallelReduction.par ha hc)
++            (ParallelReduction.par hb hc),
++          ParallelReduction.red_S a' b' c'⟩
++  case par a a' b b' ha hb iha ihb =>
++    cases hac with
++    | refl =>
++        exact ⟨a' ⬝ b', ParallelReduction.refl _, ParallelReduction.par ha hb⟩
++    | red_I =>
++        rw [I_irreducible a' ha]
++        exact ⟨b', ParallelReduction.red_I b', hb⟩
++    | red_K =>
++        obtain ⟨x, hx, ha'⟩ := Ka_irreducible _ a' ha
++        rw [ha']
++        exact ⟨x, ParallelReduction.red_K x b', hx⟩
++    | red_S =>
++        obtain ⟨x, y, hx, hy, ha'⟩ := Sab_irreducible _ _ a' ha
++        rw [ha']
++        exact ⟨x ⬝ b' ⬝ (y ⬝ b'), ParallelReduction.red_S x y b',
++          ParallelReduction.par (ParallelReduction.par hx hb)
++            (ParallelReduction.par hy hb)⟩
++    | par c c' hc hc' =>
++        obtain ⟨d, had, hcd⟩ := iha hc
++        obtain ⟨d', hbd, hc'd⟩ := ihb hc'
++        exact ⟨d ⬝ d', ParallelReduction.par had hbd,
++          ParallelReduction.par hcd hc'd⟩
+\ No newline at end of file

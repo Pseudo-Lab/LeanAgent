@@ -1,0 +1,12 @@
+--- candidate_02.proof.lean
++++ candidate_03.proof.lean
+@@ -27,7 +27,8 @@
+   have h_card : D.card ≤ (E.product (Finset.univ : Finset (Fin (2 ^ steps)))).card := by
+     apply Finset.card_le_card_of_injOn (f := enc)
+     · intro x hx
+-      change q x ∈ E ∧ k x ∈ (Finset.univ : Finset (Fin (2 ^ steps)))
++      change (q x, k x) ∈ E.product (Finset.univ : Finset (Fin (2 ^ steps)))
++      apply Finset.mem_product.mpr
+       constructor
+       · simp only [E, Set.mem_toFinset]
+         change ∃ z, q z = q x ∧ f z ≠ g_closest z

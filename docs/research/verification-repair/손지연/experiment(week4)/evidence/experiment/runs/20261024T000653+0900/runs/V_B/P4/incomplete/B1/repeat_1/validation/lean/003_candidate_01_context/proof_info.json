@@ -1,0 +1,2392 @@
+{
+  "records": [
+    {
+      "depth": 4,
+      "end": 6130,
+      "goals_after": [
+        "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\nhopen : IsOpen {y | 0 < ⟪f y, f x⟫_ℝ}\nε : ℝ\nhε : ε > 0\nhball : Metric.ball x ε ⊆ {y | 0 < ⟪f y, f x⟫_ℝ}\n⊢ False"
+      ],
+      "goals_before": [
+        "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\n⊢ f = 0"
+      ],
+      "kind": "tactic",
+      "start": 4174,
+      "raw": {
+        "depth": 4,
+        "end": 13261,
+        "goals_after": [
+          "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\nhopen : IsOpen {y | 0 < ⟪f y, f x⟫_ℝ}\nε : ℝ\nhε : ε > 0\nhball : Metric.ball x ε ⊆ {y | 0 < ⟪f y, f x⟫_ℝ}\n⊢ False"
+        ],
+        "goals_before": [
+          "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\n⊢ f = 0"
+        ],
+        "kind": "tactic",
+        "start": 11305
+      },
+      "start_offset": 4052,
+      "end_offset": 5942,
+      "position": {
+        "line": 103,
+        "column": 13
+      },
+      "end_position": {
+        "line": 156,
+        "column": 105
+      },
+      "source_text": "by\n  funext x\n  simp only [Pi.zero_apply]\n  by_contra hx\n  have hxpos : 0 < ⟪f x, f x⟫_ℝ := real_inner_self_pos'.2 hx\n  have hopen : IsOpen {y : Y | 0 < ⟪f y, f x⟫_ℝ} := by\n    apply isOpen_lt continuous_const\n    fun_prop\n  obtain ⟨ε, hε, hball⟩ := Metric.isOpen_iff.1 hopen x hxpos\n  let b := ContDiffBump.ofInnerProductSpace x (ε / 2) (half_pos hε)\n  let g : Y → V := fun y => b y • f x\n  have hgcompact : HasCompactSupport g := by\n    refine HasCompactSupport.intro (tsupport b) b.hasCompactSupport ?_\n    intro y hy\n    apply subset_tsupport\n    intro hby\n    apply hy\n    simp [g, hby]\n  have hgtest : IsTestFunction g := by\n    constructor\n    · dsimp [g]\n      fun_prop\n    · exact hgcompact\n  have hzero := hg g hgtest\n  rw [MeasureTheory.integral_eq_zero_iff_of_nonneg] at hzero\n  · rw [Continuous.ae_eq_iff_eq] at hzero\n    · have hself := congrFun hzero x\n      have : ⟪f x, f x⟫_ℝ = 0 := by\n        simpa [g, b] using hself\n      exact hx (real_inner_self_eq_zero'.1 this)\n    · fun_prop\n    · fun_prop\n  · intro y\n    by_cases hby : b y = 0\n    · simp [g, hby]\n    · have hyts : y ∈ tsupport b := subset_tsupport _ hby\n      have hyclosed : y ∈ Metric.closedBall x (ε / 2) := by\n        rw [b.tsupport_eq] at hyts\n        simpa [b] using hyts\n      have hyball : y ∈ Metric.ball x ε := by\n        rw [Metric.mem_ball]\n        have hydist := Metric.mem_closedBall.1 hyclosed\n        linarith\n      have hinner : 0 < ⟪f y, f x⟫_ℝ := hball hyball\n      simp only [g, real_inner_smul_right]\n      exact mul_nonneg (b.nonneg y) hinner.le\n  · have hicompact : HasCompactSupport (fun y => ⟪f y, g y⟫_ℝ) := by\n      refine HasCompactSupport.intro (tsupport b) b.hasCompactSupport ?_\n      intro y hy\n      apply subset_tsupport\n      intro hby\n      apply hy\n      simp [g, hby]\n    exact (show Continuous (fun y => ⟪f y, g y⟫_ℝ) by fun_prop).integrable_of_hasCompactSupport hicompact"
+    },
+    {
+      "depth": 5,
+      "end": 4176,
+      "goals_after": [
+        "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\nhopen : IsOpen {y | 0 < ⟪f y, f x⟫_ℝ}\nε : ℝ\nhε : ε > 0\nhball : Metric.ball x ε ⊆ {y | 0 < ⟪f y, f x⟫_ℝ}\n⊢ False"
+      ],
+      "goals_before": [
+        "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\n⊢ f = 0"
+      ],
+      "kind": "tactic",
+      "start": 4174,
+      "raw": {
+        "depth": 5,
+        "end": 11307,
+        "goals_after": [
+          "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\nhopen : IsOpen {y | 0 < ⟪f y, f x⟫_ℝ}\nε : ℝ\nhε : ε > 0\nhball : Metric.ball x ε ⊆ {y | 0 < ⟪f y, f x⟫_ℝ}\n⊢ False"
+        ],
+        "goals_before": [
+          "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\n⊢ f = 0"
+        ],
+        "kind": "tactic",
+        "start": 11305
+      },
+      "start_offset": 4052,
+      "end_offset": 4054,
+      "position": {
+        "line": 103,
+        "column": 13
+      },
+      "end_position": {
+        "line": 103,
+        "column": 15
+      },
+      "source_text": "by"
+    },
+    {
+      "depth": 6,
+      "end": 6130,
+      "goals_after": [
+        "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\nhopen : IsOpen {y | 0 < ⟪f y, f x⟫_ℝ}\nε : ℝ\nhε : ε > 0\nhball : Metric.ball x ε ⊆ {y | 0 < ⟪f y, f x⟫_ℝ}\n⊢ False"
+      ],
+      "goals_before": [
+        "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\n⊢ f = 0"
+      ],
+      "kind": "tactic",
+      "start": 4179,
+      "raw": {
+        "depth": 6,
+        "end": 13261,
+        "goals_after": [
+          "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\nhopen : IsOpen {y | 0 < ⟪f y, f x⟫_ℝ}\nε : ℝ\nhε : ε > 0\nhball : Metric.ball x ε ⊆ {y | 0 < ⟪f y, f x⟫_ℝ}\n⊢ False"
+        ],
+        "goals_before": [
+          "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\n⊢ f = 0"
+        ],
+        "kind": "tactic",
+        "start": 11310
+      },
+      "start_offset": 4057,
+      "end_offset": 5942,
+      "position": {
+        "line": 104,
+        "column": 2
+      },
+      "end_position": {
+        "line": 156,
+        "column": 105
+      },
+      "source_text": "funext x\n  simp only [Pi.zero_apply]\n  by_contra hx\n  have hxpos : 0 < ⟪f x, f x⟫_ℝ := real_inner_self_pos'.2 hx\n  have hopen : IsOpen {y : Y | 0 < ⟪f y, f x⟫_ℝ} := by\n    apply isOpen_lt continuous_const\n    fun_prop\n  obtain ⟨ε, hε, hball⟩ := Metric.isOpen_iff.1 hopen x hxpos\n  let b := ContDiffBump.ofInnerProductSpace x (ε / 2) (half_pos hε)\n  let g : Y → V := fun y => b y • f x\n  have hgcompact : HasCompactSupport g := by\n    refine HasCompactSupport.intro (tsupport b) b.hasCompactSupport ?_\n    intro y hy\n    apply subset_tsupport\n    intro hby\n    apply hy\n    simp [g, hby]\n  have hgtest : IsTestFunction g := by\n    constructor\n    · dsimp [g]\n      fun_prop\n    · exact hgcompact\n  have hzero := hg g hgtest\n  rw [MeasureTheory.integral_eq_zero_iff_of_nonneg] at hzero\n  · rw [Continuous.ae_eq_iff_eq] at hzero\n    · have hself := congrFun hzero x\n      have : ⟪f x, f x⟫_ℝ = 0 := by\n        simpa [g, b] using hself\n      exact hx (real_inner_self_eq_zero'.1 this)\n    · fun_prop\n    · fun_prop\n  · intro y\n    by_cases hby : b y = 0\n    · simp [g, hby]\n    · have hyts : y ∈ tsupport b := subset_tsupport _ hby\n      have hyclosed : y ∈ Metric.closedBall x (ε / 2) := by\n        rw [b.tsupport_eq] at hyts\n        simpa [b] using hyts\n      have hyball : y ∈ Metric.ball x ε := by\n        rw [Metric.mem_ball]\n        have hydist := Metric.mem_closedBall.1 hyclosed\n        linarith\n      have hinner : 0 < ⟪f y, f x⟫_ℝ := hball hyball\n      simp only [g, real_inner_smul_right]\n      exact mul_nonneg (b.nonneg y) hinner.le\n  · have hicompact : HasCompactSupport (fun y => ⟪f y, g y⟫_ℝ) := by\n      refine HasCompactSupport.intro (tsupport b) b.hasCompactSupport ?_\n      intro y hy\n      apply subset_tsupport\n      intro hby\n      apply hy\n      simp [g, hby]\n    exact (show Continuous (fun y => ⟪f y, g y⟫_ℝ) by fun_prop).integrable_of_hasCompactSupport hicompact"
+    },
+    {
+      "depth": 7,
+      "end": 6130,
+      "goals_after": [
+        "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\nhopen : IsOpen {y | 0 < ⟪f y, f x⟫_ℝ}\nε : ℝ\nhε : ε > 0\nhball : Metric.ball x ε ⊆ {y | 0 < ⟪f y, f x⟫_ℝ}\n⊢ False"
+      ],
+      "goals_before": [
+        "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\n⊢ f = 0"
+      ],
+      "kind": "tactic",
+      "start": 4179,
+      "raw": {
+        "depth": 7,
+        "end": 13261,
+        "goals_after": [
+          "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\nhopen : IsOpen {y | 0 < ⟪f y, f x⟫_ℝ}\nε : ℝ\nhε : ε > 0\nhball : Metric.ball x ε ⊆ {y | 0 < ⟪f y, f x⟫_ℝ}\n⊢ False"
+        ],
+        "goals_before": [
+          "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\n⊢ f = 0"
+        ],
+        "kind": "tactic",
+        "start": 11310
+      },
+      "start_offset": 4057,
+      "end_offset": 5942,
+      "position": {
+        "line": 104,
+        "column": 2
+      },
+      "end_position": {
+        "line": 156,
+        "column": 105
+      },
+      "source_text": "funext x\n  simp only [Pi.zero_apply]\n  by_contra hx\n  have hxpos : 0 < ⟪f x, f x⟫_ℝ := real_inner_self_pos'.2 hx\n  have hopen : IsOpen {y : Y | 0 < ⟪f y, f x⟫_ℝ} := by\n    apply isOpen_lt continuous_const\n    fun_prop\n  obtain ⟨ε, hε, hball⟩ := Metric.isOpen_iff.1 hopen x hxpos\n  let b := ContDiffBump.ofInnerProductSpace x (ε / 2) (half_pos hε)\n  let g : Y → V := fun y => b y • f x\n  have hgcompact : HasCompactSupport g := by\n    refine HasCompactSupport.intro (tsupport b) b.hasCompactSupport ?_\n    intro y hy\n    apply subset_tsupport\n    intro hby\n    apply hy\n    simp [g, hby]\n  have hgtest : IsTestFunction g := by\n    constructor\n    · dsimp [g]\n      fun_prop\n    · exact hgcompact\n  have hzero := hg g hgtest\n  rw [MeasureTheory.integral_eq_zero_iff_of_nonneg] at hzero\n  · rw [Continuous.ae_eq_iff_eq] at hzero\n    · have hself := congrFun hzero x\n      have : ⟪f x, f x⟫_ℝ = 0 := by\n        simpa [g, b] using hself\n      exact hx (real_inner_self_eq_zero'.1 this)\n    · fun_prop\n    · fun_prop\n  · intro y\n    by_cases hby : b y = 0\n    · simp [g, hby]\n    · have hyts : y ∈ tsupport b := subset_tsupport _ hby\n      have hyclosed : y ∈ Metric.closedBall x (ε / 2) := by\n        rw [b.tsupport_eq] at hyts\n        simpa [b] using hyts\n      have hyball : y ∈ Metric.ball x ε := by\n        rw [Metric.mem_ball]\n        have hydist := Metric.mem_closedBall.1 hyclosed\n        linarith\n      have hinner : 0 < ⟪f y, f x⟫_ℝ := hball hyball\n      simp only [g, real_inner_smul_right]\n      exact mul_nonneg (b.nonneg y) hinner.le\n  · have hicompact : HasCompactSupport (fun y => ⟪f y, g y⟫_ℝ) := by\n      refine HasCompactSupport.intro (tsupport b) b.hasCompactSupport ?_\n      intro y hy\n      apply subset_tsupport\n      intro hby\n      apply hy\n      simp [g, hby]\n    exact (show Continuous (fun y => ⟪f y, g y⟫_ℝ) by fun_prop).integrable_of_hasCompactSupport hicompact"
+    },
+    {
+      "depth": 8,
+      "end": 4187,
+      "goals_after": [
+        "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\n⊢ f x = 0 x"
+      ],
+      "goals_before": [
+        "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\n⊢ f = 0"
+      ],
+      "kind": "tactic",
+      "start": 4179,
+      "raw": {
+        "depth": 8,
+        "end": 11318,
+        "goals_after": [
+          "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\n⊢ f x = 0 x"
+        ],
+        "goals_before": [
+          "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\n⊢ f = 0"
+        ],
+        "kind": "tactic",
+        "start": 11310
+      },
+      "start_offset": 4057,
+      "end_offset": 4065,
+      "position": {
+        "line": 104,
+        "column": 2
+      },
+      "end_position": {
+        "line": 104,
+        "column": 10
+      },
+      "source_text": "funext x"
+    },
+    {
+      "depth": 9,
+      "end": 4187,
+      "goals_after": [
+        "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\n⊢ f x = 0 x"
+      ],
+      "goals_before": [
+        "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\n⊢ f = 0"
+      ],
+      "kind": "tactic",
+      "start": 4179,
+      "raw": {
+        "depth": 9,
+        "end": 11318,
+        "goals_after": [
+          "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\n⊢ f x = 0 x"
+        ],
+        "goals_before": [
+          "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\n⊢ f = 0"
+        ],
+        "kind": "tactic",
+        "start": 11310
+      },
+      "start_offset": 4057,
+      "end_offset": 4065,
+      "position": {
+        "line": 104,
+        "column": 2
+      },
+      "end_position": {
+        "line": 104,
+        "column": 10
+      },
+      "source_text": "funext x"
+    },
+    {
+      "depth": 10,
+      "end": 4187,
+      "goals_after": [
+        "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\n⊢ ∀ (x : Y), f x = 0 x"
+      ],
+      "goals_before": [
+        "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\n⊢ f = 0"
+      ],
+      "kind": "tactic",
+      "start": 4179,
+      "raw": {
+        "depth": 10,
+        "end": 11318,
+        "goals_after": [
+          "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\n⊢ ∀ (x : Y), f x = 0 x"
+        ],
+        "goals_before": [
+          "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\n⊢ f = 0"
+        ],
+        "kind": "tactic",
+        "start": 11310
+      },
+      "start_offset": 4057,
+      "end_offset": 4065,
+      "position": {
+        "line": 104,
+        "column": 2
+      },
+      "end_position": {
+        "line": 104,
+        "column": 10
+      },
+      "source_text": "funext x"
+    },
+    {
+      "depth": 10,
+      "end": 4187,
+      "goals_after": [
+        "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\n⊢ ∀ (x : Y), f x = 0 x"
+      ],
+      "goals_before": [
+        "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\n⊢ ∀ (x : Y), f x = 0 x"
+      ],
+      "kind": "tactic",
+      "start": 4179,
+      "raw": {
+        "depth": 10,
+        "end": 11318,
+        "goals_after": [
+          "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\n⊢ ∀ (x : Y), f x = 0 x"
+        ],
+        "goals_before": [
+          "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\n⊢ ∀ (x : Y), f x = 0 x"
+        ],
+        "kind": "tactic",
+        "start": 11310
+      },
+      "start_offset": 4057,
+      "end_offset": 4065,
+      "position": {
+        "line": 104,
+        "column": 2
+      },
+      "end_position": {
+        "line": 104,
+        "column": 10
+      },
+      "source_text": "funext x"
+    },
+    {
+      "depth": 10,
+      "end": 4187,
+      "goals_after": [
+        "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\n⊢ f x = 0 x"
+      ],
+      "goals_before": [
+        "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\n⊢ ∀ (x : Y), f x = 0 x"
+      ],
+      "kind": "tactic",
+      "start": 4179,
+      "raw": {
+        "depth": 10,
+        "end": 11318,
+        "goals_after": [
+          "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\n⊢ f x = 0 x"
+        ],
+        "goals_before": [
+          "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\n⊢ ∀ (x : Y), f x = 0 x"
+        ],
+        "kind": "tactic",
+        "start": 11310
+      },
+      "start_offset": 4057,
+      "end_offset": 4065,
+      "position": {
+        "line": 104,
+        "column": 2
+      },
+      "end_position": {
+        "line": 104,
+        "column": 10
+      },
+      "source_text": "funext x"
+    },
+    {
+      "depth": 11,
+      "end": 4187,
+      "goals_after": [
+        "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\n⊢ f x = 0 x"
+      ],
+      "goals_before": [
+        "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\n⊢ ∀ (x : Y), f x = 0 x"
+      ],
+      "kind": "tactic",
+      "start": 4179,
+      "raw": {
+        "depth": 11,
+        "end": 11318,
+        "goals_after": [
+          "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\n⊢ f x = 0 x"
+        ],
+        "goals_before": [
+          "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\n⊢ ∀ (x : Y), f x = 0 x"
+        ],
+        "kind": "tactic",
+        "start": 11310
+      },
+      "start_offset": 4057,
+      "end_offset": 4065,
+      "position": {
+        "line": 104,
+        "column": 2
+      },
+      "end_position": {
+        "line": 104,
+        "column": 10
+      },
+      "source_text": "funext x"
+    },
+    {
+      "depth": 8,
+      "end": 4215,
+      "goals_after": [
+        "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\n⊢ f x = 0"
+      ],
+      "goals_before": [
+        "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\n⊢ f x = 0 x"
+      ],
+      "kind": "tactic",
+      "start": 4190,
+      "raw": {
+        "depth": 8,
+        "end": 11346,
+        "goals_after": [
+          "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\n⊢ f x = 0"
+        ],
+        "goals_before": [
+          "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\n⊢ f x = 0 x"
+        ],
+        "kind": "tactic",
+        "start": 11321
+      },
+      "start_offset": 4068,
+      "end_offset": 4093,
+      "position": {
+        "line": 105,
+        "column": 2
+      },
+      "end_position": {
+        "line": 105,
+        "column": 27
+      },
+      "source_text": "simp only [Pi.zero_apply]"
+    },
+    {
+      "depth": 8,
+      "end": 4230,
+      "goals_after": [
+        "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\n⊢ False"
+      ],
+      "goals_before": [
+        "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\n⊢ f x = 0"
+      ],
+      "kind": "tactic",
+      "start": 4218,
+      "raw": {
+        "depth": 8,
+        "end": 11361,
+        "goals_after": [
+          "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\n⊢ False"
+        ],
+        "goals_before": [
+          "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\n⊢ f x = 0"
+        ],
+        "kind": "tactic",
+        "start": 11349
+      },
+      "start_offset": 4096,
+      "end_offset": 4108,
+      "position": {
+        "line": 106,
+        "column": 2
+      },
+      "end_position": {
+        "line": 106,
+        "column": 14
+      },
+      "source_text": "by_contra hx"
+    },
+    {
+      "depth": 9,
+      "end": 4230,
+      "goals_after": [
+        "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\n⊢ False"
+      ],
+      "goals_before": [
+        "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\n⊢ f x = 0"
+      ],
+      "kind": "tactic",
+      "start": 4218,
+      "raw": {
+        "depth": 9,
+        "end": 11361,
+        "goals_after": [
+          "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\n⊢ False"
+        ],
+        "goals_before": [
+          "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\n⊢ f x = 0"
+        ],
+        "kind": "tactic",
+        "start": 11349
+      },
+      "start_offset": 4096,
+      "end_offset": 4108,
+      "position": {
+        "line": 106,
+        "column": 2
+      },
+      "end_position": {
+        "line": 106,
+        "column": 14
+      },
+      "source_text": "by_contra hx"
+    },
+    {
+      "depth": 10,
+      "end": 4230,
+      "goals_after": [
+        "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\n⊢ False"
+      ],
+      "goals_before": [
+        "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\n⊢ f x = 0"
+      ],
+      "kind": "tactic",
+      "start": 4218,
+      "raw": {
+        "depth": 10,
+        "end": 11361,
+        "goals_after": [
+          "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\n⊢ False"
+        ],
+        "goals_before": [
+          "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\n⊢ f x = 0"
+        ],
+        "kind": "tactic",
+        "start": 11349
+      },
+      "start_offset": 4096,
+      "end_offset": 4108,
+      "position": {
+        "line": 106,
+        "column": 2
+      },
+      "end_position": {
+        "line": 106,
+        "column": 14
+      },
+      "source_text": "by_contra hx"
+    },
+    {
+      "depth": 11,
+      "end": 4230,
+      "goals_after": [
+        "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\n⊢ False"
+      ],
+      "goals_before": [
+        "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\n⊢ f x = 0"
+      ],
+      "kind": "tactic",
+      "start": 4218,
+      "raw": {
+        "depth": 11,
+        "end": 11361,
+        "goals_after": [
+          "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\n⊢ False"
+        ],
+        "goals_before": [
+          "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\n⊢ f x = 0"
+        ],
+        "kind": "tactic",
+        "start": 11349
+      },
+      "start_offset": 4096,
+      "end_offset": 4108,
+      "position": {
+        "line": 106,
+        "column": 2
+      },
+      "end_position": {
+        "line": 106,
+        "column": 14
+      },
+      "source_text": "by_contra hx"
+    },
+    {
+      "depth": 12,
+      "end": 4230,
+      "goals_after": [
+        "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\n⊢ ¬f x = 0 → False"
+      ],
+      "goals_before": [
+        "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\n⊢ f x = 0"
+      ],
+      "kind": "tactic",
+      "start": 4218,
+      "raw": {
+        "depth": 12,
+        "end": 11361,
+        "goals_after": [
+          "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\n⊢ ¬f x = 0 → False"
+        ],
+        "goals_before": [
+          "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\n⊢ f x = 0"
+        ],
+        "kind": "tactic",
+        "start": 11349
+      },
+      "start_offset": 4096,
+      "end_offset": 4108,
+      "position": {
+        "line": 106,
+        "column": 2
+      },
+      "end_position": {
+        "line": 106,
+        "column": 14
+      },
+      "source_text": "by_contra hx"
+    },
+    {
+      "depth": 13,
+      "end": 4230,
+      "goals_after": [
+        "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\n⊢ ¬f x = 0 → False"
+      ],
+      "goals_before": [
+        "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\n⊢ f x = 0"
+      ],
+      "kind": "tactic",
+      "start": 4218,
+      "raw": {
+        "depth": 13,
+        "end": 11361,
+        "goals_after": [
+          "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\n⊢ ¬f x = 0 → False"
+        ],
+        "goals_before": [
+          "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\n⊢ f x = 0"
+        ],
+        "kind": "tactic",
+        "start": 11349
+      },
+      "start_offset": 4096,
+      "end_offset": 4108,
+      "position": {
+        "line": 106,
+        "column": 2
+      },
+      "end_position": {
+        "line": 106,
+        "column": 14
+      },
+      "source_text": "by_contra hx"
+    },
+    {
+      "depth": 14,
+      "end": 4230,
+      "goals_after": [
+        "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\n⊢ f x = 0"
+      ],
+      "goals_before": [
+        "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\n⊢ f x = 0"
+      ],
+      "kind": "tactic",
+      "start": 4218,
+      "raw": {
+        "depth": 14,
+        "end": 11361,
+        "goals_after": [
+          "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\n⊢ f x = 0"
+        ],
+        "goals_before": [
+          "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\n⊢ f x = 0"
+        ],
+        "kind": "tactic",
+        "start": 11349
+      },
+      "start_offset": 4096,
+      "end_offset": 4108,
+      "position": {
+        "line": 106,
+        "column": 2
+      },
+      "end_position": {
+        "line": 106,
+        "column": 14
+      },
+      "source_text": "by_contra hx"
+    },
+    {
+      "depth": 15,
+      "end": 4230,
+      "goals_after": [
+        "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\n⊢ f x = 0"
+      ],
+      "goals_before": [
+        "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\n⊢ f x = 0"
+      ],
+      "kind": "tactic",
+      "start": 4218,
+      "raw": {
+        "depth": 15,
+        "end": 11361,
+        "goals_after": [
+          "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\n⊢ f x = 0"
+        ],
+        "goals_before": [
+          "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\n⊢ f x = 0"
+        ],
+        "kind": "tactic",
+        "start": 11349
+      },
+      "start_offset": 4096,
+      "end_offset": 4108,
+      "position": {
+        "line": 106,
+        "column": 2
+      },
+      "end_position": {
+        "line": 106,
+        "column": 14
+      },
+      "source_text": "by_contra hx"
+    },
+    {
+      "depth": 16,
+      "end": 4230,
+      "goals_after": [
+        "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\n⊢ f x = 0"
+      ],
+      "goals_before": [
+        "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\n⊢ f x = 0"
+      ],
+      "kind": "tactic",
+      "start": 4218,
+      "raw": {
+        "depth": 16,
+        "end": 11361,
+        "goals_after": [
+          "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\n⊢ f x = 0"
+        ],
+        "goals_before": [
+          "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\n⊢ f x = 0"
+        ],
+        "kind": "tactic",
+        "start": 11349
+      },
+      "start_offset": 4096,
+      "end_offset": 4108,
+      "position": {
+        "line": 106,
+        "column": 2
+      },
+      "end_position": {
+        "line": 106,
+        "column": 14
+      },
+      "source_text": "by_contra hx"
+    },
+    {
+      "depth": 14,
+      "end": 4230,
+      "goals_after": [
+        "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\n⊢ f x = 0"
+      ],
+      "goals_before": [
+        "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\n⊢ f x = 0"
+      ],
+      "kind": "tactic",
+      "start": 4218,
+      "raw": {
+        "depth": 14,
+        "end": 11361,
+        "goals_after": [
+          "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\n⊢ f x = 0"
+        ],
+        "goals_before": [
+          "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\n⊢ f x = 0"
+        ],
+        "kind": "tactic",
+        "start": 11349
+      },
+      "start_offset": 4096,
+      "end_offset": 4108,
+      "position": {
+        "line": 106,
+        "column": 2
+      },
+      "end_position": {
+        "line": 106,
+        "column": 14
+      },
+      "source_text": "by_contra hx"
+    },
+    {
+      "depth": 15,
+      "end": 4230,
+      "goals_after": [
+        "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\n⊢ f x = 0"
+      ],
+      "goals_before": [
+        "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\n⊢ f x = 0"
+      ],
+      "kind": "tactic",
+      "start": 4218,
+      "raw": {
+        "depth": 15,
+        "end": 11361,
+        "goals_after": [
+          "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\n⊢ f x = 0"
+        ],
+        "goals_before": [
+          "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\n⊢ f x = 0"
+        ],
+        "kind": "tactic",
+        "start": 11349
+      },
+      "start_offset": 4096,
+      "end_offset": 4108,
+      "position": {
+        "line": 106,
+        "column": 2
+      },
+      "end_position": {
+        "line": 106,
+        "column": 14
+      },
+      "source_text": "by_contra hx"
+    },
+    {
+      "depth": 16,
+      "end": 4230,
+      "goals_after": [
+        "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\n⊢ f x = 0"
+      ],
+      "goals_before": [
+        "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\n⊢ f x = 0"
+      ],
+      "kind": "tactic",
+      "start": 4218,
+      "raw": {
+        "depth": 16,
+        "end": 11361,
+        "goals_after": [
+          "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\n⊢ f x = 0"
+        ],
+        "goals_before": [
+          "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\n⊢ f x = 0"
+        ],
+        "kind": "tactic",
+        "start": 11349
+      },
+      "start_offset": 4096,
+      "end_offset": 4108,
+      "position": {
+        "line": 106,
+        "column": 2
+      },
+      "end_position": {
+        "line": 106,
+        "column": 14
+      },
+      "source_text": "by_contra hx"
+    },
+    {
+      "depth": 14,
+      "end": 4230,
+      "goals_after": [
+        "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\n⊢ ¬f x = 0 → False"
+      ],
+      "goals_before": [
+        "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\n⊢ f x = 0"
+      ],
+      "kind": "tactic",
+      "start": 4218,
+      "raw": {
+        "depth": 14,
+        "end": 11361,
+        "goals_after": [
+          "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\n⊢ ¬f x = 0 → False"
+        ],
+        "goals_before": [
+          "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\n⊢ f x = 0"
+        ],
+        "kind": "tactic",
+        "start": 11349
+      },
+      "start_offset": 4096,
+      "end_offset": 4108,
+      "position": {
+        "line": 106,
+        "column": 2
+      },
+      "end_position": {
+        "line": 106,
+        "column": 14
+      },
+      "source_text": "by_contra hx"
+    },
+    {
+      "depth": 15,
+      "end": 4230,
+      "goals_after": [
+        "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\n⊢ ¬f x = 0 → False"
+      ],
+      "goals_before": [
+        "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\n⊢ f x = 0"
+      ],
+      "kind": "tactic",
+      "start": 4218,
+      "raw": {
+        "depth": 15,
+        "end": 11361,
+        "goals_after": [
+          "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\n⊢ ¬f x = 0 → False"
+        ],
+        "goals_before": [
+          "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\n⊢ f x = 0"
+        ],
+        "kind": "tactic",
+        "start": 11349
+      },
+      "start_offset": 4096,
+      "end_offset": 4108,
+      "position": {
+        "line": 106,
+        "column": 2
+      },
+      "end_position": {
+        "line": 106,
+        "column": 14
+      },
+      "source_text": "by_contra hx"
+    },
+    {
+      "depth": 16,
+      "end": 4230,
+      "goals_after": [
+        "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\n⊢ ¬f x = 0 → False"
+      ],
+      "goals_before": [
+        "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\n⊢ f x = 0"
+      ],
+      "kind": "tactic",
+      "start": 4218,
+      "raw": {
+        "depth": 16,
+        "end": 11361,
+        "goals_after": [
+          "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\n⊢ ¬f x = 0 → False"
+        ],
+        "goals_before": [
+          "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\n⊢ f x = 0"
+        ],
+        "kind": "tactic",
+        "start": 11349
+      },
+      "start_offset": 4096,
+      "end_offset": 4108,
+      "position": {
+        "line": 106,
+        "column": 2
+      },
+      "end_position": {
+        "line": 106,
+        "column": 14
+      },
+      "source_text": "by_contra hx"
+    },
+    {
+      "depth": 12,
+      "end": 4230,
+      "goals_after": [
+        "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\n⊢ ¬f x = 0 → False"
+      ],
+      "goals_before": [
+        "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\n⊢ ¬f x = 0 → False"
+      ],
+      "kind": "tactic",
+      "start": 4218,
+      "raw": {
+        "depth": 12,
+        "end": 11361,
+        "goals_after": [
+          "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\n⊢ ¬f x = 0 → False"
+        ],
+        "goals_before": [
+          "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\n⊢ ¬f x = 0 → False"
+        ],
+        "kind": "tactic",
+        "start": 11349
+      },
+      "start_offset": 4096,
+      "end_offset": 4108,
+      "position": {
+        "line": 106,
+        "column": 2
+      },
+      "end_position": {
+        "line": 106,
+        "column": 14
+      },
+      "source_text": "by_contra hx"
+    },
+    {
+      "depth": 12,
+      "end": 4230,
+      "goals_after": [
+        "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\n⊢ False"
+      ],
+      "goals_before": [
+        "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\n⊢ ¬f x = 0 → False"
+      ],
+      "kind": "tactic",
+      "start": 4218,
+      "raw": {
+        "depth": 12,
+        "end": 11361,
+        "goals_after": [
+          "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\n⊢ False"
+        ],
+        "goals_before": [
+          "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\n⊢ ¬f x = 0 → False"
+        ],
+        "kind": "tactic",
+        "start": 11349
+      },
+      "start_offset": 4096,
+      "end_offset": 4108,
+      "position": {
+        "line": 106,
+        "column": 2
+      },
+      "end_position": {
+        "line": 106,
+        "column": 14
+      },
+      "source_text": "by_contra hx"
+    },
+    {
+      "depth": 8,
+      "end": 4297,
+      "goals_after": [
+        "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\n⊢ False"
+      ],
+      "goals_before": [
+        "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\n⊢ False"
+      ],
+      "kind": "tactic",
+      "start": 4233,
+      "raw": {
+        "depth": 8,
+        "end": 11428,
+        "goals_after": [
+          "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\n⊢ False"
+        ],
+        "goals_before": [
+          "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\n⊢ False"
+        ],
+        "kind": "tactic",
+        "start": 11364
+      },
+      "start_offset": 4111,
+      "end_offset": 4169,
+      "position": {
+        "line": 107,
+        "column": 2
+      },
+      "end_position": {
+        "line": 107,
+        "column": 60
+      },
+      "source_text": "have hxpos : 0 < ⟪f x, f x⟫_ℝ := real_inner_self_pos'.2 hx"
+    },
+    {
+      "depth": 9,
+      "end": 4297,
+      "goals_after": [
+        "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\n⊢ False"
+      ],
+      "goals_before": [
+        "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\n⊢ False"
+      ],
+      "kind": "tactic",
+      "start": 4233,
+      "raw": {
+        "depth": 9,
+        "end": 11428,
+        "goals_after": [
+          "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\n⊢ False"
+        ],
+        "goals_before": [
+          "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\n⊢ False"
+        ],
+        "kind": "tactic",
+        "start": 11364
+      },
+      "start_offset": 4111,
+      "end_offset": 4169,
+      "position": {
+        "line": 107,
+        "column": 2
+      },
+      "end_position": {
+        "line": 107,
+        "column": 60
+      },
+      "source_text": "have hxpos : 0 < ⟪f x, f x⟫_ℝ := real_inner_self_pos'.2 hx"
+    },
+    {
+      "depth": 10,
+      "end": 4297,
+      "goals_after": [
+        "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\n⊢ False"
+      ],
+      "goals_before": [
+        "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\n⊢ False"
+      ],
+      "kind": "tactic",
+      "start": 4233,
+      "raw": {
+        "depth": 10,
+        "end": 11428,
+        "goals_after": [
+          "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\n⊢ False"
+        ],
+        "goals_before": [
+          "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\n⊢ False"
+        ],
+        "kind": "tactic",
+        "start": 11364
+      },
+      "start_offset": 4111,
+      "end_offset": 4169,
+      "position": {
+        "line": 107,
+        "column": 2
+      },
+      "end_position": {
+        "line": 107,
+        "column": 60
+      },
+      "source_text": "have hxpos : 0 < ⟪f x, f x⟫_ℝ := real_inner_self_pos'.2 hx"
+    },
+    {
+      "depth": 11,
+      "end": 4297,
+      "goals_after": [
+        "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\n⊢ False"
+      ],
+      "goals_before": [
+        "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\n⊢ False"
+      ],
+      "kind": "tactic",
+      "start": 4233,
+      "raw": {
+        "depth": 11,
+        "end": 11428,
+        "goals_after": [
+          "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\n⊢ False"
+        ],
+        "goals_before": [
+          "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\n⊢ False"
+        ],
+        "kind": "tactic",
+        "start": 11364
+      },
+      "start_offset": 4111,
+      "end_offset": 4169,
+      "position": {
+        "line": 107,
+        "column": 2
+      },
+      "end_position": {
+        "line": 107,
+        "column": 60
+      },
+      "source_text": "have hxpos : 0 < ⟪f x, f x⟫_ℝ := real_inner_self_pos'.2 hx"
+    },
+    {
+      "depth": 11,
+      "end": 4297,
+      "goals_after": [
+        "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\n⊢ False"
+      ],
+      "goals_before": [
+        "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\n⊢ False"
+      ],
+      "kind": "tactic",
+      "start": 4233,
+      "raw": {
+        "depth": 11,
+        "end": 11428,
+        "goals_after": [
+          "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\n⊢ False"
+        ],
+        "goals_before": [
+          "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\n⊢ False"
+        ],
+        "kind": "tactic",
+        "start": 11364
+      },
+      "start_offset": 4111,
+      "end_offset": 4169,
+      "position": {
+        "line": 107,
+        "column": 2
+      },
+      "end_position": {
+        "line": 107,
+        "column": 60
+      },
+      "source_text": "have hxpos : 0 < ⟪f x, f x⟫_ℝ := real_inner_self_pos'.2 hx"
+    },
+    {
+      "depth": 12,
+      "end": 4297,
+      "goals_after": [
+        "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\n⊢ False"
+      ],
+      "goals_before": [
+        "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\n⊢ False"
+      ],
+      "kind": "tactic",
+      "start": 4233,
+      "raw": {
+        "depth": 12,
+        "end": 11428,
+        "goals_after": [
+          "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\n⊢ False"
+        ],
+        "goals_before": [
+          "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\n⊢ False"
+        ],
+        "kind": "tactic",
+        "start": 11364
+      },
+      "start_offset": 4111,
+      "end_offset": 4169,
+      "position": {
+        "line": 107,
+        "column": 2
+      },
+      "end_position": {
+        "line": 107,
+        "column": 60
+      },
+      "source_text": "have hxpos : 0 < ⟪f x, f x⟫_ℝ := real_inner_self_pos'.2 hx"
+    },
+    {
+      "depth": 13,
+      "end": 4297,
+      "goals_after": [
+        "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\n⊢ False"
+      ],
+      "goals_before": [
+        "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\n⊢ False"
+      ],
+      "kind": "tactic",
+      "start": 4233,
+      "raw": {
+        "depth": 13,
+        "end": 11428,
+        "goals_after": [
+          "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\n⊢ False"
+        ],
+        "goals_before": [
+          "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\n⊢ False"
+        ],
+        "kind": "tactic",
+        "start": 11364
+      },
+      "start_offset": 4111,
+      "end_offset": 4169,
+      "position": {
+        "line": 107,
+        "column": 2
+      },
+      "end_position": {
+        "line": 107,
+        "column": 60
+      },
+      "source_text": "have hxpos : 0 < ⟪f x, f x⟫_ℝ := real_inner_self_pos'.2 hx"
+    },
+    {
+      "depth": 14,
+      "end": 4297,
+      "goals_after": [
+        "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\n⊢ False"
+      ],
+      "goals_before": [
+        "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\n⊢ False"
+      ],
+      "kind": "tactic",
+      "start": 4233,
+      "raw": {
+        "depth": 14,
+        "end": 11428,
+        "goals_after": [
+          "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\n⊢ False"
+        ],
+        "goals_before": [
+          "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\n⊢ False"
+        ],
+        "kind": "tactic",
+        "start": 11364
+      },
+      "start_offset": 4111,
+      "end_offset": 4169,
+      "position": {
+        "line": 107,
+        "column": 2
+      },
+      "end_position": {
+        "line": 107,
+        "column": 60
+      },
+      "source_text": "have hxpos : 0 < ⟪f x, f x⟫_ℝ := real_inner_self_pos'.2 hx"
+    },
+    {
+      "depth": 15,
+      "end": 4297,
+      "goals_after": [
+        "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\n⊢ False"
+      ],
+      "goals_before": [
+        "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\n⊢ False"
+      ],
+      "kind": "tactic",
+      "start": 4233,
+      "raw": {
+        "depth": 15,
+        "end": 11428,
+        "goals_after": [
+          "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\n⊢ False"
+        ],
+        "goals_before": [
+          "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\n⊢ False"
+        ],
+        "kind": "tactic",
+        "start": 11364
+      },
+      "start_offset": 4111,
+      "end_offset": 4169,
+      "position": {
+        "line": 107,
+        "column": 2
+      },
+      "end_position": {
+        "line": 107,
+        "column": 60
+      },
+      "source_text": "have hxpos : 0 < ⟪f x, f x⟫_ℝ := real_inner_self_pos'.2 hx"
+    },
+    {
+      "depth": 16,
+      "end": 4297,
+      "goals_after": [
+        "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\n⊢ False"
+      ],
+      "goals_before": [
+        "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\n⊢ False"
+      ],
+      "kind": "tactic",
+      "start": 4233,
+      "raw": {
+        "depth": 16,
+        "end": 11428,
+        "goals_after": [
+          "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\n⊢ False"
+        ],
+        "goals_before": [
+          "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\n⊢ False"
+        ],
+        "kind": "tactic",
+        "start": 11364
+      },
+      "start_offset": 4111,
+      "end_offset": 4169,
+      "position": {
+        "line": 107,
+        "column": 2
+      },
+      "end_position": {
+        "line": 107,
+        "column": 60
+      },
+      "source_text": "have hxpos : 0 < ⟪f x, f x⟫_ℝ := real_inner_self_pos'.2 hx"
+    },
+    {
+      "depth": 16,
+      "end": 4297,
+      "goals_after": [
+        "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\n⊢ False"
+      ],
+      "goals_before": [
+        "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\n⊢ False"
+      ],
+      "kind": "tactic",
+      "start": 4233,
+      "raw": {
+        "depth": 16,
+        "end": 11428,
+        "goals_after": [
+          "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\n⊢ False"
+        ],
+        "goals_before": [
+          "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\n⊢ False"
+        ],
+        "kind": "tactic",
+        "start": 11364
+      },
+      "start_offset": 4111,
+      "end_offset": 4169,
+      "position": {
+        "line": 107,
+        "column": 2
+      },
+      "end_position": {
+        "line": 107,
+        "column": 60
+      },
+      "source_text": "have hxpos : 0 < ⟪f x, f x⟫_ℝ := real_inner_self_pos'.2 hx"
+    },
+    {
+      "depth": 16,
+      "end": 4297,
+      "goals_after": [
+        "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\n⊢ False"
+      ],
+      "goals_before": [
+        "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\n⊢ False"
+      ],
+      "kind": "tactic",
+      "start": 4233,
+      "raw": {
+        "depth": 16,
+        "end": 11428,
+        "goals_after": [
+          "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\n⊢ False"
+        ],
+        "goals_before": [
+          "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\n⊢ False"
+        ],
+        "kind": "tactic",
+        "start": 11364
+      },
+      "start_offset": 4111,
+      "end_offset": 4169,
+      "position": {
+        "line": 107,
+        "column": 2
+      },
+      "end_position": {
+        "line": 107,
+        "column": 60
+      },
+      "source_text": "have hxpos : 0 < ⟪f x, f x⟫_ℝ := real_inner_self_pos'.2 hx"
+    },
+    {
+      "depth": 8,
+      "end": 4408,
+      "goals_after": [
+        "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\nhopen : IsOpen {y | 0 < ⟪f y, f x⟫_ℝ}\n⊢ False"
+      ],
+      "goals_before": [
+        "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\n⊢ False"
+      ],
+      "kind": "tactic",
+      "start": 4300,
+      "raw": {
+        "depth": 8,
+        "end": 11539,
+        "goals_after": [
+          "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\nhopen : IsOpen {y | 0 < ⟪f y, f x⟫_ℝ}\n⊢ False"
+        ],
+        "goals_before": [
+          "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\n⊢ False"
+        ],
+        "kind": "tactic",
+        "start": 11431
+      },
+      "start_offset": 4172,
+      "end_offset": 4274,
+      "position": {
+        "line": 108,
+        "column": 2
+      },
+      "end_position": {
+        "line": 110,
+        "column": 12
+      },
+      "source_text": "have hopen : IsOpen {y : Y | 0 < ⟪f y, f x⟫_ℝ} := by\n    apply isOpen_lt continuous_const\n    fun_prop"
+    },
+    {
+      "depth": 9,
+      "end": 4304,
+      "goals_after": [
+        "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\nhopen : IsOpen {y | 0 < ⟪f y, f x⟫_ℝ}\n⊢ False"
+      ],
+      "goals_before": [
+        "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\n⊢ False"
+      ],
+      "kind": "tactic",
+      "start": 4300,
+      "raw": {
+        "depth": 9,
+        "end": 11435,
+        "goals_after": [
+          "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\nhopen : IsOpen {y | 0 < ⟪f y, f x⟫_ℝ}\n⊢ False"
+        ],
+        "goals_before": [
+          "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\n⊢ False"
+        ],
+        "kind": "tactic",
+        "start": 11431
+      },
+      "start_offset": 4172,
+      "end_offset": 4176,
+      "position": {
+        "line": 108,
+        "column": 2
+      },
+      "end_position": {
+        "line": 108,
+        "column": 6
+      },
+      "source_text": "have"
+    },
+    {
+      "depth": 10,
+      "end": 4304,
+      "goals_after": [
+        "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\n⊢ False"
+      ],
+      "goals_before": [
+        "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\n⊢ False"
+      ],
+      "kind": "tactic",
+      "start": 4300,
+      "raw": {
+        "depth": 10,
+        "end": 11435,
+        "goals_after": [
+          "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\n⊢ False"
+        ],
+        "goals_before": [
+          "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\n⊢ False"
+        ],
+        "kind": "tactic",
+        "start": 11431
+      },
+      "start_offset": 4172,
+      "end_offset": 4176,
+      "position": {
+        "line": 108,
+        "column": 2
+      },
+      "end_position": {
+        "line": 108,
+        "column": 6
+      },
+      "source_text": "have"
+    },
+    {
+      "depth": 10,
+      "end": 4304,
+      "goals_after": [
+        "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\nhopen : IsOpen {y | 0 < ⟪f y, f x⟫_ℝ}\n⊢ False"
+      ],
+      "goals_before": [
+        "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\n⊢ False"
+      ],
+      "kind": "tactic",
+      "start": 4300,
+      "raw": {
+        "depth": 10,
+        "end": 11435,
+        "goals_after": [
+          "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\nhopen : IsOpen {y | 0 < ⟪f y, f x⟫_ℝ}\n⊢ False"
+        ],
+        "goals_before": [
+          "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\n⊢ False"
+        ],
+        "kind": "tactic",
+        "start": 11431
+      },
+      "start_offset": 4172,
+      "end_offset": 4176,
+      "position": {
+        "line": 108,
+        "column": 2
+      },
+      "end_position": {
+        "line": 108,
+        "column": 6
+      },
+      "source_text": "have"
+    },
+    {
+      "depth": 11,
+      "end": 4304,
+      "goals_after": [
+        "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\nhopen : IsOpen {y | 0 < ⟪f y, f x⟫_ℝ}\n⊢ False"
+      ],
+      "goals_before": [
+        "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\n⊢ False"
+      ],
+      "kind": "tactic",
+      "start": 4300,
+      "raw": {
+        "depth": 11,
+        "end": 11435,
+        "goals_after": [
+          "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\nhopen : IsOpen {y | 0 < ⟪f y, f x⟫_ℝ}\n⊢ False"
+        ],
+        "goals_before": [
+          "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\n⊢ False"
+        ],
+        "kind": "tactic",
+        "start": 11431
+      },
+      "start_offset": 4172,
+      "end_offset": 4176,
+      "position": {
+        "line": 108,
+        "column": 2
+      },
+      "end_position": {
+        "line": 108,
+        "column": 6
+      },
+      "source_text": "have"
+    },
+    {
+      "depth": 12,
+      "end": 4304,
+      "goals_after": [
+        "case body\nV : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\n⊢ IsOpen {y | 0 < ⟪f y, f x⟫_ℝ}",
+        "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\nhopen : IsOpen {y | 0 < ⟪f y, f x⟫_ℝ}\n⊢ False"
+      ],
+      "goals_before": [
+        "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\n⊢ False"
+      ],
+      "kind": "tactic",
+      "start": 4300,
+      "raw": {
+        "depth": 12,
+        "end": 11435,
+        "goals_after": [
+          "case body\nV : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\n⊢ IsOpen {y | 0 < ⟪f y, f x⟫_ℝ}",
+          "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\nhopen : IsOpen {y | 0 < ⟪f y, f x⟫_ℝ}\n⊢ False"
+        ],
+        "goals_before": [
+          "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\n⊢ False"
+        ],
+        "kind": "tactic",
+        "start": 11431
+      },
+      "start_offset": 4172,
+      "end_offset": 4176,
+      "position": {
+        "line": 108,
+        "column": 2
+      },
+      "end_position": {
+        "line": 108,
+        "column": 6
+      },
+      "source_text": "have"
+    },
+    {
+      "depth": 12,
+      "end": 4304,
+      "goals_after": [
+        "case body\nV : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\n⊢ IsOpen {y | 0 < ⟪f y, f x⟫_ℝ}",
+        "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\nhopen : IsOpen {y | 0 < ⟪f y, f x⟫_ℝ}\n⊢ False"
+      ],
+      "goals_before": [
+        "case body\nV : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\n⊢ IsOpen {y | 0 < ⟪f y, f x⟫_ℝ}",
+        "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\nhopen : IsOpen {y | 0 < ⟪f y, f x⟫_ℝ}\n⊢ False"
+      ],
+      "kind": "tactic",
+      "start": 4300,
+      "raw": {
+        "depth": 12,
+        "end": 11435,
+        "goals_after": [
+          "case body\nV : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\n⊢ IsOpen {y | 0 < ⟪f y, f x⟫_ℝ}",
+          "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\nhopen : IsOpen {y | 0 < ⟪f y, f x⟫_ℝ}\n⊢ False"
+        ],
+        "goals_before": [
+          "case body\nV : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\n⊢ IsOpen {y | 0 < ⟪f y, f x⟫_ℝ}",
+          "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\nhopen : IsOpen {y | 0 < ⟪f y, f x⟫_ℝ}\n⊢ False"
+        ],
+        "kind": "tactic",
+        "start": 11431
+      },
+      "start_offset": 4172,
+      "end_offset": 4176,
+      "position": {
+        "line": 108,
+        "column": 2
+      },
+      "end_position": {
+        "line": 108,
+        "column": 6
+      },
+      "source_text": "have"
+    },
+    {
+      "depth": 12,
+      "end": 4358,
+      "goals_after": [
+        "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\nhopen : IsOpen {y | 0 < ⟪f y, f x⟫_ℝ}\n⊢ False"
+      ],
+      "goals_before": [
+        "case body\nV : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\n⊢ IsOpen {y | 0 < ⟪f y, f x⟫_ℝ}",
+        "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\nhopen : IsOpen {y | 0 < ⟪f y, f x⟫_ℝ}\n⊢ False"
+      ],
+      "kind": "tactic",
+      "start": 4356,
+      "raw": {
+        "depth": 12,
+        "end": 11489,
+        "goals_after": [
+          "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\nhopen : IsOpen {y | 0 < ⟪f y, f x⟫_ℝ}\n⊢ False"
+        ],
+        "goals_before": [
+          "case body\nV : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\n⊢ IsOpen {y | 0 < ⟪f y, f x⟫_ℝ}",
+          "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\nhopen : IsOpen {y | 0 < ⟪f y, f x⟫_ℝ}\n⊢ False"
+        ],
+        "kind": "tactic",
+        "start": 11487
+      },
+      "start_offset": 4222,
+      "end_offset": 4224,
+      "position": {
+        "line": 108,
+        "column": 52
+      },
+      "end_position": {
+        "line": 108,
+        "column": 54
+      },
+      "source_text": "by"
+    },
+    {
+      "depth": 13,
+      "end": 4358,
+      "goals_after": [],
+      "goals_before": [
+        "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\n⊢ IsOpen {y | 0 < ⟪f y, f x⟫_ℝ}"
+      ],
+      "kind": "tactic",
+      "start": 4356,
+      "raw": {
+        "depth": 13,
+        "end": 11489,
+        "goals_after": [],
+        "goals_before": [
+          "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\n⊢ IsOpen {y | 0 < ⟪f y, f x⟫_ℝ}"
+        ],
+        "kind": "tactic",
+        "start": 11487
+      },
+      "start_offset": 4222,
+      "end_offset": 4224,
+      "position": {
+        "line": 108,
+        "column": 52
+      },
+      "end_position": {
+        "line": 108,
+        "column": 54
+      },
+      "source_text": "by"
+    },
+    {
+      "depth": 14,
+      "end": 4408,
+      "goals_after": [],
+      "goals_before": [
+        "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\n⊢ IsOpen {y | 0 < ⟪f y, f x⟫_ℝ}"
+      ],
+      "kind": "tactic",
+      "start": 4300,
+      "raw": {
+        "depth": 14,
+        "end": 11539,
+        "goals_after": [],
+        "goals_before": [
+          "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\n⊢ IsOpen {y | 0 < ⟪f y, f x⟫_ℝ}"
+        ],
+        "kind": "tactic",
+        "start": 11431
+      },
+      "start_offset": 4172,
+      "end_offset": 4274,
+      "position": {
+        "line": 108,
+        "column": 2
+      },
+      "end_position": {
+        "line": 110,
+        "column": 12
+      },
+      "source_text": "have hopen : IsOpen {y : Y | 0 < ⟪f y, f x⟫_ℝ} := by\n    apply isOpen_lt continuous_const\n    fun_prop"
+    },
+    {
+      "depth": 15,
+      "end": 4408,
+      "goals_after": [],
+      "goals_before": [
+        "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\n⊢ IsOpen {y | 0 < ⟪f y, f x⟫_ℝ}"
+      ],
+      "kind": "tactic",
+      "start": 4300,
+      "raw": {
+        "depth": 15,
+        "end": 11539,
+        "goals_after": [],
+        "goals_before": [
+          "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\n⊢ IsOpen {y | 0 < ⟪f y, f x⟫_ℝ}"
+        ],
+        "kind": "tactic",
+        "start": 11431
+      },
+      "start_offset": 4172,
+      "end_offset": 4274,
+      "position": {
+        "line": 108,
+        "column": 2
+      },
+      "end_position": {
+        "line": 110,
+        "column": 12
+      },
+      "source_text": "have hopen : IsOpen {y : Y | 0 < ⟪f y, f x⟫_ℝ} := by\n    apply isOpen_lt continuous_const\n    fun_prop"
+    },
+    {
+      "depth": 16,
+      "end": 4358,
+      "goals_after": [],
+      "goals_before": [
+        "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\n⊢ IsOpen {y | 0 < ⟪f y, f x⟫_ℝ}"
+      ],
+      "kind": "tactic",
+      "start": 4356,
+      "raw": {
+        "depth": 16,
+        "end": 11489,
+        "goals_after": [],
+        "goals_before": [
+          "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\n⊢ IsOpen {y | 0 < ⟪f y, f x⟫_ℝ}"
+        ],
+        "kind": "tactic",
+        "start": 11487
+      },
+      "start_offset": 4222,
+      "end_offset": 4224,
+      "position": {
+        "line": 108,
+        "column": 52
+      },
+      "end_position": {
+        "line": 108,
+        "column": 54
+      },
+      "source_text": "by"
+    },
+    {
+      "depth": 17,
+      "end": 4358,
+      "goals_after": [],
+      "goals_before": [
+        "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\n⊢ IsOpen {y | 0 < ⟪f y, f x⟫_ℝ}"
+      ],
+      "kind": "tactic",
+      "start": 4356,
+      "raw": {
+        "depth": 17,
+        "end": 11489,
+        "goals_after": [],
+        "goals_before": [
+          "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\n⊢ IsOpen {y | 0 < ⟪f y, f x⟫_ℝ}"
+        ],
+        "kind": "tactic",
+        "start": 11487
+      },
+      "start_offset": 4222,
+      "end_offset": 4224,
+      "position": {
+        "line": 108,
+        "column": 52
+      },
+      "end_position": {
+        "line": 108,
+        "column": 54
+      },
+      "source_text": "by"
+    },
+    {
+      "depth": 18,
+      "end": 4358,
+      "goals_after": [],
+      "goals_before": [
+        "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\n⊢ IsOpen {y | 0 < ⟪f y, f x⟫_ℝ}"
+      ],
+      "kind": "tactic",
+      "start": 4356,
+      "raw": {
+        "depth": 18,
+        "end": 11489,
+        "goals_after": [],
+        "goals_before": [
+          "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\n⊢ IsOpen {y | 0 < ⟪f y, f x⟫_ℝ}"
+        ],
+        "kind": "tactic",
+        "start": 11487
+      },
+      "start_offset": 4222,
+      "end_offset": 4224,
+      "position": {
+        "line": 108,
+        "column": 52
+      },
+      "end_position": {
+        "line": 108,
+        "column": 54
+      },
+      "source_text": "by"
+    },
+    {
+      "depth": 19,
+      "end": 4358,
+      "goals_after": [],
+      "goals_before": [
+        "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\n⊢ IsOpen {y | 0 < ⟪f y, f x⟫_ℝ}"
+      ],
+      "kind": "tactic",
+      "start": 4356,
+      "raw": {
+        "depth": 19,
+        "end": 11489,
+        "goals_after": [],
+        "goals_before": [
+          "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\n⊢ IsOpen {y | 0 < ⟪f y, f x⟫_ℝ}"
+        ],
+        "kind": "tactic",
+        "start": 11487
+      },
+      "start_offset": 4222,
+      "end_offset": 4224,
+      "position": {
+        "line": 108,
+        "column": 52
+      },
+      "end_position": {
+        "line": 108,
+        "column": 54
+      },
+      "source_text": "by"
+    },
+    {
+      "depth": 20,
+      "end": 4358,
+      "goals_after": [],
+      "goals_before": [
+        "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\n⊢ IsOpen {y | 0 < ⟪f y, f x⟫_ℝ}"
+      ],
+      "kind": "tactic",
+      "start": 4356,
+      "raw": {
+        "depth": 20,
+        "end": 11489,
+        "goals_after": [],
+        "goals_before": [
+          "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\n⊢ IsOpen {y | 0 < ⟪f y, f x⟫_ℝ}"
+        ],
+        "kind": "tactic",
+        "start": 11487
+      },
+      "start_offset": 4222,
+      "end_offset": 4224,
+      "position": {
+        "line": 108,
+        "column": 52
+      },
+      "end_position": {
+        "line": 108,
+        "column": 54
+      },
+      "source_text": "by"
+    },
+    {
+      "depth": 21,
+      "end": 4395,
+      "goals_after": [
+        "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\n⊢ Continuous fun b => ⟪f b, f x⟫_ℝ"
+      ],
+      "goals_before": [
+        "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\n⊢ IsOpen {y | 0 < ⟪f y, f x⟫_ℝ}"
+      ],
+      "kind": "tactic",
+      "start": 4363,
+      "raw": {
+        "depth": 21,
+        "end": 11526,
+        "goals_after": [
+          "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\n⊢ Continuous fun b => ⟪f b, f x⟫_ℝ"
+        ],
+        "goals_before": [
+          "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\n⊢ IsOpen {y | 0 < ⟪f y, f x⟫_ℝ}"
+        ],
+        "kind": "tactic",
+        "start": 11494
+      },
+      "start_offset": 4229,
+      "end_offset": 4261,
+      "position": {
+        "line": 109,
+        "column": 4
+      },
+      "end_position": {
+        "line": 109,
+        "column": 36
+      },
+      "source_text": "apply isOpen_lt continuous_const"
+    },
+    {
+      "depth": 21,
+      "end": 4408,
+      "goals_after": [],
+      "goals_before": [
+        "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\n⊢ Continuous fun b => ⟪f b, f x⟫_ℝ"
+      ],
+      "kind": "tactic",
+      "start": 4400,
+      "raw": {
+        "depth": 21,
+        "end": 11539,
+        "goals_after": [],
+        "goals_before": [
+          "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\n⊢ Continuous fun b => ⟪f b, f x⟫_ℝ"
+        ],
+        "kind": "tactic",
+        "start": 11531
+      },
+      "start_offset": 4266,
+      "end_offset": 4274,
+      "position": {
+        "line": 110,
+        "column": 4
+      },
+      "end_position": {
+        "line": 110,
+        "column": 12
+      },
+      "source_text": "fun_prop"
+    },
+    {
+      "depth": 8,
+      "end": 4475,
+      "goals_after": [
+        "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\nhopen : IsOpen {y | 0 < ⟪f y, f x⟫_ℝ}\nε : ℝ\nhε : ε > 0\nhball : Metric.ball x ε ⊆ {y | 0 < ⟪f y, f x⟫_ℝ}\n⊢ False"
+      ],
+      "goals_before": [
+        "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\nhopen : IsOpen {y | 0 < ⟪f y, f x⟫_ℝ}\n⊢ False"
+      ],
+      "kind": "tactic",
+      "start": 4411,
+      "raw": {
+        "depth": 8,
+        "end": 11606,
+        "goals_after": [
+          "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\nhopen : IsOpen {y | 0 < ⟪f y, f x⟫_ℝ}\nε : ℝ\nhε : ε > 0\nhball : Metric.ball x ε ⊆ {y | 0 < ⟪f y, f x⟫_ℝ}\n⊢ False"
+        ],
+        "goals_before": [
+          "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\nhopen : IsOpen {y | 0 < ⟪f y, f x⟫_ℝ}\n⊢ False"
+        ],
+        "kind": "tactic",
+        "start": 11542
+      },
+      "start_offset": 4277,
+      "end_offset": 4335,
+      "position": {
+        "line": 111,
+        "column": 2
+      },
+      "end_position": {
+        "line": 111,
+        "column": 60
+      },
+      "source_text": "obtain ⟨ε, hε, hball⟩ := Metric.isOpen_iff.1 hopen x hxpos"
+    },
+    {
+      "depth": 8,
+      "end": 4545,
+      "goals_after": [
+        "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\nhopen : IsOpen {y | 0 < ⟪f y, f x⟫_ℝ}\nε : ℝ\nhε : ε > 0\nhball : Metric.ball x ε ⊆ {y | 0 < ⟪f y, f x⟫_ℝ}\n⊢ False"
+      ],
+      "goals_before": [
+        "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\nhopen : IsOpen {y | 0 < ⟪f y, f x⟫_ℝ}\nε : ℝ\nhε : ε > 0\nhball : Metric.ball x ε ⊆ {y | 0 < ⟪f y, f x⟫_ℝ}\n⊢ False"
+      ],
+      "kind": "tactic",
+      "start": 4478,
+      "raw": {
+        "depth": 8,
+        "end": 11676,
+        "goals_after": [
+          "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\nhopen : IsOpen {y | 0 < ⟪f y, f x⟫_ℝ}\nε : ℝ\nhε : ε > 0\nhball : Metric.ball x ε ⊆ {y | 0 < ⟪f y, f x⟫_ℝ}\n⊢ False"
+        ],
+        "goals_before": [
+          "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\nhopen : IsOpen {y | 0 < ⟪f y, f x⟫_ℝ}\nε : ℝ\nhε : ε > 0\nhball : Metric.ball x ε ⊆ {y | 0 < ⟪f y, f x⟫_ℝ}\n⊢ False"
+        ],
+        "kind": "tactic",
+        "start": 11609
+      },
+      "start_offset": 4338,
+      "end_offset": 4403,
+      "position": {
+        "line": 112,
+        "column": 2
+      },
+      "end_position": {
+        "line": 112,
+        "column": 67
+      },
+      "source_text": "let b := ContDiffBump.ofInnerProductSpace x (ε / 2) (half_pos hε)"
+    },
+    {
+      "depth": 9,
+      "end": 4545,
+      "goals_after": [
+        "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\nhopen : IsOpen {y | 0 < ⟪f y, f x⟫_ℝ}\nε : ℝ\nhε : ε > 0\nhball : Metric.ball x ε ⊆ {y | 0 < ⟪f y, f x⟫_ℝ}\n⊢ False"
+      ],
+      "goals_before": [
+        "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\nhopen : IsOpen {y | 0 < ⟪f y, f x⟫_ℝ}\nε : ℝ\nhε : ε > 0\nhball : Metric.ball x ε ⊆ {y | 0 < ⟪f y, f x⟫_ℝ}\n⊢ False"
+      ],
+      "kind": "tactic",
+      "start": 4478,
+      "raw": {
+        "depth": 9,
+        "end": 11676,
+        "goals_after": [
+          "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\nhopen : IsOpen {y | 0 < ⟪f y, f x⟫_ℝ}\nε : ℝ\nhε : ε > 0\nhball : Metric.ball x ε ⊆ {y | 0 < ⟪f y, f x⟫_ℝ}\n⊢ False"
+        ],
+        "goals_before": [
+          "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\nhopen : IsOpen {y | 0 < ⟪f y, f x⟫_ℝ}\nε : ℝ\nhε : ε > 0\nhball : Metric.ball x ε ⊆ {y | 0 < ⟪f y, f x⟫_ℝ}\n⊢ False"
+        ],
+        "kind": "tactic",
+        "start": 11609
+      },
+      "start_offset": 4338,
+      "end_offset": 4403,
+      "position": {
+        "line": 112,
+        "column": 2
+      },
+      "end_position": {
+        "line": 112,
+        "column": 67
+      },
+      "source_text": "let b := ContDiffBump.ofInnerProductSpace x (ε / 2) (half_pos hε)"
+    },
+    {
+      "depth": 10,
+      "end": 4545,
+      "goals_after": [
+        "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\nhopen : IsOpen {y | 0 < ⟪f y, f x⟫_ℝ}\nε : ℝ\nhε : ε > 0\nhball : Metric.ball x ε ⊆ {y | 0 < ⟪f y, f x⟫_ℝ}\n⊢ False"
+      ],
+      "goals_before": [
+        "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\nhopen : IsOpen {y | 0 < ⟪f y, f x⟫_ℝ}\nε : ℝ\nhε : ε > 0\nhball : Metric.ball x ε ⊆ {y | 0 < ⟪f y, f x⟫_ℝ}\n⊢ False"
+      ],
+      "kind": "tactic",
+      "start": 4478,
+      "raw": {
+        "depth": 10,
+        "end": 11676,
+        "goals_after": [
+          "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\nhopen : IsOpen {y | 0 < ⟪f y, f x⟫_ℝ}\nε : ℝ\nhε : ε > 0\nhball : Metric.ball x ε ⊆ {y | 0 < ⟪f y, f x⟫_ℝ}\n⊢ False"
+        ],
+        "goals_before": [
+          "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\nhopen : IsOpen {y | 0 < ⟪f y, f x⟫_ℝ}\nε : ℝ\nhε : ε > 0\nhball : Metric.ball x ε ⊆ {y | 0 < ⟪f y, f x⟫_ℝ}\n⊢ False"
+        ],
+        "kind": "tactic",
+        "start": 11609
+      },
+      "start_offset": 4338,
+      "end_offset": 4403,
+      "position": {
+        "line": 112,
+        "column": 2
+      },
+      "end_position": {
+        "line": 112,
+        "column": 67
+      },
+      "source_text": "let b := ContDiffBump.ofInnerProductSpace x (ε / 2) (half_pos hε)"
+    },
+    {
+      "depth": 11,
+      "end": 4545,
+      "goals_after": [
+        "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\nhopen : IsOpen {y | 0 < ⟪f y, f x⟫_ℝ}\nε : ℝ\nhε : ε > 0\nhball : Metric.ball x ε ⊆ {y | 0 < ⟪f y, f x⟫_ℝ}\n⊢ False"
+      ],
+      "goals_before": [
+        "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\nhopen : IsOpen {y | 0 < ⟪f y, f x⟫_ℝ}\nε : ℝ\nhε : ε > 0\nhball : Metric.ball x ε ⊆ {y | 0 < ⟪f y, f x⟫_ℝ}\n⊢ False"
+      ],
+      "kind": "tactic",
+      "start": 4478,
+      "raw": {
+        "depth": 11,
+        "end": 11676,
+        "goals_after": [
+          "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\nhopen : IsOpen {y | 0 < ⟪f y, f x⟫_ℝ}\nε : ℝ\nhε : ε > 0\nhball : Metric.ball x ε ⊆ {y | 0 < ⟪f y, f x⟫_ℝ}\n⊢ False"
+        ],
+        "goals_before": [
+          "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\nhopen : IsOpen {y | 0 < ⟪f y, f x⟫_ℝ}\nε : ℝ\nhε : ε > 0\nhball : Metric.ball x ε ⊆ {y | 0 < ⟪f y, f x⟫_ℝ}\n⊢ False"
+        ],
+        "kind": "tactic",
+        "start": 11609
+      },
+      "start_offset": 4338,
+      "end_offset": 4403,
+      "position": {
+        "line": 112,
+        "column": 2
+      },
+      "end_position": {
+        "line": 112,
+        "column": 67
+      },
+      "source_text": "let b := ContDiffBump.ofInnerProductSpace x (ε / 2) (half_pos hε)"
+    },
+    {
+      "depth": 11,
+      "end": 4545,
+      "goals_after": [
+        "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\nhopen : IsOpen {y | 0 < ⟪f y, f x⟫_ℝ}\nε : ℝ\nhε : ε > 0\nhball : Metric.ball x ε ⊆ {y | 0 < ⟪f y, f x⟫_ℝ}\n⊢ False"
+      ],
+      "goals_before": [
+        "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\nhopen : IsOpen {y | 0 < ⟪f y, f x⟫_ℝ}\nε : ℝ\nhε : ε > 0\nhball : Metric.ball x ε ⊆ {y | 0 < ⟪f y, f x⟫_ℝ}\n⊢ False"
+      ],
+      "kind": "tactic",
+      "start": 4478,
+      "raw": {
+        "depth": 11,
+        "end": 11676,
+        "goals_after": [
+          "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\nhopen : IsOpen {y | 0 < ⟪f y, f x⟫_ℝ}\nε : ℝ\nhε : ε > 0\nhball : Metric.ball x ε ⊆ {y | 0 < ⟪f y, f x⟫_ℝ}\n⊢ False"
+        ],
+        "goals_before": [
+          "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\nhopen : IsOpen {y | 0 < ⟪f y, f x⟫_ℝ}\nε : ℝ\nhε : ε > 0\nhball : Metric.ball x ε ⊆ {y | 0 < ⟪f y, f x⟫_ℝ}\n⊢ False"
+        ],
+        "kind": "tactic",
+        "start": 11609
+      },
+      "start_offset": 4338,
+      "end_offset": 4403,
+      "position": {
+        "line": 112,
+        "column": 2
+      },
+      "end_position": {
+        "line": 112,
+        "column": 67
+      },
+      "source_text": "let b := ContDiffBump.ofInnerProductSpace x (ε / 2) (half_pos hε)"
+    },
+    {
+      "depth": 12,
+      "end": 4545,
+      "goals_after": [
+        "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\nhopen : IsOpen {y | 0 < ⟪f y, f x⟫_ℝ}\nε : ℝ\nhε : ε > 0\nhball : Metric.ball x ε ⊆ {y | 0 < ⟪f y, f x⟫_ℝ}\n⊢ False"
+      ],
+      "goals_before": [
+        "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\nhopen : IsOpen {y | 0 < ⟪f y, f x⟫_ℝ}\nε : ℝ\nhε : ε > 0\nhball : Metric.ball x ε ⊆ {y | 0 < ⟪f y, f x⟫_ℝ}\n⊢ False"
+      ],
+      "kind": "tactic",
+      "start": 4478,
+      "raw": {
+        "depth": 12,
+        "end": 11676,
+        "goals_after": [
+          "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\nhopen : IsOpen {y | 0 < ⟪f y, f x⟫_ℝ}\nε : ℝ\nhε : ε > 0\nhball : Metric.ball x ε ⊆ {y | 0 < ⟪f y, f x⟫_ℝ}\n⊢ False"
+        ],
+        "goals_before": [
+          "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\nhopen : IsOpen {y | 0 < ⟪f y, f x⟫_ℝ}\nε : ℝ\nhε : ε > 0\nhball : Metric.ball x ε ⊆ {y | 0 < ⟪f y, f x⟫_ℝ}\n⊢ False"
+        ],
+        "kind": "tactic",
+        "start": 11609
+      },
+      "start_offset": 4338,
+      "end_offset": 4403,
+      "position": {
+        "line": 112,
+        "column": 2
+      },
+      "end_position": {
+        "line": 112,
+        "column": 67
+      },
+      "source_text": "let b := ContDiffBump.ofInnerProductSpace x (ε / 2) (half_pos hε)"
+    },
+    {
+      "depth": 13,
+      "end": 4545,
+      "goals_after": [
+        "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\nhopen : IsOpen {y | 0 < ⟪f y, f x⟫_ℝ}\nε : ℝ\nhε : ε > 0\nhball : Metric.ball x ε ⊆ {y | 0 < ⟪f y, f x⟫_ℝ}\n⊢ False"
+      ],
+      "goals_before": [
+        "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\nhopen : IsOpen {y | 0 < ⟪f y, f x⟫_ℝ}\nε : ℝ\nhε : ε > 0\nhball : Metric.ball x ε ⊆ {y | 0 < ⟪f y, f x⟫_ℝ}\n⊢ False"
+      ],
+      "kind": "tactic",
+      "start": 4478,
+      "raw": {
+        "depth": 13,
+        "end": 11676,
+        "goals_after": [
+          "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\nhopen : IsOpen {y | 0 < ⟪f y, f x⟫_ℝ}\nε : ℝ\nhε : ε > 0\nhball : Metric.ball x ε ⊆ {y | 0 < ⟪f y, f x⟫_ℝ}\n⊢ False"
+        ],
+        "goals_before": [
+          "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\nhopen : IsOpen {y | 0 < ⟪f y, f x⟫_ℝ}\nε : ℝ\nhε : ε > 0\nhball : Metric.ball x ε ⊆ {y | 0 < ⟪f y, f x⟫_ℝ}\n⊢ False"
+        ],
+        "kind": "tactic",
+        "start": 11609
+      },
+      "start_offset": 4338,
+      "end_offset": 4403,
+      "position": {
+        "line": 112,
+        "column": 2
+      },
+      "end_position": {
+        "line": 112,
+        "column": 67
+      },
+      "source_text": "let b := ContDiffBump.ofInnerProductSpace x (ε / 2) (half_pos hε)"
+    },
+    {
+      "depth": 14,
+      "end": 4545,
+      "goals_after": [
+        "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\nhopen : IsOpen {y | 0 < ⟪f y, f x⟫_ℝ}\nε : ℝ\nhε : ε > 0\nhball : Metric.ball x ε ⊆ {y | 0 < ⟪f y, f x⟫_ℝ}\n⊢ False"
+      ],
+      "goals_before": [
+        "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\nhopen : IsOpen {y | 0 < ⟪f y, f x⟫_ℝ}\nε : ℝ\nhε : ε > 0\nhball : Metric.ball x ε ⊆ {y | 0 < ⟪f y, f x⟫_ℝ}\n⊢ False"
+      ],
+      "kind": "tactic",
+      "start": 4478,
+      "raw": {
+        "depth": 14,
+        "end": 11676,
+        "goals_after": [
+          "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\nhopen : IsOpen {y | 0 < ⟪f y, f x⟫_ℝ}\nε : ℝ\nhε : ε > 0\nhball : Metric.ball x ε ⊆ {y | 0 < ⟪f y, f x⟫_ℝ}\n⊢ False"
+        ],
+        "goals_before": [
+          "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\nhopen : IsOpen {y | 0 < ⟪f y, f x⟫_ℝ}\nε : ℝ\nhε : ε > 0\nhball : Metric.ball x ε ⊆ {y | 0 < ⟪f y, f x⟫_ℝ}\n⊢ False"
+        ],
+        "kind": "tactic",
+        "start": 11609
+      },
+      "start_offset": 4338,
+      "end_offset": 4403,
+      "position": {
+        "line": 112,
+        "column": 2
+      },
+      "end_position": {
+        "line": 112,
+        "column": 67
+      },
+      "source_text": "let b := ContDiffBump.ofInnerProductSpace x (ε / 2) (half_pos hε)"
+    },
+    {
+      "depth": 15,
+      "end": 4545,
+      "goals_after": [
+        "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\nhopen : IsOpen {y | 0 < ⟪f y, f x⟫_ℝ}\nε : ℝ\nhε : ε > 0\nhball : Metric.ball x ε ⊆ {y | 0 < ⟪f y, f x⟫_ℝ}\n⊢ False"
+      ],
+      "goals_before": [
+        "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\nhopen : IsOpen {y | 0 < ⟪f y, f x⟫_ℝ}\nε : ℝ\nhε : ε > 0\nhball : Metric.ball x ε ⊆ {y | 0 < ⟪f y, f x⟫_ℝ}\n⊢ False"
+      ],
+      "kind": "tactic",
+      "start": 4478,
+      "raw": {
+        "depth": 15,
+        "end": 11676,
+        "goals_after": [
+          "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\nhopen : IsOpen {y | 0 < ⟪f y, f x⟫_ℝ}\nε : ℝ\nhε : ε > 0\nhball : Metric.ball x ε ⊆ {y | 0 < ⟪f y, f x⟫_ℝ}\n⊢ False"
+        ],
+        "goals_before": [
+          "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\nhopen : IsOpen {y | 0 < ⟪f y, f x⟫_ℝ}\nε : ℝ\nhε : ε > 0\nhball : Metric.ball x ε ⊆ {y | 0 < ⟪f y, f x⟫_ℝ}\n⊢ False"
+        ],
+        "kind": "tactic",
+        "start": 11609
+      },
+      "start_offset": 4338,
+      "end_offset": 4403,
+      "position": {
+        "line": 112,
+        "column": 2
+      },
+      "end_position": {
+        "line": 112,
+        "column": 67
+      },
+      "source_text": "let b := ContDiffBump.ofInnerProductSpace x (ε / 2) (half_pos hε)"
+    },
+    {
+      "depth": 16,
+      "end": 4545,
+      "goals_after": [
+        "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\nhopen : IsOpen {y | 0 < ⟪f y, f x⟫_ℝ}\nε : ℝ\nhε : ε > 0\nhball : Metric.ball x ε ⊆ {y | 0 < ⟪f y, f x⟫_ℝ}\n⊢ False"
+      ],
+      "goals_before": [
+        "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\nhopen : IsOpen {y | 0 < ⟪f y, f x⟫_ℝ}\nε : ℝ\nhε : ε > 0\nhball : Metric.ball x ε ⊆ {y | 0 < ⟪f y, f x⟫_ℝ}\n⊢ False"
+      ],
+      "kind": "tactic",
+      "start": 4478,
+      "raw": {
+        "depth": 16,
+        "end": 11676,
+        "goals_after": [
+          "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\nhopen : IsOpen {y | 0 < ⟪f y, f x⟫_ℝ}\nε : ℝ\nhε : ε > 0\nhball : Metric.ball x ε ⊆ {y | 0 < ⟪f y, f x⟫_ℝ}\n⊢ False"
+        ],
+        "goals_before": [
+          "V : Type u_2\ninst✝⁹ : NormedAddCommGroup V\ninst✝⁸ : NormedSpace ℝ V\ninst✝⁷ : InnerProductSpace' ℝ V\nY : Type u_1\ninst✝⁶ : NormedAddCommGroup Y\ninst✝⁵ : InnerProductSpace ℝ Y\ninst✝⁴ : FiniteDimensional ℝ Y\ninst✝³ : MeasurableSpace Y\nf : Y → V\nμ : Measure Y\ninst✝² : IsFiniteMeasureOnCompacts μ\ninst✝¹ : μ.IsOpenPosMeasure\ninst✝ : OpensMeasurableSpace Y\nhf : Continuous f\nhg : ∀ (g : Y → V), IsTestFunction g → ∫ (x : Y), ⟪f x, g x⟫_ℝ ∂μ = 0\nx : Y\nhx : ¬f x = 0\nhxpos : 0 < ⟪f x, f x⟫_ℝ\nhopen : IsOpen {y | 0 < ⟪f y, f x⟫_ℝ}\nε : ℝ\nhε : ε > 0\nhball : Metric.ball x ε ⊆ {y | 0 < ⟪f y, f x⟫_ℝ}\n⊢ False"
+        ],
+        "kind": "tactic",
+        "start": 11609
+      },
+      "start_offset": 4338,
+      "end_offset": 4403,
+      "position": {
+        "line": 112,
+        "column": 2
+      },
+      "end_position": {
+        "line": 112,
+        "column": 67
+      },
+      "source_text": "let b := ContDiffBump.ofInnerProductSpace x (ε / 2) (half_pos hε)"
+    }
+  ],
+  "unavailable_reason": null
+}

@@ -1,0 +1,73 @@
+by
+  induction post with
+  | const c =>
+      simp [OldExpressions.substOld, Imperative.HasVarsPure.getVars,
+        Lambda.LExpr.LExpr.getVars, List.Subset]
+  | op o ty =>
+      simp [OldExpressions.substOld, Imperative.HasVarsPure.getVars,
+        Lambda.LExpr.LExpr.getVars, List.Subset]
+  | bvar b =>
+      simp [OldExpressions.substOld, Imperative.HasVarsPure.getVars,
+        Lambda.LExpr.LExpr.getVars, List.Subset]
+  | fvar m n ty =>
+      simp [OldExpressions.substOld, Imperative.HasVarsPure.getVars,
+        Lambda.LExpr.LExpr.getVars, List.Subset]
+  | abs m ty e ih =>
+      simpa [OldExpressions.substOld, Imperative.HasVarsPure.getVars,
+        Lambda.LExpr.LExpr.getVars] using ih
+  | quant m k ty tr e trih eih =>
+      simp only [OldExpressions.substOld, Imperative.HasVarsPure.getVars,
+        Lambda.LExpr.LExpr.getVars, List.Subset, List.mem_append,
+        List.mem_singleton] at trih eih ⊢
+      intro a ha
+      rcases ha with ha | ha
+      · rcases trih ha with ha | ha
+        · exact Or.inl (Or.inl ha)
+        · exact Or.inr ha
+      · rcases eih ha with ha | ha
+        · exact Or.inl (Or.inr ha)
+        · exact Or.inr ha
+  | app m fn e fnih eih =>
+      simp only [OldExpressions.substOld]
+      split
+      · split <;>
+          simp [Imperative.HasVarsPure.getVars,
+            Lambda.LExpr.LExpr.getVars, List.Subset]
+      · simp only [Imperative.HasVarsPure.getVars,
+          Lambda.LExpr.LExpr.getVars, List.Subset, List.mem_append,
+          List.mem_singleton] at fnih eih ⊢
+        intro a ha
+        rcases ha with ha | ha
+        · rcases fnih ha with ha | ha
+          · exact Or.inl (Or.inl ha)
+          · exact Or.inr ha
+        · rcases eih ha with ha | ha
+          · exact Or.inl (Or.inr ha)
+          · exact Or.inr ha
+  | ite m c t e cih tih eih =>
+      simp only [OldExpressions.substOld, Imperative.HasVarsPure.getVars,
+        Lambda.LExpr.LExpr.getVars, List.Subset, List.mem_append,
+        List.mem_singleton] at cih tih eih ⊢
+      intro a ha
+      rcases ha with ha | ha | ha
+      · rcases cih ha with ha | ha
+        · exact Or.inl (Or.inl ha)
+        · exact Or.inr ha
+      · rcases tih ha with ha | ha
+        · exact Or.inl (Or.inr (Or.inl ha))
+        · exact Or.inr ha
+      · rcases eih ha with ha | ha
+        · exact Or.inl (Or.inr (Or.inr ha))
+        · exact Or.inr ha
+  | eq m e1 e2 e1ih e2ih =>
+      simp only [OldExpressions.substOld, Imperative.HasVarsPure.getVars,
+        Lambda.LExpr.LExpr.getVars, List.Subset, List.mem_append,
+        List.mem_singleton] at e1ih e2ih ⊢
+      intro a ha
+      rcases ha with ha | ha
+      · rcases e1ih ha with ha | ha
+        · exact Or.inl (Or.inl ha)
+        · exact Or.inr ha
+      · rcases e2ih ha with ha | ha
+        · exact Or.inl (Or.inr ha)
+        · exact Or.inr ha

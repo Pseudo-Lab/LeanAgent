@@ -1,0 +1,23 @@
+--- candidate_01.proof.lean
++++ candidate_02.proof.lean
+@@ -17,10 +17,7 @@
+       exact Nat.pow_lt_pow_right (by norm_num) h_exp_lt
+     omega
+ 
+-  have h_C_i_nonempty : Nonempty C_i := by
+-    simp only [nonempty_subtype, C_i]
+-    exact Submodule.nonempty
+-      (BBF_Code 𝔽q β (h_ℓ_add_R_rate := h_ℓ_add_R_rate) ⟨i.val, by omega⟩)
++  have h_C_i_nonempty : Nonempty C_i := ⟨0⟩
+ 
+   obtain ⟨g', h_g'_mem, h_g'_min_card⟩ : ∃ g' ∈ C_i, d_fw =
+       (fiberwiseDisagreementSet 𝔽q β i steps h_i_add_steps f g').ncard := by
+@@ -41,8 +38,6 @@
+       simp only [hammingDist, ne_eq, ΔH]
+     rw [h_dist_eq_card]
+     set Y_bad := fiberwiseDisagreementSet 𝔽q β i steps h_i_add_steps f g'
+-    simp only at *
+-    have hFinType_Y_bad : Fintype Y_bad := Fintype.ofFinite Y_bad
+     have h_ΔH_subset_bad_fiber_points : ΔH ⊆ Finset.biUnion Y_bad.toFinset
+         (t := fun y => ((qMap_total_fiber 𝔽q β (i := ⟨i, by omega⟩)
+           (steps := steps)

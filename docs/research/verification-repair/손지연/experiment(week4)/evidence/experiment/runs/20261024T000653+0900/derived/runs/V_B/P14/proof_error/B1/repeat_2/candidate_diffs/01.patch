@@ -1,0 +1,136 @@
+--- initial.proof.lean
++++ candidate_01.proof.lean
+@@ -1,17 +1,10 @@
+-by 
+-  have h_no_empty : ∀ (T : Set S), T ∈ P → T.Nonempty := by
+-    intro T hT
+-    have h₁ : T ∩ T ≠ ∅ := hPP T hT T hT
+-    have h₂ : T ∩ T = T := by simp [Set.ext_iff]
+-    rw [h₂] at h₁
+-    exact experiment_missing_lemma
+-  
++by
+   have h_subset_or_compl : ∀ (A : Set S), A ∈ P ∨ Aᶜ ∈ P := by
+     intro A
+     by_contra! h
+     have h₁ : A ∉ P := h.1
+     have h₂ : Aᶜ ∉ P := h.2
+-    
++
+     have h₃ : ∃ (U : Set S), U ∈ P ∧ A ∩ U = ∅ := by
+       have h₄ : ¬(A ∉ P ∧ ∀ (U : Set S), U ∈ P → A ∩ U ≠ ∅) := by
+         intro h₅
+@@ -48,7 +41,7 @@
+         exact h₉
+       · exfalso
+         simp_all
+-    
++
+     have h₄ : ∃ (V : Set S), V ∈ P ∧ Aᶜ ∩ V = ∅ := by
+       have h₅ : ¬(Aᶜ ∉ P ∧ ∀ (U : Set S), U ∈ P → Aᶜ ∩ U ≠ ∅) := by
+         intro h₆
+@@ -85,10 +78,10 @@
+         exact h₉
+       · exfalso
+         simp_all
+-    
++
+     obtain ⟨U, hU, hU'⟩ := h₃
+     obtain ⟨V, hV, hV'⟩ := h₄
+-    
++
+     have h₅ : U ⊆ Aᶜ := by
+       intro x hx
+       by_contra h₆
+@@ -105,7 +98,7 @@
+       rw [hV'] at h₉
+       simp at h₉
+       <;> aesop
+-    
++
+     have h₇ : U ∩ V = ∅ := by
+       apply Set.eq_empty_of_forall_not_mem
+       intro x hx
+@@ -115,11 +108,11 @@
+       have h₁₁ : x ∈ A := h₆ h₉
+       simp_all [Set.mem_compl_iff]
+       <;> aesop
+-    
++
+     have h₈ : U ∩ V ≠ ∅ := hPP U hU V hV
+     simp_all [Set.ext_iff]
+     <;> aesop
+-  
++
+   have h_not_both : ∀ (A : Set S), A ∈ P → Aᶜ ∉ P := by
+     intro A hA
+     by_contra h
+@@ -131,14 +124,13 @@
+     have h₃ : A ∩ Aᶜ ≠ ∅ := hPP A hA Aᶜ h₁
+     rw [h₂] at h₃
+     contradiction
+-  
++
+   have h_card : P.card = 2 ^ (Fintype.card S - 1) := by
+     classical
+-    
++
+     let Q : Finset (Set S) := (Finset.univ : Finset (Set S)) \ P
+-    
++
+     have h₁ : P.card = Q.card := by
+-      
+       have h₂ : ∀ (A : Set S), A ∈ P → Aᶜ ∈ Q := by
+         intro A hA
+         have h₃ : Aᶜ ∈ (Finset.univ : Finset (Set S)) := Finset.mem_univ _
+@@ -161,16 +153,13 @@
+           tauto
+         | inr h₈ =>
+           exact h₈
+-      
++
+       have h₄ : P.card = Q.card := by
+-        
+         have h₅ : P.card = Q.card := by
+-          
+           have h₆ : ∀ (A : Set S), A ∈ P → Aᶜ ∈ Q := h₂
+           have h₇ : ∀ (A : Set S), A ∈ Q → Aᶜ ∈ P := h₃
+-          
++
+           have h₈ : P.card = Q.card := by
+-            
+             apply Finset.card_bij' (fun A _ => Aᶜ) (fun A _ => Aᶜ)
+             <;> simp_all [Set.ext_iff]
+             <;>
+@@ -204,7 +193,7 @@
+           exact h₈
+         exact h₅
+       exact h₄
+-    
++
+     have h₂ : P.card + Q.card = 2 ^ Fintype.card S := by
+       have h₃ : P.card + Q.card = (Finset.univ : Finset (Set S)).card := by
+         have h₄ : Disjoint P Q := by
+@@ -251,12 +240,12 @@
+         <;>
+         aesop
+       linarith
+-    
++
+     have h₃ : P.card * 2 = 2 ^ Fintype.card S := by
+       have h₄ : P.card + Q.card = 2 ^ Fintype.card S := h₂
+       have h₅ : P.card = Q.card := h₁
+       linarith
+-    
++
+     have h₄ : Fintype.card S ≥ 1 := by
+       have h₅ : Nonempty S := inferInstance
+       have h₆ : 0 < Fintype.card S := by
+@@ -285,5 +274,5 @@
+         exact h₁₂
+       exact h₉
+     exact h₅
+-  
++
+   exact h_card
+\ No newline at end of file

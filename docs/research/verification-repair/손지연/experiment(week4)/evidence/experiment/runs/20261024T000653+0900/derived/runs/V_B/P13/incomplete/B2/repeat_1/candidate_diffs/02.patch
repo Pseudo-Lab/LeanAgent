@@ -1,0 +1,71 @@
+--- candidate_01.proof.lean
++++ candidate_02.proof.lean
+@@ -31,13 +31,17 @@
+       dsimp [c]
+       omega
+     have hb0 : u (a + 0 + c) = u (a + 0) := by
+-      convert h0.symm using 1 <;> omega
++      rw [show a + 0 + c = b by omega, Nat.add_zero]
++      exact h0.symm
+     have hb1 : u (a + 1 + c) = u (a + 1) := by
+-      convert h1.symm using 1 <;> omega
++      rw [show a + 1 + c = b + 1 by omega]
++      exact h1.symm
+     have hb2 : u (a + 2 + c) = u (a + 2) := by
+-      convert h2.symm using 1 <;> omega
++      rw [show a + 2 + c = b + 2 by omega]
++      exact h2.symm
+     have hb3 : u (a + 3 + c) = u (a + 3) := by
+-      convert h3.symm using 1 <;> omega
++      rw [show a + 3 + c = b + 3 by omega]
++      exact h3.symm
+     have hper : ∀ k : ℕ, u (a + k + c) = u (a + k) := by
+       intro k
+       induction k using Nat.strong_induction_on with
+@@ -51,16 +55,28 @@
+         · have hk4 : 4 ≤ k := by omega
+           have hm1 : u (a + k + c - 1) = u (a + k - 1) := by
+             have hh := ih (k - 1) (by omega)
+-            convert hh using 1 <;> omega
++            have hi : a + k + c - 1 = a + (k - 1) + c := by omega
++            have hj : a + k - 1 = a + (k - 1) := by omega
++            rw [hi, hj]
++            exact hh
+           have hm2 : u (a + k + c - 2) = u (a + k - 2) := by
+             have hh := ih (k - 2) (by omega)
+-            convert hh using 1 <;> omega
++            have hi : a + k + c - 2 = a + (k - 2) + c := by omega
++            have hj : a + k - 2 = a + (k - 2) := by omega
++            rw [hi, hj]
++            exact hh
+           have hm3 : u (a + k + c - 3) = u (a + k - 3) := by
+             have hh := ih (k - 3) (by omega)
+-            convert hh using 1 <;> omega
++            have hi : a + k + c - 3 = a + (k - 3) + c := by omega
++            have hj : a + k - 3 = a + (k - 3) := by omega
++            rw [hi, hj]
++            exact hh
+           have hm4 : u (a + k + c - 4) = u (a + k - 4) := by
+             have hh := ih (k - 4) (by omega)
+-            convert hh using 1 <;> omega
++            have hi : a + k + c - 4 = a + (k - 4) + c := by omega
++            have hj : a + k - 4 = a + (k - 4) := by omega
++            rw [hi, hj]
++            exact hh
+           have hl := (hu (a + k) (by omega)).1
+           have hr := (hu (a + k + c) (by omega)).1
+           rw [hm1, hm2, hm3, hm4] at hr
+@@ -70,8 +86,10 @@
+     refine ⟨a, c, hc, ?_⟩
+     intro n hn
+     have hh := hper (n - a)
+-    convert hh using 1 <;> omega
+-  obtain ⟨a, b, hab, hf⟩ := Infinite.exists_pair_ne f
++    have hna : a + (n - a) = n := by omega
++    rw [hna] at hh
++    exact hh
++  obtain ⟨a, b, hab, hf⟩ := Finite.exists_ne_map_eq_of_infinite f
+   rcases lt_or_gt_of_ne hab with hablt | hbalt
+   · exact cycle a b hablt hf
+   · exact cycle b a hbalt hf.symm
+\ No newline at end of file

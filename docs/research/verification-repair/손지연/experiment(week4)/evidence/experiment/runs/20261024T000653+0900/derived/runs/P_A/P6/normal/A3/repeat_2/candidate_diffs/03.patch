@@ -1,0 +1,11 @@
+--- candidate_02.proof.lean
++++ candidate_03.proof.lean
+@@ -82,7 +82,7 @@
+       by_cases hq : (𝓕 |>ₛ φ) ≠ (𝓕 |>ₛ ψ)
+       · simp [ι_superCommuteF_of_diff_statistic hq]
+       · rw [crAnTimeOrderSign,
+-          Wick.koszulSign_eq_rel_eq_stat _ _ hφψ hψφ (by simpa using hq),
++          Wick.koszulSign_eq_rel_eq_stat _ _ hφψ hψφ (Classical.not_not.mp hq).symm,
+           ← crAnTimeOrderSign, ← ofCrAnListF_append, timeOrderF_ofCrAnListF]
+         simp only [map_smul, Algebra.mul_smul_comm]
+     · simp only [map_mul, zero_mul, map_zero, mul_zero, pa]

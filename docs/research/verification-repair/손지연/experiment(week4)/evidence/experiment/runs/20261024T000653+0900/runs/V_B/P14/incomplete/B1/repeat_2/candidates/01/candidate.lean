@@ -1,0 +1,91 @@
+import Mathlib
+import Aesop
+
+set_option maxHeartbeats 0
+
+open Set Function Filter Topology
+
+
+theorem putnam_1964_b2
+(S : Type*) [Fintype S] [Nonempty S]
+(P : Finset (Set S))
+(hPP : ∀ T ∈ P, ∀ U ∈ P, T ∩ U ≠ ∅)
+(hPS : ¬∃ T : Set S, T ∉ P ∧ (∀ U ∈ P, T ∩ U ≠ ∅))
+: (P.card = 2 ^ (Fintype.card S - 1)) := by
+  classical
+  have hup : ∀ {A B : Set S}, A ∈ P → A ⊆ B → B ∈ P := by
+    intro A B hA hAB
+    by_contra hB
+    apply hPS
+    refine ⟨B, hB, ?_⟩
+    intro U hU
+    apply Set.nonempty_iff_ne_empty.mp
+    rcases Set.nonempty_iff_ne_empty.mpr (hPP A hA U hU) with ⟨x, hxA, hxU⟩
+    exact ⟨x, hAB hxA, hxU⟩
+  have hcomp : ∀ T : Set S, T ∈ P ↔ Tᶜ ∉ P := by
+    intro T
+    constructor
+    · intro hT hTc
+      have h := hPP T hT Tᶜ hTc
+      simpa using h
+    · intro hTc
+      by_contra hT
+      have hex : ∃ U ∈ P, T ∩ U = ∅ := by
+        by_contra hn
+        push_neg at hn
+        exact hPS ⟨T, hT, hn⟩
+      rcases hex with ⟨U, hU, hTU⟩
+      apply hTc
+      apply hup hU
+      intro x hxU
+      simp only [Set.mem_compl_iff]
+      intro hxT
+      have hx : x ∈ T ∩ U := ⟨hxT, hxU⟩
+      rw [hTU] at hx
+      exact hx
+  have hcomp' : ∀ T : Set S, Tᶜ ∈ P ↔ T ∉ P := by
+    intro T
+    simpa using (hcomp Tᶜ)
+  let Q : Finset (Set S) := Finset.univ.filter (fun T : Set S => T ∉ P)
+  have hQP : Q.card = P.card := by
+    let e : {T // T ∈ Q} ≃ {T // T ∈ P} :=
+      { toFun := fun T =>
+          ⟨T.1ᶜ, (hcomp' T.1).2 (by simpa [Q] using T.2)⟩
+        invFun := fun T =>
+          ⟨T.1ᶜ, by simpa [Q] using (hcomp T.1).1 T.2⟩
+        left_inv := by
+          intro T
+          apply Subtype.ext
+          simp
+        right_inv := by
+          intro T
+          apply Subtype.ext
+          simp }
+    simpa using (Fintype.card_congr e)
+  have hdisj : Disjoint P Q := by
+    refine Finset.disjoint_left.mpr ?_
+    intro T hT hTQ
+    have hnT : T ∉ P := by simpa [Q] using hTQ
+    exact hnT hT
+  have hunion : P ∪ Q = Finset.univ := by
+    ext T
+    simp [Q]
+  have htotal : P.card + Q.card = Fintype.card (Set S) := by
+    rw [← Finset.card_union_of_disjoint hdisj, hunion]
+    simp
+  have hdouble : P.card + P.card = 2 ^ Fintype.card S := by
+    calc
+      P.card + P.card = P.card + Q.card := by omega
+      _ = Fintype.card (Set S) := htotal
+      _ = 2 ^ Fintype.card S := by simp
+  have hn : 0 < Fintype.card S := Fintype.card_pos_iff.mpr inferInstance
+  have hpow :
+      2 ^ Fintype.card S =
+        2 ^ (Fintype.card S - 1) + 2 ^ (Fintype.card S - 1) := by
+    calc
+      2 ^ Fintype.card S = 2 ^ ((Fintype.card S - 1) + 1) := by
+        congr 1
+        omega
+      _ = 2 ^ (Fintype.card S - 1) * 2 := by rw [pow_succ]
+      _ = 2 ^ (Fintype.card S - 1) + 2 ^ (Fintype.card S - 1) := by omega
+  omega

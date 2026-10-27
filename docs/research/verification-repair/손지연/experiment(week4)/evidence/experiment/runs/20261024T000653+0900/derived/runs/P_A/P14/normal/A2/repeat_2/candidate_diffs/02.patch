@@ -1,0 +1,15 @@
+--- candidate_01.proof.lean
++++ candidate_02.proof.lean
+@@ -3,8 +3,10 @@
+   have hmiss : ∀ A : Set S, A ∉ P → ∃ U ∈ P, A ∩ U = ∅ := by
+     intro A hA
+     by_contra h
+-    push_neg at h
+-    exact hPS ⟨A, hA, h⟩
++    apply hPS
++    refine ⟨A, hA, ?_⟩
++    intro U hU hAU
++    exact h ⟨U, hU, hAU⟩
+   have h_choice : ∀ A : Set S, A ∈ P ∨ Aᶜ ∈ P := by
+     intro A
+     by_contra h

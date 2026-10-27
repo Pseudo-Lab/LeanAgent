@@ -1,0 +1,329 @@
+{
+  "call": 1,
+  "origin": "generated",
+  "body": "by\n  classical\n  have hbad (T : Set S) (hT : T ∉ P) :\n      ∃ U ∈ P, T ∩ U = ∅ := by\n    by_contra h\n    apply hPS\n    refine ⟨T, hT, ?_⟩\n    intro U hU hTU\n    apply h\n    exact ⟨U, hU, hTU⟩\n  have hxor (T : Set S) : T ∈ P ↔ Tᶜ ∉ P := by\n    constructor\n    · intro hT hTc\n      exact (hPP T hT Tᶜ hTc) (by simp)\n    · intro hTc\n      by_contra hT\n      obtain ⟨U, hU, hTU⟩ := hbad T hT\n      obtain ⟨V, hV, hTcV⟩ := hbad Tᶜ hTc\n      have hUV : U ∩ V = ∅ := by\n        ext x\n        simp only [Set.mem_inter_iff, Set.mem_empty_iff_false, iff_false]\n        rintro ⟨hxU, hxV⟩\n        have hxnotT : x ∉ T := by\n          intro hxT\n          have hx : x ∈ T ∩ U := ⟨hxT, hxU⟩\n          simpa [hTU] using hx\n        have hxT : x ∈ T := by\n          by_contra hn\n          have hxTc : x ∈ Tᶜ := hn\n          have hx : x ∈ Tᶜ ∩ V := ⟨hxTc, hxV⟩\n          simpa [hTcV] using hx\n        exact hxnotT hxT\n      exact (hPP U hU V hV) hUV\n  let c : Set S → Set S := fun T => Tᶜ\n  have hc : Function.Injective c := by\n    intro A B h\n    have h' := congrArg (fun T : Set S => Tᶜ) h\n    simpa [c] using h'\n  have hcomp : Pᶜ = P.image c := by\n    ext T\n    simp only [Finset.mem_compl, Finset.mem_image]\n    constructor\n    · intro hT\n      have hTc : Tᶜ ∈ P := by\n        apply (hxor Tᶜ).2\n        simpa using hT\n      exact ⟨Tᶜ, hTc, by simp [c]⟩\n    · rintro ⟨U, hU, rfl⟩\n      simpa [c] using (hxor U).1 hU\n  have hcard : (Pᶜ).card = P.card := by\n    rw [hcomp]\n    exact Finset.card_image_of_injective P hc\n  have hdouble : P.card + P.card = Fintype.card (Set S) := by\n    calc\n      P.card + P.card = (Pᶜ).card + P.card := by rw [hcard]\n      _ = Fintype.card (Set S) := Finset.card_compl_add_card P\n  have hdouble' : P.card + P.card = 2 ^ Fintype.card S := by\n    simpa using hdouble\n  have hn : 0 < Fintype.card S := Fintype.card_pos\n  have hnrep : Fintype.card S = (Fintype.card S - 1) + 1 := by\n    omega\n  have hpow :\n      2 ^ Fintype.card S =\n        2 ^ (Fintype.card S - 1) + 2 ^ (Fintype.card S - 1) := by\n    calc\n      2 ^ Fintype.card S = 2 ^ ((Fintype.card S - 1) + 1) :=\n        congrArg (fun n : Nat => 2 ^ n) hnrep\n      _ = 2 ^ (Fintype.card S - 1) + 2 ^ (Fintype.card S - 1) := by\n        simp [pow_succ, mul_two]\n  have hh :\n      P.card + P.card =\n        2 ^ (Fintype.card S - 1) + 2 ^ (Fintype.card S - 1) :=\n    hdouble'.trans hpow\n  omega",
+  "proof_sha256": "72dc20baadeff68f123a5202adbc5ca4306f5e14f6de7e688f44c72d7d9aaba2",
+  "full_source_sha256": "fb01b91bf36763d0f318aa1c28483d980e3a1f426755518c83962eadad93e53e",
+  "eligible": true,
+  "verification": {
+    "task_id": "P14",
+    "attempt": "candidate_01",
+    "candidate_hash": "fb01b91bf36763d0f318aa1c28483d980e3a1f426755518c83962eadad93e53e",
+    "environment_id": "c218c5dbbcf99921ca86ad4bf735357e5c523193eb17a84ce9e613754310a6b5",
+    "check_kind": "candidate",
+    "status": "candidate_pass",
+    "process_exit_code": 0,
+    "diagnostics": [
+      {
+        "severity": "warning",
+        "position": {
+          "column": 10,
+          "line": 39
+        },
+        "end_position": {
+          "column": 30,
+          "line": 39
+        },
+        "message": "Try `simp at hx` instead of `simpa using hx`\n\nNote: This linter can be disabled with `set_option linter.unnecessarySimpa false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "Try `simp at hx` instead of `simpa using hx`\n\nNote: This linter can be disabled with `set_option linter.unnecessarySimpa false`",
+          "endPos": {
+            "column": 30,
+            "line": 39
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P14/incomplete/B2/repeat_2/validation/lean/002_candidate_01/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unnecessarySimpa",
+          "pos": {
+            "column": 10,
+            "line": 39
+          },
+          "severity": "warning"
+        },
+        "source_line": "          simpa [hTU] using hx",
+        "start_offset": 987,
+        "start_byte_offset": 1076,
+        "end_offset": 1007,
+        "end_byte_offset": 1096,
+        "source_text": "simpa [hTU] using hx"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 10,
+          "line": 44
+        },
+        "end_position": {
+          "column": 31,
+          "line": 44
+        },
+        "message": "Try `simp at hx` instead of `simpa using hx`\n\nNote: This linter can be disabled with `set_option linter.unnecessarySimpa false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "Try `simp at hx` instead of `simpa using hx`\n\nNote: This linter can be disabled with `set_option linter.unnecessarySimpa false`",
+          "endPos": {
+            "column": 31,
+            "line": 44
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P14/incomplete/B2/repeat_2/validation/lean/002_candidate_01/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unnecessarySimpa",
+          "pos": {
+            "column": 10,
+            "line": 44
+          },
+          "severity": "warning"
+        },
+        "source_line": "          simpa [hTcV] using hx",
+        "start_offset": 1153,
+        "start_byte_offset": 1258,
+        "end_offset": 1174,
+        "end_byte_offset": 1279,
+        "source_text": "simpa [hTcV] using hx"
+      },
+      {
+        "severity": "information",
+        "position": {
+          "column": 0,
+          "line": 89
+        },
+        "end_position": {
+          "column": 6,
+          "line": 89
+        },
+        "message": "putnam_1964_b2.{u_1} (S : Type u_1) [Fintype S] [Nonempty S] (P : Finset (Set S)) (hPP : ∀ T ∈ P, ∀ U ∈ P, T ∩ U ≠ ∅)\n  (hPS : ¬∃ T ∉ P, ∀ U ∈ P, T ∩ U ≠ ∅) : P.card = 2 ^ (Fintype.card S - 1)",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "putnam_1964_b2.{u_1} (S : Type u_1) [Fintype S] [Nonempty S] (P : Finset (Set S)) (hPP : ∀ T ∈ P, ∀ U ∈ P, T ∩ U ≠ ∅)\n  (hPS : ¬∃ T ∉ P, ∀ U ∈ P, T ∩ U ≠ ∅) : P.card = 2 ^ (Fintype.card S - 1)",
+          "endPos": {
+            "column": 6,
+            "line": 89
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P14/incomplete/B2/repeat_2/validation/lean/002_candidate_01/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 0,
+            "line": 89
+          },
+          "severity": "information"
+        }
+      },
+      {
+        "severity": "information",
+        "position": {
+          "column": 0,
+          "line": 90
+        },
+        "end_position": {
+          "column": 6,
+          "line": 90
+        },
+        "message": "'putnam_1964_b2' depends on axioms: [propext, Classical.choice, Quot.sound]",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "'putnam_1964_b2' depends on axioms: [propext, Classical.choice, Quot.sound]",
+          "endPos": {
+            "column": 6,
+            "line": 90
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P14/incomplete/B2/repeat_2/validation/lean/002_candidate_01/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 0,
+            "line": 90
+          },
+          "severity": "information"
+        }
+      }
+    ],
+    "goals": null,
+    "local_context": null,
+    "sorries": [],
+    "backend_proof_status": null,
+    "statement_check": "fixed_context_preserved",
+    "axioms": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext"
+    ],
+    "metrics": {
+      "proof_tokens": 575,
+      "raw_heartbeats": 3472418,
+      "heartbeats": 3472
+    },
+    "elapsed_ms": 16665,
+    "raw_log_path": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P14/incomplete/B2/repeat_2/validation/lean/002_candidate_01/stdout.log",
+    "detail": null,
+    "failure_kind": null
+  },
+  "measurement": {
+    "proof_tokens": 575,
+    "raw_heartbeats": 3472418,
+    "token_reduction_pct": 68.09100998890122,
+    "heartbeat_reduction_pct": 97.42099896957842,
+    "search_score": 82.75600447923982
+  },
+  "facts": {
+    "diagnostics": [
+      {
+        "severity": "warning",
+        "position": {
+          "column": 10,
+          "line": 39
+        },
+        "end_position": {
+          "column": 30,
+          "line": 39
+        },
+        "message": "Try `simp at hx` instead of `simpa using hx`\n\nNote: This linter can be disabled with `set_option linter.unnecessarySimpa false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "Try `simp at hx` instead of `simpa using hx`\n\nNote: This linter can be disabled with `set_option linter.unnecessarySimpa false`",
+          "endPos": {
+            "column": 30,
+            "line": 39
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unnecessarySimpa",
+          "pos": {
+            "column": 10,
+            "line": 39
+          },
+          "severity": "warning"
+        },
+        "source_line": "          simpa [hTU] using hx",
+        "start_offset": 987,
+        "start_byte_offset": 1076,
+        "end_offset": 1007,
+        "end_byte_offset": 1096,
+        "source_text": "simpa [hTU] using hx"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 10,
+          "line": 44
+        },
+        "end_position": {
+          "column": 31,
+          "line": 44
+        },
+        "message": "Try `simp at hx` instead of `simpa using hx`\n\nNote: This linter can be disabled with `set_option linter.unnecessarySimpa false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "Try `simp at hx` instead of `simpa using hx`\n\nNote: This linter can be disabled with `set_option linter.unnecessarySimpa false`",
+          "endPos": {
+            "column": 31,
+            "line": 44
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unnecessarySimpa",
+          "pos": {
+            "column": 10,
+            "line": 44
+          },
+          "severity": "warning"
+        },
+        "source_line": "          simpa [hTcV] using hx",
+        "start_offset": 1153,
+        "start_byte_offset": 1258,
+        "end_offset": 1174,
+        "end_byte_offset": 1279,
+        "source_text": "simpa [hTcV] using hx"
+      },
+      {
+        "severity": "information",
+        "position": {
+          "column": 0,
+          "line": 89
+        },
+        "end_position": {
+          "column": 6,
+          "line": 89
+        },
+        "message": "putnam_1964_b2.{u_1} (S : Type u_1) [Fintype S] [Nonempty S] (P : Finset (Set S)) (hPP : ∀ T ∈ P, ∀ U ∈ P, T ∩ U ≠ ∅)\n  (hPS : ¬∃ T ∉ P, ∀ U ∈ P, T ∩ U ≠ ∅) : P.card = 2 ^ (Fintype.card S - 1)",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "putnam_1964_b2.{u_1} (S : Type u_1) [Fintype S] [Nonempty S] (P : Finset (Set S)) (hPP : ∀ T ∈ P, ∀ U ∈ P, T ∩ U ≠ ∅)\n  (hPS : ¬∃ T ∉ P, ∀ U ∈ P, T ∩ U ≠ ∅) : P.card = 2 ^ (Fintype.card S - 1)",
+          "endPos": {
+            "column": 6,
+            "line": 89
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 0,
+            "line": 89
+          },
+          "severity": "information"
+        }
+      },
+      {
+        "severity": "information",
+        "position": {
+          "column": 0,
+          "line": 90
+        },
+        "end_position": {
+          "column": 6,
+          "line": 90
+        },
+        "message": "'putnam_1964_b2' depends on axioms: [propext, Classical.choice, Quot.sound]",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "'putnam_1964_b2' depends on axioms: [propext, Classical.choice, Quot.sound]",
+          "endPos": {
+            "column": 6,
+            "line": 90
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 0,
+            "line": 90
+          },
+          "severity": "information"
+        }
+      }
+    ],
+    "goals": null,
+    "local_context": null,
+    "sorries": [],
+    "axioms": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext"
+    ],
+    "detail": null,
+    "raw_lean_output": "{\"caption\":\"\",\"data\":\"Try `simp at hx` instead of `simpa using hx`\\n\\nNote: This linter can be disabled with `set_option linter.unnecessarySimpa false`\",\"endPos\":{\"column\":30,\"line\":39},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"linter.unnecessarySimpa\",\"pos\":{\"column\":10,\"line\":39},\"severity\":\"warning\"}\n{\"caption\":\"\",\"data\":\"Try `simp at hx` instead of `simpa using hx`\\n\\nNote: This linter can be disabled with `set_option linter.unnecessarySimpa false`\",\"endPos\":{\"column\":31,\"line\":44},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"linter.unnecessarySimpa\",\"pos\":{\"column\":10,\"line\":44},\"severity\":\"warning\"}\n{\"caption\":\"\",\"data\":\"putnam_1964_b2.{u_1} (S : Type u_1) [Fintype S] [Nonempty S] (P : Finset (Set S)) (hPP : ∀ T ∈ P, ∀ U ∈ P, T ∩ U ≠ ∅)\\n  (hPS : ¬∃ T ∉ P, ∀ U ∈ P, T ∩ U ≠ ∅) : P.card = 2 ^ (Fintype.card S - 1)\",\"endPos\":{\"column\":6,\"line\":89},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"[anonymous]\",\"pos\":{\"column\":0,\"line\":89},\"severity\":\"information\"}\n{\"caption\":\"\",\"data\":\"'putnam_1964_b2' depends on axioms: [propext, Classical.choice, Quot.sound]\",\"endPos\":{\"column\":6,\"line\":90},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"[anonymous]\",\"pos\":{\"column\":0,\"line\":90},\"severity\":\"information\"}\n"
+  },
+  "diagnosis": "The missing argument is the standard complement-pair count: maximality implies that exactly one of every subset and its complement belongs to P. Thus complement gives a bijection between P and its finite complement, so P has half of all 2^(card S) subsets.",
+  "duplicate_cache": false,
+  "available_at": 1792774810.524408,
+  "cumulative_calls": 1,
+  "cumulative_tokens": 19637,
+  "api_spend_usd": null
+}

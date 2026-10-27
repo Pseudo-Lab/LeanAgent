@@ -1,0 +1,46 @@
+by
+  classical
+  intro ϑ
+  induction ϑ using Nat.strong_induction_on with
+  | h ϑ ih =>
+      intro hϑ_gt_0
+      cases ϑ with
+      | zero => omega
+      | succ ϑ_pred =>
+          by_cases hϑ_pred : ϑ_pred = 0
+          · subst ϑ_pred
+            simpa [δ_ε_multilinearCorrelatedAgreement_Nat,
+              e_ε_correlatedAgreementAffineLinesNat, multilinearCombine,
+              jointProximityNat₂] using hC_proximityGapAffineLines
+          · have hϑ_pred_gt_0 : ϑ_pred > 0 := Nat.pos_of_ne_zero hϑ_pred
+            have ih_pred : δ_ε_multilinearCorrelatedAgreement_Nat
+                (F := F) (A := A) (ι := ι) (C := MC) (ϑ := ϑ_pred)
+                (e := e) (ε := ε) :=
+              ih ϑ_pred (Nat.lt_succ_self ϑ_pred) hϑ_pred_gt_0
+            unfold δ_ε_multilinearCorrelatedAgreement_Nat
+            intro u hP
+            let U₀ := (splitHalfRowWiseInterleavedWords (ϑ := ϑ_pred) u).1
+            let U₁ := (splitHalfRowWiseInterleavedWords (ϑ := ϑ_pred) u).2
+            let R := R_star_tensor MC (m := ϑ_pred) (e := e) (ε := ε) U₀ U₁
+            have hR :
+                Pr_{let r ← $ᵖ F}[r ∈ R] >
+                  (↑ε : ENNReal) / (Fintype.card F : ENNReal) := by
+              simpa [U₀, U₁, R, multilinearCombine_affineComb_split_last_close]
+                using prob_R_star_gt_threshold (MC := MC) (ε := ε)
+                  (u := u) (e := e) hP
+            have h_affine :
+                Pr_{let r ← $ᵖ F}[
+                    Δ₀(affineLineEvaluation (F := F) (⋈| U₀) (⋈| U₁) r,
+                      MC ^⋈ (Fin (2 ^ ϑ_pred))) ≤ e] >
+                  (↑ε : ENNReal) / (Fintype.card F : ENNReal) := by
+              apply lt_of_lt_of_le hR
+              apply Pr_le_Pr_of_implies
+              intro r hr
+              have hr' := correlatedAgreement_of_mem_R_star_tensor
+                (MC := MC) (e := e) (ε := ε) (ih := ih_pred) (u := u)
+                (r := ⟨r, by simpa [R] using hr⟩)
+              rw [jointProximityNat] at hr'
+              simpa [U₀, U₁, affineLineEvaluation] using hr'
+            have h_pair := h_interleaved_gaps (2 ^ ϑ_pred) (by positivity)
+              (⋈| U₀) (⋈| U₁) h_affine
+            simpa [jointProximityNat₂, U₀, U₁] using h_pair

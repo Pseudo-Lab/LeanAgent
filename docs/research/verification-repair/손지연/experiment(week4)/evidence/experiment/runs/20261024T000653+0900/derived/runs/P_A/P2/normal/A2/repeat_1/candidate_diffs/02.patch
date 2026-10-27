@@ -1,0 +1,21 @@
+--- candidate_01.proof.lean
++++ candidate_02.proof.lean
+@@ -1,6 +1,15 @@
+ by
+   intro h
+-  induction h <;>
++  induction h
++  case app =>
++    intro a ha
++    unfold extractOldExprVars at ha
++    split at ha <;>
++      simp_all [Imperative.HasVarsPure.getVars,
++        Lambda.LExpr.LExpr.getVars] <;>
++      grind
++  all_goals
+     simp_all [List.Subset, extractOldExprVars,
+-      Imperative.HasVarsPure.getVars, Lambda.LExpr.LExpr.getVars] <;>
++      Imperative.HasVarsPure.getVars,
++      Lambda.LExpr.LExpr.getVars] <;>
+     grind
+\ No newline at end of file

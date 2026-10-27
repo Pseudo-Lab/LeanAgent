@@ -1,0 +1,20 @@
+--- candidate_01.proof.lean
++++ candidate_02.proof.lean
+@@ -39,8 +39,6 @@
+       rfl
+     _ = 1 / (𝓕.μ₀ * 𝓕.ε₀) * (∑ j, ∂[j] (fun y => ∂ₜ (B · y (j, i)) t) x) -
+         1 / 𝓕.ε₀ * ∂ₜ (K · x i) t := by
+-      congr
+-      simp only [Finset.sum_apply]
+       congr
+       funext j
+       rw [Space.time_deriv_comm_space_deriv]
+@@ -101,7 +99,7 @@
+         simp [← Space.deriv_eq_fderiv_basis]
+         field_simp
+         exact (LorentzCurrentDensity.chargeDensity_differentiable_space
+-          (hJ.differentiable (by simp))).differentiableAt
++          (hJ.differentiable (by simp)) t).differentiableAt
+     _ = 𝓕.c ^ 2 * ∑ j, ∂[j] (∂[j] (E t · i)) x -
+         𝓕.c ^ 2 / 𝓕.ε₀ * ∂[i] (R t ·) x -
+         𝓕.c ^ 2 * 𝓕.μ₀ * ∂ₜ (K · x i) t := by

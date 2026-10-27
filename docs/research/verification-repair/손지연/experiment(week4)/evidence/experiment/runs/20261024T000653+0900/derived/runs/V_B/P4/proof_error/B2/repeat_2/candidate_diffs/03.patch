@@ -1,0 +1,21 @@
+--- candidate_02.proof.lean
++++ candidate_03.proof.lean
+@@ -1,15 +1,2 @@
+ by
+-  have hf' := hg f hf
+-  rw [MeasureTheory.integral_eq_zero_iff_of_nonneg] at hf'
+-  · rw [Continuous.ae_eq_iff_eq] at hf'
+-    · funext x
+-      have hf'' := congrFun hf' x
+-      simpa using hf''
+-    · have hf_cont : Continuous f := hf.smooth.continuous
+-      fun_prop
+-    · fun_prop
+-  · intro x
+-    simp only [Pi.zero_apply]
+-    apply real_inner_self_nonneg'
+-  · apply IsTestFunction.integrable
+-    exact IsTestFunction.inner hf hf
+\ No newline at end of file
++  exact fundamental_theorem_of_variational_calculus' μ hf.smooth.continuous hg
+\ No newline at end of file

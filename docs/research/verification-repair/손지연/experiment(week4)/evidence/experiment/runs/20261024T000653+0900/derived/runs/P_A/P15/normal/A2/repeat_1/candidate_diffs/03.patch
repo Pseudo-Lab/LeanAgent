@@ -1,0 +1,26 @@
+--- candidate_02.proof.lean
++++ candidate_03.proof.lean
+@@ -45,9 +45,11 @@
+     rw [heq] at hs
+     have ht : 7 ∣ 8 * digits_to_num a + digits_to_num b := by
+       rw [hdiff a b]
+-      convert hs using 1 <;> ring
++      convert hs using 1
++      ring
+     have hseven : 7 ∣ 7 * digits_to_num a := ⟨digits_to_num a, rfl⟩
+-    convert dvd_sub ht hseven using 1 <;> ring
++    convert dvd_sub ht hseven using 1
++    ring
+   intro d e f h i
+   have hde := ((hrelation d e).mp h.1).2 i
+   have hef := ((hrelation e f).mp h.2).2 i
+@@ -55,7 +57,8 @@
+   rw [hreplace e f i] at hef
+   have hp : 7 ∣ (f i - d i) * (10 : ℤ) ^ (i : ℕ) := by
+     have ht := dvd_sub (dvd_add hde hef) (hsum d e h.1)
+-    convert ht using 1 <;> ring
++    convert ht using 1
++    ring
+   have hfd : 7 ∣ f i - d i := by
+     rcases (Int.prime_iff_natAbs_prime.mpr (by decide)).dvd_mul.mp hp with hp | hp
+     · exact hp

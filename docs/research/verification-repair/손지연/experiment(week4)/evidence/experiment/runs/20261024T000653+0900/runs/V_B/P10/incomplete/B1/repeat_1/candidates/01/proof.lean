@@ -1,0 +1,115 @@
+by
+  let C_i := BBF_Code 𝔽q β (h_ℓ_add_R_rate := h_ℓ_add_R_rate) ⟨i, by omega⟩
+  let S := (fun (g : C_i) =>
+    (fiberwiseDisagreementSet 𝔽q β i steps h_i_add_steps f g).ncard) '' Set.univ
+  have hS_nonempty : S.Nonempty := Set.image_nonempty.mpr Set.univ_nonempty
+  rcases Nat.sInf_mem hS_nonempty with ⟨g, _, hg_min⟩
+  have hg_min_dist :
+      (fiberwiseDisagreementSet 𝔽q β i steps h_i_add_steps f g).ncard =
+        fiberwiseDistance 𝔽q β (h_ℓ_add_R_rate := h_ℓ_add_R_rate)
+          (i := i) steps h_i_add_steps f := by
+    simpa only [fiberwiseDistance, C_i, S] using hg_min
+
+  let q := fun x : sDomain 𝔽q β h_ℓ_add_R_rate ⟨i, by omega⟩ =>
+    iteratedQuotientMap 𝔽q β h_ℓ_add_R_rate (i := i) (k := steps)
+      (h_bound := h_i_add_steps) x
+  let idx := fun x : sDomain 𝔽q β h_ℓ_add_R_rate ⟨i, by omega⟩ =>
+    pointToIterateQuotientIndex (i := ⟨i, by omega⟩) (steps := steps)
+      (h_i_add_steps := h_i_add_steps) (x := x)
+  let enc := fun x : sDomain 𝔽q β h_ℓ_add_R_rate ⟨i, by omega⟩ => (q x, idx x)
+  have h_enc_inj : Function.Injective enc := by
+    intro x₁ x₂ henc
+    have hq : q x₁ = q x₂ := by
+      simpa only [enc] using congrArg Prod.fst henc
+    have hk : idx x₁ = idx x₂ := by
+      simpa only [enc] using congrArg Prod.snd henc
+    have hx₁ :
+        qMap_total_fiber 𝔽q β (i := ⟨i, by omega⟩) (steps := steps)
+          (h_i_add_steps := fin_ℓ_steps_lt_ℓ_add_R i steps h_i_add_steps)
+          (y := q x₁) (idx x₁) = x₁ := by
+      apply (is_fiber_iff_generates_quotient_point 𝔽q β i steps h_i_add_steps
+        (x := x₁) (y := q x₁)).mp
+      rfl
+    have hx₂ :
+        qMap_total_fiber 𝔽q β (i := ⟨i, by omega⟩) (steps := steps)
+          (h_i_add_steps := fin_ℓ_steps_lt_ℓ_add_R i steps h_i_add_steps)
+          (y := q x₁) (idx x₂) = x₂ := by
+      apply (is_fiber_iff_generates_quotient_point 𝔽q β i steps h_i_add_steps
+        (x := x₂) (y := q x₁)).mp
+      exact hq
+    rw [←hx₁, ←hx₂, hk]
+
+  let D := Finset.filter (fun x => f x ≠ g x) Finset.univ
+  let FW := (fiberwiseDisagreementSet 𝔽q β i steps h_i_add_steps f g).toFinset
+  let T := FW ×ˢ (Finset.univ : Finset (Fin (2 ^ steps)))
+  have h_maps : Set.MapsTo enc (D : Set _) (T : Set _) := by
+    intro x hx
+    have hx_ne : f x ≠ g x := by
+      simpa only [D, Finset.mem_filter, Finset.mem_univ, true_and] using hx
+    simp only [T, enc, Finset.mem_product, Set.mem_toFinset, Finset.mem_univ, and_true]
+    change ∃ x',
+      iteratedQuotientMap 𝔽q β h_ℓ_add_R_rate (i := i) (k := steps)
+        (h_bound := by omega) x' = q x ∧ f x' ≠ g x'
+    exact ⟨x, rfl, hx_ne⟩
+  have h_card : D.card ≤ T.card := by
+    apply Finset.card_le_card_of_injOn (f := enc)
+    · exact h_maps
+    · exact h_enc_inj.injOn
+  have h_hamming_le :
+      hammingDist f g ≤ 2 ^ steps *
+        (fiberwiseDisagreementSet 𝔽q β i steps h_i_add_steps f g).ncard := by
+    simpa only [D, T, FW, hammingDist, Finset.card_product, Finset.card_univ,
+      Fintype.card_fin, Set.ncard_eq_toFinset_card, mul_comm] using h_card
+
+  have h_selected_lt :
+      2 * (fiberwiseDisagreementSet 𝔽q β i steps h_i_add_steps f g).ncard <
+        BBF_CodeDistance ℓ 𝓡 ⟨i + steps, by omega⟩ := by
+    unfold fiberwiseClose at h_fw_dist_lt
+    rw [←hg_min_dist] at h_fw_dist_lt
+    exact_mod_cast h_fw_dist_lt
+  have h_base :
+      2 * (fiberwiseDisagreementSet 𝔽q β i steps h_i_add_steps f g).ncard ≤
+        BBF_CodeDistance ℓ 𝓡 ⟨i + steps, by omega⟩ - 1 := by
+    omega
+  have h_distance_scale :
+      BBF_CodeDistance ℓ 𝓡 ⟨i, by omega⟩ =
+        (BBF_CodeDistance ℓ 𝓡 ⟨i + steps, by omega⟩ - 1) * 2 ^ steps + 1 := by
+    have h_exp₁ :
+        ℓ + 𝓡 - i.val = (ℓ + 𝓡 - (i.val + steps)) + steps := by
+      omega
+    have h_exp₂ :
+        ℓ - i.val = (ℓ - (i.val + steps)) + steps := by
+      omega
+    unfold BBF_CodeDistance
+    simp only [Fin.val_mk]
+    rw [h_exp₁, h_exp₂, pow_add, pow_add]
+    simp only [Nat.add_sub_cancel, Nat.sub_mul]
+  have h_hamming_scaled_lt :
+      2 * hammingDist f g < BBF_CodeDistance ℓ 𝓡 ⟨i, by omega⟩ := by
+    calc
+      2 * hammingDist f g ≤
+          2 * (2 ^ steps *
+            (fiberwiseDisagreementSet 𝔽q β i steps h_i_add_steps f g).ncard) :=
+        Nat.mul_le_mul_left 2 h_hamming_le
+      _ = (2 * (fiberwiseDisagreementSet 𝔽q β i steps h_i_add_steps f g).ncard) *
+          2 ^ steps := by ac_rfl
+      _ ≤ (BBF_CodeDistance ℓ 𝓡 ⟨i + steps, by omega⟩ - 1) * 2 ^ steps :=
+        Nat.mul_le_mul_right (2 ^ steps) h_base
+      _ < BBF_CodeDistance ℓ 𝓡 ⟨i, by omega⟩ := by
+        rw [h_distance_scale]
+        omega
+
+  have h_dist_le :
+      Code.distFromCode (u := f) (C := C_i) ≤ (hammingDist f g : ℕ∞) := by
+    unfold Code.distFromCode
+    apply sInf_le
+    use (g : _)
+    exact ⟨g.property, le_rfl⟩
+  unfold hammingClose
+  change 2 * Code.distFromCode (u := f) (C := C_i) <
+    (BBF_CodeDistance ℓ 𝓡 ⟨i, by omega⟩ : ℕ∞)
+  calc
+    2 * Code.distFromCode (u := f) (C := C_i) ≤
+        2 * (hammingDist f g : ℕ∞) := mul_le_mul_left' h_dist_le 2
+    _ < (BBF_CodeDistance ℓ 𝓡 ⟨i, by omega⟩ : ℕ∞) := by
+      exact_mod_cast h_hamming_scaled_lt

@@ -1,0 +1,12 @@
+--- candidate_02.proof.lean
++++ candidate_03.proof.lean
+@@ -46,8 +46,7 @@
+       simp
+       ring
+     rw [heq] at hs
+-    exact (dvd_sub hs ⟨digits_to_num a, rfl⟩ :
+-      7 ∣ digits_to_num a + digits_to_num b)
++    convert dvd_sub hs ⟨digits_to_num a, rfl⟩ using 1 <;> ring
+   have hp : 7 ∣ (f i - d i) * (10 : ℤ) ^ (i : ℕ) := by
+     have hs := dvd_sub
+       (dvd_add (hrepdvd d e h.1 i) (hrepdvd e f h.2 i))

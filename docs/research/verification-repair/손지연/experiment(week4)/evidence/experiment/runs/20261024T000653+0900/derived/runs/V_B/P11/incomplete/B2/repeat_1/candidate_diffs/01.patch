@@ -1,0 +1,18 @@
+--- initial.proof.lean
++++ candidate_01.proof.lean
+@@ -1,2 +1,12 @@
+ by
+-  skip
+\ No newline at end of file
++  simp only
++  intro y
++  have h₀ := qMap_total_fiber_one_level_eq 𝔽q β
++    (h_ℓ_add_R_rate := h_ℓ_add_R_rate) i (by omega) y (0 : Fin 2)
++  have h₁ := qMap_total_fiber_one_level_eq 𝔽q β
++    (h_ℓ_add_R_rate := h_ℓ_add_R_rate) i (by omega) y (1 : Fin 2)
++  simp only at h₀ h₁
++  simp only [fold]
++  rw [h₀, h₁]
++  simp [Fin2ToF2, intermediateEvaluationPoly, h_β₀_eq_1.out,
++    Submodule.coe_add, Submodule.coe_smul] <;> ring
+\ No newline at end of file

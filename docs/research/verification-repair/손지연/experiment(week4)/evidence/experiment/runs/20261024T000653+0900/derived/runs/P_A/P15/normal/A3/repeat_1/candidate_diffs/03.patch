@@ -1,0 +1,14 @@
+--- candidate_02.proof.lean
++++ candidate_03.proof.lean
+@@ -12,10 +12,7 @@
+           if j = i then (b j - a j) * 10 ^ (j : ℕ) else 0) := by
+         apply Finset.sum_congr rfl
+         intro j _
+-        split_ifs with q
+-        · subst j
+-          ring
+-        · ring
++        by_cases q : j = i <;> simp [q] <;> ring
+       _ = _ := by
+         rw [Finset.sum_add_distrib]
+         simp [Finset.sum_ite_eq', Finset.mem_univ]

@@ -1,0 +1,13 @@
+--- candidate_02.proof.lean
++++ candidate_03.proof.lean
+@@ -27,7 +27,9 @@
+         simp at Hx
+         rcases Hx with Hx | Hx
+         · simp_all
+-        · exact List.mem_cons_of_mem a (ih bs Hx)
++        · rcases Hx with ⟨y, Hxy⟩
++          have Hmem := List.of_mem_zip Hxy
++          exact List.mem_cons_of_mem a Hmem.1
+   have Hzipdisj :
+       List.Disjoint ((ks.zip vs).unzip.1) ((ks'.zip vs').unzip.1) := by
+     intro k Hk Hk'

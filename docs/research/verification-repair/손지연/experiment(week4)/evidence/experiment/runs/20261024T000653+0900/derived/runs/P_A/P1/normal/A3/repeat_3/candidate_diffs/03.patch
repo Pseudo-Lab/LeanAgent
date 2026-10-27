@@ -1,0 +1,28 @@
+--- candidate_02.proof.lean
++++ candidate_03.proof.lean
+@@ -5,14 +5,18 @@
+         b.Subset (d ++ [h1]) →
+         (a ++ b).Subset (c ++ d ++ [h1]) := by
+     intro a b c d hac hbd x hx
+-    simp only [List.mem_append, List.mem_singleton] at hx hac hbd ⊢
++    simp only [List.mem_append] at hx ⊢
+     rcases hx with hx | hx
+-    · rcases hac hx with hx | hx
+-      · exact Or.inl (Or.inl hx)
+-      · exact Or.inr hx
+-    · rcases hbd hx with hx | hx
+-      · exact Or.inl (Or.inr hx)
+-      · exact Or.inr hx
++    · have hy : x ∈ c ∨ x = h1 := by
++        simpa only [List.mem_append, List.mem_singleton] using hac hx
++      rcases hy with hy | hy
++      · exact Or.inl (Or.inl hy)
++      · exact Or.inr hy
++    · have hy : x ∈ d ∨ x = h1 := by
++        simpa only [List.mem_append, List.mem_singleton] using hbd hx
++      rcases hy with hy | hy
++      · exact Or.inl (Or.inr hy)
++      · exact Or.inr hy
+   induction post with
+   | const c =>
+       simp [List.Subset, substOld, Imperative.HasVarsPure.getVars,

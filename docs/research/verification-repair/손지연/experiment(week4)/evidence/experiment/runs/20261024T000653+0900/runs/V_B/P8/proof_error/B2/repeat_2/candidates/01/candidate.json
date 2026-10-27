@@ -1,0 +1,185 @@
+{
+  "call": 1,
+  "origin": "generated",
+  "body": "by\n  intro a a₁ a₂ h₁ h₂\n  cases h₁\n  case refl => exact ⟨a₂, h₂, .refl a₂⟩\n  case par a a' b b' ha' hb' =>\n    cases h₂\n    case refl =>\n      use a' ⬝ b'\n      exact ⟨.refl (a' ⬝ b'), .par ha' hb'⟩\n    case par a'' b'' ha'' hb'' =>\n      let ⟨a₃, ha⟩ := parallelReduction_diamond ha' ha''\n      let ⟨b₃, hb⟩ := parallelReduction_diamond hb' hb''\n      use a₃ ⬝ b₃\n      constructor\n      · exact .par ha.1 hb.1\n      · exact .par ha.2 hb.2\n    case red_I =>\n      rw [I_irreducible a' ha']\n      use b', .red_I b'\n    case red_K =>\n      let ⟨a₂', ha₂'⟩ := Ka_irreducible a₂ a' ha'\n      rw [ha₂'.2]\n      use a₂'\n      exact ⟨.red_K a₂' b', ha₂'.1⟩\n    case red_S a c =>\n      let ⟨a'', c', h⟩ := Sab_irreducible a c a' ha'\n      rw [h.2.2]\n      use a'' ⬝ b' ⬝ (c' ⬝ b'), .red_S a'' c' b'\n      apply ParallelReduction.par <;>\n        apply ParallelReduction.par <;>\n        grind\n  case red_I =>\n    cases h₂\n    case refl => use a₁; exact ⟨.refl a₁, .red_I a₁⟩\n    case par c a₁' hc ha =>\n      rw [I_irreducible c hc]\n      use a₁'\n      exact ⟨ha, .red_I a₁'⟩\n    case red_I => use a₁; exact ⟨.refl a₁, .refl a₁⟩\n  case red_K c =>\n    cases h₂\n    case refl => use a₁; exact ⟨.refl a₁, .red_K a₁ c⟩\n    case par a' c' ha hc =>\n      let ⟨a₁', h'⟩ := Ka_irreducible a₁ a' ha\n      rw [h'.2]\n      use a₁'\n      exact ⟨h'.1, .red_K a₁' c'⟩\n    case red_K =>\n      use a₁; exact ⟨.refl a₁, .refl a₁⟩\n  case red_S a b c =>\n    cases h₂\n    case refl =>\n      use a ⬝ c ⬝ (b ⬝ c)\n      exact ⟨.refl _, .red_S ..⟩\n    case par d c' hd hc =>\n      let ⟨a', b', h⟩ := Sab_irreducible a b d hd\n      rw [h.2.2]\n      use a' ⬝ c' ⬝ (b' ⬝ c')\n      constructor\n      · apply ParallelReduction.par\n        · exact .par h.left hc\n        · exact .par h.2.1 hc\n      · exact .red_S ..\n    case red_S => exact ⟨a ⬝ c ⬝ (b ⬝ c), .refl _, .refl _,⟩",
+  "proof_sha256": "17c7c55fe9e3b43e9227b8f6709c62007d107bb9d9bb1fd9b801e8e8e937c43a",
+  "full_source_sha256": "6042b6d5bf9bb9a1668b48a46f56f87713cf0c963a35da1b5b6b1f94943fb1ba",
+  "eligible": true,
+  "verification": {
+    "task_id": "P8",
+    "attempt": "candidate_01",
+    "candidate_hash": "6042b6d5bf9bb9a1668b48a46f56f87713cf0c963a35da1b5b6b1f94943fb1ba",
+    "environment_id": "539810be844b4918624a39f96635209e5268d60962b8f167956106aaa6dbee0f",
+    "check_kind": "candidate",
+    "status": "candidate_pass",
+    "process_exit_code": 0,
+    "diagnostics": [
+      {
+        "severity": "information",
+        "position": {
+          "column": 0,
+          "line": 227
+        },
+        "end_position": {
+          "column": 6,
+          "line": 227
+        },
+        "message": "Cslib.SKI.parallelReduction_diamond : Relation.Diamond Cslib.SKI.ParallelReduction",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "Cslib.SKI.parallelReduction_diamond : Relation.Diamond Cslib.SKI.ParallelReduction",
+          "endPos": {
+            "column": 6,
+            "line": 227
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P8/proof_error/B2/repeat_2/validation/lean/002_candidate_01/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 0,
+            "line": 227
+          },
+          "severity": "information"
+        }
+      },
+      {
+        "severity": "information",
+        "position": {
+          "column": 0,
+          "line": 228
+        },
+        "end_position": {
+          "column": 6,
+          "line": 228
+        },
+        "message": "'Cslib.SKI.parallelReduction_diamond' depends on axioms: [propext, Classical.choice, Quot.sound]",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "'Cslib.SKI.parallelReduction_diamond' depends on axioms: [propext, Classical.choice, Quot.sound]",
+          "endPos": {
+            "column": 6,
+            "line": 228
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P8/proof_error/B2/repeat_2/validation/lean/002_candidate_01/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 0,
+            "line": 228
+          },
+          "severity": "information"
+        }
+      }
+    ],
+    "goals": null,
+    "local_context": null,
+    "sorries": [],
+    "backend_proof_status": null,
+    "statement_check": "fixed_context_preserved",
+    "axioms": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext"
+    ],
+    "metrics": {
+      "proof_tokens": 454,
+      "raw_heartbeats": 1459060,
+      "heartbeats": 1459
+    },
+    "elapsed_ms": 5246,
+    "raw_log_path": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P8/proof_error/B2/repeat_2/validation/lean/002_candidate_01/stdout.log",
+    "detail": null,
+    "failure_kind": null
+  },
+  "measurement": {
+    "proof_tokens": 454,
+    "raw_heartbeats": 1459060,
+    "token_reduction_pct": 0.0,
+    "heartbeat_reduction_pct": -0.0019190805959024004,
+    "search_score": -0.0009595402979512002
+  },
+  "facts": {
+    "diagnostics": [
+      {
+        "severity": "information",
+        "position": {
+          "column": 0,
+          "line": 227
+        },
+        "end_position": {
+          "column": 6,
+          "line": 227
+        },
+        "message": "Cslib.SKI.parallelReduction_diamond : Relation.Diamond Cslib.SKI.ParallelReduction",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "Cslib.SKI.parallelReduction_diamond : Relation.Diamond Cslib.SKI.ParallelReduction",
+          "endPos": {
+            "column": 6,
+            "line": 227
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 0,
+            "line": 227
+          },
+          "severity": "information"
+        }
+      },
+      {
+        "severity": "information",
+        "position": {
+          "column": 0,
+          "line": 228
+        },
+        "end_position": {
+          "column": 6,
+          "line": 228
+        },
+        "message": "'Cslib.SKI.parallelReduction_diamond' depends on axioms: [propext, Classical.choice, Quot.sound]",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "'Cslib.SKI.parallelReduction_diamond' depends on axioms: [propext, Classical.choice, Quot.sound]",
+          "endPos": {
+            "column": 6,
+            "line": 228
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 0,
+            "line": 228
+          },
+          "severity": "information"
+        }
+      }
+    ],
+    "goals": null,
+    "local_context": null,
+    "sorries": [],
+    "axioms": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext"
+    ],
+    "detail": null,
+    "raw_lean_output": "{\"caption\":\"\",\"data\":\"Cslib.SKI.parallelReduction_diamond : Relation.Diamond Cslib.SKI.ParallelReduction\",\"endPos\":{\"column\":6,\"line\":227},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"[anonymous]\",\"pos\":{\"column\":0,\"line\":227},\"severity\":\"information\"}\n{\"caption\":\"\",\"data\":\"'Cslib.SKI.parallelReduction_diamond' depends on axioms: [propext, Classical.choice, Quot.sound]\",\"endPos\":{\"column\":6,\"line\":228},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"[anonymous]\",\"pos\":{\"column\":0,\"line\":228},\"severity\":\"information\"}\n"
+  },
+  "diagnosis": "The reflexive second reduction leaves the common reduct `a' ⬝ b'`. The first branch is reflexivity, while the original parallel application reaches it via `.par ha' hb'`.",
+  "duplicate_cache": false,
+  "available_at": 1792773561.115971,
+  "cumulative_calls": 1,
+  "cumulative_tokens": 13652,
+  "api_spend_usd": null
+}

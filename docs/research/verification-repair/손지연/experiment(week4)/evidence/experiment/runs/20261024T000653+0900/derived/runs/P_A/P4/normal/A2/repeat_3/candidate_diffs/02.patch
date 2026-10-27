@@ -1,0 +1,15 @@
+--- candidate_01.proof.lean
++++ candidate_02.proof.lean
+@@ -4,9 +4,7 @@
+   · rw [Continuous.ae_eq_iff_eq] at h
+     · funext x
+       simpa using congrFun h x
+-    · exact Continuous.inner' f f hf.smooth.continuous hf.smooth.continuous
++    · exact (IsTestFunction.inner hf hf).smooth.continuous
+     · exact continuous_zero
+-  · intro x
+-    simp only [Pi.zero_apply]
+-    exact real_inner_self_nonneg' _
++  · exact fun _ => real_inner_self_nonneg'
+   · exact IsTestFunction.integrable (IsTestFunction.inner hf hf)
+\ No newline at end of file

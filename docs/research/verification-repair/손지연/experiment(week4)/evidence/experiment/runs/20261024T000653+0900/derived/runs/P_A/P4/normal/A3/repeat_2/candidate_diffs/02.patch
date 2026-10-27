@@ -1,0 +1,15 @@
+--- candidate_01.proof.lean
++++ candidate_02.proof.lean
+@@ -2,9 +2,9 @@
+   have h := hg f hf
+   rw [MeasureTheory.integral_eq_zero_iff_of_nonneg] at h
+   · rw [Continuous.ae_eq_iff_eq] at h
+-    · funext x
++    · ext x
+       simpa using congrFun h x
+     · exact (IsTestFunction.inner hf hf).smooth.continuous
+     · exact continuous_const
+-  · exact fun x => real_inner_self_nonneg' (f x)
++  · exact fun _ => real_inner_self_nonneg'
+   · exact (IsTestFunction.inner hf hf).integrable
+\ No newline at end of file

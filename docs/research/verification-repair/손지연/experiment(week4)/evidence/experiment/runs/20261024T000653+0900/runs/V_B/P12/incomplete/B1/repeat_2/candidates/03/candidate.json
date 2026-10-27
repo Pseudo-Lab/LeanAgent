@@ -1,0 +1,173 @@
+{
+  "call": 3,
+  "origin": "generated",
+  "body": "by\n  classical\n  have prob_uniform_equiv\n      {α β : Type} [Fintype α] [Fintype β]\n      (E : α ≃ β) (p : β → Prop) :\n      Pr_{let x ← $ᵖ α}[p (E x)] = Pr_{let y ← $ᵖ β}[p y] := by\n    have hcard :\n        (Finset.filter (fun x : α => p (E x)) Finset.univ).card =\n          (Finset.filter p Finset.univ).card := by\n      refine Finset.card_bij (fun x _ => E x) ?_ ?_ ?_\n      · intro x hx\n        simp only [Finset.mem_filter, Finset.mem_univ, true_and] at hx ⊢\n        exact hx\n      · intro x₁ hx₁ x₂ hx₂ h\n        exact E.injective h\n      · intro y hy\n        refine ⟨E.symm y, ?_, ?_⟩\n        · simp only [Finset.mem_filter, Finset.mem_univ, true_and] at hy ⊢\n          simpa using hy\n        · simp\n    rw [prob_uniform_eq_card_filter_div_card,\n      prob_uniform_eq_card_filter_div_card]\n    rw [hcard, Fintype.card_congr E]\n  intro ϑ hϑ_gt_0\n  induction ϑ using Nat.case_strong_induction_on with\n  | hz => omega\n  | hi ϑ ih =>\n      by_cases hϑ_zero : ϑ = 0\n      · subst ϑ\n        intro u hu\n        let E : F ≃ (Fin 1 → F) where\n          toFun r := fun _ => r\n          invFun r := r 0\n          left_inv r := rfl\n          right_inv r := by\n            funext i\n            fin_cases i\n            rfl\n        have hp :\n            Pr_{let r ← $ᵖ F}[\n              Δ₀(multilinearCombine (F := F) u (E r), MC) ≤ e]\n              > (↑ε : ENNReal) / (Fintype.card F : ENNReal) := by\n          rw [prob_uniform_equiv E\n            (fun r => Δ₀(multilinearCombine (F := F) u r, MC) ≤ e)]\n          simpa [δ_ε_multilinearCorrelatedAgreement_Nat] using hu\n        have hbase := hC_proximityGapAffineLines (u 0) (u 1) (by\n          simpa [E, multilinearCombine, affineLineEvaluation] using hp)\n        simpa [jointProximityNat₂, finMapTwoWords] using hbase\n      · have hϑ_pos : 0 < ϑ := Nat.pos_of_ne_zero hϑ_zero\n        have ihϑ : δ_ε_multilinearCorrelatedAgreement_Nat\n            (F := F) (A := A) (ι := ι) (C := MC) (ϑ := ϑ) (e := e) (ε := ε) :=\n          ih ϑ (Nat.le_refl ϑ) hϑ_pos\n        intro u hu\n        let U₀ := (splitHalfRowWiseInterleavedWords (ϑ := ϑ) u).1\n        let U₁ := (splitHalfRowWiseInterleavedWords (ϑ := ϑ) u).2\n        let R := R_star_tensor MC (m := ϑ) (e := e) (ε := ε) U₀ U₁\n        let E : (F × (Fin ϑ → F)) ≃ (Fin (ϑ + 1) → F) where\n          toFun p := Fin.lastCases p.1 p.2\n          invFun r := (r (Fin.last ϑ), fun i => r i.castSucc)\n          left_inv p := by\n            rcases p with ⟨r, rs⟩\n            apply Prod.ext\n            · rfl\n            · funext i\n              rfl\n          right_inv r := by\n            funext i\n            refine Fin.lastCases ?_ (fun j => ?_) i <;> rfl\n        have hu_split :\n            Pr_{ let r_last ← $ᵖ F;\n                 let r_init ← $ᵖ (Fin ϑ → F)}[\n              multilinearCombine_affineComb_split_last_close\n                (MC := MC) (u := u) (e := e) r_last r_init]\n              > (((Nat.cast (R := ℝ≥0) (ϑ + 1)) * ε : ℝ≥0) /\n                (Fintype.card F : ℝ≥0)) := by\n          rw [do_two_uniform_sampling_eq_uniform_prod]\n          have hp :\n              Pr_{let p ← $ᵖ (F × (Fin ϑ → F))}[\n                Δ₀(multilinearCombine (F := F) u (E p), MC) ≤ e]\n                > (((Nat.cast (R := ℝ≥0) (ϑ + 1)) * ε : ℝ≥0) /\n                  (Fintype.card F : ℝ≥0)) := by\n            rw [prob_uniform_equiv E\n              (fun r => Δ₀(multilinearCombine (F := F) u r, MC) ≤ e)]\n            simpa [δ_ε_multilinearCorrelatedAgreement_Nat] using hu\n          simpa [multilinearCombine_affineComb_split_last_close, E, U₀, U₁,\n            multilinearCombine, splitHalfRowWiseInterleavedWords,\n            affineLineEvaluation] using hp\n        have hR :\n            Pr_{let r ← $ᵖ F}[r ∈ R] >\n              (↑ε : ENNReal) / (Fintype.card F : ENNReal) := by\n          simpa [U₀, U₁, R] using\n            (prob_R_star_gt_threshold (MC := MC) (ε := ε)\n              (u := u) (e := e) hu_split)\n        have hclose : ∀ r : R,\n            jointProximityNat\n              (u := affineLineEvaluation U₀ U₁ r.val)\n              (e := e) (C := MC) := by\n          simpa [U₀, U₁, R] using\n            (correlatedAgreement_of_mem_R_star_tensor\n              (MC := MC) (e := e) (ε := ε) (ih := ihϑ) u)\n        have h_affine_probability :\n            Pr_{let r ← $ᵖ F}[\n              Δ₀(affineLineEvaluation (F := F) (⋈| U₀) (⋈| U₁) r,\n                MC ^⋈ (Fin (2 ^ ϑ))) ≤ e]\n              > (↑ε : ENNReal) / (Fintype.card F : ENNReal) := by\n          apply lt_of_lt_of_le hR\n          apply Pr_le_Pr_of_implies\n          intro r hr\n          have hword :\n              affineLineEvaluation (F := F) (⋈| U₀) (⋈| U₁) r =\n                ⋈| (affineLineEvaluation (F := F) U₀ U₁ r) := by\n            ext j k\n            rfl\n          rw [hword]\n          simpa [jointProximityNat] using hclose ⟨r, hr⟩\n        have hpow : 0 < 2 ^ ϑ := pow_pos (by omega) ϑ\n        have h_interleaved :=\n          (h_interleaved_gaps (2 ^ ϑ) (by omega))\n            (⋈| U₀) (⋈| U₁) h_affine_probability\n        unfold jointProximityNat₂ at h_interleaved\n        unfold jointProximityNat at h_interleaved ⊢\n        rw [Code.closeToCode_iff_closeToCodeword_of_minDist] at h_interleaved ⊢\n        rcases h_interleaved with ⟨v, hv, hv_close⟩\n        let flatV : InterleavedWord A (Fin (2 ^ (ϑ + 1))) ι := fun j i =>\n          if hi : i.val < 2 ^ ϑ then\n            v j 0 ⟨i.val, hi⟩\n          else\n            v j 1 ⟨i.val - 2 ^ ϑ, by\n              have hil := i.isLt\n              rw [pow_succ] at hil\n              omega⟩\n        refine ⟨flatV, ?_, ?_⟩\n        · simp only [CodeInterleavable.interleaveCode,\n            ModuleCode.moduleInterleavedCode] at hv ⊢\n          intro i\n          by_cases hi : i.val < 2 ^ ϑ\n          · simpa [flatV, hi] using hv 0 ⟨i.val, hi⟩\n          · have hil := i.isLt\n            have hisub : i.val - 2 ^ ϑ < 2 ^ ϑ := by\n              rw [pow_succ] at hil\n              omega\n            simpa [flatV, hi] using hv 1 ⟨i.val - 2 ^ ϑ, hisub⟩\n        · have hdist :\n              Δ₀(⋈| u, flatV) =\n                Δ₀(⋈| finMapTwoWords (⋈| U₀) (⋈| U₁), v) := by\n            unfold hammingDist\n            apply congrArg Finset.card\n            ext j\n            simp only [Finset.mem_filter, Finset.mem_univ, true_and]\n            apply not_congr\n            constructor\n            · intro hflat\n              funext k t\n              fin_cases k\n              · let i : Fin (2 ^ (ϑ + 1)) := ⟨t.val, by\n                  rw [pow_succ]\n                  omega⟩\n                have hi : i.val < 2 ^ ϑ := t.isLt\n                have h := congrFun hflat i\n                simpa [i, flatV, hi, U₀, U₁, finMapTwoWords,\n                  splitHalfRowWiseInterleavedWords] using h\n              · let i : Fin (2 ^ (ϑ + 1)) := ⟨2 ^ ϑ + t.val, by\n                  rw [pow_succ]\n                  omega⟩\n                have hi : ¬i.val < 2 ^ ϑ := by\n                  dsimp only [i]\n                  omega\n                have h := congrFun hflat i\n                simpa [i, flatV, hi, U₀, U₁, finMapTwoWords,\n                  splitHalfRowWiseInterleavedWords] using h\n            · intro hnested\n              funext i\n              by_cases hi : i.val < 2 ^ ϑ\n              · have h := congrFun (congrFun hnested 0) ⟨i.val, hi⟩\n                simpa [flatV, hi, U₀, U₁, finMapTwoWords,\n                  splitHalfRowWiseInterleavedWords] using h\n              · have hil := i.isLt\n                have hisub : i.val - 2 ^ ϑ < 2 ^ ϑ := by\n                  rw [pow_succ] at hil\n                  omega\n                have h := congrFun (congrFun hnested 1)\n                  ⟨i.val - 2 ^ ϑ, hisub⟩\n                simpa [flatV, hi, U₀, U₁, finMapTwoWords,\n                  splitHalfRowWiseInterleavedWords] using h\n          rw [hdist]\n          exact hv_close",
+  "proof_sha256": "294f988d29c4c8c5d7ebc19105b88cc6457399193cdd7086061ff64a37c2099e",
+  "full_source_sha256": "373194e57c2a300ae62e53af739f717ced0af1a53514498a8e2f426c836d401c",
+  "eligible": false,
+  "verification": {
+    "task_id": "P12",
+    "attempt": "candidate_03",
+    "candidate_hash": "373194e57c2a300ae62e53af739f717ced0af1a53514498a8e2f426c836d401c",
+    "environment_id": "0c6971d601fccc37e69d84ddfa1ac63a41527ba5fa2d7e4f87c63547c308939a",
+    "check_kind": "candidate",
+    "status": "invalid_candidate",
+    "process_exit_code": null,
+    "diagnostics": [
+      {
+        "severity": "error",
+        "position": {
+          "column": 0,
+          "line": 1361
+        },
+        "end_position": {
+          "column": 7950,
+          "line": 1361
+        },
+        "message": "repair guard: <repair_body>:31:32: expected ':=' or '|'",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "repair guard: <repair_body>:31:32: expected ':=' or '|'",
+          "endPos": {
+            "column": 7950,
+            "line": 1361
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P12/incomplete/B1/repeat_2/validation/lean/007_candidate_03_guard/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 0,
+            "line": 1361
+          },
+          "severity": "error"
+        }
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 8,
+          "line": 1369
+        },
+        "end_position": {
+          "column": 49,
+          "line": 1369
+        },
+        "message": "declaration uses `sorry`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "declaration uses `sorry`",
+          "endPos": {
+            "column": 49,
+            "line": 1369
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P12/incomplete/B1/repeat_2/validation/lean/007_candidate_03_guard/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "hasSorry",
+          "pos": {
+            "column": 8,
+            "line": 1369
+          },
+          "severity": "warning"
+        }
+      }
+    ],
+    "goals": null,
+    "local_context": null,
+    "sorries": null,
+    "backend_proof_status": null,
+    "statement_check": "not_run",
+    "axioms": null,
+    "metrics": {},
+    "elapsed_ms": 0,
+    "raw_log_path": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P12/incomplete/B1/repeat_2/validation/lean/007_candidate_03_guard/stdout.log",
+    "detail": "parse-only proof boundary/policy check failed",
+    "failure_kind": "syntax"
+  },
+  "measurement": {
+    "proof_tokens": null,
+    "raw_heartbeats": null,
+    "token_reduction_pct": null,
+    "heartbeat_reduction_pct": null,
+    "search_score": null
+  },
+  "facts": {
+    "diagnostics": [
+      {
+        "severity": "error",
+        "position": {
+          "column": 0,
+          "line": 1361
+        },
+        "end_position": {
+          "column": 7950,
+          "line": 1361
+        },
+        "message": "repair guard: <repair_body>:31:32: expected ':=' or '|'",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "repair guard: <repair_body>:31:32: expected ':=' or '|'",
+          "endPos": {
+            "column": 7950,
+            "line": 1361
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 0,
+            "line": 1361
+          },
+          "severity": "error"
+        }
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 8,
+          "line": 1369
+        },
+        "end_position": {
+          "column": 49,
+          "line": 1369
+        },
+        "message": "declaration uses `sorry`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "declaration uses `sorry`",
+          "endPos": {
+            "column": 49,
+            "line": 1369
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "hasSorry",
+          "pos": {
+            "column": 8,
+            "line": 1369
+          },
+          "severity": "warning"
+        }
+      }
+    ],
+    "goals": null,
+    "local_context": null,
+    "sorries": null,
+    "axioms": null,
+    "detail": "parse-only proof boundary/policy check failed",
+    "raw_lean_output": "{\"caption\":\"\",\"data\":\"repair guard: <repair_body>:31:32: expected ':=' or '|'\",\"endPos\":{\"column\":7950,\"line\":1361},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"[anonymous]\",\"pos\":{\"column\":0,\"line\":1361},\"severity\":\"error\"}\n{\"caption\":\"\",\"data\":\"declaration uses `sorry`\",\"endPos\":{\"column\":49,\"line\":1369},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"hasSorry\",\"pos\":{\"column\":8,\"line\":1369},\"severity\":\"warning\"}\n"
+  },
+  "diagnosis": "The proof needs explicit transport across the canonical equivalences used when splitting the last tensor coordinate. In particular, uniform sampling on `Fin (ϑ + 1) → F` must be transported to sampling on `F × (Fin ϑ → F)`, affine combinations must commute with interleaving, and the nested two-half interleaving must be flattened back to the original row stack. The induction hypothesis also expects `ϑ ≤ ϑ`, not `ϑ < ϑ + 1`.",
+  "duplicate_cache": false,
+  "available_at": 1792774756.006634,
+  "cumulative_calls": 3,
+  "cumulative_tokens": 169052,
+  "api_spend_usd": null
+}

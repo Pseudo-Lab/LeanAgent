@@ -1,0 +1,487 @@
+{
+  "call": 1,
+  "origin": "generated",
+  "body": "by\n  intro h\n  use @ChoiceBisim _ _ defs, ChoiceBisim.choice h\n  intro s1 s2 hr μ\n  constructor\n  · intro s1' htr\n    cases hr with\n    | choice h =>\n      cases htr with\n      | choiceL htr =>\n        obtain ⟨q', htr', h'⟩ := h.follow_fst htr\n        exact ⟨q', Tr.choiceL htr', ChoiceBisim.bisim h'⟩\n      | choiceR htr =>\n        exact ⟨s1', Tr.choiceR htr, ChoiceBisim.bisim HomBisimilarity.refl⟩\n    | bisim h =>\n      obtain ⟨s2', htr', h'⟩ := h.follow_fst htr\n      exact ⟨s2', htr', ChoiceBisim.bisim h'⟩\n  · intro s2' htr\n    cases hr with\n    | choice h =>\n      cases htr with\n      | choiceL htr =>\n        obtain ⟨p', htr', h'⟩ := h.follow_snd htr\n        exact ⟨p', Tr.choiceL htr', ChoiceBisim.bisim h'⟩\n      | choiceR htr =>\n        exact ⟨s2', Tr.choiceR htr, ChoiceBisim.bisim HomBisimilarity.refl⟩\n    | bisim h =>\n      obtain ⟨s1', htr', h'⟩ := h.follow_snd htr\n      exact ⟨s1', htr', ChoiceBisim.bisim h'⟩",
+  "proof_sha256": "2ba22f3d907aedb2a24c7401ba1e708fef15e21357da6b1ed60d887b524a3df7",
+  "full_source_sha256": "25554a01e14f8bfb1d6bdb3e3e434ebd5f684a71ff973503902bd25239f63f68",
+  "eligible": false,
+  "verification": {
+    "task_id": "P9",
+    "attempt": "candidate_01",
+    "candidate_hash": "25554a01e14f8bfb1d6bdb3e3e434ebd5f684a71ff973503902bd25239f63f68",
+    "environment_id": "539810be844b4918624a39f96635209e5268d60962b8f167956106aaa6dbee0f",
+    "check_kind": "candidate",
+    "status": "proof_error",
+    "process_exit_code": 1,
+    "diagnostics": [
+      {
+        "severity": "error",
+        "position": {
+          "column": 54,
+          "line": 325
+        },
+        "end_position": {
+          "column": 74,
+          "line": 325
+        },
+        "message": "Application type mismatch: The argument\n  HomBisimilarity.refl\nhas type\n  ∀ (s : ?m.319), s ~[?m.321] s\nbut is expected to have type\n  s1' ~[lts] s1'\nin the application\n  ChoiceBisim.bisim HomBisimilarity.refl",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "Application type mismatch: The argument\n  HomBisimilarity.refl\nhas type\n  ∀ (s : ?m.319), s ~[?m.321] s\nbut is expected to have type\n  s1' ~[lts] s1'\nin the application\n  ChoiceBisim.bisim HomBisimilarity.refl",
+          "endPos": {
+            "column": 74,
+            "line": 325
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/P_A/P9/normal/A0/repeat_2/validation/lean/002_candidate_01/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 54,
+            "line": 325
+          },
+          "severity": "error"
+        },
+        "source_line": "        exact ⟨s1', Tr.choiceR htr, ChoiceBisim.bisim HomBisimilarity.refl⟩",
+        "start_offset": 9336,
+        "start_byte_offset": 9484,
+        "end_offset": 9356,
+        "end_byte_offset": 9504,
+        "source_text": "HomBisimilarity.refl",
+        "expected_actual_types": {
+          "actual": "∀ (s : ?m.319), s ~[?m.321] s",
+          "expected": "s1' ~[lts] s1'"
+        },
+        "failed_tactic": "exact ⟨s1', Tr.choiceR htr, ChoiceBisim.bisim HomBisimilarity.refl⟩",
+        "tactic_range": {
+          "position": {
+            "line": 325,
+            "column": 8
+          },
+          "end_position": {
+            "line": 325,
+            "column": 75
+          },
+          "start_offset": 9290,
+          "end_offset": 9357
+        },
+        "goals": [
+          "∃ s₂', lts.Tr (q✝.choice r✝) μ s₂' ∧ ChoiceBisim s1' s₂'"
+        ],
+        "local_context": [
+          "case right.left.choice.choiceR\nName : Type u\nConstant : Type v\ndefs : Constant → Process Name Constant → Prop\np q r : Process Name Constant\nh✝ : p ~[lts] q\nμ : Act Name\ns1' p✝ q✝ r✝ : Process Name Constant\nh : p✝ ~[lts] q✝\nhtr : Tr r✝ μ s1'"
+        ],
+        "proof_state_source": "lean_infotree_before_tactic",
+        "proof_state_raw": {
+          "depth": 19,
+          "end": 16638,
+          "goals_after": [],
+          "goals_before": [
+            "case right.left.choice.choiceR\nName : Type u\nConstant : Type v\ndefs : Constant → Process Name Constant → Prop\np q r : Process Name Constant\nh✝ : p ~[lts] q\nμ : Act Name\ns1' p✝ q✝ r✝ : Process Name Constant\nh : p✝ ~[lts] q✝\nhtr : Tr r✝ μ s1'\n⊢ ∃ s₂', lts.Tr (q✝.choice r✝) μ s₂' ∧ ChoiceBisim s1' s₂'"
+          ],
+          "kind": "tactic",
+          "start": 16567
+        }
+      },
+      {
+        "severity": "error",
+        "position": {
+          "column": 54,
+          "line": 337
+        },
+        "end_position": {
+          "column": 74,
+          "line": 337
+        },
+        "message": "Application type mismatch: The argument\n  HomBisimilarity.refl\nhas type\n  ∀ (s : ?m.682), s ~[?m.684] s\nbut is expected to have type\n  s2' ~[lts] s2'\nin the application\n  ChoiceBisim.bisim HomBisimilarity.refl",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "Application type mismatch: The argument\n  HomBisimilarity.refl\nhas type\n  ∀ (s : ?m.682), s ~[?m.684] s\nbut is expected to have type\n  s2' ~[lts] s2'\nin the application\n  ChoiceBisim.bisim HomBisimilarity.refl",
+          "endPos": {
+            "column": 74,
+            "line": 337
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/P_A/P9/normal/A0/repeat_2/validation/lean/002_candidate_01/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 54,
+            "line": 337
+          },
+          "severity": "error"
+        },
+        "source_line": "        exact ⟨s2', Tr.choiceR htr, ChoiceBisim.bisim HomBisimilarity.refl⟩",
+        "start_offset": 9753,
+        "start_byte_offset": 9922,
+        "end_offset": 9773,
+        "end_byte_offset": 9942,
+        "source_text": "HomBisimilarity.refl",
+        "expected_actual_types": {
+          "actual": "∀ (s : ?m.682), s ~[?m.684] s",
+          "expected": "s2' ~[lts] s2'"
+        },
+        "failed_tactic": "exact ⟨s2', Tr.choiceR htr, ChoiceBisim.bisim HomBisimilarity.refl⟩",
+        "tactic_range": {
+          "position": {
+            "line": 337,
+            "column": 8
+          },
+          "end_position": {
+            "line": 337,
+            "column": 75
+          },
+          "start_offset": 9707,
+          "end_offset": 9774
+        },
+        "goals": [
+          "∃ s₁', lts.Tr (p✝.choice r✝) μ s₁' ∧ ChoiceBisim s₁' s2'"
+        ],
+        "local_context": [
+          "case right.right.choice.choiceR\nName : Type u\nConstant : Type v\ndefs : Constant → Process Name Constant → Prop\np q r : Process Name Constant\nh✝ : p ~[lts] q\nμ : Act Name\ns2' p✝ q✝ r✝ : Process Name Constant\nh : p✝ ~[lts] q✝\nhtr : Tr r✝ μ s2'"
+        ],
+        "proof_state_source": "lean_infotree_before_tactic",
+        "proof_state_raw": {
+          "depth": 19,
+          "end": 17076,
+          "goals_after": [],
+          "goals_before": [
+            "case right.right.choice.choiceR\nName : Type u\nConstant : Type v\ndefs : Constant → Process Name Constant → Prop\np q r : Process Name Constant\nh✝ : p ~[lts] q\nμ : Act Name\ns2' p✝ q✝ r✝ : Process Name Constant\nh : p✝ ~[lts] q✝\nhtr : Tr r✝ μ s2'\n⊢ ∃ s₁', lts.Tr (p✝.choice r✝) μ s₁' ∧ ChoiceBisim s₁' s2'"
+          ],
+          "kind": "tactic",
+          "start": 17005
+        }
+      },
+      {
+        "severity": "information",
+        "position": {
+          "column": 0,
+          "line": 427
+        },
+        "end_position": {
+          "column": 6,
+          "line": 427
+        },
+        "message": "Cslib.CCS.bisimilarity_congr_choice.{u, v} {Name : Type u} {Constant : Type v}\n  {defs : Constant → Cslib.CCS.Process Name Constant → Prop} {p q r : Cslib.CCS.Process Name Constant} :\n  Cslib.CCS.lts.HomBisimilarity p q → Cslib.CCS.lts.HomBisimilarity (p.choice r) (q.choice r)",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "Cslib.CCS.bisimilarity_congr_choice.{u, v} {Name : Type u} {Constant : Type v}\n  {defs : Constant → Cslib.CCS.Process Name Constant → Prop} {p q r : Cslib.CCS.Process Name Constant} :\n  Cslib.CCS.lts.HomBisimilarity p q → Cslib.CCS.lts.HomBisimilarity (p.choice r) (q.choice r)",
+          "endPos": {
+            "column": 6,
+            "line": 427
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/P_A/P9/normal/A0/repeat_2/validation/lean/002_candidate_01/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 0,
+            "line": 427
+          },
+          "severity": "information"
+        }
+      },
+      {
+        "severity": "information",
+        "position": {
+          "column": 0,
+          "line": 428
+        },
+        "end_position": {
+          "column": 6,
+          "line": 428
+        },
+        "message": "'Cslib.CCS.bisimilarity_congr_choice' depends on axioms: [propext, sorryAx, Classical.choice, Quot.sound]",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "'Cslib.CCS.bisimilarity_congr_choice' depends on axioms: [propext, sorryAx, Classical.choice, Quot.sound]",
+          "endPos": {
+            "column": 6,
+            "line": 428
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/P_A/P9/normal/A0/repeat_2/validation/lean/002_candidate_01/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 0,
+            "line": 428
+          },
+          "severity": "information"
+        }
+      }
+    ],
+    "goals": [
+      "∃ s₂', lts.Tr (q✝.choice r✝) μ s₂' ∧ ChoiceBisim s1' s₂'"
+    ],
+    "local_context": [
+      "case right.left.choice.choiceR\nName : Type u\nConstant : Type v\ndefs : Constant → Process Name Constant → Prop\np q r : Process Name Constant\nh✝ : p ~[lts] q\nμ : Act Name\ns1' p✝ q✝ r✝ : Process Name Constant\nh : p✝ ~[lts] q✝\nhtr : Tr r✝ μ s1'"
+    ],
+    "sorries": [
+      {
+        "kind": "transitive_dependency",
+        "axiom": "sorryAx",
+        "position": null,
+        "end_position": null
+      }
+    ],
+    "backend_proof_status": null,
+    "statement_check": "fixed_context_preserved",
+    "axioms": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext",
+      "sorryAx"
+    ],
+    "metrics": {
+      "proof_tokens": 172
+    },
+    "elapsed_ms": 5034,
+    "raw_log_path": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/P_A/P9/normal/A0/repeat_2/validation/lean/002_candidate_01/stdout.log",
+    "detail": null,
+    "failure_kind": "proof_error"
+  },
+  "measurement": {
+    "proof_tokens": 172,
+    "raw_heartbeats": null,
+    "token_reduction_pct": 31.474103585657375,
+    "heartbeat_reduction_pct": null,
+    "search_score": null
+  },
+  "facts": {
+    "diagnostics": [
+      {
+        "severity": "error",
+        "position": {
+          "column": 54,
+          "line": 325
+        },
+        "end_position": {
+          "column": 74,
+          "line": 325
+        },
+        "message": "Application type mismatch: The argument\n  HomBisimilarity.refl\nhas type\n  ∀ (s : ?m.319), s ~[?m.321] s\nbut is expected to have type\n  s1' ~[lts] s1'\nin the application\n  ChoiceBisim.bisim HomBisimilarity.refl",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "Application type mismatch: The argument\n  HomBisimilarity.refl\nhas type\n  ∀ (s : ?m.319), s ~[?m.321] s\nbut is expected to have type\n  s1' ~[lts] s1'\nin the application\n  ChoiceBisim.bisim HomBisimilarity.refl",
+          "endPos": {
+            "column": 74,
+            "line": 325
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 54,
+            "line": 325
+          },
+          "severity": "error"
+        },
+        "source_line": "        exact ⟨s1', Tr.choiceR htr, ChoiceBisim.bisim HomBisimilarity.refl⟩",
+        "start_offset": 9336,
+        "start_byte_offset": 9484,
+        "end_offset": 9356,
+        "end_byte_offset": 9504,
+        "source_text": "HomBisimilarity.refl",
+        "expected_actual_types": {
+          "actual": "∀ (s : ?m.319), s ~[?m.321] s",
+          "expected": "s1' ~[lts] s1'"
+        },
+        "failed_tactic": "exact ⟨s1', Tr.choiceR htr, ChoiceBisim.bisim HomBisimilarity.refl⟩",
+        "tactic_range": {
+          "position": {
+            "line": 325,
+            "column": 8
+          },
+          "end_position": {
+            "line": 325,
+            "column": 75
+          },
+          "start_offset": 9290,
+          "end_offset": 9357
+        },
+        "goals": [
+          "∃ s₂', lts.Tr (q✝.choice r✝) μ s₂' ∧ ChoiceBisim s1' s₂'"
+        ],
+        "local_context": [
+          "case right.left.choice.choiceR\nName : Type u\nConstant : Type v\ndefs : Constant → Process Name Constant → Prop\np q r : Process Name Constant\nh✝ : p ~[lts] q\nμ : Act Name\ns1' p✝ q✝ r✝ : Process Name Constant\nh : p✝ ~[lts] q✝\nhtr : Tr r✝ μ s1'"
+        ],
+        "proof_state_source": "lean_infotree_before_tactic",
+        "proof_state_raw": {
+          "depth": 19,
+          "end": 16638,
+          "goals_after": [],
+          "goals_before": [
+            "case right.left.choice.choiceR\nName : Type u\nConstant : Type v\ndefs : Constant → Process Name Constant → Prop\np q r : Process Name Constant\nh✝ : p ~[lts] q\nμ : Act Name\ns1' p✝ q✝ r✝ : Process Name Constant\nh : p✝ ~[lts] q✝\nhtr : Tr r✝ μ s1'\n⊢ ∃ s₂', lts.Tr (q✝.choice r✝) μ s₂' ∧ ChoiceBisim s1' s₂'"
+          ],
+          "kind": "tactic",
+          "start": 16567
+        }
+      },
+      {
+        "severity": "error",
+        "position": {
+          "column": 54,
+          "line": 337
+        },
+        "end_position": {
+          "column": 74,
+          "line": 337
+        },
+        "message": "Application type mismatch: The argument\n  HomBisimilarity.refl\nhas type\n  ∀ (s : ?m.682), s ~[?m.684] s\nbut is expected to have type\n  s2' ~[lts] s2'\nin the application\n  ChoiceBisim.bisim HomBisimilarity.refl",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "Application type mismatch: The argument\n  HomBisimilarity.refl\nhas type\n  ∀ (s : ?m.682), s ~[?m.684] s\nbut is expected to have type\n  s2' ~[lts] s2'\nin the application\n  ChoiceBisim.bisim HomBisimilarity.refl",
+          "endPos": {
+            "column": 74,
+            "line": 337
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 54,
+            "line": 337
+          },
+          "severity": "error"
+        },
+        "source_line": "        exact ⟨s2', Tr.choiceR htr, ChoiceBisim.bisim HomBisimilarity.refl⟩",
+        "start_offset": 9753,
+        "start_byte_offset": 9922,
+        "end_offset": 9773,
+        "end_byte_offset": 9942,
+        "source_text": "HomBisimilarity.refl",
+        "expected_actual_types": {
+          "actual": "∀ (s : ?m.682), s ~[?m.684] s",
+          "expected": "s2' ~[lts] s2'"
+        },
+        "failed_tactic": "exact ⟨s2', Tr.choiceR htr, ChoiceBisim.bisim HomBisimilarity.refl⟩",
+        "tactic_range": {
+          "position": {
+            "line": 337,
+            "column": 8
+          },
+          "end_position": {
+            "line": 337,
+            "column": 75
+          },
+          "start_offset": 9707,
+          "end_offset": 9774
+        },
+        "goals": [
+          "∃ s₁', lts.Tr (p✝.choice r✝) μ s₁' ∧ ChoiceBisim s₁' s2'"
+        ],
+        "local_context": [
+          "case right.right.choice.choiceR\nName : Type u\nConstant : Type v\ndefs : Constant → Process Name Constant → Prop\np q r : Process Name Constant\nh✝ : p ~[lts] q\nμ : Act Name\ns2' p✝ q✝ r✝ : Process Name Constant\nh : p✝ ~[lts] q✝\nhtr : Tr r✝ μ s2'"
+        ],
+        "proof_state_source": "lean_infotree_before_tactic",
+        "proof_state_raw": {
+          "depth": 19,
+          "end": 17076,
+          "goals_after": [],
+          "goals_before": [
+            "case right.right.choice.choiceR\nName : Type u\nConstant : Type v\ndefs : Constant → Process Name Constant → Prop\np q r : Process Name Constant\nh✝ : p ~[lts] q\nμ : Act Name\ns2' p✝ q✝ r✝ : Process Name Constant\nh : p✝ ~[lts] q✝\nhtr : Tr r✝ μ s2'\n⊢ ∃ s₁', lts.Tr (p✝.choice r✝) μ s₁' ∧ ChoiceBisim s₁' s2'"
+          ],
+          "kind": "tactic",
+          "start": 17005
+        }
+      },
+      {
+        "severity": "information",
+        "position": {
+          "column": 0,
+          "line": 427
+        },
+        "end_position": {
+          "column": 6,
+          "line": 427
+        },
+        "message": "Cslib.CCS.bisimilarity_congr_choice.{u, v} {Name : Type u} {Constant : Type v}\n  {defs : Constant → Cslib.CCS.Process Name Constant → Prop} {p q r : Cslib.CCS.Process Name Constant} :\n  Cslib.CCS.lts.HomBisimilarity p q → Cslib.CCS.lts.HomBisimilarity (p.choice r) (q.choice r)",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "Cslib.CCS.bisimilarity_congr_choice.{u, v} {Name : Type u} {Constant : Type v}\n  {defs : Constant → Cslib.CCS.Process Name Constant → Prop} {p q r : Cslib.CCS.Process Name Constant} :\n  Cslib.CCS.lts.HomBisimilarity p q → Cslib.CCS.lts.HomBisimilarity (p.choice r) (q.choice r)",
+          "endPos": {
+            "column": 6,
+            "line": 427
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 0,
+            "line": 427
+          },
+          "severity": "information"
+        }
+      },
+      {
+        "severity": "information",
+        "position": {
+          "column": 0,
+          "line": 428
+        },
+        "end_position": {
+          "column": 6,
+          "line": 428
+        },
+        "message": "'Cslib.CCS.bisimilarity_congr_choice' depends on axioms: [propext, sorryAx, Classical.choice, Quot.sound]",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "'Cslib.CCS.bisimilarity_congr_choice' depends on axioms: [propext, sorryAx, Classical.choice, Quot.sound]",
+          "endPos": {
+            "column": 6,
+            "line": 428
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 0,
+            "line": 428
+          },
+          "severity": "information"
+        }
+      }
+    ],
+    "goals": [
+      "∃ s₂', lts.Tr (q✝.choice r✝) μ s₂' ∧ ChoiceBisim s1' s₂'"
+    ],
+    "local_context": [
+      "case right.left.choice.choiceR\nName : Type u\nConstant : Type v\ndefs : Constant → Process Name Constant → Prop\np q r : Process Name Constant\nh✝ : p ~[lts] q\nμ : Act Name\ns1' p✝ q✝ r✝ : Process Name Constant\nh : p✝ ~[lts] q✝\nhtr : Tr r✝ μ s1'"
+    ],
+    "sorries": [
+      {
+        "kind": "transitive_dependency",
+        "axiom": "sorryAx",
+        "position": null,
+        "end_position": null
+      }
+    ],
+    "axioms": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext",
+      "sorryAx"
+    ],
+    "detail": null,
+    "raw_lean_output": "{\"caption\":\"\",\"data\":\"Application type mismatch: The argument\\n  HomBisimilarity.refl\\nhas type\\n  ∀ (s : ?m.319), s ~[?m.321] s\\nbut is expected to have type\\n  s1' ~[lts] s1'\\nin the application\\n  ChoiceBisim.bisim HomBisimilarity.refl\",\"endPos\":{\"column\":74,\"line\":325},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"[anonymous]\",\"pos\":{\"column\":54,\"line\":325},\"severity\":\"error\"}\n{\"caption\":\"\",\"data\":\"Application type mismatch: The argument\\n  HomBisimilarity.refl\\nhas type\\n  ∀ (s : ?m.682), s ~[?m.684] s\\nbut is expected to have type\\n  s2' ~[lts] s2'\\nin the application\\n  ChoiceBisim.bisim HomBisimilarity.refl\",\"endPos\":{\"column\":74,\"line\":337},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"[anonymous]\",\"pos\":{\"column\":54,\"line\":337},\"severity\":\"error\"}\n{\"caption\":\"\",\"data\":\"Cslib.CCS.bisimilarity_congr_choice.{u, v} {Name : Type u} {Constant : Type v}\\n  {defs : Constant → Cslib.CCS.Process Name Constant → Prop} {p q r : Cslib.CCS.Process Name Constant} :\\n  Cslib.CCS.lts.HomBisimilarity p q → Cslib.CCS.lts.HomBisimilarity (p.choice r) (q.choice r)\",\"endPos\":{\"column\":6,\"line\":427},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"[anonymous]\",\"pos\":{\"column\":0,\"line\":427},\"severity\":\"information\"}\n{\"caption\":\"\",\"data\":\"'Cslib.CCS.bisimilarity_congr_choice' depends on axioms: [propext, sorryAx, Classical.choice, Quot.sound]\",\"endPos\":{\"column\":6,\"line\":428},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"[anonymous]\",\"pos\":{\"column\":0,\"line\":428},\"severity\":\"information\"}\n"
+  },
+  "diagnosis": "The original proof repeatedly unpacks bisimilarity into its witness relation and then converts residual relation proofs back into bisimilarity. The existing `follow_fst` and `follow_snd` operations on bisimilarity already perform that conversion, allowing a shorter direct case analysis.",
+  "duplicate_cache": false,
+  "available_at": 1792772788.458415,
+  "cumulative_calls": 1,
+  "cumulative_tokens": 14841,
+  "api_spend_usd": null
+}

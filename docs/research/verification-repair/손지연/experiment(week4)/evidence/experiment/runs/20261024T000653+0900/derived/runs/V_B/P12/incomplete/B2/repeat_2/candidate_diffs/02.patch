@@ -1,0 +1,53 @@
+--- candidate_01.proof.lean
++++ candidate_02.proof.lean
+@@ -11,7 +11,7 @@
+       · subst ϑ
+         intro u hu
+         have hprob :
+-            Pr_{let r ← $ᵖ F}[
++            Pr_{ let r ← $ᵖ F }[
+               Δ₀(affineLineEvaluation (F := F) (u 0) (u 1) r, MC) ≤ e]
+               > (ε : ℝ≥0) / (Fintype.card F : ℝ≥0) := by
+           simpa [multilinearCombine] using hu
+@@ -20,7 +20,8 @@
+           funext i
+           fin_cases i <;> rfl
+         simpa [jointProximityNat₂, hu_pair] using hbase
+-      · have hϑ_pos : ϑ > 0 := by omega
++      · have hϑ_pos : ϑ > 0 := by
++          omega
+         have ihϑ : δ_ε_multilinearCorrelatedAgreement_Nat
+             (F := F) (A := A) (ι := ι) (C := MC)
+             (ϑ := ϑ) (e := e) (ε := ε) := ih hϑ_pos
+@@ -28,23 +29,17 @@
+         let U₀ := (splitHalfRowWiseInterleavedWords (ϑ := ϑ) u).1
+         let U₁ := (splitHalfRowWiseInterleavedWords (ϑ := ϑ) u).2
+         let R := R_star_tensor MC (m := ϑ) (e := e) (ε := ε) U₀ U₁
+-        have hsplit :
+-            Pr_{let r_last ← $ᵖ F;
+-               let r_init ← $ᵖ (Fin ϑ → F)}[
+-                multilinearCombine_affineComb_split_last_close
+-                  (MC := MC) (u := u) (e := e) r_last r_init]
+-              > (((Nat.cast (R := ℝ≥0) (ϑ + 1)) * ε : ℝ≥0) /
+-                  (Fintype.card F : ℝ≥0)) := by
+-          simpa [multilinearCombine_affineComb_split_last_close,
+-            Nat.succ_eq_add_one] using hu
++        have hR_raw :=
++          prob_R_star_gt_threshold (MC := MC) (ε := ε)
++            (ϑ := ϑ) u e (by
++              simpa [multilinearCombine_affineComb_split_last_close,
++                Nat.succ_eq_add_one] using hu)
+         have hR :
+-            Pr_{let r ← $ᵖ F}[r ∈ R]
++            Pr_{ let r ← $ᵖ F }[r ∈ R]
+               > (ε : ENNReal) / (Fintype.card F : ENNReal) := by
+-          simpa [U₀, U₁, R] using
+-            (prob_R_star_gt_threshold (MC := MC) (ε := ε)
+-              (ϑ := ϑ) u e hsplit)
++          simpa [U₀, U₁, R] using hR_raw
+         have hline :
+-            Pr_{let r ← $ᵖ F}[
++            Pr_{ let r ← $ᵖ F }[
+               Δ₀(affineLineEvaluation (F := F) (⋈| U₀) (⋈| U₁) r,
+                 MC ^⋈ (Fin (2 ^ ϑ))) ≤ e]
+               > (ε : ℝ≥0) / (Fintype.card F : ℝ≥0) := by

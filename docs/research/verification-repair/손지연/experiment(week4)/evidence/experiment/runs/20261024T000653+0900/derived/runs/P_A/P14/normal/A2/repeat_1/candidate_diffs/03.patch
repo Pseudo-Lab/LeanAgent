@@ -1,0 +1,77 @@
+--- candidate_02.proof.lean
++++ candidate_03.proof.lean
+@@ -8,42 +8,32 @@
+     · intro hA hAc
+       exact hPP A hA Aᶜ hAc (by simp)
+     · intro hAc
+-      by_contra hA
+-      have hnA : ¬∀ U ∈ P, A ∩ U ≠ ∅ := fun h => hA (hmax A h)
+-      have hnAc : ¬∀ V ∈ P, Aᶜ ∩ V ≠ ∅ := fun h => hAc (hmax Aᶜ h)
+-      push_neg at hnA hnAc
+-      obtain ⟨U, hU, hAU⟩ := hnA
+-      obtain ⟨V, hV, hAcV⟩ := hnAc
+-      have hUA : ∀ x ∈ U, x ∉ A := by
+-        intro x hxU hxA
+-        have hx : x ∈ A ∩ U := ⟨hxA, hxU⟩
+-        simpa [hAU] using hx
+-      have hVA : ∀ x ∈ V, x ∈ A := by
+-        intro x hxV
+-        by_contra hxA
+-        have hx : x ∈ Aᶜ ∩ V := ⟨by simpa, hxV⟩
+-        simpa [hAcV] using hx
++      apply hmax
++      intro U hU hAU
++      apply hAc
++      apply hmax
++      intro V hV hAcV
+       apply hPP U hU V hV
+       apply Set.eq_empty_of_forall_notMem
+       rintro x ⟨hxU, hxV⟩
+-      exact hUA x hxU (hVA x hxV)
++      have hxA : x ∉ A := by
++        intro hxA
++        have hx : x ∈ A ∩ U := ⟨hxA, hxU⟩
++        simpa [hAU] using hx
++      have hx : x ∈ Aᶜ ∩ V := ⟨hxA, hxV⟩
++      simpa [hAcV] using hx
+   let Q : Finset (Set S) := Finset.univ \ P
+-  have hPQ : ∀ A ∈ P, Aᶜ ∈ Q := by
+-    intro A hA
+-    simpa [Q] using (hmem A).mp hA
+-  have hQP : ∀ A ∈ Q, Aᶜ ∈ P := by
+-    intro A hA
+-    have hnA : A ∉ P := by simpa [Q] using hA
+-    apply (hmem Aᶜ).mpr
+-    simpa using hnA
+   have hc : P.card = Q.card := by
+     apply Finset.card_bij' (fun A _ => Aᶜ) (fun A _ => Aᶜ)
+-    · exact hPQ
+-    · exact hQP
+     · intro A hA
+       simp
+     · intro A hA
+       simp
++    · intro A hA
++      simpa [Q] using (hmem A).mp hA
++    · intro A hA
++      apply (hmem Aᶜ).mpr
++      simpa [Q] using hA
+   have hsum : P.card + Q.card = (Finset.univ : Finset (Set S)).card := by
+     rw [← Finset.card_union_add_card_inter P Q]
+     have hi : P ∩ Q = ∅ := by
+@@ -54,14 +44,12 @@
+       simp [Q]
+     rw [hi, hu]
+     simp
+-  have hall : (Finset.univ : Finset (Set S)).card = 2 ^ Fintype.card S := by
+-    simp
+   have hdouble : P.card * 2 = 2 ^ Fintype.card S := by
+     calc
+       P.card * 2 = P.card + P.card := by omega
+       _ = P.card + Q.card := by rw [hc]
+       _ = (Finset.univ : Finset (Set S)).card := hsum
+-      _ = 2 ^ Fintype.card S := hall
++      _ = 2 ^ Fintype.card S := by simp
+   have hn : 0 < Fintype.card S := Fintype.card_pos
+   have hpow : 2 ^ Fintype.card S = 2 ^ (Fintype.card S - 1) * 2 := by
+     calc

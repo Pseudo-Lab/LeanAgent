@@ -1,0 +1,50 @@
+by
+  classical
+  simp only
+  intro y
+  unfold fold
+  dsimp only
+  have h_exp : ℓ - (i : ℕ) = (ℓ - ((i : ℕ) + 1)) + 1 := by
+    omega
+  have hq (k : Fin 2) :
+      Polynomial.eval
+          (↑(qMap_total_fiber 𝔽q β (i := ⟨i, by omega⟩) (steps := 1)
+            (h_i_add_steps := by omega) (y := y) k))
+          (qMap 𝔽q β ⟨i, by omega⟩) = (y : L) := by
+    have hk := generates_quotient_point_if_is_fiber_of_y 𝔽q β
+      (i := i) (steps := 1) (h_i_add_steps := by omega)
+      (x := qMap_total_fiber 𝔽q β (i := ⟨i, by omega⟩) (steps := 1)
+        (h_i_add_steps := by omega) (y := y) k)
+      (y := y) (hx_is_fiber := by exact ⟨k, rfl⟩)
+    have hk' := congrArg Subtype.val hk
+    simpa [iteratedQuotientMap, intermediateNormVpoly] using hk'.symm
+  have heval (k : Fin 2) :
+      Polynomial.eval
+          (↑(qMap_total_fiber 𝔽q β (i := ⟨i, by omega⟩) (steps := 1)
+            (h_i_add_steps := by omega) (y := y) k))
+          (intermediateEvaluationPoly 𝔽q β h_ℓ_add_R_rate
+            (i := ⟨i, by omega⟩) coeffs) =
+        ∑ j : Fin (2 ^ (ℓ - ((i : ℕ) + 1))),
+          (coeffs ⟨j.val * 2, by
+              rw [h_exp, pow_succ]
+              omega⟩ +
+            coeffs ⟨j.val * 2 + 1, by
+              rw [h_exp, pow_succ]
+              omega⟩ *
+              (↑(qMap_total_fiber 𝔽q β (i := ⟨i, by omega⟩) (steps := 1)
+                (h_i_add_steps := by omega) (y := y) k) : L)) *
+            Polynomial.eval (y : L)
+              (intermediateNovelBasisX 𝔽q β h_ℓ_add_R_rate
+                (i := ⟨i + 1, by omega⟩) j) := by
+    simp [intermediateEvaluationPoly, intermediateNovelBasisX,
+      intermediateNormVpoly, h_exp, pow_succ, Fin.sum_univ_mul, hq k] <;>
+      ring
+  have h0 := qMap_total_fiber_one_level_eq 𝔽q β (i := i)
+    (h_i_add_1 := by omega) (y := y) (k := (0 : Fin 2))
+  have h1 := qMap_total_fiber_one_level_eq 𝔽q β (i := i)
+    (h_i_add_1 := by omega) (y := y) (k := (1 : Fin 2))
+  simp only at h0 h1
+  rw [heval (0 : Fin 2), heval (1 : Fin 2), h0, h1]
+  simp [Fin2ToF2, intermediateEvaluationPoly, h_β₀_eq_1.out,
+    Finset.sum_mul, ← Finset.sum_add_distrib] <;>
+    ring

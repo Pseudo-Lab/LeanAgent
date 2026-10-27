@@ -1,0 +1,185 @@
+{
+  "call": 2,
+  "origin": "generated",
+  "body": "by\n  classical\n  intro ϑ\n  induction ϑ with\n  | zero =>\n      intro h\n      contradiction\n  | succ ϑ_sub_1 ih =>\n      cases ϑ_sub_1 with\n      | zero =>\n          simp only [zero_add, gt_iff_lt, zero_lt_one, ModuleCode, forall_const]\n          intro u\n          let toAffineLineEval :=\n            multilinearCombine₁_eq_affineLineEvaluation (F := F) (u := u)\n          intro hprob_gt\n          simp_rw [toAffineLineEval] at hprob_gt\n          let prob_eq := prob_uniform_singleton_finFun_eq (F := F)\n            (P := fun r => Δ₀(affineLineEvaluation (u 0) (u 1) r, MC) ≤ e)\n          simp_rw [prob_eq, Nat.cast_one, ENNReal.coe_one, one_mul] at hprob_gt\n          have h_correlated_agreement :=\n            hC_proximityGapAffineLines (u 0) (u 1) hprob_gt\n          simp only [jointProximityNat₂, Fin.isValue] at h_correlated_agreement\n          have h_u_eq : u = finMapTwoWords (u 0) (u 1) := by\n            funext rowIdx\n            match rowIdx with\n            | 0 => rfl\n            | 1 => rfl\n          rw [h_u_eq.symm] at h_correlated_agreement\n          exact h_correlated_agreement\n      | succ ϑ_sub_2 =>\n          intro _ u hP_multilinearCombine_close_gt\n          set U₀ : Fin (2 ^ (ϑ_sub_2 + 1)) → Word A ι :=\n            (splitHalfRowWiseInterleavedWords (ϑ := ϑ_sub_2 + 1) u).1\n          set U₁ : Fin (2 ^ (ϑ_sub_2 + 1)) → Word A ι :=\n            (splitHalfRowWiseInterleavedWords (ϑ := ϑ_sub_2 + 1) u).2\n          unfold jointProximityNat\n          simp only\n          have h_finsnoc_eq_r : ∀ r : Fin (ϑ_sub_2 + 1 + 1) → F,\n              Fin.snoc (fun i : Fin (ϑ_sub_2 + 1) ↦ r i.castSucc)\n                (r (Fin.last (ϑ_sub_2 + 1))) = r := fun r => by\n            funext i\n            by_cases h : i = Fin.last (ϑ_sub_2 + 1)\n            · simp only [h, Fin.snoc_last]\n            · have h_i_ne_last_val : i.val ≠ Fin.last (ϑ_sub_2 + 1) := by omega\n              rw [Fin.val_last] at h_i_ne_last_val\n              have h_i_lt : i.val < ϑ_sub_2 + 1 := by omega\n              simp only [Fin.snoc, Fin.castSucc_castLT, cast_eq, dite_eq_ite,\n                ite_eq_left_iff, not_lt]\n              simp only [isEmpty_Prop, not_le, h_i_lt, IsEmpty.forall_iff]\n          let P : F → (Fin (ϑ_sub_2 + 1) → F) → Prop := fun r_last r_init =>\n            Δ₀(multilinearCombine (u := u) (r := Fin.snoc r_init r_last), MC) ≤ e\n          let hP_split_r_last := prob_split_last_uniform_sampling_of_finFun\n            (ϑ := ϑ_sub_2 + 1) (F := F) (P := P)\n          unfold P at hP_split_r_last\n          simp_rw [h_finsnoc_eq_r] at hP_split_r_last\n          rw [hP_split_r_last] at hP_multilinearCombine_close_gt\n          have multilinearCombine_snoc_eq_multilinearCombine_affine\n              (r_init : Fin (ϑ_sub_2 + 1) → F) (r_last : F) :\n              multilinearCombine u (Fin.snoc r_init r_last) =\n                multilinearCombine (affineLineEvaluation U₀ U₁ r_last) r_init := by\n            rw [multilinearCombine_recursive_form]\n            simp only [Fin.snoc_last, Fin.init_snoc]\n            rfl\n          simp_rw [multilinearCombine_snoc_eq_multilinearCombine_affine]\n            at hP_multilinearCombine_close_gt\n          let R_star_set := R_star_tensor MC (m := ϑ_sub_2 + 1)\n            (e := e) (ε := ε) U₀ U₁\n          have h_prob_Rstar_gt_eps_div_q :\n              Pr_{ let r ← $ᵖ F }[r ∈ R_star_set] >\n                (↑ε : ENNReal) / (Fintype.card F : ENNReal) := by\n            exact prob_R_star_gt_threshold (MC := MC) (ε := ε)\n              (ϑ := ϑ_sub_2 + 1) (u := u) (e := e)\n              hP_multilinearCombine_close_gt\n          have h_line_close_to_C_m : ∀ r : R_star_set,\n              jointProximityNat (u := affineLineEvaluation U₀ U₁ r.val)\n                (e := e) (C := MC) := by\n            intro r_in_Rstar\n            apply correlatedAgreement_of_mem_R_star_tensor\n              (ih := fun u_prev => ih (by omega) u_prev) (u := u)\n          have h_prob_line_gt_eps_div_q :\n              Pr_{ let r ← $ᵖ F }[\n                Δ₀(affineLineEvaluation\n                    (u₀ := ⋈|(show WordStack A (Fin (2 ^ (ϑ_sub_2 + 1))) ι from U₀))\n                    (u₁ := ⋈|(show WordStack A (Fin (2 ^ (ϑ_sub_2 + 1))) ι from U₁)) r,\n                  MC ^⋈ (Fin (2 ^ (ϑ_sub_2 + 1)))) ≤ e] >\n                (↑ε : ENNReal) / (Fintype.card F : ENNReal) := by\n            apply lt_of_le_of_lt' _ h_prob_Rstar_gt_eps_div_q\n            have h_r_implies : ∀ r : F, r ∈ R_star_set →\n                Δ₀(affineLineEvaluation\n                    (u₀ := ⋈|(show WordStack A (Fin (2 ^ (ϑ_sub_2 + 1))) ι from U₀))\n                    (u₁ := ⋈|(show WordStack A (Fin (2 ^ (ϑ_sub_2 + 1))) ι from U₁)) r,\n                  MC ^⋈ (Fin (2 ^ (ϑ_sub_2 + 1)))) ≤ e := by\n              intro r hr\n              specialize h_line_close_to_C_m ⟨r, hr⟩\n              unfold jointProximityNat at h_line_close_to_C_m\n              exact h_line_close_to_C_m\n            simpa only using\n              (Pr_le_Pr_of_implies (D := $ᵖ F)\n                (g := fun r => Δ₀(affineLineEvaluation\n                  (u₀ := ⋈|(show WordStack A (Fin (2 ^ (ϑ_sub_2 + 1))) ι from U₀))\n                  (u₁ := ⋈|(show WordStack A (Fin (2 ^ (ϑ_sub_2 + 1))) ι from U₁)) r,\n                  MC ^⋈ (Fin (2 ^ (ϑ_sub_2 + 1)))) ≤ e)\n                (f := fun r => r ∈ R_star_set) (h_imp := h_r_implies))\n          have h_final_gap : jointProximityNat₂\n              (u₀ := ⋈|(show WordStack A (Fin (2 ^ (ϑ_sub_2 + 1))) ι from U₀))\n              (u₁ := ⋈|(show WordStack A (Fin (2 ^ (ϑ_sub_2 + 1))) ι from U₁))\n              (e := e) (C := MC ^⋈ (Fin (2 ^ (ϑ_sub_2 + 1)))) := by\n            apply h_interleaved_gaps (2 ^ (ϑ_sub_2 + 1)) Nat.one_le_two_pow\n              (u₀ := ⋈|(show WordStack A (Fin (2 ^ (ϑ_sub_2 + 1))) ι from U₀))\n              (u₁ := ⋈|(show WordStack A (Fin (2 ^ (ϑ_sub_2 + 1))) ι from U₁))\n              h_prob_line_gt_eps_div_q\n          apply CA_split_rowwise_implies_CA (u := u) (e := e)\n          exact h_final_gap",
+  "proof_sha256": "916d5f3392c0ccb74f94234cb5967fd000fa16df0e71f73116654e2b5b56332f",
+  "full_source_sha256": "e5de9f6da0f05f75c8ea4d49875e8f86a44292ae1bca97ad2bd019b7a7c3b945",
+  "eligible": true,
+  "verification": {
+    "task_id": "P12",
+    "attempt": "candidate_02",
+    "candidate_hash": "e5de9f6da0f05f75c8ea4d49875e8f86a44292ae1bca97ad2bd019b7a7c3b945",
+    "environment_id": "0c6971d601fccc37e69d84ddfa1ac63a41527ba5fa2d7e4f87c63547c308939a",
+    "check_kind": "candidate",
+    "status": "candidate_pass",
+    "process_exit_code": 0,
+    "diagnostics": [
+      {
+        "severity": "information",
+        "position": {
+          "column": 0,
+          "line": 1391
+        },
+        "end_position": {
+          "column": 6,
+          "line": 1391
+        },
+        "message": "interleaved_affine_gaps_imply_tensor_gaps.{l} {ι : Type l} [Fintype ι] [Nonempty ι] [DecidableEq ι] {F : Type}\n  [CommRing F] [Fintype F] {A : Type} [DecidableEq A] [AddCommGroup A] [Module F A] (MC : ModuleCode ι F A) {e ε : ℕ}\n  (hC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε)\n  (h_interleaved_gaps :\n    ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(Code.CodeInterleavable.interleaveCode MC (Fin m))) e ε)\n  (ϑ : ℕ) (hϑ_gt_0 : ϑ > 0) : δ_ε_multilinearCorrelatedAgreement_Nat (↑MC) ϑ e ε",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "interleaved_affine_gaps_imply_tensor_gaps.{l} {ι : Type l} [Fintype ι] [Nonempty ι] [DecidableEq ι] {F : Type}\n  [CommRing F] [Fintype F] {A : Type} [DecidableEq A] [AddCommGroup A] [Module F A] (MC : ModuleCode ι F A) {e ε : ℕ}\n  (hC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε)\n  (h_interleaved_gaps :\n    ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(Code.CodeInterleavable.interleaveCode MC (Fin m))) e ε)\n  (ϑ : ℕ) (hϑ_gt_0 : ϑ > 0) : δ_ε_multilinearCorrelatedAgreement_Nat (↑MC) ϑ e ε",
+          "endPos": {
+            "column": 6,
+            "line": 1391
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/P_A/P12/normal/A2/repeat_1/validation/lean/005_candidate_02/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 0,
+            "line": 1391
+          },
+          "severity": "information"
+        }
+      },
+      {
+        "severity": "information",
+        "position": {
+          "column": 0,
+          "line": 1392
+        },
+        "end_position": {
+          "column": 6,
+          "line": 1392
+        },
+        "message": "'interleaved_affine_gaps_imply_tensor_gaps' depends on axioms: [propext, Classical.choice, Quot.sound]",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "'interleaved_affine_gaps_imply_tensor_gaps' depends on axioms: [propext, Classical.choice, Quot.sound]",
+          "endPos": {
+            "column": 6,
+            "line": 1392
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/P_A/P12/normal/A2/repeat_1/validation/lean/005_candidate_02/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 0,
+            "line": 1392
+          },
+          "severity": "information"
+        }
+      }
+    ],
+    "goals": null,
+    "local_context": null,
+    "sorries": [],
+    "backend_proof_status": null,
+    "statement_check": "fixed_context_preserved",
+    "axioms": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext"
+    ],
+    "metrics": {
+      "proof_tokens": 1100,
+      "raw_heartbeats": 8806173,
+      "heartbeats": 8806
+    },
+    "elapsed_ms": 55257,
+    "raw_log_path": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/P_A/P12/normal/A2/repeat_1/validation/lean/005_candidate_02/stdout.log",
+    "detail": null,
+    "failure_kind": null
+  },
+  "measurement": {
+    "proof_tokens": 1100,
+    "raw_heartbeats": 8806173,
+    "token_reduction_pct": 17.231000752445446,
+    "heartbeat_reduction_pct": 11.220308635938835,
+    "search_score": 14.22565469419214
+  },
+  "facts": {
+    "diagnostics": [
+      {
+        "severity": "information",
+        "position": {
+          "column": 0,
+          "line": 1391
+        },
+        "end_position": {
+          "column": 6,
+          "line": 1391
+        },
+        "message": "interleaved_affine_gaps_imply_tensor_gaps.{l} {ι : Type l} [Fintype ι] [Nonempty ι] [DecidableEq ι] {F : Type}\n  [CommRing F] [Fintype F] {A : Type} [DecidableEq A] [AddCommGroup A] [Module F A] (MC : ModuleCode ι F A) {e ε : ℕ}\n  (hC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε)\n  (h_interleaved_gaps :\n    ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(Code.CodeInterleavable.interleaveCode MC (Fin m))) e ε)\n  (ϑ : ℕ) (hϑ_gt_0 : ϑ > 0) : δ_ε_multilinearCorrelatedAgreement_Nat (↑MC) ϑ e ε",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "interleaved_affine_gaps_imply_tensor_gaps.{l} {ι : Type l} [Fintype ι] [Nonempty ι] [DecidableEq ι] {F : Type}\n  [CommRing F] [Fintype F] {A : Type} [DecidableEq A] [AddCommGroup A] [Module F A] (MC : ModuleCode ι F A) {e ε : ℕ}\n  (hC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε)\n  (h_interleaved_gaps :\n    ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(Code.CodeInterleavable.interleaveCode MC (Fin m))) e ε)\n  (ϑ : ℕ) (hϑ_gt_0 : ϑ > 0) : δ_ε_multilinearCorrelatedAgreement_Nat (↑MC) ϑ e ε",
+          "endPos": {
+            "column": 6,
+            "line": 1391
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 0,
+            "line": 1391
+          },
+          "severity": "information"
+        }
+      },
+      {
+        "severity": "information",
+        "position": {
+          "column": 0,
+          "line": 1392
+        },
+        "end_position": {
+          "column": 6,
+          "line": 1392
+        },
+        "message": "'interleaved_affine_gaps_imply_tensor_gaps' depends on axioms: [propext, Classical.choice, Quot.sound]",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "'interleaved_affine_gaps_imply_tensor_gaps' depends on axioms: [propext, Classical.choice, Quot.sound]",
+          "endPos": {
+            "column": 6,
+            "line": 1392
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 0,
+            "line": 1392
+          },
+          "severity": "information"
+        }
+      }
+    ],
+    "goals": null,
+    "local_context": null,
+    "sorries": [],
+    "axioms": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext"
+    ],
+    "detail": null,
+    "raw_lean_output": "{\"caption\":\"\",\"data\":\"interleaved_affine_gaps_imply_tensor_gaps.{l} {ι : Type l} [Fintype ι] [Nonempty ι] [DecidableEq ι] {F : Type}\\n  [CommRing F] [Fintype F] {A : Type} [DecidableEq A] [AddCommGroup A] [Module F A] (MC : ModuleCode ι F A) {e ε : ℕ}\\n  (hC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε)\\n  (h_interleaved_gaps :\\n    ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(Code.CodeInterleavable.interleaveCode MC (Fin m))) e ε)\\n  (ϑ : ℕ) (hϑ_gt_0 : ϑ > 0) : δ_ε_multilinearCorrelatedAgreement_Nat (↑MC) ϑ e ε\",\"endPos\":{\"column\":6,\"line\":1391},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"[anonymous]\",\"pos\":{\"column\":0,\"line\":1391},\"severity\":\"information\"}\n{\"caption\":\"\",\"data\":\"'interleaved_affine_gaps_imply_tensor_gaps' depends on axioms: [propext, Classical.choice, Quot.sound]\",\"endPos\":{\"column\":6,\"line\":1392},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"[anonymous]\",\"pos\":{\"column\":0,\"line\":1392},\"severity\":\"information\"}\n"
+  },
+  "diagnosis": "The supplied proof is already valid; the feedback is informational only. This refactor removes comments, an unused positivity binder, the redundant `ϑ_pred` alias, and one-use theorem/probability aliases while preserving the same induction and probability argument.",
+  "duplicate_cache": false,
+  "available_at": 1792770704.588806,
+  "cumulative_calls": 2,
+  "cumulative_tokens": 90401,
+  "api_spend_usd": null
+}

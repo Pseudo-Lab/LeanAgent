@@ -1,0 +1,23 @@
+--- candidate_01.proof.lean
++++ candidate_02.proof.lean
+@@ -15,7 +15,19 @@
+             ((if j = i then b j else a j) - a j) * (10 : ℤ) ^ (j : ℕ) :=
+         hdiff a (fun j : Fin 9 => if j = i then b j else a j)
+       _ = digits_to_num a + (b i - a i) * (10 : ℤ) ^ (i : ℕ) := by
+-        simp [Finset.sum_ite_eq']
++        congr 1
++        calc
++          ∑ j : Fin 9, ((if j = i then b j else a j) - a j) *
++              (10 : ℤ) ^ (j : ℕ) =
++              ∑ j : Fin 9, if j = i then
++                (b i - a i) * (10 : ℤ) ^ (i : ℕ) else 0 := by
++            apply Finset.sum_congr rfl
++            intro j _
++            by_cases h : j = i
++            · subst j
++              simp
++            · simp [h]
++          _ = (b i - a i) * (10 : ℤ) ^ (i : ℕ) := by simp
+   rintro d e f ⟨rde, ref⟩
+   have hde (i : Fin 9) :
+       7 ∣ digits_to_num d + (e i - d i) * (10 : ℤ) ^ (i : ℕ) := by

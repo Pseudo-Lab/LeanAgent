@@ -1,0 +1,27 @@
+--- candidate_01.proof.lean
++++ candidate_02.proof.lean
+@@ -1,20 +1,20 @@
+ by
++  let C := [ofCrAnOpF φ, ofCrAnOpF ψ]ₛF
+   let pb (b : 𝓕.FieldOpFreeAlgebra)
+       (_ : b ∈ Submodule.span ℂ (Set.range ofCrAnListFBasis)) : Prop :=
+-    ι 𝓣ᶠ(a * [ofCrAnOpF φ, ofCrAnOpF ψ]ₛF * b) =
+-      ι ([ofCrAnOpF φ, ofCrAnOpF ψ]ₛF * 𝓣ᶠ(a * b))
++    ι 𝓣ᶠ(a * C * b) = ι (C * 𝓣ᶠ(a * b))
+   change pb b (Basis.mem_span _ b)
+   apply Submodule.span_induction
+   · rintro x ⟨φs, rfl⟩
+     simp only [ofListBasis_eq_ofList, map_mul, pb]
+     let pa (a : 𝓕.FieldOpFreeAlgebra)
+         (_ : a ∈ Submodule.span ℂ (Set.range ofCrAnListFBasis)) : Prop :=
+-      ι 𝓣ᶠ(a * [ofCrAnOpF φ, ofCrAnOpF ψ]ₛF * ofCrAnListF φs) =
+-        ι ([ofCrAnOpF φ, ofCrAnOpF ψ]ₛF * 𝓣ᶠ(a * ofCrAnListF φs))
++      ι 𝓣ᶠ(a * C * ofCrAnListF φs) = ι (C * 𝓣ᶠ(a * ofCrAnListF φs))
+     change pa a (Basis.mem_span _ a)
+     apply Submodule.span_induction
+     · rintro x ⟨φs', rfl⟩
+       simp only [ofListBasis_eq_ofList, map_mul, pa]
++      dsimp [C]
+       let l1 := List.takeWhile (fun c => ¬crAnTimeOrderRel φ c)
+         (List.insertionSort crAnTimeOrderRel (φs' ++ φs))
+       let l2 := List.filter
