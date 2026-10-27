@@ -81,13 +81,15 @@ Explore → Design → Build → Test → Improve → Share
 
 ## 🗓️ 14주 로드맵
 
+다음 모임은 **2026년 11월 1일 일요일 20:00–22:00, Week 5 · 하네스 구축·검증·고도화**입니다. 실제 API 호출로 하네스의 성능·비용과 전체 실행 과정을 비교·검증하며, 11월 1일 공개 예정인 60문제에 대비합니다. [Week 5 안내와 공유 자료](docs/meetings/2026-11-01-week5/README.md)에서 준비 주제를 확인할 수 있습니다.
+
 | Week | 날짜 | 시간 | 주요 활동 | 결과물 |
 | --- | --- | --- | --- | --- |
-| **W01** | 2026.10.04 | 20:00–22:00 | OT & Lean Setup | Lean 개발 환경, 첫 번째 검증 예제 |
-| **W02** | 2026.10.11 | 20:00–22:00 | Lean & Formal Mathematics | Lean·Mathlib·Autoformalization·ATP·verifier-guided agent 조사 |
-| **W03** | 2026.10.18 | 20:00–22:00 | Lean Agents & Harnesses | M1 · 선행 연구 및 오픈소스 조사, 최소 실행 구조 설계 |
-| **W04** | 2026.10.25 | 20:00–22:00 | Evaluation Harness | M2 · 모델 호출부터 검증·평가·결과 저장까지 연결한 harness |
-| **W05** | 2026.11.01 | 20:00–22:00 | Full Benchmark Sprint | Full benchmark 결과, refactoring 전략, technical report 초안 |
+| **[W01](docs/meetings/2026-10-04-ot/README.md)** | 2026.10.04 | 20:00–22:00 | OT & Lean Setup | Lean 개발 환경, 첫 번째 검증 예제 |
+| **[W02](docs/meetings/2026-10-11-week2/README.md)** | 2026.10.11 | 20:00–22:00 | Lean & Formal Mathematics | Lean·Mathlib·Autoformalization·ATP·verifier-guided agent 조사 |
+| **[W03](docs/meetings/2026-10-18-week3/README.md)** | 2026.10.18 | 20:00–22:00 | Lean Agents & Harnesses | M1 · 선행 연구 및 오픈소스 조사, 최소 실행 구조 설계 |
+| **[W04](docs/meetings/2026-10-25-week4/README.md)** | 2026.10.25 | 20:00–22:00 | Evaluation Harness | M2 · 모델 호출부터 검증·평가·결과 저장까지 연결한 harness |
+| **[W05](docs/meetings/2026-11-01-week5/README.md)** | 2026.11.01 | 20:00–22:00 | 하네스 구축·검증·고도화 | 실제 API 기반 하네스 비교·비용 측정, 전 과정 검증과 60문제 대응 준비 |
 | **W06** | 2026.11.08 | 20:00–22:00 | Competition Submission | M3 · 증명 결과, 실행 코드, OpenReview technical report 제출 |
 | **W07** | 2026.11.15 | — | Break | 제출 기록과 문서 자유 보완 |
 | **W08** | 2026.11.22 | 20:00–22:00 | Retrospective & LeanAgent Design | 성공·실패 사례 분석, 최소 LeanAgent 구조 |
@@ -103,14 +105,19 @@ Explore → Design → Build → Test → Improve → Share
 ### 🔗 결과물
 
 - 🔗 Repository: [Pseudo-Lab/LeanAgent](https://github.com/Pseudo-Lab/LeanAgent)
-- 🧪 Experiments: `TBD`
+- 📚 Documents: [문서·모임 자료 목차](docs/README.md)
+- 🧪 Experiments: [Refactoring 연구·실험 자료](docs/research/refactoring/README.md) · [검증·수리 연구](docs/research/verification-repair/README.md)
 - 📝 Technical Report: `TBD`
 
 ### 📝 주요 기록
 
 | Date | Content | Link |
 | --- | --- | --- |
-| 2026.10.04 | 프로젝트 킥오프 | `TBD` |
+| 2026.10.04 | 프로젝트 킥오프 | [Week 1 · OT](docs/meetings/2026-10-04-ot/README.md) |
+| 2026.10.11 | Warm-up 문제 연구와 논문 조사 | [Week 2 자료](docs/meetings/2026-10-11-week2/README.md) |
+| 2026.10.18 | 역할 분담과 에이전트 설계 | [Week 3 자료](docs/meetings/2026-10-18-week3/README.md) |
+| 2026.10.25 | 하네스·리팩터링·검증·수리 실험 공유 | [Week 4 자료](docs/meetings/2026-10-25-week4/README.md) |
+| 2026.11.01 | 하네스 구축·검증·고도화 및 60문제 대응 준비 (예정) | [Week 5 안내](docs/meetings/2026-11-01-week5/README.md) |
 | 2026.11.08 | Lean Refactor Arena 제출 | `TBD` |
 | 2027.01.03 | 최종 발표 및 오픈소스 릴리스 | `TBD` |
 

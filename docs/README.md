@@ -17,15 +17,12 @@
 
 ## 모임 자료
 
+- [2026-11-01 · Week 5 / 하네스 구축·검증·고도화 (예정)](meetings/2026-11-01-week5/README.md)
 - [2026-10-25 · Week 4 / Evaluation Harness](meetings/2026-10-25-week4/README.md)
-- [2026-10-18 · Week 3 / 검증·수리 파이프라인 주간 공유](meetings/2026-10-18-week3/README.md)
-
-- [2026-10-04 · 13기 1차 미팅 / OT](meetings/2026-10-04-ot/README.md)
-- [2026-10-11 · Week 2 / 웜업 문제 연구와 논문 조사](meetings/2026-10-11-week2/README.md)
 - [2026-10-18 · Week 3 / 역할 분담과 에이전트 설계 초안](meetings/2026-10-18-week3/README.md)
+- [2026-10-11 · Week 2 / 웜업 문제 연구와 논문 조사](meetings/2026-10-11-week2/README.md)
+- [2026-10-04 · 13기 1차 미팅 / OT](meetings/2026-10-04-ot/README.md)
 
 Week 2부터 모임 폴더에는 발표자별 공유 자료를 연결하는 README만 둡니다. 발표자료·보고서·증명·검증 기록은 `research/`에서 관리합니다. [폴더·파일명 지침](STRUCTURE.md)을 따릅니다.
 
 OT 폴더의 기존 발표자료는 후속 정리 대상입니다.
-
-- [2026-10-25 · Week 4 / 새 연습문제와 Agent Repair](meetings/2026-10-25-week4/README.md)
