@@ -1,0 +1,470 @@
+{
+  "id": "R06b",
+  "seed_id": "warmup-3:Core.InitsUpdatesComm",
+  "source_kind": "arena_derived",
+  "source_path": "benchmark_data_warmup.jsonl line 3; Strata/Languages/Core/StatementSemanticsProps.lean @ 451e5f047 (git HEAD copy, uncommitted patch excluded)",
+  "decl_full_name": "Core.InitsUpdatesComm",
+  "environment": {
+    "dir": "/Users/sungwoo/lean_project/refactor_arena/strata",
+    "lean_version": "Lean (version 4.26.0, arm64-apple-darwin24.6.0, commit d8204c9fd894f91bbb2cdfec5912ec8196fd8562, Release)",
+    "lake_version": "Lake version 5.0.0-src+d8204c9 (Lean version 4.26.0)",
+    "lean_toolchain": "leanprover/lean4:v4.26.0",
+    "repo_commit": "451e5f047bafa010d178856db76c00029bfa4d7f",
+    "lake_manifest_sha256": "5aab41f14cc55b5049ae81535506b6998bfadd9d983af6130fa92f4a39bd244c",
+    "lakefile_sha256": {
+      "lakefile.toml": "5c0abe83aaa82d837d50cf987102ff3138a15aec988912f06166a39e5ee578ae"
+    },
+    "uncommitted_status": [
+      "M Strata/Transform/CallElimCorrect.lean"
+    ],
+    "uncommitted_diff_sha256": "4f46664d01716151ce17d064218040e096c82504d719e877901e39271b9c8d4c",
+    "packages": {
+      "plausible": "b949552f6ca8e223f424b3e3b33f74185bbf1179"
+    },
+    "has_aesop": false,
+    "environment_hash": "b2c42272ae50e12d1472e380395e82dd422746e97da291bdb2684a96c2ba850d",
+    "project": "strata"
+  },
+  "immutable_context_hash": "ca9a091cf4943c1f90ebd9bb5b46f1cd3ec9cd9e551d18660608c7b909edbd9e",
+  "statement": "theorem InitsUpdatesComm\n  {P : PureExpr} {σ σ' σ'' : SemanticStore P}\n  {ks ks' : List P.Ident} {vs vs' : List P.Expr} :\n  UpdateStates σ ks vs σ' →\n  InitStates σ' ks' vs' σ'' →\n  ∃ σ₁,\n    σ₁ = (updatedStates σ ks' vs') ∧\n    InitStates σ ks' vs' σ₁ ∧\n    UpdateStates σ₁ ks vs σ''",
+  "original_body": "by\n  intros Hup Hinit\n  exists (updatedStates σ ks' vs')\n  have Hk : (isDefined σ' ks) := UpdateStatesDefined Hup\n  have Hlen1 := InitStatesLength Hinit\n  have Hlen2 := UpdateStatesLength Hup\n  induction Hup generalizing σ''\n  case update_none =>\n    simp_all\n    apply And.intro\n    refine updatedStatesInit Hlen1 ?_ ?_\n    exact InitStatesNotDefined Hinit\n    exact InitStatesNodup Hinit\n    simp [InitStatesUpdated Hinit]\n    constructor\n  case update_some σ x v σ₀ xs vs σ₁ Hup Hups ih =>\n    refine ⟨rfl, ?_, ?_⟩\n    . apply updatedStatesInit Hlen1\n      apply UpdateStateNotDefMonotone' ?_ Hup\n      apply UpdateStatesNotDefMonotone' ?_ Hups\n      exact InitStatesNotDefined Hinit\n      exact InitStatesNodup Hinit\n    . apply UpdateStates.update_some (σ':=updatedStates σ₀ ks' vs')\n      . simp [UpdateStateUpdated Hup, updatedStates]\n        rw [← updatedStateComm']\n        . have Hdef := UpdateStateDefined' Hup\n          simp [isDefined, Option.isSome] at Hdef\n          split at Hdef <;> simp_all\n          next val heq =>\n          apply updatedStateUpdate (v':=val)\n          apply InitStatesSomeMonotone heq\n          apply updatedStatesInit\n          . simp_all\n          . apply UpdateStateNotDefMonotone' ?_ Hup\n            apply UpdateStatesNotDefMonotone' ?_ Hups\n            apply InitStatesNotDefined Hinit\n          . exact InitStatesNodup Hinit\n        . rw [List.unzip_zip] <;> simp_all\n          have Hnd := InitStatesNotDefined Hinit\n          simp [isNotDefined, isDefined] at *\n          apply Not.intro\n          intros Hin\n          specialize Hnd _ Hin\n          simp_all\n      . apply (ih Hinit ?_ ?_).2.2\n        . simp [isDefined] at * <;> simp_all\n        . simp_all",
+  "original_body_sha256": "31d6fc114c9a8fba93a46868067c9d92e424180303d2b97ce9bba76c8110cda5",
+  "body_range": {
+    "body_start_char": 24928,
+    "body_end_char": 26630,
+    "body_first_line": 939,
+    "decl_first_line": 931
+  },
+  "candidate_body": "by\n  intros Hup Hinit\n  exists (updatedStates σ ks' vs')\n  have Hlen1 := InitStatesLength Hinit\n  have Hlen2 := UpdateStatesLength Hup\n  induction Hup generalizing σ''\n  case update_none =>\n    simp_all\n    apply And.intro\n    refine updatedStatesInit Hlen1 ?_ ?_\n    exact InitStatesNotDefined Hinit\n    exact InitStatesNodup Hinit\n    simp [InitStatesUpdated Hinit]\n    constructor\n  case update_some σ x v σ₀ xs vs σ₁ Hup Hups ih =>\n    refine ⟨rfl, ?_, ?_⟩\n    . apply updatedStatesInit Hlen1\n      apply UpdateStateNotDefMonotone' ?_ Hup\n      apply UpdateStatesNotDefMonotone' ?_ Hups\n      exact InitStatesNotDefined Hinit\n      exact InitStatesNodup Hinit\n    . apply UpdateStates.update_some (σ':=updatedStates σ₀ ks' vs')\n      . simp [UpdateStateUpdated Hup, updatedStates]\n        rw [← updatedStateComm']\n        . have Hdef := UpdateStateDefined' Hup\n          simp [isDefined, Option.isSome] at Hdef\n          split at Hdef <;> simp_all\n          next val heq =>\n          apply updatedStateUpdate (v':=val)\n          apply InitStatesSomeMonotone heq\n          apply updatedStatesInit\n          . simp_all\n          . apply UpdateStateNotDefMonotone' ?_ Hup\n            apply UpdateStatesNotDefMonotone' ?_ Hups\n            apply InitStatesNotDefined Hinit\n          . exact InitStatesNodup Hinit\n        . rw [List.unzip_zip] <;> simp_all\n          have Hnd := InitStatesNotDefined Hinit\n          simp [isNotDefined, isDefined] at *\n          apply Not.intro\n          intros Hin\n          specialize Hnd _ Hin\n          simp_all\n      . apply (ih Hinit ?_ ?_).2.2\n        . simp [isDefined] at * <;> simp_all\n        . simp_all",
+  "candidate_hash": "c423fe951c205f8d0a81b7557e3bc9ace106233ac10a459d01bb18030f458013",
+  "expected_intent": "Remove the pre-induction auxiliary step `have Hk : (isDefined σ' ks) := UpdateStatesDefined Hup` before `induction Hup generalizing σ''`, losing `Hk` from the induction hypothesis context.",
+  "baseline_check": {
+    "kind": "valid",
+    "exit_code": 0,
+    "axioms": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "n_errors_in_target": 0,
+    "first_error": null,
+    "errors_outside_target": 0,
+    "run": "cases/R06b/logs/00_baseline.result.json",
+    "wall_s_local": 7.52
+  },
+  "observed_result": "invalid",
+  "candidate_check": {
+    "kind": "invalid",
+    "exit_code": 1,
+    "axioms": [
+      "propext",
+      "sorryAx",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "n_errors_in_target": 3,
+    "first_error": {
+      "line": 981,
+      "col": 10,
+      "message": "simp_all made no progress"
+    },
+    "errors_outside_target": 0,
+    "run": "cases/R06b/logs/01_candidate.result.json",
+    "wall_s_local": 3.06
+  },
+  "diagnostics": [
+    {
+      "severity": "error",
+      "file_line": 981,
+      "col": 10,
+      "body_line": 42,
+      "message": "simp_all made no progress"
+    },
+    {
+      "severity": "error",
+      "file_line": 982,
+      "col": 15,
+      "body_line": 43,
+      "message": "Function expected at\n  ih Hinit ?m.278\nbut this term has type\n  updatedStates σ₀ ks' vs' = updatedStates σ₀ ks' vs' ∧\n    InitStates σ₀ ks' vs' (updatedStates σ₀ ks' vs') ∧ UpdateStates (updatedStates σ₀ ks' vs') xs vs σ''\n\nNote: Expected a function because this term is being applied to the argument\n  ?_"
+    },
+    {
+      "severity": "error",
+      "file_line": 983,
+      "col": 8,
+      "body_line": 44,
+      "message": "No goals to be solved"
+    }
+  ],
+  "pre_error_state": {
+    "source": "instrumented_trace_state_run",
+    "trusted": false,
+    "untrusted_reason": "no clean-prefix replay certificate / state digest (Lean adapter not implemented)",
+    "file_line": 981,
+    "body_line": 42,
+    "goals_text": "case refine_2.a.h\nP : PureExpr\nσ✝ σ' : SemanticStore P\nks ks' : List P.Ident\nvs✝ vs' : List P.Expr\nHlen1 : ks'.length = vs'.length\nσ : SemanticStore P\nx : P.Ident\nv : P.Expr\nσ₀ : SemanticStore P\nxs : List P.Ident\nvs : List P.Expr\nσ₁ : SemanticStore P\nHup : UpdateState P σ x v σ₀\nHups : UpdateStates σ₀ xs vs σ₁\nσ'' : SemanticStore P\nih : ∀ {σ'' : SemanticStore P}, InitStates σ₁ ks' vs' σ'' → InitStates σ₀ ks' vs' (updatedStates σ₀ ks' vs')\nHinit : InitStates σ₁ ks' vs' σ''\nHlen2 : xs.length = vs.length\nHin : x ∈ ks'\nHnd : σ₁ x = none\n⊢ False",
+    "run": "cases/R06b/logs/02_trace_state.result.json"
+  },
+  "pre_error_state_null_reason": null,
+  "inferred_state": null,
+  "localization": {
+    "scope": "tactic",
+    "file_line": 981,
+    "col": 10,
+    "body_line": 42,
+    "line_text": "          simp_all",
+    "method": "text heuristic on first error position (not a parser)",
+    "trusted_pre_state": false
+  },
+  "local_attempts": [
+    {
+      "n": 1,
+      "op": "delete_span",
+      "tactic": null,
+      "span_body_lines": [
+        42,
+        42
+      ],
+      "span_text": "          simp_all",
+      "check": {
+        "kind": "invalid",
+        "exit_code": 1,
+        "axioms": [
+          "propext",
+          "sorryAx",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "n_errors_in_target": 3,
+        "first_error": {
+          "line": 975,
+          "col": 8,
+          "message": "unsolved goals\ncase refine_2.a.h\nP : PureExpr\nσ✝ σ' : SemanticStore P\nks ks' : List P.Ident\nvs✝ vs' : List P.Expr\nHlen1 : ks'.length = vs'.length\nσ : SemanticStore P\nx : P.Ident\nv : P.Expr\nσ₀ : SemanticStore P\nxs : List P.Ident\nvs : List P.Expr\nσ₁ : SemanticStore P\nHup : UpdateState P σ x v σ₀\nHups : UpdateStates σ₀ xs vs σ₁\nσ'' : SemanticStore P\nih : ∀ {σ'' : SemanticStore P}, InitStates σ₁ ks' vs' σ'' → InitStates σ₀ ks' vs' (updatedStates σ₀ ks' vs')\nHinit : InitStates σ₁ ks' vs' σ''\nHlen2 : xs.length = vs.length\nHin : x ∈ ks'\nHnd : σ₁ x = none\n⊢ False"
+        },
+        "errors_outside_target": 0,
+        "run": "cases/R06b/attempts/01_delete_span_none.result.json",
+        "wall_s_local": 3.1
+      },
+      "local_error_cleared": false,
+      "full_replay": "invalid",
+      "result": "failed"
+    },
+    {
+      "n": 2,
+      "op": "replace_span",
+      "tactic": "assumption",
+      "span_body_lines": [
+        42,
+        42
+      ],
+      "span_text": "          simp_all",
+      "check": {
+        "kind": "invalid",
+        "exit_code": 1,
+        "axioms": [
+          "propext",
+          "sorryAx",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "n_errors_in_target": 3,
+        "first_error": {
+          "line": 981,
+          "col": 10,
+          "message": "Tactic `assumption` failed\n\ncase refine_2.a.h\nP : PureExpr\nσ✝ σ' : SemanticStore P\nks ks' : List P.Ident\nvs✝ vs' : List P.Expr\nHlen1 : ks'.length = vs'.length\nσ : SemanticStore P\nx : P.Ident\nv : P.Expr\nσ₀ : SemanticStore P\nxs : List P.Ident\nvs : List P.Expr\nσ₁ : SemanticStore P\nHup : UpdateState P σ x v σ₀\nHups : UpdateStates σ₀ xs vs σ₁\nσ'' : SemanticStore P\nih : ∀ {σ'' : SemanticStore P}, InitStates σ₁ ks' vs' σ'' → InitStates σ₀ ks' vs' (updatedStates σ₀ ks' vs')\nHinit : InitStates σ₁ ks' vs' σ''\nHlen2 : xs.length = vs.length\nHin : x ∈ ks'\nHnd : σ₁ x = none\n⊢ False"
+        },
+        "errors_outside_target": 0,
+        "run": "cases/R06b/attempts/02_replace_span_assumption.result.json",
+        "wall_s_local": 2.44
+      },
+      "local_error_cleared": false,
+      "full_replay": "invalid",
+      "result": "failed"
+    },
+    {
+      "n": 3,
+      "op": "replace_span",
+      "tactic": "rfl",
+      "span_body_lines": [
+        42,
+        42
+      ],
+      "span_text": "          simp_all",
+      "check": {
+        "kind": "invalid",
+        "exit_code": 1,
+        "axioms": [
+          "propext",
+          "sorryAx",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "n_errors_in_target": 3,
+        "first_error": {
+          "line": 981,
+          "col": 10,
+          "message": "Tactic `rfl` failed: Expected the goal to be a binary relation\n\nHint: Reflexivity tactics can only be used on goals of the form `x ~ x` or `R x x`\n\ncase refine_2.a.h\nP : PureExpr\nσ✝ σ' : SemanticStore P\nks ks' : List P.Ident\nvs✝ vs' : List P.Expr\nHlen1 : ks'.length = vs'.length\nσ : SemanticStore P\nx : P.Ident\nv : P.Expr\nσ₀ : SemanticStore P\nxs : List P.Ident\nvs : List P.Expr\nσ₁ : SemanticStore P\nHup : UpdateState P σ x v σ₀\nHups : UpdateStates σ₀ xs vs σ₁\nσ'' : SemanticStore P\nih : ∀ {σ'' : SemanticStore P}, InitStates σ₁ ks' vs' σ'' → InitStates σ₀ ks' vs' (updatedStates σ₀ ks' vs')\nHinit : InitStates σ₁ ks' vs' σ''\nHlen2 : xs.length = vs.length\nHin : x ∈ ks'\nHnd : σ₁ x = none\n⊢ False"
+        },
+        "errors_outside_target": 0,
+        "run": "cases/R06b/attempts/03_replace_span_rfl.result.json",
+        "wall_s_local": 2.45
+      },
+      "local_error_cleared": false,
+      "full_replay": "invalid",
+      "result": "failed"
+    },
+    {
+      "n": 4,
+      "op": "replace_span",
+      "tactic": "omega",
+      "span_body_lines": [
+        42,
+        42
+      ],
+      "span_text": "          simp_all",
+      "check": {
+        "kind": "invalid",
+        "exit_code": 1,
+        "axioms": [
+          "propext",
+          "sorryAx",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "n_errors_in_target": 3,
+        "first_error": {
+          "line": 981,
+          "col": 10,
+          "message": "omega could not prove the goal:\na possible counterexample may satisfy the constraints\n  b ≥ 0\n  a ≥ 0\nwhere\n a := ↑vs'.length\n b := ↑vs.length"
+        },
+        "errors_outside_target": 0,
+        "run": "cases/R06b/attempts/04_replace_span_omega.result.json",
+        "wall_s_local": 2.51
+      },
+      "local_error_cleared": false,
+      "full_replay": "invalid",
+      "result": "failed"
+    },
+    {
+      "n": 5,
+      "op": "replace_span",
+      "tactic": "simp_all",
+      "span_body_lines": [
+        42,
+        42
+      ],
+      "span_text": "          simp_all",
+      "check": {
+        "kind": "invalid",
+        "exit_code": 1,
+        "axioms": [
+          "propext",
+          "sorryAx",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "n_errors_in_target": 3,
+        "first_error": {
+          "line": 981,
+          "col": 10,
+          "message": "simp_all made no progress"
+        },
+        "errors_outside_target": 0,
+        "run": "cases/R06b/attempts/05_replace_span_simp_all.result.json",
+        "wall_s_local": 2.64
+      },
+      "local_error_cleared": false,
+      "full_replay": "invalid",
+      "result": "failed"
+    },
+    {
+      "n": 6,
+      "op": "replace_span_extract",
+      "tactic": "simp?",
+      "span_body_lines": [
+        42,
+        42
+      ],
+      "span_text": "          simp_all",
+      "check": {
+        "kind": "invalid",
+        "exit_code": 1,
+        "axioms": [
+          "propext",
+          "sorryAx",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "n_errors_in_target": 3,
+        "first_error": {
+          "line": 981,
+          "col": 10,
+          "message": "`simp` made no progress"
+        },
+        "errors_outside_target": 0,
+        "run": "cases/R06b/attempts/06_replace_span_extract_simpQ.result.json",
+        "wall_s_local": 3.36
+      },
+      "raw_tool_output": null,
+      "result": "no_suggestion"
+    },
+    {
+      "n": 7,
+      "op": "replace_span_extract",
+      "tactic": "exact?",
+      "span_body_lines": [
+        42,
+        42
+      ],
+      "span_text": "          simp_all",
+      "check": {
+        "kind": "invalid",
+        "exit_code": 1,
+        "axioms": [
+          "propext",
+          "sorryAx",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "n_errors_in_target": 3,
+        "first_error": {
+          "line": 981,
+          "col": 10,
+          "message": "`exact?` could not close the goal. Try `apply?` to see partial suggestions."
+        },
+        "errors_outside_target": 0,
+        "run": "cases/R06b/attempts/07_replace_span_extract_exactQ.result.json",
+        "wall_s_local": 4.4
+      },
+      "raw_tool_output": null,
+      "result": "no_suggestion"
+    },
+    {
+      "n": 8,
+      "op": "replace_span_extract",
+      "tactic": "aesop?",
+      "span_body_lines": [
+        42,
+        42
+      ],
+      "span_text": "          simp_all",
+      "result": "skipped",
+      "reason": "Aesop not available in pinned environment (not added)"
+    }
+  ],
+  "local_result": null,
+  "valid_path_extraction": [],
+  "gold_repair_path": "gold_repair.lean",
+  "gold_strategy": "restore the pre-induction auxiliary hypothesis `Hk` before `induction Hup`",
+  "gold_check": {
+    "kind": "valid",
+    "exit_code": 0,
+    "axioms": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "n_errors_in_target": 0,
+    "first_error": null,
+    "errors_outside_target": 0,
+    "run": "cases/R06b/logs/03_gold_alt0.result.json",
+    "wall_s_local": 4.39
+  },
+  "gold_attempts": [
+    {
+      "alternative": 0,
+      "edits": [
+        [
+          "  have Hlen1 := InitStatesLength Hinit\n",
+          "  have Hk : (isDefined σ' ks) := UpdateStatesDefined Hup\n  have Hlen1 := InitStatesLength Hinit\n"
+        ]
+      ],
+      "check": {
+        "kind": "valid",
+        "exit_code": 0,
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "n_errors_in_target": 0,
+        "first_error": null,
+        "errors_outside_target": 0,
+        "run": "cases/R06b/logs/03_gold_alt0.result.json",
+        "wall_s_local": 4.39
+      }
+    }
+  ],
+  "full_replay_result": {
+    "kind": "valid",
+    "exit_code": 0,
+    "axioms": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "n_errors_in_target": 0,
+    "first_error": null,
+    "errors_outside_target": 0,
+    "run": "cases/R06b/logs/03_gold_alt0.result.json",
+    "wall_s_local": 4.39
+  },
+  "full_replay_result_source": "gold_repair",
+  "measurements": {
+    "baseline": {
+      "body_nonwhitespace_chars": {
+        "value": 1209,
+        "kind": "local_estimate",
+        "note": "character count, NOT the official token count"
+      },
+      "official_tokens": {
+        "value": null,
+        "kind": "not_measured",
+        "reason": "official tokenizer not available"
+      },
+      "heartbeats": {
+        "value": 4676,
+        "kind": "local_estimate",
+        "method": "instrumented run: IO.getNumHeartbeats delta /1000 around the declaration with Elab.async=false (same mechanism as Mathlib #count_heartbeats); single run; not the official Arena measurement",
+        "run": "cases/R06b/logs/04_measure_baseline.result.json"
+      }
+    },
+    "gold": {
+      "body_nonwhitespace_chars": {
+        "value": 1209,
+        "kind": "local_estimate",
+        "note": "character count, NOT the official token count"
+      },
+      "official_tokens": {
+        "value": null,
+        "kind": "not_measured",
+        "reason": "official tokenizer not available"
+      },
+      "heartbeats": {
+        "value": 4676,
+        "kind": "local_estimate",
+        "method": "instrumented run: IO.getNumHeartbeats delta /1000 around the declaration with Elab.async=false (same mechanism as Mathlib #count_heartbeats); single run; not the official Arena measurement",
+        "run": "cases/R06b/logs/04_measure_gold.result.json"
+      }
+    },
+    "robustness": {
+      "listed_versions": [
+        "v4.29.1",
+        "v4.27.0",
+        "v4.26.0"
+      ],
+      "checked_versions": [
+        "v4.26.0"
+      ],
+      "complete": false,
+      "note": ""
+    }
+  },
+  "expected_route": "escalate_after_local_exhausted",
+  "expected_route_reason": "all applicable local-ops-v1 attempts failed on full replay; no replay certificate so policy widens scope to body",
+  "author_prediction_before_run": "in update_some, `ih` or `simp_all` fails because `isDefined` is missing from induction context -> escalate",
+  "policy_decision": {
+    "decision.json": "PRICE_REQUEST",
+    "decision.configured_budget.json": "EMIT_LLM_PROMPT"
+  },
+  "validation_status": "lean_observed+gold_verified+string_contract_only_no_lean_adapter_term_check+robustness_incomplete"
+}

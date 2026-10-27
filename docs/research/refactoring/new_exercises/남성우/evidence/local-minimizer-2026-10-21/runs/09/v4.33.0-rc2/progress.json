@@ -1,0 +1,522 @@
+{
+  "problem_id": 9,
+  "name": "Cslib.CCS.bisimilarity_congr_choice",
+  "version": "v4.33.0-rc2",
+  "commit": "3aa9d4416c185e0b9faeb72bbd65abe85b95dbcc",
+  "source_hash": "ab051b1bb5547a874efe3491ed0c9acc785de2234344046c0d95d4dee178f73e",
+  "baseline": {
+    "kind": "valid",
+    "axioms": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "body_hash": "e0e5357ba18cf440a8d13ce7a92d2e527b58088d170d6f66f9991e6ed9c18464",
+    "tokens": 251,
+    "output_path": "/Users/sungwoo/lean_project/LeanAgent/docs/research/verifier-guided-agent/experiments/local-minimizer-2026-10-21/runs/09/v4.33.0-rc2/baseline.combined.txt",
+    "heartbeats_raw": 3856574,
+    "heartbeats": 3856.574,
+    "measurement_kind": "local_o200k_base_and_synchronous_declaration_heartbeats"
+  },
+  "control": {
+    "kind": "valid",
+    "axioms": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "body_hash": "d3d15bcdeae7327b50e983480869255c9a74af5b1369879519b5625abedc1f4f",
+    "tokens": 253,
+    "output_path": "/Users/sungwoo/lean_project/LeanAgent/docs/research/verifier-guided-agent/experiments/local-minimizer-2026-10-21/runs/09/v4.33.0-rc2/control.combined.txt",
+    "heartbeats_raw": 2689966,
+    "heartbeats": 2689.966,
+    "measurement_kind": "local_o200k_base_and_synchronous_declaration_heartbeats"
+  },
+  "attempts": [
+    {
+      "id": 1,
+      "round": 0,
+      "parent_hash": "d3d15bcdeae7327b50e983480869255c9a74af5b1369879519b5625abedc1f4f",
+      "site": {
+        "kind": "Lean.Parser.Tactic.tacticSeq1Indented",
+        "start": 5,
+        "end": 1531,
+        "depth": 5,
+        "text": "intro h\n  exists @ChoiceBisim _ _ defs\n  constructor\n  · constructor; assumption\n  intro s1 s2 r μ\n  constructor\n  case left =>\n    intro s1' htr\n    cases r\n    case choice p q r hbisim =>\n      obtain ⟨rel, hr, hb⟩ := hbisim\n      cases htr\n      case choiceL a b c htr =>\n        obtain ⟨s2', htr2, hr2⟩ := hb.follow_fst hr htr\n        exact ⟨s2', Tr.choiceL htr2, .bisim (hb.le_bisimilarity _ _ hr2)⟩\n      case choiceR a b c htr =>\n        exists s1'\n        constructor\n        · apply Tr.choiceR htr\n        · constructor\n          apply HomBisimilarity.refl\n    case bisim hbisim =>\n      obtain ⟨rel, hr, hb⟩ := hbisim\n      obtain ⟨s2', htr2, hr2⟩ := hb.follow_fst hr htr\n      exists s2'\n      constructor\n      · assumption\n      constructor\n      apply hb.le_bisimilarity _ _ hr2\n  case right =>\n    intro s2' htr\n    cases r\n    case choice p q r hbisim =>\n      obtain ⟨rel, hr, hb⟩ := hbisim\n      cases htr\n      case choiceL a b c htr =>\n        obtain ⟨s1', htr1, hr1⟩ := hb.follow_snd hr htr\n        exact ⟨s1', Tr.choiceL htr1, .bisim (hb.le_bisimilarity _ _ hr1)⟩\n      case choiceR a b c htr =>\n        exists s2'\n        constructor\n        · apply Tr.choiceR htr\n        · constructor\n          apply HomBisimilarity.refl\n    case bisim hbisim =>\n      obtain ⟨rel, hr, hb⟩ := hbisim\n      obtain ⟨s1', htr1, hr1⟩ := hb.follow_snd hr htr\n      exists s1'\n      constructor\n      · assumption\n      · constructor\n        apply hb.le_bisimilarity _ _ hr1"
+      },
+      "operator": "simp?",
+      "query_hash": "83513701cdb5f6c80935ca98454adb1e2ee79129c95bd17b7979102e0bfc2d51",
+      "query_observation": {
+        "kind": "invalid",
+        "axioms": null,
+        "body_hash": "83513701cdb5f6c80935ca98454adb1e2ee79129c95bd17b7979102e0bfc2d51",
+        "tokens": 3,
+        "output_path": "/Users/sungwoo/lean_project/LeanAgent/docs/research/verifier-guided-agent/experiments/local-minimizer-2026-10-21/runs/09/v4.33.0-rc2/a001.combined.txt"
+      },
+      "outcome": "no_supported_suggestion"
+    },
+    {
+      "id": 2,
+      "round": 0,
+      "parent_hash": "d3d15bcdeae7327b50e983480869255c9a74af5b1369879519b5625abedc1f4f",
+      "site": {
+        "kind": "Lean.Parser.Tactic.tacticSeq1Indented",
+        "start": 5,
+        "end": 1531,
+        "depth": 5,
+        "text": "intro h\n  exists @ChoiceBisim _ _ defs\n  constructor\n  · constructor; assumption\n  intro s1 s2 r μ\n  constructor\n  case left =>\n    intro s1' htr\n    cases r\n    case choice p q r hbisim =>\n      obtain ⟨rel, hr, hb⟩ := hbisim\n      cases htr\n      case choiceL a b c htr =>\n        obtain ⟨s2', htr2, hr2⟩ := hb.follow_fst hr htr\n        exact ⟨s2', Tr.choiceL htr2, .bisim (hb.le_bisimilarity _ _ hr2)⟩\n      case choiceR a b c htr =>\n        exists s1'\n        constructor\n        · apply Tr.choiceR htr\n        · constructor\n          apply HomBisimilarity.refl\n    case bisim hbisim =>\n      obtain ⟨rel, hr, hb⟩ := hbisim\n      obtain ⟨s2', htr2, hr2⟩ := hb.follow_fst hr htr\n      exists s2'\n      constructor\n      · assumption\n      constructor\n      apply hb.le_bisimilarity _ _ hr2\n  case right =>\n    intro s2' htr\n    cases r\n    case choice p q r hbisim =>\n      obtain ⟨rel, hr, hb⟩ := hbisim\n      cases htr\n      case choiceL a b c htr =>\n        obtain ⟨s1', htr1, hr1⟩ := hb.follow_snd hr htr\n        exact ⟨s1', Tr.choiceL htr1, .bisim (hb.le_bisimilarity _ _ hr1)⟩\n      case choiceR a b c htr =>\n        exists s2'\n        constructor\n        · apply Tr.choiceR htr\n        · constructor\n          apply HomBisimilarity.refl\n    case bisim hbisim =>\n      obtain ⟨rel, hr, hb⟩ := hbisim\n      obtain ⟨s1', htr1, hr1⟩ := hb.follow_snd hr htr\n      exists s1'\n      constructor\n      · assumption\n      · constructor\n        apply hb.le_bisimilarity _ _ hr1"
+      },
+      "operator": "exact?",
+      "query_hash": "704efeeee592c3ee6480336bbb69c4f75dd795846a471cd26e230716ffdaed02",
+      "query_observation": {
+        "kind": "invalid",
+        "axioms": null,
+        "body_hash": "704efeeee592c3ee6480336bbb69c4f75dd795846a471cd26e230716ffdaed02",
+        "tokens": 3,
+        "output_path": "/Users/sungwoo/lean_project/LeanAgent/docs/research/verifier-guided-agent/experiments/local-minimizer-2026-10-21/runs/09/v4.33.0-rc2/a002.combined.txt"
+      },
+      "outcome": "no_supported_suggestion"
+    },
+    {
+      "id": 3,
+      "round": 0,
+      "parent_hash": "d3d15bcdeae7327b50e983480869255c9a74af5b1369879519b5625abedc1f4f",
+      "site": {
+        "kind": "Lean.Parser.Tactic.tacticSeq1Indented",
+        "start": 5,
+        "end": 1531,
+        "depth": 5,
+        "text": "intro h\n  exists @ChoiceBisim _ _ defs\n  constructor\n  · constructor; assumption\n  intro s1 s2 r μ\n  constructor\n  case left =>\n    intro s1' htr\n    cases r\n    case choice p q r hbisim =>\n      obtain ⟨rel, hr, hb⟩ := hbisim\n      cases htr\n      case choiceL a b c htr =>\n        obtain ⟨s2', htr2, hr2⟩ := hb.follow_fst hr htr\n        exact ⟨s2', Tr.choiceL htr2, .bisim (hb.le_bisimilarity _ _ hr2)⟩\n      case choiceR a b c htr =>\n        exists s1'\n        constructor\n        · apply Tr.choiceR htr\n        · constructor\n          apply HomBisimilarity.refl\n    case bisim hbisim =>\n      obtain ⟨rel, hr, hb⟩ := hbisim\n      obtain ⟨s2', htr2, hr2⟩ := hb.follow_fst hr htr\n      exists s2'\n      constructor\n      · assumption\n      constructor\n      apply hb.le_bisimilarity _ _ hr2\n  case right =>\n    intro s2' htr\n    cases r\n    case choice p q r hbisim =>\n      obtain ⟨rel, hr, hb⟩ := hbisim\n      cases htr\n      case choiceL a b c htr =>\n        obtain ⟨s1', htr1, hr1⟩ := hb.follow_snd hr htr\n        exact ⟨s1', Tr.choiceL htr1, .bisim (hb.le_bisimilarity _ _ hr1)⟩\n      case choiceR a b c htr =>\n        exists s2'\n        constructor\n        · apply Tr.choiceR htr\n        · constructor\n          apply HomBisimilarity.refl\n    case bisim hbisim =>\n      obtain ⟨rel, hr, hb⟩ := hbisim\n      obtain ⟨s1', htr1, hr1⟩ := hb.follow_snd hr htr\n      exists s1'\n      constructor\n      · assumption\n      · constructor\n        apply hb.le_bisimilarity _ _ hr1"
+      },
+      "operator": "aesop?",
+      "query_hash": "3ab5d63b1ebcc58bae8f30d1dbef3a02c84c282ccb119b20f18f96589494493a",
+      "query_observation": {
+        "kind": "invalid",
+        "axioms": null,
+        "body_hash": "3ab5d63b1ebcc58bae8f30d1dbef3a02c84c282ccb119b20f18f96589494493a",
+        "tokens": 3,
+        "output_path": "/Users/sungwoo/lean_project/LeanAgent/docs/research/verifier-guided-agent/experiments/local-minimizer-2026-10-21/runs/09/v4.33.0-rc2/a003.combined.txt"
+      },
+      "outcome": "no_supported_suggestion"
+    },
+    {
+      "id": 4,
+      "round": 0,
+      "parent_hash": "d3d15bcdeae7327b50e983480869255c9a74af5b1369879519b5625abedc1f4f",
+      "site": {
+        "kind": "Lean.Parser.Tactic.tacticSeq1Indented",
+        "start": 5,
+        "end": 1531,
+        "depth": 5,
+        "text": "intro h\n  exists @ChoiceBisim _ _ defs\n  constructor\n  · constructor; assumption\n  intro s1 s2 r μ\n  constructor\n  case left =>\n    intro s1' htr\n    cases r\n    case choice p q r hbisim =>\n      obtain ⟨rel, hr, hb⟩ := hbisim\n      cases htr\n      case choiceL a b c htr =>\n        obtain ⟨s2', htr2, hr2⟩ := hb.follow_fst hr htr\n        exact ⟨s2', Tr.choiceL htr2, .bisim (hb.le_bisimilarity _ _ hr2)⟩\n      case choiceR a b c htr =>\n        exists s1'\n        constructor\n        · apply Tr.choiceR htr\n        · constructor\n          apply HomBisimilarity.refl\n    case bisim hbisim =>\n      obtain ⟨rel, hr, hb⟩ := hbisim\n      obtain ⟨s2', htr2, hr2⟩ := hb.follow_fst hr htr\n      exists s2'\n      constructor\n      · assumption\n      constructor\n      apply hb.le_bisimilarity _ _ hr2\n  case right =>\n    intro s2' htr\n    cases r\n    case choice p q r hbisim =>\n      obtain ⟨rel, hr, hb⟩ := hbisim\n      cases htr\n      case choiceL a b c htr =>\n        obtain ⟨s1', htr1, hr1⟩ := hb.follow_snd hr htr\n        exact ⟨s1', Tr.choiceL htr1, .bisim (hb.le_bisimilarity _ _ hr1)⟩\n      case choiceR a b c htr =>\n        exists s2'\n        constructor\n        · apply Tr.choiceR htr\n        · constructor\n          apply HomBisimilarity.refl\n    case bisim hbisim =>\n      obtain ⟨rel, hr, hb⟩ := hbisim\n      obtain ⟨s1', htr1, hr1⟩ := hb.follow_snd hr htr\n      exists s1'\n      constructor\n      · assumption\n      · constructor\n        apply hb.le_bisimilarity _ _ hr1"
+      },
+      "operator": "assumption",
+      "query_hash": "ea7946017e7dc613f596a67325b00c2f343e6ffebaad6e57b49260b51187f06c",
+      "query_observation": {
+        "kind": "invalid",
+        "axioms": null,
+        "body_hash": "ea7946017e7dc613f596a67325b00c2f343e6ffebaad6e57b49260b51187f06c",
+        "tokens": 2,
+        "output_path": "/Users/sungwoo/lean_project/LeanAgent/docs/research/verifier-guided-agent/experiments/local-minimizer-2026-10-21/runs/09/v4.33.0-rc2/a004.combined.txt"
+      },
+      "outcome": "invalid"
+    },
+    {
+      "id": 5,
+      "round": 0,
+      "parent_hash": "d3d15bcdeae7327b50e983480869255c9a74af5b1369879519b5625abedc1f4f",
+      "site": {
+        "kind": "Lean.Parser.Tactic.tacticSeq1Indented",
+        "start": 5,
+        "end": 1531,
+        "depth": 5,
+        "text": "intro h\n  exists @ChoiceBisim _ _ defs\n  constructor\n  · constructor; assumption\n  intro s1 s2 r μ\n  constructor\n  case left =>\n    intro s1' htr\n    cases r\n    case choice p q r hbisim =>\n      obtain ⟨rel, hr, hb⟩ := hbisim\n      cases htr\n      case choiceL a b c htr =>\n        obtain ⟨s2', htr2, hr2⟩ := hb.follow_fst hr htr\n        exact ⟨s2', Tr.choiceL htr2, .bisim (hb.le_bisimilarity _ _ hr2)⟩\n      case choiceR a b c htr =>\n        exists s1'\n        constructor\n        · apply Tr.choiceR htr\n        · constructor\n          apply HomBisimilarity.refl\n    case bisim hbisim =>\n      obtain ⟨rel, hr, hb⟩ := hbisim\n      obtain ⟨s2', htr2, hr2⟩ := hb.follow_fst hr htr\n      exists s2'\n      constructor\n      · assumption\n      constructor\n      apply hb.le_bisimilarity _ _ hr2\n  case right =>\n    intro s2' htr\n    cases r\n    case choice p q r hbisim =>\n      obtain ⟨rel, hr, hb⟩ := hbisim\n      cases htr\n      case choiceL a b c htr =>\n        obtain ⟨s1', htr1, hr1⟩ := hb.follow_snd hr htr\n        exact ⟨s1', Tr.choiceL htr1, .bisim (hb.le_bisimilarity _ _ hr1)⟩\n      case choiceR a b c htr =>\n        exists s2'\n        constructor\n        · apply Tr.choiceR htr\n        · constructor\n          apply HomBisimilarity.refl\n    case bisim hbisim =>\n      obtain ⟨rel, hr, hb⟩ := hbisim\n      obtain ⟨s1', htr1, hr1⟩ := hb.follow_snd hr htr\n      exists s1'\n      constructor\n      · assumption\n      · constructor\n        apply hb.le_bisimilarity _ _ hr1"
+      },
+      "operator": "rfl",
+      "query_hash": "1f66f63cfdbcd2444e0f4e89907aec65e5445cb49f773bf2c2befba0b4b40f14",
+      "query_observation": {
+        "kind": "invalid",
+        "axioms": null,
+        "body_hash": "1f66f63cfdbcd2444e0f4e89907aec65e5445cb49f773bf2c2befba0b4b40f14",
+        "tokens": 2,
+        "output_path": "/Users/sungwoo/lean_project/LeanAgent/docs/research/verifier-guided-agent/experiments/local-minimizer-2026-10-21/runs/09/v4.33.0-rc2/a005.combined.txt"
+      },
+      "outcome": "invalid"
+    },
+    {
+      "id": 6,
+      "round": 0,
+      "parent_hash": "d3d15bcdeae7327b50e983480869255c9a74af5b1369879519b5625abedc1f4f",
+      "site": {
+        "kind": "Lean.Parser.Tactic.tacticSeq1Indented",
+        "start": 843,
+        "end": 1531,
+        "depth": 9,
+        "text": "intro s2' htr\n    cases r\n    case choice p q r hbisim =>\n      obtain ⟨rel, hr, hb⟩ := hbisim\n      cases htr\n      case choiceL a b c htr =>\n        obtain ⟨s1', htr1, hr1⟩ := hb.follow_snd hr htr\n        exact ⟨s1', Tr.choiceL htr1, .bisim (hb.le_bisimilarity _ _ hr1)⟩\n      case choiceR a b c htr =>\n        exists s2'\n        constructor\n        · apply Tr.choiceR htr\n        · constructor\n          apply HomBisimilarity.refl\n    case bisim hbisim =>\n      obtain ⟨rel, hr, hb⟩ := hbisim\n      obtain ⟨s1', htr1, hr1⟩ := hb.follow_snd hr htr\n      exists s1'\n      constructor\n      · assumption\n      · constructor\n        apply hb.le_bisimilarity _ _ hr1"
+      },
+      "operator": "simp?",
+      "query_hash": "41f9990324bdb2777757bc54edb48549d4c1e24344a835c208697216d9f906b8",
+      "query_observation": {
+        "kind": "invalid",
+        "axioms": null,
+        "body_hash": "41f9990324bdb2777757bc54edb48549d4c1e24344a835c208697216d9f906b8",
+        "tokens": 141,
+        "output_path": "/Users/sungwoo/lean_project/LeanAgent/docs/research/verifier-guided-agent/experiments/local-minimizer-2026-10-21/runs/09/v4.33.0-rc2/a006.combined.txt"
+      },
+      "outcome": "no_supported_suggestion"
+    },
+    {
+      "id": 7,
+      "round": 0,
+      "parent_hash": "d3d15bcdeae7327b50e983480869255c9a74af5b1369879519b5625abedc1f4f",
+      "site": {
+        "kind": "Lean.Parser.Tactic.tacticSeq1Indented",
+        "start": 843,
+        "end": 1531,
+        "depth": 9,
+        "text": "intro s2' htr\n    cases r\n    case choice p q r hbisim =>\n      obtain ⟨rel, hr, hb⟩ := hbisim\n      cases htr\n      case choiceL a b c htr =>\n        obtain ⟨s1', htr1, hr1⟩ := hb.follow_snd hr htr\n        exact ⟨s1', Tr.choiceL htr1, .bisim (hb.le_bisimilarity _ _ hr1)⟩\n      case choiceR a b c htr =>\n        exists s2'\n        constructor\n        · apply Tr.choiceR htr\n        · constructor\n          apply HomBisimilarity.refl\n    case bisim hbisim =>\n      obtain ⟨rel, hr, hb⟩ := hbisim\n      obtain ⟨s1', htr1, hr1⟩ := hb.follow_snd hr htr\n      exists s1'\n      constructor\n      · assumption\n      · constructor\n        apply hb.le_bisimilarity _ _ hr1"
+      },
+      "operator": "exact?",
+      "query_hash": "cf4a0ac5d9715ab7db6c6037db4c1570e886c3b7649978c4408fb5a421791b4a",
+      "query_observation": {
+        "kind": "invalid",
+        "axioms": null,
+        "body_hash": "cf4a0ac5d9715ab7db6c6037db4c1570e886c3b7649978c4408fb5a421791b4a",
+        "tokens": 141,
+        "output_path": "/Users/sungwoo/lean_project/LeanAgent/docs/research/verifier-guided-agent/experiments/local-minimizer-2026-10-21/runs/09/v4.33.0-rc2/a007.combined.txt"
+      },
+      "outcome": "no_supported_suggestion"
+    },
+    {
+      "id": 8,
+      "round": 0,
+      "parent_hash": "d3d15bcdeae7327b50e983480869255c9a74af5b1369879519b5625abedc1f4f",
+      "site": {
+        "kind": "Lean.Parser.Tactic.tacticSeq1Indented",
+        "start": 843,
+        "end": 1531,
+        "depth": 9,
+        "text": "intro s2' htr\n    cases r\n    case choice p q r hbisim =>\n      obtain ⟨rel, hr, hb⟩ := hbisim\n      cases htr\n      case choiceL a b c htr =>\n        obtain ⟨s1', htr1, hr1⟩ := hb.follow_snd hr htr\n        exact ⟨s1', Tr.choiceL htr1, .bisim (hb.le_bisimilarity _ _ hr1)⟩\n      case choiceR a b c htr =>\n        exists s2'\n        constructor\n        · apply Tr.choiceR htr\n        · constructor\n          apply HomBisimilarity.refl\n    case bisim hbisim =>\n      obtain ⟨rel, hr, hb⟩ := hbisim\n      obtain ⟨s1', htr1, hr1⟩ := hb.follow_snd hr htr\n      exists s1'\n      constructor\n      · assumption\n      · constructor\n        apply hb.le_bisimilarity _ _ hr1"
+      },
+      "operator": "aesop?",
+      "query_hash": "c47d8921e03aaa9213ed54b068c2b4acf4f1671767fb931cac2d51b8af32af57",
+      "query_observation": {
+        "kind": "invalid",
+        "axioms": null,
+        "body_hash": "c47d8921e03aaa9213ed54b068c2b4acf4f1671767fb931cac2d51b8af32af57",
+        "tokens": 141,
+        "output_path": "/Users/sungwoo/lean_project/LeanAgent/docs/research/verifier-guided-agent/experiments/local-minimizer-2026-10-21/runs/09/v4.33.0-rc2/a008.combined.txt"
+      },
+      "outcome": "no_supported_suggestion"
+    },
+    {
+      "id": 9,
+      "round": 0,
+      "parent_hash": "d3d15bcdeae7327b50e983480869255c9a74af5b1369879519b5625abedc1f4f",
+      "site": {
+        "kind": "Lean.Parser.Tactic.tacticSeq1Indented",
+        "start": 843,
+        "end": 1531,
+        "depth": 9,
+        "text": "intro s2' htr\n    cases r\n    case choice p q r hbisim =>\n      obtain ⟨rel, hr, hb⟩ := hbisim\n      cases htr\n      case choiceL a b c htr =>\n        obtain ⟨s1', htr1, hr1⟩ := hb.follow_snd hr htr\n        exact ⟨s1', Tr.choiceL htr1, .bisim (hb.le_bisimilarity _ _ hr1)⟩\n      case choiceR a b c htr =>\n        exists s2'\n        constructor\n        · apply Tr.choiceR htr\n        · constructor\n          apply HomBisimilarity.refl\n    case bisim hbisim =>\n      obtain ⟨rel, hr, hb⟩ := hbisim\n      obtain ⟨s1', htr1, hr1⟩ := hb.follow_snd hr htr\n      exists s1'\n      constructor\n      · assumption\n      · constructor\n        apply hb.le_bisimilarity _ _ hr1"
+      },
+      "operator": "assumption",
+      "query_hash": "7bac41832d303f3bf6315f2946b759c2e90984dfdf091edb96724ea882ddd839",
+      "query_observation": {
+        "kind": "invalid",
+        "axioms": null,
+        "body_hash": "7bac41832d303f3bf6315f2946b759c2e90984dfdf091edb96724ea882ddd839",
+        "tokens": 140,
+        "output_path": "/Users/sungwoo/lean_project/LeanAgent/docs/research/verifier-guided-agent/experiments/local-minimizer-2026-10-21/runs/09/v4.33.0-rc2/a009.combined.txt"
+      },
+      "outcome": "invalid"
+    },
+    {
+      "id": 10,
+      "round": 0,
+      "parent_hash": "d3d15bcdeae7327b50e983480869255c9a74af5b1369879519b5625abedc1f4f",
+      "site": {
+        "kind": "Lean.Parser.Tactic.tacticSeq1Indented",
+        "start": 843,
+        "end": 1531,
+        "depth": 9,
+        "text": "intro s2' htr\n    cases r\n    case choice p q r hbisim =>\n      obtain ⟨rel, hr, hb⟩ := hbisim\n      cases htr\n      case choiceL a b c htr =>\n        obtain ⟨s1', htr1, hr1⟩ := hb.follow_snd hr htr\n        exact ⟨s1', Tr.choiceL htr1, .bisim (hb.le_bisimilarity _ _ hr1)⟩\n      case choiceR a b c htr =>\n        exists s2'\n        constructor\n        · apply Tr.choiceR htr\n        · constructor\n          apply HomBisimilarity.refl\n    case bisim hbisim =>\n      obtain ⟨rel, hr, hb⟩ := hbisim\n      obtain ⟨s1', htr1, hr1⟩ := hb.follow_snd hr htr\n      exists s1'\n      constructor\n      · assumption\n      · constructor\n        apply hb.le_bisimilarity _ _ hr1"
+      },
+      "operator": "rfl",
+      "query_hash": "89ae261070aa81bfc86b919965aa91c69748fc96340dea05cef3a6772ce6b949",
+      "query_observation": {
+        "kind": "invalid",
+        "axioms": null,
+        "body_hash": "89ae261070aa81bfc86b919965aa91c69748fc96340dea05cef3a6772ce6b949",
+        "tokens": 140,
+        "output_path": "/Users/sungwoo/lean_project/LeanAgent/docs/research/verifier-guided-agent/experiments/local-minimizer-2026-10-21/runs/09/v4.33.0-rc2/a010.combined.txt"
+      },
+      "outcome": "invalid"
+    },
+    {
+      "id": 11,
+      "round": 0,
+      "parent_hash": "d3d15bcdeae7327b50e983480869255c9a74af5b1369879519b5625abedc1f4f",
+      "site": {
+        "kind": "Lean.Parser.Tactic.exact",
+        "start": 354,
+        "end": 423,
+        "depth": 19,
+        "text": "exact ⟨s2', Tr.choiceL htr2, .bisim (hb.le_bisimilarity _ _ hr2)⟩"
+      },
+      "operator": "delete",
+      "query_hash": "abf9b66a70a3dfcd335bbfd5c72568502786fed5c58533566e9cba6fdcd3f848",
+      "query_observation": {
+        "kind": "invalid",
+        "axioms": null,
+        "body_hash": "abf9b66a70a3dfcd335bbfd5c72568502786fed5c58533566e9cba6fdcd3f848",
+        "tokens": 238,
+        "output_path": "/Users/sungwoo/lean_project/LeanAgent/docs/research/verifier-guided-agent/experiments/local-minimizer-2026-10-21/runs/09/v4.33.0-rc2/a011.combined.txt"
+      },
+      "outcome": "invalid"
+    },
+    {
+      "id": 12,
+      "round": 0,
+      "parent_hash": "d3d15bcdeae7327b50e983480869255c9a74af5b1369879519b5625abedc1f4f",
+      "site": {
+        "kind": "Lean.Parser.Tactic.exact",
+        "start": 354,
+        "end": 423,
+        "depth": 19,
+        "text": "exact ⟨s2', Tr.choiceL htr2, .bisim (hb.le_bisimilarity _ _ hr2)⟩"
+      },
+      "operator": "simp?",
+      "query_hash": "651bc0dae9464afafd65dd8dee0f9480ae5c5b799c62ee0f57c871471656bda7",
+      "query_observation": {
+        "kind": "invalid",
+        "axioms": null,
+        "body_hash": "651bc0dae9464afafd65dd8dee0f9480ae5c5b799c62ee0f57c871471656bda7",
+        "tokens": 240,
+        "output_path": "/Users/sungwoo/lean_project/LeanAgent/docs/research/verifier-guided-agent/experiments/local-minimizer-2026-10-21/runs/09/v4.33.0-rc2/a012.combined.txt"
+      },
+      "outcome": "no_supported_suggestion"
+    },
+    {
+      "id": 13,
+      "round": 0,
+      "parent_hash": "d3d15bcdeae7327b50e983480869255c9a74af5b1369879519b5625abedc1f4f",
+      "site": {
+        "kind": "Lean.Parser.Tactic.exact",
+        "start": 354,
+        "end": 423,
+        "depth": 19,
+        "text": "exact ⟨s2', Tr.choiceL htr2, .bisim (hb.le_bisimilarity _ _ hr2)⟩"
+      },
+      "operator": "exact?",
+      "query_hash": "3971eab13364fb42a54ce7ef0a886171548b7294a591c01ac6ef3dfca77580ea",
+      "query_observation": {
+        "kind": "invalid",
+        "axioms": null,
+        "body_hash": "3971eab13364fb42a54ce7ef0a886171548b7294a591c01ac6ef3dfca77580ea",
+        "tokens": 240,
+        "output_path": "/Users/sungwoo/lean_project/LeanAgent/docs/research/verifier-guided-agent/experiments/local-minimizer-2026-10-21/runs/09/v4.33.0-rc2/a013.combined.txt"
+      },
+      "outcome": "no_supported_suggestion"
+    },
+    {
+      "id": 14,
+      "round": 0,
+      "parent_hash": "d3d15bcdeae7327b50e983480869255c9a74af5b1369879519b5625abedc1f4f",
+      "site": {
+        "kind": "Lean.Parser.Tactic.exact",
+        "start": 354,
+        "end": 423,
+        "depth": 19,
+        "text": "exact ⟨s2', Tr.choiceL htr2, .bisim (hb.le_bisimilarity _ _ hr2)⟩"
+      },
+      "operator": "aesop?",
+      "query_hash": "2440ab453fc6e73a26399853818520e7c668ed9c50691b3f8e25c8206f395c60",
+      "query_observation": {
+        "kind": "invalid",
+        "axioms": null,
+        "body_hash": "2440ab453fc6e73a26399853818520e7c668ed9c50691b3f8e25c8206f395c60",
+        "tokens": 240,
+        "output_path": "/Users/sungwoo/lean_project/LeanAgent/docs/research/verifier-guided-agent/experiments/local-minimizer-2026-10-21/runs/09/v4.33.0-rc2/a014.combined.txt"
+      },
+      "outcome": "no_supported_suggestion"
+    },
+    {
+      "id": 15,
+      "round": 0,
+      "parent_hash": "d3d15bcdeae7327b50e983480869255c9a74af5b1369879519b5625abedc1f4f",
+      "site": {
+        "kind": "Lean.Parser.Tactic.exact",
+        "start": 354,
+        "end": 423,
+        "depth": 19,
+        "text": "exact ⟨s2', Tr.choiceL htr2, .bisim (hb.le_bisimilarity _ _ hr2)⟩"
+      },
+      "operator": "assumption",
+      "query_hash": "a30d0c6785a416ea34f5b0ae42728d8aab7e5bad9e47e04017265f8919608a4c",
+      "query_observation": {
+        "kind": "invalid",
+        "axioms": null,
+        "body_hash": "a30d0c6785a416ea34f5b0ae42728d8aab7e5bad9e47e04017265f8919608a4c",
+        "tokens": 239,
+        "output_path": "/Users/sungwoo/lean_project/LeanAgent/docs/research/verifier-guided-agent/experiments/local-minimizer-2026-10-21/runs/09/v4.33.0-rc2/a015.combined.txt"
+      },
+      "outcome": "invalid"
+    },
+    {
+      "id": 16,
+      "round": 0,
+      "parent_hash": "d3d15bcdeae7327b50e983480869255c9a74af5b1369879519b5625abedc1f4f",
+      "site": {
+        "kind": "Lean.Parser.Tactic.exact",
+        "start": 354,
+        "end": 423,
+        "depth": 19,
+        "text": "exact ⟨s2', Tr.choiceL htr2, .bisim (hb.le_bisimilarity _ _ hr2)⟩"
+      },
+      "operator": "rfl",
+      "query_hash": "10cf9771a4a452ff650c8cba48b0af8e519fc42bad3be4d898163941d7d15c8b",
+      "query_observation": {
+        "kind": "invalid",
+        "axioms": null,
+        "body_hash": "10cf9771a4a452ff650c8cba48b0af8e519fc42bad3be4d898163941d7d15c8b",
+        "tokens": 239,
+        "output_path": "/Users/sungwoo/lean_project/LeanAgent/docs/research/verifier-guided-agent/experiments/local-minimizer-2026-10-21/runs/09/v4.33.0-rc2/a016.combined.txt"
+      },
+      "outcome": "invalid"
+    },
+    {
+      "id": 17,
+      "round": 0,
+      "parent_hash": "d3d15bcdeae7327b50e983480869255c9a74af5b1369879519b5625abedc1f4f",
+      "site": {
+        "kind": "Lean.Parser.Tactic.exact",
+        "start": 1058,
+        "end": 1127,
+        "depth": 19,
+        "text": "exact ⟨s1', Tr.choiceL htr1, .bisim (hb.le_bisimilarity _ _ hr1)⟩"
+      },
+      "operator": "delete",
+      "query_hash": "cae838bb8c3ebb4129741dd08f4513797079e7891b8060643ab55f47be39552a",
+      "query_observation": {
+        "kind": "invalid",
+        "axioms": null,
+        "body_hash": "cae838bb8c3ebb4129741dd08f4513797079e7891b8060643ab55f47be39552a",
+        "tokens": 238,
+        "output_path": "/Users/sungwoo/lean_project/LeanAgent/docs/research/verifier-guided-agent/experiments/local-minimizer-2026-10-21/runs/09/v4.33.0-rc2/a017.combined.txt"
+      },
+      "outcome": "invalid"
+    },
+    {
+      "id": 18,
+      "round": 0,
+      "parent_hash": "d3d15bcdeae7327b50e983480869255c9a74af5b1369879519b5625abedc1f4f",
+      "site": {
+        "kind": "Lean.Parser.Tactic.exact",
+        "start": 1058,
+        "end": 1127,
+        "depth": 19,
+        "text": "exact ⟨s1', Tr.choiceL htr1, .bisim (hb.le_bisimilarity _ _ hr1)⟩"
+      },
+      "operator": "simp?",
+      "query_hash": "7a673046573d4a246b17e9ff2f4f084894af726e3683c1385bf714cdde592806",
+      "query_observation": {
+        "kind": "invalid",
+        "axioms": null,
+        "body_hash": "7a673046573d4a246b17e9ff2f4f084894af726e3683c1385bf714cdde592806",
+        "tokens": 240,
+        "output_path": "/Users/sungwoo/lean_project/LeanAgent/docs/research/verifier-guided-agent/experiments/local-minimizer-2026-10-21/runs/09/v4.33.0-rc2/a018.combined.txt"
+      },
+      "outcome": "no_supported_suggestion"
+    },
+    {
+      "id": 19,
+      "round": 0,
+      "parent_hash": "d3d15bcdeae7327b50e983480869255c9a74af5b1369879519b5625abedc1f4f",
+      "site": {
+        "kind": "Lean.Parser.Tactic.exact",
+        "start": 1058,
+        "end": 1127,
+        "depth": 19,
+        "text": "exact ⟨s1', Tr.choiceL htr1, .bisim (hb.le_bisimilarity _ _ hr1)⟩"
+      },
+      "operator": "exact?",
+      "query_hash": "b11f45adf2a6fe221263e6e317e4e3768a24ad21cf11bf853db4a8b8b3fefa6b",
+      "query_observation": {
+        "kind": "invalid",
+        "axioms": null,
+        "body_hash": "b11f45adf2a6fe221263e6e317e4e3768a24ad21cf11bf853db4a8b8b3fefa6b",
+        "tokens": 240,
+        "output_path": "/Users/sungwoo/lean_project/LeanAgent/docs/research/verifier-guided-agent/experiments/local-minimizer-2026-10-21/runs/09/v4.33.0-rc2/a019.combined.txt"
+      },
+      "outcome": "no_supported_suggestion"
+    },
+    {
+      "id": 20,
+      "round": 0,
+      "parent_hash": "d3d15bcdeae7327b50e983480869255c9a74af5b1369879519b5625abedc1f4f",
+      "site": {
+        "kind": "Lean.Parser.Tactic.exact",
+        "start": 1058,
+        "end": 1127,
+        "depth": 19,
+        "text": "exact ⟨s1', Tr.choiceL htr1, .bisim (hb.le_bisimilarity _ _ hr1)⟩"
+      },
+      "operator": "aesop?",
+      "query_hash": "26f524f94e6a2e206fe36310ab199bb17f79b344c167eef61acc4f23b26b2726",
+      "query_observation": {
+        "kind": "invalid",
+        "axioms": null,
+        "body_hash": "26f524f94e6a2e206fe36310ab199bb17f79b344c167eef61acc4f23b26b2726",
+        "tokens": 240,
+        "output_path": "/Users/sungwoo/lean_project/LeanAgent/docs/research/verifier-guided-agent/experiments/local-minimizer-2026-10-21/runs/09/v4.33.0-rc2/a020.combined.txt"
+      },
+      "outcome": "no_supported_suggestion"
+    },
+    {
+      "id": 21,
+      "round": 0,
+      "parent_hash": "d3d15bcdeae7327b50e983480869255c9a74af5b1369879519b5625abedc1f4f",
+      "site": {
+        "kind": "Lean.Parser.Tactic.exact",
+        "start": 1058,
+        "end": 1127,
+        "depth": 19,
+        "text": "exact ⟨s1', Tr.choiceL htr1, .bisim (hb.le_bisimilarity _ _ hr1)⟩"
+      },
+      "operator": "assumption",
+      "query_hash": "0ea1350c149ea2c356264932687bdf3cd6c9c39134781702594e51b5bdbdd724",
+      "query_observation": {
+        "kind": "invalid",
+        "axioms": null,
+        "body_hash": "0ea1350c149ea2c356264932687bdf3cd6c9c39134781702594e51b5bdbdd724",
+        "tokens": 239,
+        "output_path": "/Users/sungwoo/lean_project/LeanAgent/docs/research/verifier-guided-agent/experiments/local-minimizer-2026-10-21/runs/09/v4.33.0-rc2/a021.combined.txt"
+      },
+      "outcome": "invalid"
+    },
+    {
+      "id": 22,
+      "round": 0,
+      "parent_hash": "d3d15bcdeae7327b50e983480869255c9a74af5b1369879519b5625abedc1f4f",
+      "site": {
+        "kind": "Lean.Parser.Tactic.exact",
+        "start": 1058,
+        "end": 1127,
+        "depth": 19,
+        "text": "exact ⟨s1', Tr.choiceL htr1, .bisim (hb.le_bisimilarity _ _ hr1)⟩"
+      },
+      "operator": "rfl",
+      "query_hash": "358b335cf70085b0248e4b03c149603176a62d7102fcdb6f24d3f67a5cb51631",
+      "query_observation": {
+        "kind": "invalid",
+        "axioms": null,
+        "body_hash": "358b335cf70085b0248e4b03c149603176a62d7102fcdb6f24d3f67a5cb51631",
+        "tokens": 239,
+        "output_path": "/Users/sungwoo/lean_project/LeanAgent/docs/research/verifier-guided-agent/experiments/local-minimizer-2026-10-21/runs/09/v4.33.0-rc2/a022.combined.txt"
+      },
+      "outcome": "invalid"
+    }
+  ],
+  "pool": []
+}
