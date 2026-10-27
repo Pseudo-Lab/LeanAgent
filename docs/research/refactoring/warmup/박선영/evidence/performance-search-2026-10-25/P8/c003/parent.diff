@@ -1,0 +1,52 @@
+--- /Users/parksunyoung/Desktop/study/LeanAgent/docs/research/refactoring/warmup/박선영/evidence/performance-search-2026-10-25/P8/c001/candidate.lean
++++ docs/research/refactoring/warmup/박선영/evidence/performance-search-2026-10-25/P8/c003/candidate.lean
+@@ -4,22 +4,20 @@
+   case refl a => exact ⟨a₂, h₂, .refl a₂⟩
+   case par a a' b b' ha' hb' iha ihb =>
+     cases h₂
+-    case refl => exact ⟨a' ⬝ b', .refl _, .par ha' hb'⟩
++    case refl => exact ⟨_, .refl _, .par ha' hb'⟩
+     case par a'' b'' ha'' hb'' =>
+       obtain ⟨a₃, ha₁, ha₂⟩ := iha ha''
+       obtain ⟨b₃, hb₁, hb₂⟩ := ihb hb''
+-      exact ⟨a₃ ⬝ b₃, .par ha₁ hb₁, .par ha₂ hb₂⟩
++      exact ⟨_, .par ha₁ hb₁, .par ha₂ hb₂⟩
+     case red_I =>
+       rw [I_irreducible a' ha']
+       exact ⟨b', .red_I b', hb'⟩
+     case red_K =>
+-      obtain ⟨d, hd, he⟩ := Ka_irreducible _ a' ha'
+-      rw [he]
++      obtain ⟨d, hd, rfl⟩ := Ka_irreducible _ a' ha'
+       exact ⟨d, .red_K d b', hd⟩
+     case red_S a c =>
+-      obtain ⟨a'', c', ha, hc, he⟩ := Sab_irreducible a c a' ha'
+-      rw [he]
+-      exact ⟨a'' ⬝ b' ⬝ (c' ⬝ b'), .red_S a'' c' b',
++      obtain ⟨a'', c', ha, hc, rfl⟩ := Sab_irreducible a c a' ha'
++      exact ⟨_, .red_S a'' c' b',
+         .par (.par ha hb') (.par hc hb')⟩
+   case red_I a =>
+     cases h₂
+@@ -32,16 +30,14 @@
+     cases h₂
+     case refl => exact ⟨a, .refl a, .red_K a c⟩
+     case par a' c' ha hc =>
+-      obtain ⟨d, hd, he⟩ := Ka_irreducible a a' ha
+-      rw [he]
++      obtain ⟨d, hd, rfl⟩ := Ka_irreducible a a' ha
+       exact ⟨d, hd, .red_K d c'⟩
+     case red_K => exact ⟨a, .refl a, .refl a⟩
+   case red_S a b c =>
+     cases h₂
+-    case refl => exact ⟨a ⬝ c ⬝ (b ⬝ c), .refl _, .red_S a b c⟩
++    case refl => exact ⟨_, .refl _, .red_S a b c⟩
+     case par d c' hd hc =>
+-      obtain ⟨a', b', ha, hb, he⟩ := Sab_irreducible a b d hd
+-      rw [he]
+-      exact ⟨a' ⬝ c' ⬝ (b' ⬝ c'),
++      obtain ⟨a', b', ha, hb, rfl⟩ := Sab_irreducible a b d hd
++      exact ⟨_,
+         .par (.par ha hc) (.par hb hc), .red_S a' b' c'⟩
+-    case red_S => exact ⟨a ⬝ c ⬝ (b ⬝ c), .refl _, .refl _⟩
++    case red_S => exact ⟨_, .refl _, .refl _⟩

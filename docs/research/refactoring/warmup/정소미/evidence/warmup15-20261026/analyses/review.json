@@ -1,0 +1,60 @@
+{
+  "scope": "Reproduction instructions, selection rules, and saved measurement evidence; not a proof of global optimality.",
+  "routing": [
+    "shower",
+    "mandela",
+    "factchk",
+    "ssotize audit only",
+    "re0"
+  ],
+  "findings": [
+    {
+      "finding": "A fresh reader lacked the checkout and environment preparation steps.",
+      "resolution": "README now identifies the working folder, two checker revisions, explicit pinned CSLib setup, result paths, and selection replay command."
+    },
+    {
+      "finding": "P09 secondary versions rechecked the selected proof but did not freshly remeasure the original; the selector initially assumed original records existed.",
+      "resolution": "Selector requires paired controls on the primary version; secondary correctness checks preserve originalRemeasured=false and the source note."
+    },
+    {
+      "finding": "A workflow can complete even though an experimental candidate fails.",
+      "resolution": "Controls and per-candidate validity/three-run records govern scores. experiment.py adds controlsValid, and the selector refuses missing primary controls."
+    },
+    {
+      "finding": "Previously selected proofs and newly edited proofs could be credited together.",
+      "resolution": "Starting snapshot and author/source manifest are preserved. All claimed additional points use the paired starting proof; retained proofs receive zero additional points."
+    },
+    {
+      "finding": "Custom P12 validation and chosen benchmark cases could be mistaken for an official or held-out model evaluation.",
+      "resolution": "P12 remains a separate protocol and is excluded from the common mean; no model success-rate or $3-compliance claim."
+    }
+  ],
+  "independentNativeAudit": {
+    "scope": "P07-P09",
+    "results": 43,
+    "leanSources": 121,
+    "logs": 121,
+    "reportedMismatches": 0,
+    "note": "Fresh-context auditor reported byte reconstruction against pinned git sources, frozen runtime identity, raw/scaled heartbeat and allowed axioms. Its final formatted response was interrupted by account usage limits; this records only the concrete completed checks it delivered."
+  },
+  "notConsolidated": "Prior dated research reports and dashboard results remain historical snapshots; only new report/readme references are added.",
+  "portabilityAudit": "No stack-neutral portability claim; the runbook explicitly requires pinned Lean projects and the recorded Arena checkout.",
+  "integrationCheck": {
+    "artifact": "raw/replay-verify-final-p09.tar.gz",
+    "problem": 9,
+    "version": "v4.32.0",
+    "proofs": [
+      "original",
+      "starting",
+      "06-expected-relation-witnesses"
+    ],
+    "allValid": true,
+    "controlsValid": true,
+    "repetitionsEach": 1,
+    "purpose": "Exercise the final portable adapter; separate 3-run data determines selection."
+  },
+  "negativeSelectionCheck": {
+    "artifact": "analyses/selection-negative-check.json",
+    "finding": "Selection stopped when a stronger primary-valid candidate still had pending designated versions."
+  }
+}

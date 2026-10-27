@@ -1,0 +1,477 @@
+{
+  "id": "R02",
+  "seed_id": "warmup-2:CallElimCorrect.extractedOldExprInVars",
+  "source_kind": "arena_derived",
+  "source_path": "benchmark_data_warmup.jsonl line 2; Strata/Transform/CallElimCorrect.lean @ 451e5f047 (git HEAD copy, uncommitted patch excluded)",
+  "decl_full_name": "CallElimCorrect.extractedOldExprInVars",
+  "environment": {
+    "dir": "/Users/sungwoo/lean_project/refactor_arena/strata",
+    "lean_version": "Lean (version 4.26.0, arm64-apple-darwin24.6.0, commit d8204c9fd894f91bbb2cdfec5912ec8196fd8562, Release)",
+    "lake_version": "Lake version 5.0.0-src+d8204c9 (Lean version 4.26.0)",
+    "lean_toolchain": "leanprover/lean4:v4.26.0",
+    "repo_commit": "451e5f047bafa010d178856db76c00029bfa4d7f",
+    "lake_manifest_sha256": "5aab41f14cc55b5049ae81535506b6998bfadd9d983af6130fa92f4a39bd244c",
+    "lakefile_sha256": {
+      "lakefile.toml": "5c0abe83aaa82d837d50cf987102ff3138a15aec988912f06166a39e5ee578ae"
+    },
+    "uncommitted_status": [
+      "M Strata/Transform/CallElimCorrect.lean"
+    ],
+    "uncommitted_diff_sha256": "4f46664d01716151ce17d064218040e096c82504d719e877901e39271b9c8d4c",
+    "packages": {
+      "plausible": "b949552f6ca8e223f424b3e3b33f74185bbf1179"
+    },
+    "has_aesop": false,
+    "environment_hash": "b2c42272ae50e12d1472e380395e82dd422746e97da291bdb2684a96c2ba850d",
+    "project": "strata"
+  },
+  "immutable_context_hash": "8f68a74c45c727571014efbf19aeb25ae703d2feefdc31795331361fcfd4c901",
+  "statement": "open OldExpressions in\ntheorem extractedOldExprInVars :\n  NormalizedOldExpr post →\n  (extractOldExprVars post).Subset\n  (Imperative.HasVarsPure.getVars post)",
+  "original_body": "by\n  intros Hnorm\n  induction post <;>\n    simp [Imperative.HasVarsPure.getVars, extractOldExprVars,\n          Lambda.LExpr.LExpr.getVars] at * <;>\n    try simp_all\n  case app fn e fn_ih e_ih =>\n    unfold extractOldExprVars\n    split\n    . simp [Lambda.LExpr.LExpr.getVars]\n      intros x Hin\n      exact Hin\n    . next Hfalse =>\n      cases Hnorm with\n      | app H1 H2 Hn =>\n      exfalso\n      specialize Hn ?_\n      constructor\n      cases Hn\n      apply Hfalse\n      rfl\n    . cases Hnorm with\n      | app H1 H2 Hn =>\n      apply List.Subset.app\n      . apply List.Subset.trans\n        apply fn_ih\n        exact H1\n        intros x Hin\n        simp_all\n      . apply List.Subset.trans\n        apply e_ih\n        exact H2\n        intros x Hin\n        simp_all\n  case abs ih =>\n    cases Hnorm\n    apply ih <;> assumption\n  case quant trih eih =>\n    cases Hnorm\n    rename_i e_normalized\n    rename_i tr_normalized\n    rename_i tr e ty k\n    apply List.Subset.app\n    . apply List.Subset.trans\n      apply trih <;> assumption\n      intros x Hin\n      simp_all\n    . apply List.Subset.trans\n      apply eih <;> assumption\n      intros x Hin\n      simp_all\n  case ite cih tih eih =>\n    cases Hnorm\n    apply List.Subset.app\n    . apply List.Subset.trans\n      apply cih <;> assumption\n      intros x Hin\n      simp_all\n    apply List.Subset.app\n    . apply List.Subset.trans\n      apply tih <;> assumption\n      intros x Hin\n      simp_all\n    . apply List.Subset.trans\n      apply eih <;> assumption\n      intros x Hin\n      simp_all\n  case eq ih1 ih2 =>\n    cases Hnorm\n    apply List.Subset.app\n    . apply List.Subset.trans\n      apply ih1 <;> assumption\n      intros x Hin\n      simp_all\n    . apply List.Subset.trans\n      apply ih2 <;> assumption\n      intros x Hin\n      simp_all",
+  "original_body_sha256": "f7b78d9ba7d8f5b613b96d15f84f6a6403027cf3ba98028f1bc9792395588088",
+  "body_range": {
+    "body_start_char": 91247,
+    "body_end_char": 93038,
+    "body_first_line": 2862,
+    "decl_first_line": 2858
+  },
+  "candidate_body": "by\n  intro post Hnorm\n  induction post <;>\n    simp [Imperative.HasVarsPure.getVars, extractOldExprVars,\n          Lambda.LExpr.LExpr.getVars] at * <;>\n    try simp_all\n  case app fn e fn_ih e_ih =>\n    unfold extractOldExprVars\n    split\n    . simp [Lambda.LExpr.LExpr.getVars]\n      intros x Hin\n      exact Hin\n    . next Hfalse =>\n      cases Hnorm with\n      | app H1 H2 Hn =>\n      exfalso\n      specialize Hn ?_\n      constructor\n      cases Hn\n      apply Hfalse\n      rfl\n    . cases Hnorm with\n      | app H1 H2 Hn =>\n      apply List.Subset.app\n      . apply List.Subset.trans\n        apply fn_ih\n        exact H1\n        intros x Hin\n        simp_all\n      . apply List.Subset.trans\n        apply e_ih\n        exact H2\n        intros x Hin\n        simp_all\n  case abs ih =>\n    cases Hnorm\n    apply ih <;> assumption\n  case quant trih eih =>\n    cases Hnorm\n    rename_i e_normalized\n    rename_i tr_normalized\n    rename_i tr e ty k\n    apply List.Subset.app\n    . apply List.Subset.trans\n      apply trih <;> assumption\n      intros x Hin\n      simp_all\n    . apply List.Subset.trans\n      apply eih <;> assumption\n      intros x Hin\n      simp_all\n  case ite cih tih eih =>\n    cases Hnorm\n    apply List.Subset.app\n    . apply List.Subset.trans\n      apply cih <;> assumption\n      intros x Hin\n      simp_all\n    apply List.Subset.app\n    . apply List.Subset.trans\n      apply tih <;> assumption\n      intros x Hin\n      simp_all\n    . apply List.Subset.trans\n      apply eih <;> assumption\n      intros x Hin\n      simp_all\n  case eq ih1 ih2 =>\n    cases Hnorm\n    apply List.Subset.app\n    . apply List.Subset.trans\n      apply ih1 <;> assumption\n      intros x Hin\n      simp_all\n    . apply List.Subset.trans\n      apply ih2 <;> assumption\n      intros x Hin\n      simp_all",
+  "candidate_hash": "57d7a98a7e540cb59622bd8cbf66c812c56f08692babe2302f5f73b2c9256709",
+  "expected_intent": "Refactorer believed the auto-bound implicit `post` must be introduced before the hypothesis and rewrote `intros Hnorm` as `intro post Hnorm` (post is already a binder of the statement).",
+  "baseline_check": {
+    "kind": "valid",
+    "exit_code": 0,
+    "axioms": [
+      "propext",
+      "Quot.sound"
+    ],
+    "n_errors_in_target": 0,
+    "first_error": null,
+    "errors_outside_target": 0,
+    "run": "cases/R02/logs/00_baseline.result.json",
+    "wall_s_local": 12.34
+  },
+  "observed_result": "invalid",
+  "candidate_check": {
+    "kind": "invalid",
+    "exit_code": 1,
+    "axioms": [
+      "propext",
+      "sorryAx",
+      "Quot.sound"
+    ],
+    "n_errors_in_target": 6,
+    "first_error": {
+      "line": 2872,
+      "col": 6,
+      "message": "No goals to be solved"
+    },
+    "errors_outside_target": 0,
+    "run": "cases/R02/logs/01_candidate.result.json",
+    "wall_s_local": 8.24
+  },
+  "diagnostics": [
+    {
+      "severity": "error",
+      "file_line": 2872,
+      "col": 6,
+      "body_line": 10,
+      "message": "No goals to be solved"
+    },
+    {
+      "severity": "error",
+      "file_line": 2876,
+      "col": 6,
+      "body_line": 14,
+      "message": "Invalid alternative name `app`: Expected `mk`"
+    },
+    {
+      "severity": "error",
+      "file_line": 2875,
+      "col": 6,
+      "body_line": 13,
+      "message": "Alternative `mk` has not been provided"
+    },
+    {
+      "severity": "error",
+      "file_line": 2884,
+      "col": 6,
+      "body_line": 22,
+      "message": "Invalid alternative name `app`: Expected `mk`"
+    },
+    {
+      "severity": "error",
+      "file_line": 2883,
+      "col": 6,
+      "body_line": 21,
+      "message": "Alternative `mk` has not been provided"
+    },
+    {
+      "severity": "error",
+      "file_line": 2896,
+      "col": 2,
+      "body_line": 34,
+      "message": "Case tag `abs` not found.\n\nHint: Available tags:\n  • `quant`: a̵b̵s̵q̲u̲a̲n̲t̲\n  • `ite`: a̵b̵s̵i̲t̲e̲\n  • `eq`: a̵b̵s̵e̲q̲"
+    }
+  ],
+  "pre_error_state": {
+    "source": "instrumented_trace_state_run",
+    "trusted": false,
+    "untrusted_reason": "no clean-prefix replay certificate / state digest (Lean adapter not implemented)",
+    "file_line": 2872,
+    "body_line": 10,
+    "goals_text": "",
+    "run": "cases/R02/logs/02_trace_state.result.json"
+  },
+  "pre_error_state_null_reason": null,
+  "inferred_state": null,
+  "localization": {
+    "scope": "tactic",
+    "file_line": 2872,
+    "col": 6,
+    "body_line": 10,
+    "line_text": "      intros x Hin",
+    "method": "text heuristic on first error position (not a parser)",
+    "trusted_pre_state": false
+  },
+  "local_attempts": [
+    {
+      "n": 1,
+      "op": "delete_span",
+      "tactic": null,
+      "span_body_lines": [
+        10,
+        10
+      ],
+      "span_text": "      intros x Hin",
+      "check": {
+        "kind": "invalid",
+        "exit_code": 1,
+        "axioms": [
+          "propext",
+          "sorryAx",
+          "Quot.sound"
+        ],
+        "n_errors_in_target": 6,
+        "first_error": {
+          "line": 2872,
+          "col": 6,
+          "message": "No goals to be solved"
+        },
+        "errors_outside_target": 0,
+        "run": "cases/R02/attempts/01_delete_span_none.result.json",
+        "wall_s_local": 7.64
+      },
+      "local_error_cleared": false,
+      "full_replay": "invalid",
+      "result": "failed"
+    },
+    {
+      "n": 2,
+      "op": "replace_span",
+      "tactic": "assumption",
+      "span_body_lines": [
+        10,
+        10
+      ],
+      "span_text": "      intros x Hin",
+      "check": {
+        "kind": "invalid",
+        "exit_code": 1,
+        "axioms": [
+          "propext",
+          "sorryAx",
+          "Quot.sound"
+        ],
+        "n_errors_in_target": 6,
+        "first_error": {
+          "line": 2872,
+          "col": 6,
+          "message": "No goals to be solved"
+        },
+        "errors_outside_target": 0,
+        "run": "cases/R02/attempts/02_replace_span_assumption.result.json",
+        "wall_s_local": 7.51
+      },
+      "local_error_cleared": false,
+      "full_replay": "invalid",
+      "result": "failed"
+    },
+    {
+      "n": 3,
+      "op": "replace_span",
+      "tactic": "rfl",
+      "span_body_lines": [
+        10,
+        10
+      ],
+      "span_text": "      intros x Hin",
+      "check": {
+        "kind": "invalid",
+        "exit_code": 1,
+        "axioms": [
+          "propext",
+          "sorryAx",
+          "Quot.sound"
+        ],
+        "n_errors_in_target": 6,
+        "first_error": {
+          "line": 2872,
+          "col": 6,
+          "message": "No goals to be solved"
+        },
+        "errors_outside_target": 0,
+        "run": "cases/R02/attempts/03_replace_span_rfl.result.json",
+        "wall_s_local": 7.11
+      },
+      "local_error_cleared": false,
+      "full_replay": "invalid",
+      "result": "failed"
+    },
+    {
+      "n": 4,
+      "op": "replace_span",
+      "tactic": "omega",
+      "span_body_lines": [
+        10,
+        10
+      ],
+      "span_text": "      intros x Hin",
+      "check": {
+        "kind": "invalid",
+        "exit_code": 1,
+        "axioms": [
+          "propext",
+          "sorryAx",
+          "Quot.sound"
+        ],
+        "n_errors_in_target": 6,
+        "first_error": {
+          "line": 2872,
+          "col": 6,
+          "message": "No goals to be solved"
+        },
+        "errors_outside_target": 0,
+        "run": "cases/R02/attempts/04_replace_span_omega.result.json",
+        "wall_s_local": 7.92
+      },
+      "local_error_cleared": false,
+      "full_replay": "invalid",
+      "result": "failed"
+    },
+    {
+      "n": 5,
+      "op": "replace_span",
+      "tactic": "simp_all",
+      "span_body_lines": [
+        10,
+        10
+      ],
+      "span_text": "      intros x Hin",
+      "check": {
+        "kind": "invalid",
+        "exit_code": 1,
+        "axioms": [
+          "propext",
+          "sorryAx",
+          "Quot.sound"
+        ],
+        "n_errors_in_target": 6,
+        "first_error": {
+          "line": 2872,
+          "col": 6,
+          "message": "No goals to be solved"
+        },
+        "errors_outside_target": 0,
+        "run": "cases/R02/attempts/05_replace_span_simp_all.result.json",
+        "wall_s_local": 7.06
+      },
+      "local_error_cleared": false,
+      "full_replay": "invalid",
+      "result": "failed"
+    },
+    {
+      "n": 6,
+      "op": "replace_span_extract",
+      "tactic": "simp?",
+      "span_body_lines": [
+        10,
+        10
+      ],
+      "span_text": "      intros x Hin",
+      "check": {
+        "kind": "invalid",
+        "exit_code": 1,
+        "axioms": [
+          "propext",
+          "sorryAx",
+          "Quot.sound"
+        ],
+        "n_errors_in_target": 6,
+        "first_error": {
+          "line": 2872,
+          "col": 6,
+          "message": "No goals to be solved"
+        },
+        "errors_outside_target": 0,
+        "run": "cases/R02/attempts/06_replace_span_extract_simpQ.result.json",
+        "wall_s_local": 7.48
+      },
+      "raw_tool_output": null,
+      "result": "no_suggestion"
+    },
+    {
+      "n": 7,
+      "op": "replace_span_extract",
+      "tactic": "exact?",
+      "span_body_lines": [
+        10,
+        10
+      ],
+      "span_text": "      intros x Hin",
+      "check": {
+        "kind": "invalid",
+        "exit_code": 1,
+        "axioms": [
+          "propext",
+          "sorryAx",
+          "Quot.sound"
+        ],
+        "n_errors_in_target": 6,
+        "first_error": {
+          "line": 2872,
+          "col": 6,
+          "message": "No goals to be solved"
+        },
+        "errors_outside_target": 0,
+        "run": "cases/R02/attempts/07_replace_span_extract_exactQ.result.json",
+        "wall_s_local": 9.72
+      },
+      "raw_tool_output": null,
+      "result": "no_suggestion"
+    },
+    {
+      "n": 8,
+      "op": "replace_span_extract",
+      "tactic": "aesop?",
+      "span_body_lines": [
+        10,
+        10
+      ],
+      "span_text": "      intros x Hin",
+      "result": "skipped",
+      "reason": "Aesop not available in pinned environment (not added)"
+    }
+  ],
+  "local_result": null,
+  "valid_path_extraction": [],
+  "gold_repair_path": "gold_repair.lean",
+  "gold_strategy": "keeps the switch from `intros` to `intro`, drops the spurious `post` name",
+  "gold_check": {
+    "kind": "valid",
+    "exit_code": 0,
+    "axioms": [
+      "propext",
+      "Quot.sound"
+    ],
+    "n_errors_in_target": 0,
+    "first_error": null,
+    "errors_outside_target": 0,
+    "run": "cases/R02/logs/03_gold_alt0.result.json",
+    "wall_s_local": 9.39
+  },
+  "gold_attempts": [
+    {
+      "alternative": 0,
+      "edits": [
+        [
+          "  intro post Hnorm\n",
+          "  intro Hnorm\n"
+        ]
+      ],
+      "check": {
+        "kind": "valid",
+        "exit_code": 0,
+        "axioms": [
+          "propext",
+          "Quot.sound"
+        ],
+        "n_errors_in_target": 0,
+        "first_error": null,
+        "errors_outside_target": 0,
+        "run": "cases/R02/logs/03_gold_alt0.result.json",
+        "wall_s_local": 9.39
+      }
+    }
+  ],
+  "full_replay_result": {
+    "kind": "valid",
+    "exit_code": 0,
+    "axioms": [
+      "propext",
+      "Quot.sound"
+    ],
+    "n_errors_in_target": 0,
+    "first_error": null,
+    "errors_outside_target": 0,
+    "run": "cases/R02/logs/03_gold_alt0.result.json",
+    "wall_s_local": 9.39
+  },
+  "full_replay_result_source": "gold_repair",
+  "measurements": {
+    "baseline": {
+      "body_nonwhitespace_chars": {
+        "value": 1174,
+        "kind": "local_estimate",
+        "note": "character count, NOT the official token count"
+      },
+      "official_tokens": {
+        "value": null,
+        "kind": "not_measured",
+        "reason": "official tokenizer not available"
+      },
+      "heartbeats": {
+        "value": 2697,
+        "kind": "local_estimate",
+        "method": "instrumented run: IO.getNumHeartbeats delta /1000 around the declaration with Elab.async=false (same mechanism as Mathlib #count_heartbeats); single run; not the official Arena measurement",
+        "run": "cases/R02/logs/04_measure_baseline.result.json"
+      }
+    },
+    "gold": {
+      "body_nonwhitespace_chars": {
+        "value": 1173,
+        "kind": "local_estimate",
+        "note": "character count, NOT the official token count"
+      },
+      "official_tokens": {
+        "value": null,
+        "kind": "not_measured",
+        "reason": "official tokenizer not available"
+      },
+      "heartbeats": {
+        "value": 2697,
+        "kind": "local_estimate",
+        "method": "instrumented run: IO.getNumHeartbeats delta /1000 around the declaration with Elab.async=false (same mechanism as Mathlib #count_heartbeats); single run; not the official Arena measurement",
+        "run": "cases/R02/logs/04_measure_gold.result.json"
+      }
+    },
+    "robustness": {
+      "listed_versions": [
+        "v4.26.0"
+      ],
+      "checked_versions": [
+        "v4.26.0"
+      ],
+      "complete": true,
+      "note": ""
+    }
+  },
+  "expected_route": "escalate_after_local_exhausted",
+  "expected_route_reason": "all applicable local-ops-v1 attempts failed on full replay; no replay certificate so policy widens scope to body",
+  "author_prediction_before_run": "error at the intro line; delete_span loses Hnorm so later `cases Hnorm` fails -> escalate (body)",
+  "policy_decision": {
+    "decision.json": "PRICE_REQUEST",
+    "decision.configured_budget.json": "EMIT_LLM_PROMPT"
+  },
+  "validation_status": "lean_observed+gold_verified+string_contract_only_no_lean_adapter_term_check"
+}

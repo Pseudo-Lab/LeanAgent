@@ -23,3 +23,6 @@
 ## 공통 경로와 파일명
 
 [폴더·파일명 지침](../STRUCTURE.md)에 경로, 대표 파일명, 모임 목차, 혼합 자료와 원본 보존 기준을 모았습니다. 규칙을 변경할 때는 해당 지침을 갱신합니다.
+
+- [Agent Repair](agent_repair/README.md): 남성우 검증·수리 연구.
+- [새 연습문제](refactoring/new_exercises/README.md): 문제 세트·실행 기록·minimizer 발표.

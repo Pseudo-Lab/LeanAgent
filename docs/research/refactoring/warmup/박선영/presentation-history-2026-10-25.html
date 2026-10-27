@@ -1,0 +1,204 @@
+<title>Lean Warmup 실험노트</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+/* Technical study deck: experiment design, measured effects, and conditional strategy evidence. */
+:root{--bg:#FFFFFF;--surface:#F2F5F8;--ink:#182B40;--muted:#53677B;--accent:#1557B0;--line:#D8E1EB;--display:"Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;--body:system-ui,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;--code:"SFMono-Regular",Consolas,"Liberation Mono",monospace;font-family:var(--body);color:var(--ink);background:var(--bg);color-scheme:light}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink)}button,a{font:inherit}a{color:var(--accent)}button{cursor:pointer;background:var(--bg);color:var(--ink);border:1px solid var(--line);padding:.55rem .9rem;border-radius:.3rem}button:hover{background:var(--surface)}button:disabled{opacity:.4;cursor:default}:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+header{display:flex;align-items:center;justify-content:space-between;padding:1rem 3vw;border-bottom:1px solid var(--line);gap:1rem}header strong{font-size:.95rem}header span{font-size:.82rem;color:var(--muted)}main{max-width:1200px;margin:2rem auto;padding-block:0}.slide{display:none;min-width:0;min-height:640px;padding:3rem;border:1px solid var(--line);background:var(--bg);position:relative}.slide.active{display:flex;flex-direction:column;gap:1.25rem}.eyebrow{font-size:.8rem;letter-spacing:.12em;color:var(--accent);font-weight:700;margin:0}h1,h2,h3,p{margin:0}h1,h2,h3{font-family:var(--display);text-wrap:balance}h1{font-size:clamp(2.5rem,5vw,4.2rem);line-height:1.15;letter-spacing:-.04em}h2{font-size:clamp(1.9rem,3.4vw,2.8rem);line-height:1.25;letter-spacing:-.035em}h3{font-size:1.25rem;margin-bottom:.75rem}p,li{font-size:1.2rem;line-height:1.7}ul,ol{margin:0;padding-left:1.4rem}li+li{margin-top:.55rem}.lead{font-size:1.5rem;max-width:38em;line-height:1.65}.muted{color:var(--muted)}.split{display:grid;grid-template-columns:1fr 1fr;gap:2rem;margin-top:.75rem;align-items:start}.split>*{min-width:0}.surface{background:var(--surface);padding:1.5rem;min-width:0}.big{font-size:2rem;font-weight:700;line-height:1.6;color:var(--accent)}.thesis{margin:auto 0;display:flex;flex-direction:column;gap:2rem}.note{font-size:1rem;color:var(--muted);line-height:1.6;padding-top:1rem;border-top:1px solid var(--line);margin-top:auto}.label{display:inline-block;color:var(--accent);font-size:.8rem;font-weight:700;letter-spacing:.05em;margin-bottom:.65rem}.code{overflow-x:auto;background:var(--surface);padding:1.25rem;max-width:100%}pre{margin:0;font:1rem/1.7 var(--code);white-space:pre}code{font-family:var(--code)}.code p{font-size:1rem}.scroll{overflow-x:auto;max-width:100%;min-width:0;flex-shrink:0}table{border-collapse:collapse;width:100%;font-size:1.12rem;line-height:1.55}th,td{text-align:left;padding:.85rem .6rem;border-bottom:1px solid var(--line);vertical-align:top}th{color:var(--muted);font-size:.95rem}td:first-child{font-weight:700}caption{text-align:left;color:var(--muted);font-size:.85rem;padding-bottom:.5rem}footer{max-width:1200px;margin:1rem auto 2rem;padding-block:0;display:flex;align-items:center;justify-content:space-between;gap:1rem}.controls{display:flex;gap:.5rem;align-items:center;flex-wrap:wrap}#position{font-variant-numeric:tabular-nums;min-width:4rem;text-align:center;color:var(--muted)}#hint{font-size:.85rem;color:var(--muted)}.overview main{display:grid;gap:1.5rem}.overview .slide{display:flex;flex-direction:column;gap:1.25rem}.source{font-size:.85rem;line-height:1.65;overflow-wrap:anywhere}.sequence{font-size:1.4rem;line-height:2.2;font-weight:600;color:var(--accent)}.results{padding:2.5rem}.results table{font-size:.92rem;font-variant-numeric:tabular-nums}.results th{font-size:.82rem}.results td,.results th{padding:.45rem .5rem}.results .source{font-size:.82rem}main,footer{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#142130;--surface:#1D3043;--ink:#E3EBF5;--muted:#AFBED0;--accent:#8BBFFF;--line:#395066;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#142130;--surface:#1D3043;--ink:#E3EBF5;--muted:#AFBED0;--accent:#8BBFFF;--line:#395066;color-scheme:dark}
+@media(max-width:750px){header{flex-wrap:wrap;padding:1rem}header span{display:none}main{margin:1rem auto}.slide,.results{padding:1.5rem 1rem;min-height:70vh}.split{grid-template-columns:1fr;gap:1.25rem}p,li{font-size:1.05rem}.lead{font-size:1.2rem}.big{font-size:1.5rem}.code{padding:.9rem}pre{font-size:.83rem}footer{flex-wrap:wrap;gap:.5rem}#hint{display:none}table{font-size:.95rem}.sequence{font-size:1.15rem}.results table{min-width:680px}.results h2{font-size:1.65rem}}
+@media print{@page{size:landscape;margin:0}header,footer{display:none}main,.overview main{display:block;margin:0;padding:0;max-width:none}.slide,.slide.active,.overview .slide{display:flex;flex-direction:column;gap:.8rem;min-height:100vh;width:100%;padding:2rem 3rem;border:0;break-after:page;page-break-after:always}h1{font-size:3rem}h2{font-size:2rem}p,li{font-size:1rem}.lead{font-size:1.2rem}pre{font-size:.85rem}.note{font-size:.8rem}table{font-size:.9rem}.slide:last-child{break-after:auto}.results{padding:1rem 2rem;gap:.6rem}.results table{font-size:.7rem}.results th{font-size:.65rem}.results td,.results th{padding:.25rem}.results .source,.results .note{font-size:.65rem}}
+</style>
+<header><strong>Lean Warmup 실험노트</strong><span>P11 효과 분리 · P8 성능 탐색 · 본문 16장 / 부록 6장</span><button id="overview" type="button" aria-pressed="false">전체 보기</button></header>
+<main>
+<section class="slide active" id="research-goal" aria-label="1. 에이전트 목표와 연구 질문">
+<p class="eyebrow">연구 목표 / 구조를 보고 전략을 선택하는 에이전트</p>
+<div class="thesis"><h1>증명을 개선하는 전략,<br>그 효과를 어떻게 확인할까?</h1><p class="lead">목표는 유효하면서 heartbeat가 더 낮은 증명을 만드는 에이전트.<br>이번 질문은 <strong>구조를 보고 선택한 변환이<br>실제로 증명 비용을 줄이는가?</strong>입니다.</p><p class="muted">P11 구조 분석 → 순차 탐색 → 조건 고정 비교 → 다음 전략의 근거</p></div>
+<p class="note">Week 3: 2026-10-17 A/C 효과 분리 · Week 4: 2026-10-25 P11 단일 변환 파일럿 + P8 증명 골격 성능 탐색. 서로 다른 실험의 결과이며 Lean v4.31.0에서 확인했습니다. 같은 전략의 다중 정리 일반화나 공식 점수를 검증한 것은 아닙니다.</p>
+</section>
+<section class="slide" id="proof-map" aria-label="2. P11 최소 배경과 변경 위치">
+<p class="eyebrow">실험 대상 / P11 · ArkLib</p><h2>전체 풀이보다,<br>바꿀 계산 블록과 경계를 먼저 본다</h2>
+<p class="lead">함수 쪽 fold 결과와 갱신된 계수로 만든<br>다음 단계 다항식의 평가가 같음을 증명합니다.</p>
+<div class="split"><div><h3>증명의 큰 흐름</h3><ol><li>fiber의 두 점 x₀, x₁ 선택</li><li>qMap 평가값·두 점의 차이 확인</li><li>짝수·홀수 refinement로 분해</li><li>fold 계산을 정리하고 계수식과 연결</li></ol></div><div class="surface"><h3>이번 비교에서 바꾸는 곳</h3><ul><li><strong>B:</strong> 미사용 계수 정의 두 개를 제거한 공통 출발점</li><li><strong>C:</strong> main calc의 연속 ring 단계</li><li><strong>A:</strong> 마지막 sum_congr 내부 계수 계산</li></ul></div></div>
+<p>명제·fiber·qMap 논리는 유지합니다. 두 대수 계산 블록을 바꾸되, <strong>길다는 이유만으로 병목이라고 단정하지 않습니다.</strong></p>
+<p class="note">정리: <code>fold_advances_evaluation_poly</code>. B에서 제거한 이름은 P₀_coeffs/P₁_coeffs이며, 실제 다항식 P₀/P₁의 refinement 정의는 유지합니다.<br><a href="evidence/agent/p11-20261017-ac-check4/analysis.md">분석과 허용 변경 범위</a> · <a href="evidence/P11/selected.lean">B에 해당하는 기존 선택 후보</a></p>
+</section>
+<section class="slide" id="search-question" aria-label="3. 순차 탐색에서 남은 질문">
+<p class="eyebrow">탐색과 확인의 구분</p><h2>조합은 좋아졌다.<br>그런데 C만 적용해도 좋을까?</h2>
+<div class="surface"><p class="label">앞선 순차 탐색 · heartbeat</p><p class="sequence">B 41,636 → B+A 39,123 → B+A+C 38,337</p><p>각 단계에서 좋은 후보를 다음 부모로 사용했습니다.<br>새 후보를 찾는 데는 유용하지만, <strong>B+C 조건이 빠져 있었습니다.</strong></p></div>
+<div class="split"><div><h3>이미 관찰한 것</h3><p>A를 적용한 뒤 C를 추가하면<br>786 heartbeat가 줄었습니다.</p></div><div><h3>아직 모르는 것</h3><p>A가 없는 B에서도 C가 유효한가?<br>둘의 결합 효과는 단순한 합인가?</p></div></div>
+<p class="lead">그래서 다음 단계는 더 많은 자유 탐색이 아니라,<br><strong>이미 찾은 변경의 효과를 분리하는 확인 실험</strong>입니다.</p>
+<p class="note">앞선 adaptive3 세션의 세 후보 측정은 통과했지만 마지막 review는 skill drift로 중단됐습니다. 이번에는 새 세션에서 기준선부터 측정했고 review·회고까지 완료했습니다. 기존 조합의 재현을 새 최적화 발견으로 세지 않습니다.<br><a href="evidence/agent/p11-20261017-adaptive3/report.md">앞선 순차 탐색 보고서</a></p>
+</section>
+<section class="slide" id="change-a" aria-label="4. A: 계수 계산 재구성">
+<p class="eyebrow">변경 A / 표현을 바꾸기</p><h2>수동으로 식을 맞추는 대신,<br>대수 법칙으로 목표를 정리한다</h2>
+<p>마지막 <code>sum_congr</code>의 <code>intro j hj</code> 다음 계산 블록을 교체합니다.</p>
+<div class="split"><div><p class="label">변경 전 · 주요 단계 발췌</p><div class="code"><pre>-- h_j_lt와 인덱스 증명 재기술
+-- conv_lhs로 두 항의 곱셈 순서 조정
+conv_rhs =&gt; rw [mul_comm]
+rw [←mul_add]
+congr
+simp only [←Polynomial.C_mul,
+  ←Polynomial.C_add]</pre></div></div><div><p class="label">변경 후 · 해당 블록 전체</p><div class="code"><pre>simp only [Polynomial.C_add,
+  Polynomial.C_mul]
+ring</pre></div><p style="margin-top:1rem">C가 덧셈·곱셈을 보존하는 법칙으로<br>정규화한 뒤 가환환 등식을 닫습니다.</p></div></div>
+<p class="lead">가설: 수동 conv와 인덱스 증명 재기술을 피하면<br>전체 선언의 비용이 줄어들까?</p>
+<p class="note">h_j_lt 삭제도 A에 포함됩니다. 각 세부 변경의 효과까지 분리한 실험은 아닙니다. 전술을 짧게 쓰는 것 자체가 목적이 아니라, 같은 등식을 다루는 방식을 바꾼 것입니다.<br><a href="evidence/agent/p11-20261017-ac-check4/attempts/a002/parent.diff">정확한 전후 diff</a> · <a href="evidence/agent/p11-20261017-ac-check4/attempts/a002/candidate.lean">B+A 후보</a></p>
+</section>
+<section class="slide" id="change-c" aria-label="5. C: 중간 등식 생략">
+<p class="eyebrow">변경 C / 증명 경로 줄이기</p><h2>전개했다가 다시 묶는 단계,<br>중간 등식이 꼭 필요할까?</h2>
+<div class="split"><div><p class="label">변경 전 · 구조를 축약한 설명용 코드</p><div class="code"><pre>calc
+  ...
+  _ = 전개형_중간식 := by ring
+  _ = 공통인자_형태 := by ring</pre></div></div><div><p class="label">변경 후 · 구조를 축약한 설명용 코드</p><div class="code"><pre>calc
+  ...
+  _ = 공통인자_형태 := by ring</pre></div></div></div>
+<div class="surface"><h3>한 번의 환 항등식 증명으로 바로 연결</h3><p>main calc의 전개형 중간 등식 3행만 삭제합니다.<br>다음 등식의 x₁−x₀ 공통인자 형태와 마지막 계수 계산은 유지합니다.</p></div>
+<p class="lead">가설: 중간 등식과 반복 정규화가 줄어드는 이득이<br>한 번에 증명할 목표가 커지는 비용보다 클까?</p>
+<p class="note">한글 항은 설명용 자리표시자이며 실행 가능한 Lean 코드가 아닙니다. ring 한 번이 항상 더 저렴하다는 가정은 하지 않습니다. B+C의 마지막 계수 계산은 B 그대로입니다.<br><a href="evidence/agent/p11-20261017-ac-check4/attempts/a003/parent.diff">C의 정확한 3행 삭제</a> · <a href="evidence/agent/p11-20261017-ac-check4/attempts/a003/candidate.lean">B+C 후보</a></p>
+</section>
+<section class="slide" id="controlled-design" aria-label="6. 네 조건을 고정한 비교 설계">
+<p class="eyebrow">확인 설계 / 바꾸는 것과 고정하는 것</p><h2>현재 best를 따라가지 않고,<br>같은 B에서 네 조건을 비교한다</h2>
+<div class="scroll"><table><caption>B를 공통 기반으로 A·C의 유무를 교차 비교</caption><thead><tr><th></th><th>C 없음</th><th>C 있음</th></tr></thead><tbody><tr><th>A 없음</th><td>B · a001</td><td>B+C · a003</td></tr><tr><th>A 있음</th><td>B+A · a002</td><td>B+A+C · a004</td></tr></tbody></table></div>
+<div class="split"><div><h3>실행 전에 고정</h3><ul><li>후보 4개 + 별도의 원본 기준선</li><li>B의 부모는 원본, 나머지 부모는 B</li><li>허용 diff와 가설을 작성 전에 등록</li><li>결과에 따른 추가 후보·수정 없음</li></ul></div><div class="surface"><h3>동일하게 유지</h3><ul><li>같은 명제와 전체 소스 문맥</li><li>Lean v4.31.0 · 같은 ArkLib 커밋</li><li>같은 검증기·정책 snapshot</li><li>subprocess timeout 180초</li></ul></div></div>
+<p class="note">C의 효과는 B→B+C와 B+A→B+A+C를 대조합니다. 조건당 1회이며, 같은 예산으로 에이전트 정책 두 개를 비교한 실험은 아닙니다.<br><a href="evidence/agent/p11-20261017-ac-check4/analysis.md">사전 설계</a> · <a href="evidence/agent/p11-20261017-ac-check4/report.md">부모·diff·고정 환경 근거</a></p>
+</section>
+<section class="slide" id="validation-method" aria-label="7. 실행·검증·기록의 역할">
+<p class="eyebrow">측정 신뢰성 / 유효성 먼저, 비용 비교는 그다음</p><h2>좋아 보이는 코드가 아니라,<br>같은 명제의 검증된 비용을 비교</h2>
+<div class="split"><div><h3>에이전트가 판단</h3><ol><li>증명 구조와 이전 결과 읽기</li><li>가설·부모·변경 범위 등록</li><li>후보 작성 및 diff 확인</li><li>측정 결과 해석·review·회고</li></ol></div><div class="surface"><h3>도구가 검사·보존</h3><ul><li>세션 helper: 해시·예산·상태·best 관리</li><li>기존 검증기: 명제·금지 패턴 검사</li><li>전체 파일 문맥에서 Lean 컴파일·공리 검사</li><li>별도 실행으로 대상 heartbeat 측정</li></ul></div></div>
+<p class="sequence">가설 → 후보 → 검증 → 측정 → 해석<br>증명·diff는 evidence / 수치·원시 로그는 evidence/metrics</p>
+<p class="note">기존 대상 정리의 .olean import로 검증을 대신하지 않았습니다. 네 후보 모두 원본과 같은 표준 공리만 사용하며 sorryAx·새 공리 추가는 없습니다. 주변 기존 선언의 sorry 경고와는 구분합니다. heartbeat ≠ proof tokens ≠ LLM 토큰 ≠ 실행 시간.<br><a href="evidence/run_experiments.py">기존 검증기</a> · skill·세션 helper는 추후 별도 공개 예정</p>
+</section>
+<section class="slide results" id="confirmation-results" aria-label="8. P11 A/C 효과 분리 결과">
+<p class="eyebrow">2026-10-17 / P11 · 후속 확인 실험</p><h2>C는 A 없이도<br>786 heartbeat를 줄였다</h2>
+<div class="scroll"><table><caption>모두 새 세션의 실측 · B = 미사용 정의 제거 · A = 계수 계산 재구성 · C = 중간 ring 단계 통합</caption><thead><tr><th>조건</th><th>Heartbeat</th><th>B 대비 감소량</th><th>Proof tokens</th><th>검증</th></tr></thead><tbody>
+<tr data-condition="a001"><td>B</td><td data-field="heartbeat">41,636</td><td data-field="delta">—</td><td data-field="proof_tokens">1,656</td><td>통과</td></tr>
+<tr data-condition="a002"><td>B+A</td><td data-field="heartbeat">39,123</td><td data-field="delta">2,513</td><td data-field="proof_tokens">1,441</td><td>통과</td></tr>
+<tr data-condition="a003"><td>B+C</td><td data-field="heartbeat">40,850</td><td data-field="delta">786</td><td data-field="proof_tokens">1,594</td><td>통과</td></tr>
+<tr data-condition="a004"><td>B+A+C</td><td data-field="heartbeat">38,337</td><td data-field="delta">3,299</td><td data-field="proof_tokens">1,379</td><td>통과</td></tr>
+</tbody></table></div>
+<div class="split"><div class="surface"><h3>A 없이 C 적용</h3><p>41,636 → 40,850<br><strong>786 감소 · 1.8878%</strong></p></div><div class="surface"><h3>A 이후 C 적용</h3><p>39,123 → 38,337<br><strong>786 감소 · 2.0090%</strong></p></div></div>
+<p>두 경우 모두 proof tokens는 62 감소했습니다.<br>감소율이 다른 이유는 비교 분모가 다르기 때문입니다.</p>
+<p class="source">새 원본 기준선: 45,537 heartbeat / 1,906 tokens. 세션 best B+A+C는 원본 대비 15.81% / 27.65% 감소했습니다. 네 후보 모두 passed/reviewed, 회고 완료.<br><a href="evidence/agent/p11-20261017-ac-check4/report.md">상세 보고서·원시 로그 링크</a> · <a href="evidence/metrics/agent/p11-20261017-ac-check4/contrasts.json">효과 비교 JSON</a></p>
+<p class="note">새로 발견한 최적해가 아니라 지정 네 조건 안의 best입니다. 기존 selected.lean으로 채택하거나 초기 집계를 교체한 것은 아닙니다. 단일 정리·고정 환경·조건당 1회라는 범위를 유지합니다.</p>
+</section>
+<section class="slide" id="interpretation" aria-label="9. 관찰과 원인 추정의 구분">
+<p class="eyebrow">해석 / 숫자가 말하는 것과 말하지 않는 것</p><h2>가산적인 결과를 관찰했지만,<br>보편적인 독립성을 증명한 것은 아니다</h2>
+<div class="split"><div><h3>측정으로 확인</h3><ul><li>C는 A 유무 모두 786 감소</li><li>A는 C 유무 모두 2,513 감소</li><li>결합 감소 3,299 = 2,513 + 786</li><li>이 네 측정의 상호작용 대비는 0</li></ul></div><div class="surface"><h3>설명과 한계</h3><p>중간 등식 elaboration과 반복 ring 정규화가 줄었다는 설명에 부합합니다.</p><p style="margin-top:1rem">그러나 tactic별 profiling은 하지 않았습니다. <strong>786을 ring 한 번의 내부 비용으로 볼 수는 없습니다.</strong></p></div></div>
+<div class="surface"><h3>best 갱신과 변경 효과도 다르다</h3><p>B+C의 <code>improved=false</code>는 당시 best인 B+A를 넘지 못했다는 뜻입니다. 부모 B보다는 개선됐고 검증도 통과했습니다.</p></div>
+<p class="note">다른 정리·버전에서의 독립성, 반복 실행 분포, 실제 실행 시간 향상은 미검증입니다. B+A와 B+A+C의 재현을 새 전략 성공으로 중복 집계하지 않습니다.<br><a href="evidence/agent/p11-20261017-ac-check4/report.md">관찰·원인 추정·한계의 상세 구분</a></p>
+</section>
+<section class="slide" id="strategy-evidence" aria-label="10. 다음 전략에 남길 조건부 근거">
+<p class="eyebrow">에이전트로 연결 / 성공 사례가 아니라 적용 조건을 남기기</p><h2>“ring을 줄여라” 대신,<br>어떤 구조에서 검토할지 기록한다</h2>
+<div class="split"><div class="surface"><h3>A · 표현 재구성 후보</h3><ul><li><strong>구조:</strong> 같은 basis의 계수를 수동 conv로 조정</li><li><strong>후보:</strong> 환 준동형 법칙으로 정규화 후 ring</li><li><strong>확인 조건:</strong> 필요한 법칙·환 구조·인덱스가 맞는가?</li><li><strong>반례 가능성:</strong> 비가환 구조 또는 전개로 목표가 커지는 경우</li></ul></div><div class="surface"><h3>C · 중간 등식 생략 후보</h3><ul><li><strong>구조:</strong> 같은 항을 연속 ring 단계에서 정규화</li><li><strong>후보:</strong> 중간 전개식을 건너뛰어 직접 연결</li><li><strong>확인 조건:</strong> 중간 등식 없이도 다음 목표를 닫는가?</li><li><strong>반례 가능성:</strong> 합친 목표의 정규화 비용이 더 커지는 경우</li></ul></div></div>
+<p class="lead">구조 → 후보 변경 → 적용 조건 → 반례 → 실행 근거<br>이 연결이 다음 선택을 검증할 출발점입니다.</p>
+<p class="note">위 내용은 발표의 조건부 해석·후속 검토 항목입니다. 이번 확인 실험의 회고에서 정책 변경 제안은 없었으며, 활성 정책·skill·검증기는 수정하지 않았습니다. 관찰은 P11 한 정리에 한정됩니다.</p>
+</section>
+<section class="slide" id="pilot-design" aria-label="11. 구조 전략 파일럿 설계">
+<p class="eyebrow">Week 4 / 2026-10-25 · 구조에서 적용 조건 찾기</p><h2>정리 여섯 개를 읽고,<br>변환 세 가지를 분리했다</h2>
+<div class="split"><div><h3>구조 단서 → 단일 변환</h3><ul><li><strong>S1:</strong> 불필요한 지역 정의 하나 제거</li><li><strong>S2:</strong> 중간 calc 등식 하나 생략</li><li><strong>S3:</strong> 반복하는 동일 사실을 한 번 증명해 재사용</li></ul></div><div class="surface"><h3>비교 조건</h3><ul><li>매번 원본에서 독립 출발</li><li>명제·문맥·환경 고정</li><li>원본과 후보 각각 2회 검사·계측</li><li>새 공리 금지 · 명령당 180초</li></ul></div></div>
+<p>원본 검토: P3·P6·P7·P9·P11·P12.<br>반복되는 tactic이나 대칭 분기만으로 같은 추론이라고 판단하지 않았습니다.</p>
+<p class="note">실제 후보 비교를 완료한 정리는 P11 하나입니다. 여섯 정리 검토를 여섯 정리 최적화 성공으로 세지 않습니다. 기존 B는 정의 두 개 제거, 이번 S1은 하나만 제거합니다.<br><a href="evidence/structural-strategies-2026-10-22/README.md">적용 가능성 표·사전 설계</a></p>
+</section>
+<section class="slide results" id="pilot-results" aria-label="12. 구조 전략별 반복 측정 결과">
+<p class="eyebrow">Week 4 / P11 · Lean v4.31.0 · 원본에서 독립 비교</p><h2>제거와 생략은 개선,<br>공통화는 짧아져도 느려졌다</h2>
+<div class="scroll"><table><caption>원본: 45,537 HB / 1,906 tokens · 각 원본·후보 2회 값 동일</caption><thead><tr><th>전략</th><th>후보 HB</th><th>HB 감소율</th><th>후보 tokens</th><th>토큰 변화</th></tr></thead><tbody>
+<tr data-strategy="S1"><td>S1 · 지역 정의 제거</td><td data-field="heartbeat">43,683</td><td>4.07%</td><td data-field="proof_tokens">1,782</td><td>124 감소</td></tr>
+<tr data-strategy="S2"><td>S2 · 중간 등식 생략</td><td data-field="heartbeat">44,748</td><td>1.73%</td><td data-field="proof_tokens">1,844</td><td>62 감소</td></tr>
+<tr data-strategy="S3"><td>S3 · 반복 사실 공통화</td><td data-field="heartbeat">45,832</td><td>−0.65% (악화)</td><td data-field="proof_tokens">1,883</td><td>23 감소</td></tr>
+</tbody></table></div>
+<p>세 후보 모두 전체 파일 검사·공리 검사·계측 통과.<br><strong>유효성 통과와 최적화 성공은 별개</strong>입니다.</p>
+<p class="note">S3은 공통 사실을 congr/omega로 새로 증명한 구현 전체의 효과입니다. 재사용 자체의 비용을 분리하지 않았습니다. S2의 789 HB 감소는 과거 B 기반 C의 786과 다르므로 고정 비용으로 일반화하지 않습니다.</p>
+<p class="source"><a href="evidence/structural-strategies-2026-10-22/report.md">전략별 해석·원시 로그</a> · <a href="evidence/metrics/structural-pilot-2026-10-25/summary.json">두 반복의 검증된 수치</a> · 단일 정리 내 비교이며 범용 전략 순위가 아닙니다.</p>
+</section>
+<section class="slide" id="pilot-boundaries" aria-label="13. 환경 차단과 전략 적용 순서">
+<p class="eyebrow">Week 4 / 실패 유형과 적용 순서</p><h2>삭제할 수 있는 블록을<br>먼저 공통화할 필요는 없다</h2>
+<div class="split"><div class="surface"><h3>전략에 남길 가설</h3><p>S3은 제거 가능한 계수 정의 내부의 등식을 공통화했습니다.</p><p>삭제 가능성 → 계산 경로 단축 → 남은 반복의 공통화 순서를 검토합니다. 아직 범용 규칙으로 검증한 것은 아닙니다.</p></div><div><h3>다른 정리의 실제 상태</h3><ul><li><strong>P12:</strong> 원본의 Basic.olean 의존성 누락. 후보는 미실행</li><li><strong>P3·P6:</strong> 확인한 경로에 지정 환경이 없어 보류</li><li><strong>P7·P9:</strong> 적용 근거가 부족해 변환을 강제하지 않음</li></ul></div></div>
+<p class="note">P12의 원본 환경 오류를 후보 실패나 HB 0으로 집계하지 않습니다. 다중 정리 일반화는 아직 미검증입니다. 기존 selected.lean과 제출 상태는 자동으로 바꾸지 않았습니다.<br><a href="evidence/metrics/structural-pilot-2026-10-25/environment-check.json">환경 확인 범위</a> · <a href="evidence/metrics/structural-pilot-2026-10-25/P12-S1/baseline-1/check.log">P12 원본 오류</a></p>
+</section>
+<section class="slide" id="performance-design" aria-label="14. P8 증명 골격 변경">
+<p class="eyebrow">Week 4 / 별도 성능 탐색 · P8 / 2026-10-25</p><h2>한 분기의 tactic에서,<br>증명 전체의 귀납 구조로</h2>
+<div class="split"><div><h3>c001 · 명시적 귀납</h3><ul><li>첫 번째 병렬 축약 증거에 귀납</li><li>par/par 분기는 두 귀납 가설로 합류</li><li>각 분기의 공통 항·축약 증거를 직접 생성</li></ul></div><div class="surface"><h3>c002 · 지역 보조 사실까지 공통화</h3><ul><li>I/K/S별 합류를 지역 have로 작성</li><li>대칭 방향은 같은 사실을 뒤집어 재사용</li><li>보조 사실의 증명 비용도 모두 측정에 포함</li></ul></div></div>
+<p>두 후보 모두 기존 selected에서 출발했습니다.<br>원본·시작 best·두 후보를 각각 <strong>전체 파일 검증 + 공리 검사 + HB 계측 3회</strong> 확인했습니다.</p>
+<p class="note">성능 탐색이지 귀납 변경 하나의 효과 분리 실험은 아닙니다. 직접 생성자 구성 등도 함께 바뀌었습니다. 병렬 후보 준비 후 Lean 실행은 직렬로 진행했습니다. 실행기 독립 재검토는 도구 오류로 완료되지 않아 직접 점검·mock 테스트로 보완했습니다.<br><a href="evidence/performance-search-2026-10-25/protocol.md">고정 프로토콜</a> · <a href="evidence/performance-search-2026-10-25/P8/c001/parent.diff">c001 diff</a> · <a href="evidence/performance-search-2026-10-25/P8/c002/parent.diff">c002 diff</a></p>
+</section>
+<section class="slide results" id="performance-results" aria-label="15. P8 구조 변경 성능 결과">
+<p class="eyebrow">Week 4 / P8 · Lean v4.31.0 · 각 3회 실측</p><h2>HB는 약 68% 감소,<br>대신 증명 토큰은 증가했다</h2>
+<div class="scroll"><table><caption>현재 세션에서 재측정 · HB 중앙값 (세 번 모두 같은 값) · 변화율은 시작 best 대비</caption><thead><tr><th>조건</th><th>HB</th><th>Proof tokens</th><th>HB 감소</th><th>토큰 증가</th></tr></thead><tbody>
+<tr data-search="reference"><td>원본</td><td data-field="heartbeat">1,382</td><td data-field="proof_tokens">407</td><td>—</td><td>—</td></tr>
+<tr data-search="start"><td>기존 best</td><td data-field="heartbeat">1,320</td><td data-field="proof_tokens">412</td><td>기준</td><td>기준</td></tr>
+<tr data-search="c001"><td>c001 · 명시적 귀납·직접 구성</td><td data-field="heartbeat">429</td><td data-field="proof_tokens">434</td><td>67.50%</td><td>5.34%</td></tr>
+<tr data-search="c002"><td>c002 · 지역 합류 사실 공통화</td><td data-field="heartbeat">420</td><td data-field="proof_tokens">493</td><td>68.18%</td><td>19.66%</td></tr>
+</tbody></table></div>
+<p><strong>HB 우선이면 c002, 토큰 증가를 억제하려면 c001.</strong><br>c002는 c001보다 9 HB 낮지만 59토큰 더 깁니다. 둘 다 보존합니다.</p>
+<p class="note">원본 대비 HB 감소는 c001 68.96%, c002 69.61%입니다. 후보 둘 다 공리 의존성 없음. 귀납만의 효과·공통화만의 효과를 분리한 결과는 아닙니다. 새 P11 구조 탐색은 미완료이며, 다른 버전·정리로의 일반화와 공식 점수는 미검증입니다. 기존 selected·제출 상태는 유지했습니다.</p>
+<p class="source"><a href="evidence/performance-search-2026-10-25/report.md">상세 결과·원장 안내</a> · <a href="evidence/metrics/performance-search-2026-10-25/P8/runs/c001-1/raw/result.json">c001 실행 근거</a> · <a href="evidence/metrics/performance-search-2026-10-25/P8/runs/c002-1/raw/result.json">c002 실행 근거</a></p>
+</section>
+<section class="slide" id="next-study" aria-label="16. 다음 검증과 본문 결론">
+<p class="eyebrow">다음 연구 / 파일럿 이후의 검증</p><h2>증명 변경의 효과에서,<br>에이전트 선택 능력의 검증으로</h2>
+<div class="split"><div><h3>먼저: 전략의 적용 범위</h3><ol><li>다른 증명에서 유사 구조 선정</li><li>원본과 단일 변경을 같은 환경에서 비교</li><li>개선뿐 아니라 실패·무개선·악화 기록</li></ol></div><div class="surface"><h3>그다음: 선택 정책의 효과</h3><ol><li>탐색에 쓰지 않은 정리에서 평가</li><li>같은 시작 증명·환경·시도 예산 고정</li><li>고정 정책과 경험 활용 정책의 유효 후보·best 비용 비교</li></ol></div></div>
+<p class="lead">확인한 것: <strong>P11의 제거·생략은 개선, P8의 큰 구조 변경은 HB 개선·토큰 증가</strong><br>다음: 유망한 변경의 효과를 분리하고, 적용 조건을 고정한 뒤 다른 정리에서 확인합니다.</p>
+<p class="note">에이전트 선택 정책 비교는 미실행입니다. P8의 토큰 증가 완화와 최신 후보의 채택·제출도 별도 과제입니다. 부록의 버전 통과 수는 당시 로컬 검사 범위이며, 외부 대시보드의 후속 재검증과 구분합니다. 이후 6장은 배경·초기 결과입니다.</p>
+<div class="source"><a href="evidence/agent/p11-20261017-ac-check4/README.md">확인 실험 안내</a> · <a href="evidence/agent/p11-20261017-adaptive3/report.md">앞선 순차 탐색</a> · <a href="report.md">초기 실험 보고서</a></div>
+</section>
+<section class="slide appendix" id="appendix-start" aria-label="부록 1. 대회 평가 기준">
+<p class="eyebrow">부록 1 / 목표와 제약</p><h2>점수는 증명 개선에서,<br>비용은 예산 조건으로</h2>
+<div class="split"><div><h3>같은 명제를 더 잘 증명하기</h3><ul><li><strong>길이 감소율</strong> — 참조 증명보다 짧게</li><li><strong>heartbeat 감소율</strong> — Lean 내부 연산량을 줄이기</li><li><strong>버전 호환성</strong> — 지정 버전에서 변경 없이 컴파일</li></ul></div><div class="surface"><h3>Track 1: 문제당 최대 US$3</h3><p>후보 생성·수정·폐기 등 관련 API 호출 비용을 합산하고 보고합니다.</p><p style="margin-top:1rem"><strong>더 적게 썼다고 추가 점수를 받는 항목은 아닙니다.</strong></p></div></div>
+<p class="note">문제별 점수는 세 지표의 평균. 검증 실패·금지 패턴은 해당 문제 0점. heartbeat ≠ API 토큰 ≠ 실제 실행 시간.<br>근거: solution/README.md에 정리된 공식 안내 요지. 이 작업 전체의 API 비용은 계측하지 않아 미집계입니다. <a href="https://huggingface.co/spaces/delta-lab-ai/lean-refactor-arena" target="_blank" rel="noopener noreferrer">대회 공식 안내</a></p>
+</section>
+<section class="slide appendix" aria-label="부록 2. Lean 기초">
+<p class="eyebrow">부록 2 / 학습 출발점</p><h2>식이 어떻게 바뀌는지,<br>그 증거가 무엇인지부터</h2>
+<div class="scroll"><table><thead><tr><th>이름</th><th>의미</th><th>읽는 예시</th></tr></thead><tbody><tr><td>refl</td><td>그대로 두는 축약</td><td><code>a ⇒ a</code></td></tr><tr><td>red_I / K / S</td><td>I/K/S 규칙을 적용하는 증거</td><td><code>I ⬝ x ⇒ x</code></td></tr><tr><td>par</td><td>두 부분의 축약 증거를 합치기</td><td><code>a ⬝ b ⇒ a′ ⬝ b′</code></td></tr><tr><td>cases / case</td><td>증거가 만들어진 규칙별로 경우 나누기</td><td><code>cases h₁</code> → <code>case refl</code></td></tr></tbody></table></div>
+<div class="code"><pre>.par (.red_I K) (.refl S)
+-- (I ⬝ K) ⬝ S ⇒ K ⬝ S
+-- 왼쪽을 바꾸고, 오른쪽은 그대로 둔 뒤 합친다.</pre></div>
+<p class="note">⬝는 적용. ⇒는 이 발표의 설명용 병렬 축약 표기입니다. red는 reduction, par는 parallel, refl은 reflexivity.</p>
+</section>
+<section class="slide appendix" aria-label="부록 3. P8 증명 구조">
+<p class="eyebrow">부록 3 / WARMUP 08 · Cslib</p><h2>두 축약 결과를<br>공통 항에서 다시 만나게 한다</h2>
+<div class="split"><div class="surface"><p class="label">DIAMOND 성질</p><div class="code" style="padding:0"><pre>a ⇒ a₁    a ⇒ a₂
+
+공통 항 b를 선택하여
+
+a₁ ⇒ b    a₂ ⇒ b</pre></div><p style="margin-top:1rem">결과가 처음부터 같을 필요도,<br>b가 최종 형태일 필요도 없습니다.</p></div><div><h3>분기마다 만드는 세 가지</h3><ol><li>만날 항</li><li>첫 번째 결과에서 가는 증거</li><li>두 번째 결과에서 가는 증거</li></ol><div class="code" style="margin-top:1rem"><pre>⟨공통 항, 왼쪽 증거, 오른쪽 증거⟩</pre></div></div></div>
+<p class="note">양쪽이 par이면 작은 부분항에서 재귀적으로 합류한 뒤 전체를 조립합니다.<br>정리: Cslib.SKI.parallelReduction_diamond</p>
+</section>
+<section class="slide appendix" aria-label="부록 4. P8 초기 후보">
+<p class="eyebrow">부록 4 / 8번 후보 · v4.31.0 검증 완료</p><h2>탐색시키는 대신,<br>이미 있는 증거를 직접 조립하면?</h2>
+<div class="split"><div><p class="label">현재 S/PAR 혼합 분기</p><div class="code"><pre>apply ParallelReduction.par &lt;;&gt;
+  apply ParallelReduction.par &lt;;&gt;
+  grind</pre></div><p style="margin-top:1rem">목표를 나눈 뒤 자동화로<br>필요한 증거를 찾습니다.</p></div><div><p class="label">교체 가설</p><div class="code"><pre>exact .par
+  (.par h.1 hb')
+  (.par h.2.1 hb')</pre></div><p style="margin-top:1rem">부분항 축약 증거를<br>명시적으로 결합합니다.</p></div></div>
+<p class="big">한 곳만 변경 → 컴파일 → 지표 비교</p>
+<p class="note"><a href="evidence/P8/selected.lean">선택 후보</a>는 이 분기만 변경했습니다. v4.31.0 컴파일 통과, 공리 의존성 없음. 토큰은 증가했지만 heartbeat는 감소한 절충안입니다. 자세한 수치와 실행 기록은 부록 결과 표에서 확인합니다.</p>
+</section>
+<section class="slide appendix" aria-label="부록 5. 구조 분석 질문">
+<p class="eyebrow">부록 5 / 구조 리팩터링의 분석 질문</p><h2>작은 변경 전에,<br>증명의 의존성을 먼저 본다</h2>
+<div class="split"><div><h3>분석 질문</h3><ul><li>핵심 증명 구조를 한 문장으로 설명할 수 있나?</li><li>재귀·귀납법은 무엇에 의존하나?</li><li>각 cases 분기는 실제로 필요한가?</li><li>이미 있는 정리로 대체할 수 있나?</li><li>반복 논리를 묶으면 정말 유리한가?</li></ul></div><div class="surface"><h3>변경 범위를 먼저 고정</h3><p>가설 · 예상 효과 · 변경 범위를 먼저 기록합니다.</p><p style="margin-top:1rem">귀납법 변경이나 보조정리 추가는 <strong>검토 항목</strong>이지 필수 작업이 아닙니다.</p><p style="margin-top:1rem">실패하면 Lean 오류를 근거로<br>다음 실험을 정합니다.</p></div></div>
+<p class="note">기본은 한 종류의 변경이며, 결합 조건은 이번 A+C처럼 목적과 허용 범위를 사전 지정해 별도로 비교합니다. 코드가 짧아지는 것과 Lean 연산량이 줄어드는 것은 별개입니다.</p>
+</section>
+<section class="slide results appendix" id="legacy-results" aria-label="부록 6. 기존 선택 후보의 검증 이력">
+<p class="eyebrow">부록 6 / 초기 실험 · 2026-10-16 · 기존 선택 후보</p><h2>기존 선택 후보의 결과는<br>후속 실험과 구분해 보존</h2>
+<!-- experiment-results:start -->
+<div class="scroll"><table><caption>원본 → 선택 후보 · 로컬 측정 / 미검증 초안 토큰은 별도 표기</caption><thead><tr><th>문제 / 환경</th><th>증명 토큰</th><th>heartbeat</th><th>원본 / 후보 상태</th><th>후보 지정 버전 통과</th><th>근거</th></tr></thead><tbody>
+<tr><td>8번 · v4.33.0-rc2</td><td>미측정 → 미측정</td><td>미측정 → 미측정</td><td>미실행 / 미실행</td><td>1/4 (검사 1)</td><td>기록 없음</td></tr>
+<tr><td>8번 · v4.32.0</td><td>미측정 → 미측정</td><td>미측정 → 미측정</td><td>미실행 / 미실행</td><td>1/4 (검사 1)</td><td>기록 없음</td></tr>
+<tr><td>8번 · v4.31.0</td><td>407 → 412 (1.23% 증가)</td><td>1,382 → 1,320 (4.49% 감소)</td><td>통과 / 통과</td><td>1/4 (검사 1)</td><td><a href="evidence/metrics/P8/runs/20261016T003747320609Z-attempt_01_recheck/result.json">실행 기록</a></td></tr>
+<tr><td>8번 · v4.30.0</td><td>미측정 → 미측정</td><td>미측정 → 미측정</td><td>미실행 / 미실행</td><td>1/4 (검사 1)</td><td>기록 없음</td></tr>
+<tr><td>11번 · v4.31.0</td><td>1,906 → 1,656 (13.12% 감소)</td><td>45,537 → 41,636 (8.57% 감소)</td><td>통과 / 통과</td><td>1/3 (검사 1)</td><td><a href="evidence/metrics/P11/runs/20261016T003619698812Z-attempt_01/result.json">실행 기록</a></td></tr>
+<tr><td>11번 · v4.30.0</td><td>미측정 → 미측정</td><td>미측정 → 미측정</td><td>미실행 / 미실행</td><td>1/3 (검사 1)</td><td>기록 없음</td></tr>
+<tr><td>11번 · v4.29.0</td><td>미측정 → 미측정</td><td>미측정 → 미측정</td><td>미실행 / 미실행</td><td>1/3 (검사 1)</td><td>기록 없음</td></tr>
+</tbody></table></div>
+<p class="source">8번 후보 <a href="evidence/P8/attempts/attempt_01.lean">attempt_01</a>: 412 tokens (Lean 검증 통과: v4.31.0). par/red_S 분기의 grind 탐색을 명시적 .par 생성자 조립으로 대체한다.</p>
+<p class="source">11번 후보 <a href="evidence/P11/attempts/attempt_01.lean">attempt_01</a>: 1,656 tokens (Lean 검증 통과: v4.31.0). 이후 참조되지 않는 P₀_coeffs·P₁_coeffs 지역 정의만 제거한다.</p>
+<!-- experiment-results:end -->
+<p class="note">원본·후보 모두 v4.31.0에서 검증·측정했습니다. 8번 후보는 공리 없음, 11번은 원본과 같은 표준 공리만 사용합니다. 1/4·1/3은 전체 지정 버전 중 확인한 범위이며 나머지는 미실행입니다. 권한 차단은 승인 후 해소됐고, 공리 없는 출력을 잘못 실패 처리하던 검증기도 수정했습니다. 공식 서버 점수가 아닙니다.</p>
+</section>
+</main>
+<footer><span id="hint">← → 이동 · Home / End · 본문 16장 / 부록 6장</span><nav class="controls" aria-label="슬라이드 이동"><button id="main-end" type="button">본문 끝</button><button id="appendix" type="button">부록</button><button id="prev" type="button">이전</button><span id="position" aria-live="polite">1 / 22</span><button id="next" type="button">다음</button></nav></footer>
+<script>
+(()=>{const slides=[...document.querySelectorAll('.slide')];let index=0;const prev=document.getElementById('prev'),next=document.getElementById('next'),position=document.getElementById('position'),overview=document.getElementById('overview');function show(n){index=Math.max(0,Math.min(slides.length-1,n));slides.forEach((slide,i)=>{slide.classList.toggle('active',i===index);slide.setAttribute('aria-hidden',String(!document.body.classList.contains('overview')&&i!==index))});position.textContent=`${index+1} / ${slides.length}`;prev.disabled=index===0;next.disabled=index===slides.length-1}prev.onclick=()=>show(index-1);next.onclick=()=>show(index+1);document.getElementById('main-end').onclick=()=>show(slides.findIndex(s=>s.id==='next-study'));document.getElementById('appendix').onclick=()=>show(slides.findIndex(s=>s.id==='appendix-start'));overview.onclick=()=>{const on=document.body.classList.toggle('overview');overview.setAttribute('aria-pressed',String(on));overview.textContent=on?'발표 보기':'전체 보기';show(index)};document.addEventListener('keydown',event=>{if(event.altKey||event.ctrlKey||event.metaKey||['INPUT','TEXTAREA','SELECT'].includes(event.target.tagName))return;if(event.key==='ArrowRight'){event.preventDefault();show(index+1)}else if(event.key==='ArrowLeft'){event.preventDefault();show(index-1)}else if(event.key==='Home'){event.preventDefault();show(0)}else if(event.key==='End'){event.preventDefault();show(slides.length-1)}});show(0)})();
+</script>
