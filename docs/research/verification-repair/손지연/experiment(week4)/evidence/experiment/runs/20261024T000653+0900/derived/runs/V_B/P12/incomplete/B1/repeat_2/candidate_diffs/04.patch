@@ -1,0 +1,40 @@
+--- candidate_03.proof.lean
++++ candidate_04.proof.lean
+@@ -29,10 +29,11 @@
+       · subst ϑ
+         intro u hu
+         let E : F ≃ (Fin 1 → F) where
+-          toFun r := fun _ => r
+-          invFun r := r 0
+-          left_inv r := rfl
+-          right_inv r := by
++          toFun := fun r _ => r
++          invFun := fun r => r 0
++          left_inv := fun r => rfl
++          right_inv := by
++            intro r
+             funext i
+             fin_cases i
+             rfl
+@@ -55,15 +56,17 @@
+         let U₁ := (splitHalfRowWiseInterleavedWords (ϑ := ϑ) u).2
+         let R := R_star_tensor MC (m := ϑ) (e := e) (ε := ε) U₀ U₁
+         let E : (F × (Fin ϑ → F)) ≃ (Fin (ϑ + 1) → F) where
+-          toFun p := Fin.lastCases p.1 p.2
+-          invFun r := (r (Fin.last ϑ), fun i => r i.castSucc)
+-          left_inv p := by
++          toFun := fun p => Fin.lastCases p.1 p.2
++          invFun := fun r => (r (Fin.last ϑ), fun i => r i.castSucc)
++          left_inv := by
++            intro p
+             rcases p with ⟨r, rs⟩
+             apply Prod.ext
+             · rfl
+             · funext i
+               rfl
+-          right_inv r := by
++          right_inv := by
++            intro r
+             funext i
+             refine Fin.lastCases ?_ (fun j => ?_) i <;> rfl
+         have hu_split :

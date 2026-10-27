@@ -1,0 +1,65 @@
+--- candidate_01.proof.lean
++++ candidate_02.proof.lean
+@@ -35,15 +35,13 @@
+               Fin.snoc (fun i : Fin (k + 1) => r i.castSucc)
+                 (r (Fin.last (k + 1))) = r := fun r => by
+             funext i
+-            have hi_lt := i.isLt
+             by_cases h : i = Fin.last (k + 1)
+             · simp only [h, Fin.snoc_last]
+             · have hval : i.val ≠ Fin.last (k + 1) := by omega
+               rw [Fin.val_last] at hval
+               have hi : i.val < k + 1 := by omega
+               simp only [Fin.snoc, Fin.castSucc_castLT, cast_eq, dite_eq_ite,
+-                ite_eq_left_iff, not_lt]
+-              simp only [isEmpty_Prop, not_le, hi, IsEmpty.forall_iff]
++                ite_eq_left_iff, not_lt, isEmpty_Prop, not_le, hi, IsEmpty.forall_iff]
+           let P : F → (Fin (k + 1) → F) → Prop := fun r_last r_init =>
+             Δ₀(multilinearCombine (u := u) (r := Fin.snoc r_init r_last), MC) ≤ e
+           have hsplit := prob_split_last_uniform_sampling_of_finFun
+@@ -60,18 +58,17 @@
+           simp_rw [hcombine] at hprob
+           let R := R_star_tensor MC (m := k + 1) (e := e) (ε := ε) U₀ U₁
+           have hRprob : Pr_{let r ← $ᵖ F}[r ∈ R] >
+-              (↑ε : ENNReal) / (Fintype.card F : ENNReal) := by
+-            let h := prob_R_star_gt_threshold (MC := MC) (ε := ε)
++              (↑ε : ENNReal) / (Fintype.card F : ENNReal) :=
++            prob_R_star_gt_threshold (MC := MC) (ε := ε)
+               (ϑ := k + 1) (u := u) (e := e) hprob
+-            exact h
+           have hclose : ∀ r : R,
+               jointProximityNat (u := affineLineEvaluation U₀ U₁ r.val)
+                 (e := e) (C := MC) := by
+             intro r
+             apply correlatedAgreement_of_mem_R_star_tensor
+               (ih := fun v => ih (by omega) v) (u := u)
+-          let W₀ : InterleavedWord A (Fin (2 ^ (k + 1))) ι := ⋈|U₀
+-          let W₁ : InterleavedWord A (Fin (2 ^ (k + 1))) ι := ⋈|U₁
++          let W₀ : InterleavedWord A (Fin (2 ^ (k + 1))) ι := Matrix.transpose U₀
++          let W₁ : InterleavedWord A (Fin (2 ^ (k + 1))) ι := Matrix.transpose U₁
+           have hp : Pr_{let r ← $ᵖ F}[
+               Δ₀(affineLineEvaluation W₀ W₁ r,
+                 MC ^⋈ (Fin (2 ^ (k + 1)))) ≤ e] >
+@@ -81,11 +78,18 @@
+             intro r hr
+             have h := hclose ⟨r, hr⟩
+             unfold jointProximityNat at h
+-            exact h
++            have hword : affineLineEvaluation W₀ W₁ r =
++                Matrix.transpose (affineLineEvaluation U₀ U₁ r) := by
++              funext j i
++              rfl
++            rw [hword]
++            simpa only [interleave_wordStack_eq, CodeInterleavable.interleaveCode,
++              ModuleCode.moduleInterleavedCode] using h
+           have hfinal : jointProximityNat₂ (u₀ := W₀) (u₁ := W₁) (e := e)
+               (C := MC ^⋈ (Fin (2 ^ (k + 1)))) := by
+             apply h_interleaved_gaps (2 ^ (k + 1)) Nat.one_le_two_pow
+               (u₀ := W₀) (u₁ := W₁)
+             exact hp
+           apply CA_split_rowwise_implies_CA (u := u) (e := e)
+-          exact hfinal
+\ No newline at end of file
++          simpa only [W₀, W₁, U₀, U₁, interleave_wordStack_eq,
++            CodeInterleavable.interleaveCode, ModuleCode.moduleInterleavedCode] using hfinal
+\ No newline at end of file

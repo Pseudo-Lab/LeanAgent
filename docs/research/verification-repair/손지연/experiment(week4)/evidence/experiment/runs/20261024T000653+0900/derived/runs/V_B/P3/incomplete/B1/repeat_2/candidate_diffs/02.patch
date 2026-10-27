@@ -1,0 +1,11 @@
+--- candidate_01.proof.lean
++++ candidate_02.proof.lean
+@@ -21,7 +21,7 @@
+         (updatedStates (updatedStates σ ks' vs') ks vs) :=
+     updatedStatesUpdate Hlen Hdef₁
+   have Hzipdisj :
+-      (ks'.zip vs').unzip.1.Disjoint (ks.zip vs).unzip.1 := by
++      List.Disjoint ((ks'.zip vs').unzip.1) ((ks.zip vs).unzip.1) := by
+     simpa [Hlen, Hlen'] using (List.Disjoint.symm Hdisj)
+   have Hcomm :
+       updatedStates (updatedStates σ ks' vs') ks vs =

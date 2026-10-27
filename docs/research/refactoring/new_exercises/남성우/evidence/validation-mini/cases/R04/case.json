@@ -1,0 +1,238 @@
+{
+  "id": "R04",
+  "seed_id": "toy:ValidationMini.r04_inter_union",
+  "source_kind": "toy",
+  "source_path": "validation-mini/sources/toy/R04_inter_union.lean (educational example written for this dataset)",
+  "decl_full_name": "ValidationMini.r04_inter_union",
+  "environment": {
+    "dir": "/Users/sungwoo/lean_project/autoformalization_lab",
+    "lean_version": "Lean (version 4.35.0-rc4, arm64-apple-darwin24.6.0, commit c29b6dda4f7c20e3eeaa717c4e565663c5cfa364, Release)",
+    "lake_version": "Lake version 5.0.0-src+c29b6dd (Lean version 4.35.0-rc4)",
+    "lean_toolchain": "leanprover/lean4:v4.35.0-rc4",
+    "repo_commit": "454cc4cd2f28c71eaa3f37df40ef5616a96b947e",
+    "lake_manifest_sha256": "e9e2f6717972d3fc7266e2e8e02236c289f24a6b8ca824e0799d7ef01ab79a7a",
+    "lakefile_sha256": {
+      "lakefile.toml": "c75d913834f1403f56639d57320b39a355d2a3ad76ea86336d13b061a08b05f5"
+    },
+    "uncommitted_status": [
+      "M AGENTS.md",
+      " M AutoformalizationLab.lean",
+      " M README.md",
+      " M docs/hilbert-scheme/outline.md",
+      " M docs/hilbert-scheme/verification.md"
+    ],
+    "uncommitted_diff_sha256": "93487ca4becf62c7ede7d950ca76304f58bba3b9ca77445c999f02975f3310d6",
+    "packages": {
+      "mathlib": "e6bbacd0e1b7307ff6e17da09cd2455f60804fa6",
+      "plausible": "aef59637faa9e85fa2486acaaf906ce3f572af7c",
+      "LeanSearchClient": "234d9e074fbd6e911b920baf32db5291c3125be0",
+      "importGraph": "579f558774c4ac6840e715ba60dabf3030619349",
+      "proofwidgets": "d5ad4a0b79fa7f9818fe1380d05a3f6143823c09",
+      "aesop": "04879b1e1de744d5c9777c8cf63fa55a8f652e5e",
+      "Qq": "e7c4cdd2f1bf9df361ef7f621b4d6867012ab65e",
+      "batteries": "b71aaf60877e673fdb921f06f20987d12ee8a290",
+      "Cli": "82c11b9717083154aefc5fe8d4cba4bbf046298f"
+    },
+    "has_aesop": true,
+    "environment_hash": "eaa66a54671323fdb00c2ab25c3e52d1a8dd93a4c37fef763b259574ff3920a3",
+    "project": "mathlib_toy"
+  },
+  "immutable_context_hash": "466ec1f64c262f7cee79c05b5dac6c35cc55426409ecc6d8671046909c540771",
+  "statement": "theorem r04_inter_union {α : Type*} (s t u : Set α) (x : α) (hx : x ∈ s ∩ (t ∪ u)) :\n    x ∈ (s ∩ t) ∪ (s ∩ u)",
+  "original_body": "by\n  obtain ⟨hs, htu⟩ := hx\n  rcases htu with ht | hu\n  · exact Or.inl ⟨hs, ht⟩\n  · exact Or.inr ⟨hs, hu⟩",
+  "original_body_sha256": "7bc3925ec8543635f6c56304bb659bb0b75c5e1db6297f53f2dfb57bf0d9090c",
+  "body_range": {
+    "body_start_char": 207,
+    "body_end_char": 312,
+    "body_first_line": 7,
+    "decl_first_line": 6
+  },
+  "candidate_body": "by\n  aesop",
+  "candidate_hash": "929b04ed07796e023cee7eead60e789dde850261f490454715b7e99bf7d58e3b",
+  "expected_intent": "Shorten the explicit case split to a single `aesop` call (expected valid; the question is whether the raw call or the extracted aesop? script is cheaper).",
+  "baseline_check": {
+    "kind": "valid",
+    "exit_code": 0,
+    "axioms": [],
+    "n_errors_in_target": 0,
+    "first_error": null,
+    "errors_outside_target": 0,
+    "run": "cases/R04/logs/00_baseline.result.json",
+    "wall_s_local": 13.35
+  },
+  "observed_result": "valid",
+  "candidate_check": {
+    "kind": "valid",
+    "exit_code": 0,
+    "axioms": [
+      "propext"
+    ],
+    "n_errors_in_target": 0,
+    "first_error": null,
+    "errors_outside_target": 0,
+    "run": "cases/R04/logs/01_candidate.result.json",
+    "wall_s_local": 2.63
+  },
+  "diagnostics": [],
+  "pre_error_state": null,
+  "pre_error_state_null_reason": "candidate valid",
+  "inferred_state": null,
+  "localization": {
+    "scope": "body",
+    "method": "no error",
+    "trusted_pre_state": false
+  },
+  "local_attempts": [],
+  "local_result": null,
+  "valid_path_extraction": [
+    {
+      "body_line": 1,
+      "original_line": "  aesop",
+      "query_line": "  aesop?",
+      "query_check": {
+        "kind": "valid",
+        "exit_code": 0,
+        "axioms": [
+          "propext"
+        ],
+        "n_errors_in_target": 0,
+        "first_error": null,
+        "errors_outside_target": 0,
+        "run": "cases/R04/attempts/extract_001_aesopQ.result.json",
+        "wall_s_local": 2.04
+      },
+      "raw_tool_output": "Try this:\n\n  [apply]   simp_all only [Set.mem_inter_iff, Set.mem_union, true_and]",
+      "suggestion": "simp_all only [Set.mem_inter_iff, Set.mem_union, true_and]",
+      "substituted_body": "by\n  simp_all only [Set.mem_inter_iff, Set.mem_union, true_and]",
+      "substituted_check": {
+        "kind": "valid",
+        "exit_code": 0,
+        "axioms": [
+          "propext"
+        ],
+        "n_errors_in_target": 0,
+        "first_error": null,
+        "errors_outside_target": 0,
+        "run": "cases/R04/attempts/extract_001_aesopQ_substituted.result.json",
+        "wall_s_local": 3.86
+      }
+    }
+  ],
+  "gold_repair_path": "gold_repair.lean",
+  "gold_strategy": "candidate itself is the reference if valid (no repair needed)",
+  "gold_check": {
+    "kind": "valid",
+    "exit_code": 0,
+    "axioms": [
+      "propext"
+    ],
+    "n_errors_in_target": 0,
+    "first_error": null,
+    "errors_outside_target": 0,
+    "run": "cases/R04/logs/03_gold_alt0.result.json",
+    "wall_s_local": 2.56
+  },
+  "gold_attempts": [
+    {
+      "alternative": 0,
+      "edits": [],
+      "check": {
+        "kind": "valid",
+        "exit_code": 0,
+        "axioms": [
+          "propext"
+        ],
+        "n_errors_in_target": 0,
+        "first_error": null,
+        "errors_outside_target": 0,
+        "run": "cases/R04/logs/03_gold_alt0.result.json",
+        "wall_s_local": 2.56
+      }
+    }
+  ],
+  "full_replay_result": {
+    "kind": "valid",
+    "exit_code": 0,
+    "axioms": [
+      "propext"
+    ],
+    "n_errors_in_target": 0,
+    "first_error": null,
+    "errors_outside_target": 0,
+    "run": "cases/R04/logs/03_gold_alt0.result.json",
+    "wall_s_local": 2.56
+  },
+  "full_replay_result_source": "gold_repair",
+  "measurements": {
+    "baseline": {
+      "body_nonwhitespace_chars": {
+        "value": 76,
+        "kind": "local_estimate",
+        "note": "character count, NOT the official token count"
+      },
+      "official_tokens": {
+        "value": null,
+        "kind": "not_measured",
+        "reason": "official tokenizer not available"
+      },
+      "heartbeats": {
+        "value": 68,
+        "kind": "local_estimate",
+        "method": "instrumented run: IO.getNumHeartbeats delta /1000 around the declaration with Elab.async=false (same mechanism as Mathlib #count_heartbeats); single run; not the official Arena measurement",
+        "run": "cases/R04/logs/04_measure_baseline.result.json"
+      }
+    },
+    "candidate": {
+      "body_nonwhitespace_chars": {
+        "value": 7,
+        "kind": "local_estimate",
+        "note": "character count, NOT the official token count"
+      },
+      "official_tokens": {
+        "value": null,
+        "kind": "not_measured",
+        "reason": "official tokenizer not available"
+      },
+      "heartbeats": {
+        "value": 119,
+        "kind": "local_estimate",
+        "method": "instrumented run: IO.getNumHeartbeats delta /1000 around the declaration with Elab.async=false (same mechanism as Mathlib #count_heartbeats); single run; not the official Arena measurement",
+        "run": "cases/R04/logs/04_measure_candidate.result.json"
+      }
+    },
+    "extracted_0": {
+      "body_nonwhitespace_chars": {
+        "value": 56,
+        "kind": "local_estimate",
+        "note": "character count, NOT the official token count"
+      },
+      "official_tokens": {
+        "value": null,
+        "kind": "not_measured",
+        "reason": "official tokenizer not available"
+      },
+      "heartbeats": {
+        "value": 69,
+        "kind": "local_estimate",
+        "method": "instrumented run: IO.getNumHeartbeats delta /1000 around the declaration with Elab.async=false (same mechanism as Mathlib #count_heartbeats); single run; not the official Arena measurement",
+        "run": "cases/R04/logs/04_measure_extracted_0.result.json"
+      }
+    },
+    "robustness": {
+      "listed_versions": [],
+      "checked_versions": [
+        "mathlib_toy pinned env only"
+      ],
+      "complete": false,
+      "note": "toy example: no Arena version list; robustness not applicable/not complete"
+    }
+  },
+  "expected_route": "valid_measure_then_select",
+  "expected_route_reason": "candidate valid; official tokens not measured -> policy MEASURE before any optimization request",
+  "author_prediction_before_run": "valid; aesop? yields a script; HB comparison unknown before measuring",
+  "policy_decision": {
+    "decision.json": "MEASURE",
+    "decision.configured_budget.json": null
+  },
+  "validation_status": "lean_observed+gold_verified+string_contract_only_no_lean_adapter_term_check+robustness_incomplete"
+}

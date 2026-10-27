@@ -1,0 +1,1207 @@
+{
+  "call": 2,
+  "origin": "generated",
+  "body": "by\n  let C_i := BBF_Code 𝔽q β (h_ℓ_add_R_rate := h_ℓ_add_R_rate) ⟨i, by omega⟩\n  let S := (fun (g : C_i) =>\n    (fiberwiseDisagreementSet 𝔽q β i steps h_i_add_steps f g).ncard) '' Set.univ\n  have hS_nonempty : S.Nonempty := Set.image_nonempty.mpr Set.univ_nonempty\n  rcases Nat.sInf_mem hS_nonempty with ⟨g_subtype, hg_subtype, hg_min⟩\n  rcases g_subtype with ⟨g_closest, hg_mem⟩\n  have h_fw_eq :\n      fiberwiseDistance 𝔽q β (h_ℓ_add_R_rate := h_ℓ_add_R_rate)\n        (i := i) steps h_i_add_steps f =\n      (fiberwiseDisagreementSet 𝔽q β i steps h_i_add_steps f g_closest).ncard := by\n    change sInf S = _\n    simpa using hg_min.symm\n\n  let D := Finset.filter (fun x => f x ≠ g_closest x) Finset.univ\n  let FW := fiberwiseDisagreementSet 𝔽q β i steps h_i_add_steps f g_closest\n  letI : Fintype FW := Fintype.ofFinite FW\n  let E := FW.toFinset\n  let q := fun x : sDomain 𝔽q β h_ℓ_add_R_rate ⟨i, by omega⟩ =>\n    iteratedQuotientMap 𝔽q β h_ℓ_add_R_rate (i := i) (k := steps)\n      (h_bound := h_i_add_steps) x\n  let k := fun x : sDomain 𝔽q β h_ℓ_add_R_rate ⟨i, by omega⟩ =>\n    pointToIterateQuotientIndex (i := ⟨i, by omega⟩) (steps := steps)\n      (h_i_add_steps := h_i_add_steps) (x := x)\n  let enc := fun x => (q x, k x)\n\n  have h_card : D.card ≤ (E.product (Finset.univ : Finset (Fin (2 ^ steps)))).card := by\n    apply Finset.card_le_card_of_injOn (f := enc)\n    · intro x hx\n      change q x ∈ E ∧ k x ∈ (Finset.univ : Finset (Fin (2 ^ steps)))\n      constructor\n      · simp only [E, Set.mem_toFinset]\n        change ∃ z, q z = q x ∧ f z ≠ g_closest z\n        exact ⟨x, rfl, (Finset.mem_filter.mp hx).2⟩\n      · exact Finset.mem_univ _\n    · intro x hx y hy hxy\n      change (q x, k x) = (q y, k y) at hxy\n      have hq : q x = q y := congrArg Prod.fst hxy\n      have hk : k x = k y := congrArg Prod.snd hxy\n      have hx_rec :=\n        (is_fiber_iff_generates_quotient_point 𝔽q β i steps h_i_add_steps\n          (x := x) (y := q x)).mp (by rfl)\n      have hy_rec :=\n        (is_fiber_iff_generates_quotient_point 𝔽q β i steps h_i_add_steps\n          (x := y) (y := q y)).mp (by rfl)\n      calc\n        x = qMap_total_fiber 𝔽q β\n            (i := ⟨i.val, fin_ℓ_lt_r (h_ℓ_add_R_rate := h_ℓ_add_R_rate) i⟩)\n            (steps := steps)\n            (h_i_add_steps := fin_ℓ_steps_lt_ℓ_add_R i steps h_i_add_steps)\n            (y := q x) (k x) := hx_rec.symm\n        _ = qMap_total_fiber 𝔽q β\n            (i := ⟨i.val, fin_ℓ_lt_r (h_ℓ_add_R_rate := h_ℓ_add_R_rate) i⟩)\n            (steps := steps)\n            (h_i_add_steps := fin_ℓ_steps_lt_ℓ_add_R i steps h_i_add_steps)\n            (y := q y) (k y) := by rw [hq, hk]\n        _ = y := hy_rec\n\n  have h_hamming_le :\n      hammingDist f g_closest ≤\n        2 ^ steps *\n          (fiberwiseDisagreementSet 𝔽q β i steps h_i_add_steps\n            f g_closest).ncard := by\n    simpa [D, E, FW, hammingDist, Nat.mul_comm] using h_card\n\n  have h_dist_le_hamming :\n      Code.distFromCode f\n          (BBF_Code 𝔽q β (h_ℓ_add_R_rate := h_ℓ_add_R_rate) ⟨i, by omega⟩) ≤\n        (hammingDist f g_closest : ℕ∞) := by\n    unfold Code.distFromCode\n    apply sInf_le\n    exact ⟨g_closest, hg_mem, le_rfl⟩\n\n  have h_hamming_le_enat :\n      (hammingDist f g_closest : ℕ∞) ≤\n        ((2 ^ steps * fiberwiseDistance 𝔽q β\n          (h_ℓ_add_R_rate := h_ℓ_add_R_rate)\n          (i := i) steps h_i_add_steps f : ℕ) : ℕ∞) := by\n    exact_mod_cast h_hamming_le.trans_eq (congrArg (2 ^ steps * ·) h_fw_eq.symm)\n\n  have h_fw_bound := h_fw_dist_lt\n  unfold fiberwiseClose at h_fw_bound\n  have h_fw_nat :\n      2 * fiberwiseDistance 𝔽q β (h_ℓ_add_R_rate := h_ℓ_add_R_rate)\n          (i := i) steps h_i_add_steps f <\n        BBF_CodeDistance ℓ 𝓡 ⟨i + steps, by omega⟩ := by\n    exact_mod_cast h_fw_bound\n\n  have h_distance_identity :\n      BBF_CodeDistance ℓ 𝓡 ⟨i, by omega⟩ =\n        2 ^ steps * (BBF_CodeDistance ℓ 𝓡 ⟨i + steps, by omega⟩ - 1) + 1 := by\n    have h_exp_top :\n        ℓ + 𝓡 - i.val = steps + (ℓ + 𝓡 - (i.val + steps)) := by omega\n    have h_exp_bottom :\n        ℓ - i.val = steps + (ℓ - (i.val + steps)) := by omega\n    unfold BBF_CodeDistance\n    rw [h_exp_top, h_exp_bottom, Nat.pow_add, Nat.pow_add]\n    simp only [Nat.add_sub_cancel]\n    rw [Nat.mul_sub_left_distrib]\n\n  have h_fw_le :\n      2 * fiberwiseDistance 𝔽q β (h_ℓ_add_R_rate := h_ℓ_add_R_rate)\n          (i := i) steps h_i_add_steps f ≤\n        BBF_CodeDistance ℓ 𝓡 ⟨i + steps, by omega⟩ - 1 := by\n    omega\n  have h_scaled := Nat.mul_le_mul_left (2 ^ steps) h_fw_le\n  have h_numeric :\n      2 * (2 ^ steps * fiberwiseDistance 𝔽q β\n          (h_ℓ_add_R_rate := h_ℓ_add_R_rate)\n          (i := i) steps h_i_add_steps f) <\n        BBF_CodeDistance ℓ 𝓡 ⟨i, by omega⟩ := by\n    rw [h_distance_identity]\n    calc\n      2 * (2 ^ steps * fiberwiseDistance 𝔽q β\n          (h_ℓ_add_R_rate := h_ℓ_add_R_rate)\n          (i := i) steps h_i_add_steps f) =\n          2 ^ steps * (2 * fiberwiseDistance 𝔽q β\n            (h_ℓ_add_R_rate := h_ℓ_add_R_rate)\n            (i := i) steps h_i_add_steps f) := by ac_rfl\n      _ ≤ 2 ^ steps * (BBF_CodeDistance ℓ 𝓡 ⟨i + steps, by omega⟩ - 1) := h_scaled\n      _ < 2 ^ steps * (BBF_CodeDistance ℓ 𝓡 ⟨i + steps, by omega⟩ - 1) + 1 :=\n        Nat.lt_succ_self _\n\n  unfold hammingClose\n  calc\n    2 * Code.distFromCode f\n        (BBF_Code 𝔽q β (h_ℓ_add_R_rate := h_ℓ_add_R_rate) ⟨i, by omega⟩) ≤\n      2 * (hammingDist f g_closest : ℕ∞) :=\n        mul_le_mul_left' h_dist_le_hamming 2\n    _ ≤ 2 * ((2 ^ steps * fiberwiseDistance 𝔽q β\n        (h_ℓ_add_R_rate := h_ℓ_add_R_rate)\n        (i := i) steps h_i_add_steps f : ℕ) : ℕ∞) :=\n      mul_le_mul_left' h_hamming_le_enat 2\n    _ < (BBF_CodeDistance ℓ 𝓡 ⟨i, by omega⟩ : ℕ∞) := by\n      exact_mod_cast h_numeric",
+  "proof_sha256": "d7789d470885b878ec4c4aad2b26f2efaa9d284076830864c92086f9dcdc2759",
+  "full_source_sha256": "45613241ca550bda57f738f40107f9337bbbec857c9a28718bf567f502108a99",
+  "eligible": false,
+  "verification": {
+    "task_id": "P10",
+    "attempt": "candidate_02",
+    "candidate_hash": "45613241ca550bda57f738f40107f9337bbbec857c9a28718bf567f502108a99",
+    "environment_id": "0c6971d601fccc37e69d84ddfa1ac63a41527ba5fa2d7e4f87c63547c308939a",
+    "check_kind": "candidate",
+    "status": "proof_error",
+    "process_exit_code": 1,
+    "diagnostics": [
+      {
+        "severity": "warning",
+        "position": {
+          "column": 84,
+          "line": 234
+        },
+        "end_position": {
+          "column": 96,
+          "line": 234
+        },
+        "message": "`not_lt_zero'` has been deprecated: Use `_root_.not_lt_zero` instead",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "`not_lt_zero'` has been deprecated: Use `_root_.not_lt_zero` instead",
+          "endPos": {
+            "column": 96,
+            "line": 234
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P10/incomplete/B2/repeat_1/validation/lean/005_candidate_02/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "Lean.Linter.deprecatedAttr",
+          "pos": {
+            "column": 84,
+            "line": 234
+          },
+          "severity": "warning"
+        },
+        "source_line": "    simp only [qMap_total_fiber, ↓reduceDIte, Nat.add_zero, eq_mp_eq_cast, cast_eq, not_lt_zero',",
+        "start_offset": 10734,
+        "start_byte_offset": 11464,
+        "end_offset": 10746,
+        "end_byte_offset": 11476,
+        "source_text": "not_lt_zero'"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 48,
+          "line": 326
+        },
+        "end_position": {
+          "column": 60,
+          "line": 326
+        },
+        "message": "`not_lt_zero'` has been deprecated: Use `_root_.not_lt_zero` instead",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "`not_lt_zero'` has been deprecated: Use `_root_.not_lt_zero` instead",
+          "endPos": {
+            "column": 60,
+            "line": 326
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P10/incomplete/B2/repeat_1/validation/lean/005_candidate_02/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "Lean.Linter.deprecatedAttr",
+          "pos": {
+            "column": 48,
+            "line": 326
+          },
+          "severity": "warning"
+        },
+        "source_line": "  simp only [fiber_coeff, add_lt_iff_neg_right, not_lt_zero', ↓reduceDIte, add_tsub_cancel_right,",
+        "start_offset": 15860,
+        "start_byte_offset": 16861,
+        "end_offset": 15872,
+        "end_byte_offset": 16873,
+        "source_text": "not_lt_zero'"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 4,
+          "line": 648
+        },
+        "end_position": {
+          "column": 14,
+          "line": 648
+        },
+        "message": "declaration uses `sorry`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "declaration uses `sorry`",
+          "endPos": {
+            "column": 14,
+            "line": 648
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P10/incomplete/B2/repeat_1/validation/lean/005_candidate_02/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "hasSorry",
+          "pos": {
+            "column": 4,
+            "line": 648
+          },
+          "severity": "warning"
+        },
+        "source_line": "def foldMatrix (i : Fin r) (steps : Fin (ℓ + 1)) (h_i_add_steps : i.val + steps < ℓ + 𝓡)",
+        "start_offset": 33101,
+        "start_byte_offset": 35080,
+        "end_offset": 33111,
+        "end_byte_offset": 35090,
+        "source_text": "foldMatrix"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 6,
+          "line": 684
+        },
+        "end_position": {
+          "column": 32,
+          "line": 684
+        },
+        "message": "declaration uses `sorry`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "declaration uses `sorry`",
+          "endPos": {
+            "column": 32,
+            "line": 684
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P10/incomplete/B2/repeat_1/validation/lean/005_candidate_02/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "hasSorry",
+          "pos": {
+            "column": 6,
+            "line": 684
+          },
+          "severity": "warning"
+        },
+        "source_line": "lemma iterated_fold_transitivity",
+        "start_offset": 34780,
+        "start_byte_offset": 36881,
+        "end_offset": 34806,
+        "end_byte_offset": 36907,
+        "source_text": "iterated_fold_transitivity"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 8,
+          "line": 798
+        },
+        "end_position": {
+          "column": 36,
+          "line": 798
+        },
+        "message": "declaration uses `sorry`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "declaration uses `sorry`",
+          "endPos": {
+            "column": 36,
+            "line": 798
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P10/incomplete/B2/repeat_1/validation/lean/005_candidate_02/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "hasSorry",
+          "pos": {
+            "column": 8,
+            "line": 798
+          },
+          "severity": "warning"
+        },
+        "source_line": "theorem iterated_fold_eq_matrix_form (i : Fin ℓ) (steps : ℕ) (h_i_add_steps : i + steps ≤ ℓ)",
+        "start_offset": 40551,
+        "start_byte_offset": 42971,
+        "end_offset": 40579,
+        "end_byte_offset": 42999,
+        "source_text": "iterated_fold_eq_matrix_form"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 15,
+          "line": 864
+        },
+        "end_position": {
+          "column": 29,
+          "line": 864
+        },
+        "message": "`Subtype.eq_iff` has been deprecated: Use `Subtype.ext_iff` instead\n\nNote: The updated constant has a different type:\n  ∀ {α : Sort u} {p : α → Prop} {a1 a2 : { x // p x }}, a1 = a2 ↔ ↑a1 = ↑a2\ninstead of\n  ∀ {α : Sort u_1} {p : α → Prop} {a1 a2 : { x // p x }}, a1 = a2 ↔ ↑a1 = ↑a2",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "`Subtype.eq_iff` has been deprecated: Use `Subtype.ext_iff` instead\n\nNote: The updated constant has a different type:\n  ∀ {α : Sort u} {p : α → Prop} {a1 a2 : { x // p x }}, a1 = a2 ↔ ↑a1 = ↑a2\ninstead of\n  ∀ {α : Sort u_1} {p : α → Prop} {a1 a2 : { x // p x }}, a1 = a2 ↔ ↑a1 = ↑a2",
+          "endPos": {
+            "column": 29,
+            "line": 864
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P10/incomplete/B2/repeat_1/validation/lean/005_candidate_02/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "Lean.Linter.deprecatedAttr",
+          "pos": {
+            "column": 15,
+            "line": 864
+          },
+          "severity": "warning"
+        },
+        "source_line": "    simp only [Subtype.eq_iff] at h",
+        "start_offset": 43800,
+        "start_byte_offset": 46512,
+        "end_offset": 43814,
+        "end_byte_offset": 46526,
+        "source_text": "Subtype.eq_iff"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 15,
+          "line": 872
+        },
+        "end_position": {
+          "column": 29,
+          "line": 872
+        },
+        "message": "`Subtype.eq_iff` has been deprecated: Use `Subtype.ext_iff` instead\n\nNote: The updated constant has a different type:\n  ∀ {α : Sort u} {p : α → Prop} {a1 a2 : { x // p x }}, a1 = a2 ↔ ↑a1 = ↑a2\ninstead of\n  ∀ {α : Sort u_1} {p : α → Prop} {a1 a2 : { x // p x }}, a1 = a2 ↔ ↑a1 = ↑a2",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "`Subtype.eq_iff` has been deprecated: Use `Subtype.ext_iff` instead\n\nNote: The updated constant has a different type:\n  ∀ {α : Sort u} {p : α → Prop} {a1 a2 : { x // p x }}, a1 = a2 ↔ ↑a1 = ↑a2\ninstead of\n  ∀ {α : Sort u_1} {p : α → Prop} {a1 a2 : { x // p x }}, a1 = a2 ↔ ↑a1 = ↑a2",
+          "endPos": {
+            "column": 29,
+            "line": 872
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P10/incomplete/B2/repeat_1/validation/lean/005_candidate_02/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "Lean.Linter.deprecatedAttr",
+          "pos": {
+            "column": 15,
+            "line": 872
+          },
+          "severity": "warning"
+        },
+        "source_line": "    simp only [Subtype.eq_iff] at h",
+        "start_offset": 44312,
+        "start_byte_offset": 47058,
+        "end_offset": 44326,
+        "end_byte_offset": 47072,
+        "source_text": "Subtype.eq_iff"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 28,
+          "line": 886
+        },
+        "end_position": {
+          "column": 60,
+          "line": 886
+        },
+        "message": "`AddSubmonoidClass.coe_finset_sum` has been deprecated: Use `AddSubmonoidClass.coe_finsetSum` instead",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "`AddSubmonoidClass.coe_finset_sum` has been deprecated: Use `AddSubmonoidClass.coe_finsetSum` instead",
+          "endPos": {
+            "column": 60,
+            "line": 886
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P10/incomplete/B2/repeat_1/validation/lean/005_candidate_02/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "Lean.Linter.deprecatedAttr",
+          "pos": {
+            "column": 28,
+            "line": 886
+          },
+          "severity": "warning"
+        },
+        "source_line": "    simp only [Fin.isValue, AddSubmonoidClass.coe_finset_sum, SetLike.val_smul]",
+        "start_offset": 44925,
+        "start_byte_offset": 47705,
+        "end_offset": 44957,
+        "end_byte_offset": 47737,
+        "source_text": "AddSubmonoidClass.coe_finset_sum"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 52,
+          "line": 924
+        },
+        "end_position": {
+          "column": 67,
+          "line": 924
+        },
+        "message": "`Nat.add_eq_zero` has been deprecated: Use `Nat.add_eq_zero_iff` instead",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "`Nat.add_eq_zero` has been deprecated: Use `Nat.add_eq_zero_iff` instead",
+          "endPos": {
+            "column": 67,
+            "line": 924
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P10/incomplete/B2/repeat_1/validation/lean/005_candidate_02/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "Lean.Linter.deprecatedAttr",
+          "pos": {
+            "column": 52,
+            "line": 924
+          },
+          "severity": "warning"
+        },
+        "source_line": "    simp only [mem_univ, congr_eqRec, Fin.val_succ, Nat.add_eq_zero, one_ne_zero, and_false,",
+        "start_offset": 46841,
+        "start_byte_offset": 49684,
+        "end_offset": 46856,
+        "end_byte_offset": 49699,
+        "source_text": "Nat.add_eq_zero"
+      },
+      {
+        "severity": "information",
+        "position": {
+          "column": 0,
+          "line": 1087
+        },
+        "end_position": {
+          "column": 6,
+          "line": 1087
+        },
+        "message": "hammingClose 𝔽q β : (i : Fin (ℓ + 1)) → OracleFunction 𝔽q β i → Prop",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "hammingClose 𝔽q β : (i : Fin (ℓ + 1)) → OracleFunction 𝔽q β i → Prop",
+          "endPos": {
+            "column": 6,
+            "line": 1087
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P10/incomplete/B2/repeat_1/validation/lean/005_candidate_02/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 0,
+            "line": 1087
+          },
+          "severity": "information"
+        },
+        "source_line": "#check hammingClose 𝔽q β (h_ℓ_add_R_rate := h_ℓ_add_R_rate)",
+        "start_offset": 55828,
+        "start_byte_offset": 59262,
+        "end_offset": 55834,
+        "end_byte_offset": 59268,
+        "source_text": "#check"
+      },
+      {
+        "severity": "error",
+        "position": {
+          "column": 6,
+          "line": 1299
+        },
+        "end_position": {
+          "column": 69,
+          "line": 1299
+        },
+        "message": "'change' tactic failed, pattern\n  q x ∈ E ∧ k x ∈ univ\nis not definitionally equal to target\n  enc x ∈ ↑(E.product univ)",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "'change' tactic failed, pattern\n  q x ∈ E ∧ k x ∈ univ\nis not definitionally equal to target\n  enc x ∈ ↑(E.product univ)",
+          "endPos": {
+            "column": 69,
+            "line": 1299
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P10/incomplete/B2/repeat_1/validation/lean/005_candidate_02/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 6,
+            "line": 1299
+          },
+          "severity": "error"
+        },
+        "source_line": "      change q x ∈ E ∧ k x ∈ (Finset.univ : Finset (Fin (2 ^ steps)))",
+        "start_offset": 67093,
+        "start_byte_offset": 71152,
+        "end_offset": 67156,
+        "end_byte_offset": 71221,
+        "source_text": "change q x ∈ E ∧ k x ∈ (Finset.univ : Finset (Fin (2 ^ steps)))",
+        "failed_tactic": "change q x ∈ E ∧ k x ∈ (Finset.univ : Finset (Fin (2 ^ steps)))",
+        "tactic_range": {
+          "position": {
+            "line": 1299,
+            "column": 6
+          },
+          "end_position": {
+            "line": 1299,
+            "column": 69
+          },
+          "start_offset": 67093,
+          "end_offset": 67156
+        },
+        "goals": [
+          "enc x ∈ ↑(E.product univ)"
+        ],
+        "local_context": [
+          "case hf\nr : ℕ\ninst✝⁹ : NeZero r\nL : Type\ninst✝⁸ : Field L\ninst✝⁷ : Fintype L\ninst✝⁶ : DecidableEq L\n𝔽q : Type\ninst✝⁵ : Field 𝔽q\ninst✝⁴ : Fintype 𝔽q\ninst✝³ : DecidableEq 𝔽q\nh_Fq_char_prime : Fact (Nat.Prime (ringChar 𝔽q))\nhF₂ : Fact (Fintype.card 𝔽q = 2)\ninst✝² : Algebra 𝔽q L\nβ : Fin r → L\nhβ_lin_indep : Fact (LinearIndependent 𝔽q β)\nh_β₀_eq_1 : Fact (β 0 = 1)\nℓ 𝓡 : ℕ\ninst✝¹ : NeZero 𝓡\nh_ℓ_add_R_rate : ℓ + 𝓡 < r\ni : Fin ℓ\nsteps : ℕ\ninst✝ : NeZero steps\nh_i_add_steps : ↑i + steps ≤ ℓ\nf : OracleFunction 𝔽q β ⟨↑i, ⋯⟩\nh_fw_dist_lt : fiberwiseClose 𝔽q β i steps h_i_add_steps f\nC_i : Submodule L (↥(sDomain 𝔽q β h_ℓ_add_R_rate ⟨↑⟨↑i, ⋯⟩, ⋯⟩) → L) := BBF_Code 𝔽q β ⟨↑i, ⋯⟩\nS : Set ℕ := (fun g => (fiberwiseDisagreementSet 𝔽q β i steps h_i_add_steps f ↑g).ncard) '' Set.univ\nhS_nonempty : S.Nonempty\ng_closest : ↥(sDomain 𝔽q β h_ℓ_add_R_rate ⟨↑⟨↑i, ⋯⟩, ⋯⟩) → L\nhg_mem : g_closest ∈ C_i\nhg_subtype : ⟨g_closest, hg_mem⟩ ∈ Set.univ\nhg_min : (fun g => (fiberwiseDisagreementSet 𝔽q β i steps h_i_add_steps f ↑g).ncard) ⟨g_closest, hg_mem⟩ = sInf S\nh_fw_eq :\n  fiberwiseDistance 𝔽q β i steps h_i_add_steps f =\n    (fiberwiseDisagreementSet 𝔽q β i steps h_i_add_steps f g_closest).ncard\nD : Finset ↥(sDomain 𝔽q β h_ℓ_add_R_rate ⟨↑⟨↑i, ⋯⟩, ⋯⟩) := {x | f x ≠ g_closest x}\nFW : Set ↥(sDomain 𝔽q β h_ℓ_add_R_rate ⟨↑i + steps, ⋯⟩) :=\n  fiberwiseDisagreementSet 𝔽q β i steps h_i_add_steps f g_closest\nthis : Fintype ↑FW := Fintype.ofFinite ↑FW\nE : Finset ↥(sDomain 𝔽q β h_ℓ_add_R_rate ⟨↑i + steps, ⋯⟩) := FW.toFinset\nq : ↥(sDomain 𝔽q β h_ℓ_add_R_rate ⟨↑i, ⋯⟩) → ↥(sDomain 𝔽q β h_ℓ_add_R_rate ⟨↑i + steps, ⋯⟩) :=\n  fun x => iteratedQuotientMap 𝔽q β h_ℓ_add_R_rate i steps h_i_add_steps x\nk : ↥(sDomain 𝔽q β h_ℓ_add_R_rate ⟨↑i, ⋯⟩) → Fin (2 ^ steps) :=\n  fun x => pointToIterateQuotientIndex 𝔽q β ⟨↑i, ⋯⟩ steps h_i_add_steps x\nenc : ↥(sDomain 𝔽q β h_ℓ_add_R_rate ⟨↑i, ⋯⟩) → ↥(sDomain 𝔽q β h_ℓ_add_R_rate ⟨↑i + steps, ⋯⟩) × Fin (2 ^ steps) :=\n  fun x => (q x, k x)\nx : ↥(sDomain 𝔽q β h_ℓ_add_R_rate ⟨↑i, ⋯⟩)\nhx : x ∈ ↑D"
+        ],
+        "proof_state_source": "lean_infotree_before_tactic",
+        "proof_state_raw": {
+          "depth": 24,
+          "end": 78352,
+          "goals_after": [
+            "case hf\nr : ℕ\ninst✝⁹ : NeZero r\nL : Type\ninst✝⁸ : Field L\ninst✝⁷ : Fintype L\ninst✝⁶ : DecidableEq L\n𝔽q : Type\ninst✝⁵ : Field 𝔽q\ninst✝⁴ : Fintype 𝔽q\ninst✝³ : DecidableEq 𝔽q\nh_Fq_char_prime : Fact (Nat.Prime (ringChar 𝔽q))\nhF₂ : Fact (Fintype.card 𝔽q = 2)\ninst✝² : Algebra 𝔽q L\nβ : Fin r → L\nhβ_lin_indep : Fact (LinearIndependent 𝔽q β)\nh_β₀_eq_1 : Fact (β 0 = 1)\nℓ 𝓡 : ℕ\ninst✝¹ : NeZero 𝓡\nh_ℓ_add_R_rate : ℓ + 𝓡 < r\ni : Fin ℓ\nsteps : ℕ\ninst✝ : NeZero steps\nh_i_add_steps : ↑i + steps ≤ ℓ\nf : OracleFunction 𝔽q β ⟨↑i, ⋯⟩\nh_fw_dist_lt : fiberwiseClose 𝔽q β i steps h_i_add_steps f\nC_i : Submodule L (↥(sDomain 𝔽q β h_ℓ_add_R_rate ⟨↑⟨↑i, ⋯⟩, ⋯⟩) → L) := BBF_Code 𝔽q β ⟨↑i, ⋯⟩\nS : Set ℕ := (fun g => (fiberwiseDisagreementSet 𝔽q β i steps h_i_add_steps f ↑g).ncard) '' Set.univ\nhS_nonempty : S.Nonempty\ng_closest : ↥(sDomain 𝔽q β h_ℓ_add_R_rate ⟨↑⟨↑i, ⋯⟩, ⋯⟩) → L\nhg_mem : g_closest ∈ C_i\nhg_subtype : ⟨g_closest, hg_mem⟩ ∈ Set.univ\nhg_min : (fun g => (fiberwiseDisagreementSet 𝔽q β i steps h_i_add_steps f ↑g).ncard) ⟨g_closest, hg_mem⟩ = sInf S\nh_fw_eq :\n  fiberwiseDistance 𝔽q β i steps h_i_add_steps f =\n    (fiberwiseDisagreementSet 𝔽q β i steps h_i_add_steps f g_closest).ncard\nD : Finset ↥(sDomain 𝔽q β h_ℓ_add_R_rate ⟨↑⟨↑i, ⋯⟩, ⋯⟩) := {x | f x ≠ g_closest x}\nFW : Set ↥(sDomain 𝔽q β h_ℓ_add_R_rate ⟨↑i + steps, ⋯⟩) :=\n  fiberwiseDisagreementSet 𝔽q β i steps h_i_add_steps f g_closest\nthis : Fintype ↑FW := Fintype.ofFinite ↑FW\nE : Finset ↥(sDomain 𝔽q β h_ℓ_add_R_rate ⟨↑i + steps, ⋯⟩) := FW.toFinset\nq : ↥(sDomain 𝔽q β h_ℓ_add_R_rate ⟨↑i, ⋯⟩) → ↥(sDomain 𝔽q β h_ℓ_add_R_rate ⟨↑i + steps, ⋯⟩) :=\n  fun x => iteratedQuotientMap 𝔽q β h_ℓ_add_R_rate i steps h_i_add_steps x\nk : ↥(sDomain 𝔽q β h_ℓ_add_R_rate ⟨↑i, ⋯⟩) → Fin (2 ^ steps) :=\n  fun x => pointToIterateQuotientIndex 𝔽q β ⟨↑i, ⋯⟩ steps h_i_add_steps x\nenc : ↥(sDomain 𝔽q β h_ℓ_add_R_rate ⟨↑i, ⋯⟩) → ↥(sDomain 𝔽q β h_ℓ_add_R_rate ⟨↑i + steps, ⋯⟩) × Fin (2 ^ steps) :=\n  fun x => (q x, k x)\nx : ↥(sDomain 𝔽q β h_ℓ_add_R_rate ⟨↑i, ⋯⟩)\nhx : x ∈ ↑D\n⊢ enc x ∈ ↑(E.product univ)"
+          ],
+          "goals_before": [
+            "case hf\nr : ℕ\ninst✝⁹ : NeZero r\nL : Type\ninst✝⁸ : Field L\ninst✝⁷ : Fintype L\ninst✝⁶ : DecidableEq L\n𝔽q : Type\ninst✝⁵ : Field 𝔽q\ninst✝⁴ : Fintype 𝔽q\ninst✝³ : DecidableEq 𝔽q\nh_Fq_char_prime : Fact (Nat.Prime (ringChar 𝔽q))\nhF₂ : Fact (Fintype.card 𝔽q = 2)\ninst✝² : Algebra 𝔽q L\nβ : Fin r → L\nhβ_lin_indep : Fact (LinearIndependent 𝔽q β)\nh_β₀_eq_1 : Fact (β 0 = 1)\nℓ 𝓡 : ℕ\ninst✝¹ : NeZero 𝓡\nh_ℓ_add_R_rate : ℓ + 𝓡 < r\ni : Fin ℓ\nsteps : ℕ\ninst✝ : NeZero steps\nh_i_add_steps : ↑i + steps ≤ ℓ\nf : OracleFunction 𝔽q β ⟨↑i, ⋯⟩\nh_fw_dist_lt : fiberwiseClose 𝔽q β i steps h_i_add_steps f\nC_i : Submodule L (↥(sDomain 𝔽q β h_ℓ_add_R_rate ⟨↑⟨↑i, ⋯⟩, ⋯⟩) → L) := BBF_Code 𝔽q β ⟨↑i, ⋯⟩\nS : Set ℕ := (fun g => (fiberwiseDisagreementSet 𝔽q β i steps h_i_add_steps f ↑g).ncard) '' Set.univ\nhS_nonempty : S.Nonempty\ng_closest : ↥(sDomain 𝔽q β h_ℓ_add_R_rate ⟨↑⟨↑i, ⋯⟩, ⋯⟩) → L\nhg_mem : g_closest ∈ C_i\nhg_subtype : ⟨g_closest, hg_mem⟩ ∈ Set.univ\nhg_min : (fun g => (fiberwiseDisagreementSet 𝔽q β i steps h_i_add_steps f ↑g).ncard) ⟨g_closest, hg_mem⟩ = sInf S\nh_fw_eq :\n  fiberwiseDistance 𝔽q β i steps h_i_add_steps f =\n    (fiberwiseDisagreementSet 𝔽q β i steps h_i_add_steps f g_closest).ncard\nD : Finset ↥(sDomain 𝔽q β h_ℓ_add_R_rate ⟨↑⟨↑i, ⋯⟩, ⋯⟩) := {x | f x ≠ g_closest x}\nFW : Set ↥(sDomain 𝔽q β h_ℓ_add_R_rate ⟨↑i + steps, ⋯⟩) :=\n  fiberwiseDisagreementSet 𝔽q β i steps h_i_add_steps f g_closest\nthis : Fintype ↑FW := Fintype.ofFinite ↑FW\nE : Finset ↥(sDomain 𝔽q β h_ℓ_add_R_rate ⟨↑i + steps, ⋯⟩) := FW.toFinset\nq : ↥(sDomain 𝔽q β h_ℓ_add_R_rate ⟨↑i, ⋯⟩) → ↥(sDomain 𝔽q β h_ℓ_add_R_rate ⟨↑i + steps, ⋯⟩) :=\n  fun x => iteratedQuotientMap 𝔽q β h_ℓ_add_R_rate i steps h_i_add_steps x\nk : ↥(sDomain 𝔽q β h_ℓ_add_R_rate ⟨↑i, ⋯⟩) → Fin (2 ^ steps) :=\n  fun x => pointToIterateQuotientIndex 𝔽q β ⟨↑i, ⋯⟩ steps h_i_add_steps x\nenc : ↥(sDomain 𝔽q β h_ℓ_add_R_rate ⟨↑i, ⋯⟩) → ↥(sDomain 𝔽q β h_ℓ_add_R_rate ⟨↑i + steps, ⋯⟩) × Fin (2 ^ steps) :=\n  fun x => (q x, k x)\nx : ↥(sDomain 𝔽q β h_ℓ_add_R_rate ⟨↑i, ⋯⟩)\nhx : x ∈ ↑D\n⊢ enc x ∈ ↑(E.product univ)"
+          ],
+          "kind": "tactic",
+          "start": 78283
+        }
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 8,
+          "line": 1398
+        },
+        "end_position": {
+          "column": 24,
+          "line": 1398
+        },
+        "message": "`mul_le_mul_left'` has been deprecated: Use `_root_.mul_le_mul_right` instead",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "`mul_le_mul_left'` has been deprecated: Use `_root_.mul_le_mul_right` instead",
+          "endPos": {
+            "column": 24,
+            "line": 1398
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P10/incomplete/B2/repeat_1/validation/lean/005_candidate_02/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "Lean.Linter.deprecatedAttr",
+          "pos": {
+            "column": 8,
+            "line": 1398
+          },
+          "severity": "warning"
+        },
+        "source_line": "        mul_le_mul_left' h_dist_le_hamming 2",
+        "start_offset": 71082,
+        "start_byte_offset": 75392,
+        "end_offset": 71098,
+        "end_byte_offset": 75408,
+        "source_text": "mul_le_mul_left'"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 6,
+          "line": 1402
+        },
+        "end_position": {
+          "column": 22,
+          "line": 1402
+        },
+        "message": "`mul_le_mul_left'` has been deprecated: Use `_root_.mul_le_mul_right` instead",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "`mul_le_mul_left'` has been deprecated: Use `_root_.mul_le_mul_right` instead",
+          "endPos": {
+            "column": 22,
+            "line": 1402
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P10/incomplete/B2/repeat_1/validation/lean/005_candidate_02/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "Lean.Linter.deprecatedAttr",
+          "pos": {
+            "column": 6,
+            "line": 1402
+          },
+          "severity": "warning"
+        },
+        "source_line": "      mul_le_mul_left' h_hamming_le_enat 2",
+        "start_offset": 71270,
+        "start_byte_offset": 75596,
+        "end_offset": 71286,
+        "end_byte_offset": 75612,
+        "source_text": "mul_le_mul_left'"
+      },
+      {
+        "severity": "information",
+        "position": {
+          "column": 0,
+          "line": 1517
+        },
+        "end_position": {
+          "column": 6,
+          "line": 1517
+        },
+        "message": "Binius.BinaryBasefold.fiberwise_dist_lt_imp_dist_lt_unique_decoding_radius {r : ℕ} [NeZero r] {L : Type} [Field L]\n  [Fintype L] [DecidableEq L] (𝔽q : Type) [Field 𝔽q] [Fintype 𝔽q] [DecidableEq 𝔽q]\n  [h_Fq_char_prime : Fact (Nat.Prime (ringChar 𝔽q))] [hF₂ : Fact (Fintype.card 𝔽q = 2)] [Algebra 𝔽q L] (β : Fin r → L)\n  [hβ_lin_indep : Fact (LinearIndependent 𝔽q β)] [h_β₀_eq_1 : Fact (β 0 = 1)] {ℓ 𝓡 : ℕ} [NeZero 𝓡]\n  {h_ℓ_add_R_rate : ℓ + 𝓡 < r} (i : Fin ℓ) (steps : ℕ) [NeZero steps] (h_i_add_steps : ↑i + steps ≤ ℓ)\n  (f : Binius.BinaryBasefold.OracleFunction 𝔽q β ⟨↑i, ⋯⟩)\n  (h_fw_dist_lt : Binius.BinaryBasefold.fiberwiseClose 𝔽q β i steps h_i_add_steps f) :\n  Binius.BinaryBasefold.hammingClose 𝔽q β ⟨↑i, ⋯⟩ f",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "Binius.BinaryBasefold.fiberwise_dist_lt_imp_dist_lt_unique_decoding_radius {r : ℕ} [NeZero r] {L : Type} [Field L]\n  [Fintype L] [DecidableEq L] (𝔽q : Type) [Field 𝔽q] [Fintype 𝔽q] [DecidableEq 𝔽q]\n  [h_Fq_char_prime : Fact (Nat.Prime (ringChar 𝔽q))] [hF₂ : Fact (Fintype.card 𝔽q = 2)] [Algebra 𝔽q L] (β : Fin r → L)\n  [hβ_lin_indep : Fact (LinearIndependent 𝔽q β)] [h_β₀_eq_1 : Fact (β 0 = 1)] {ℓ 𝓡 : ℕ} [NeZero 𝓡]\n  {h_ℓ_add_R_rate : ℓ + 𝓡 < r} (i : Fin ℓ) (steps : ℕ) [NeZero steps] (h_i_add_steps : ↑i + steps ≤ ℓ)\n  (f : Binius.BinaryBasefold.OracleFunction 𝔽q β ⟨↑i, ⋯⟩)\n  (h_fw_dist_lt : Binius.BinaryBasefold.fiberwiseClose 𝔽q β i steps h_i_add_steps f) :\n  Binius.BinaryBasefold.hammingClose 𝔽q β ⟨↑i, ⋯⟩ f",
+          "endPos": {
+            "column": 6,
+            "line": 1517
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P10/incomplete/B2/repeat_1/validation/lean/005_candidate_02/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 0,
+            "line": 1517
+          },
+          "severity": "information"
+        }
+      },
+      {
+        "severity": "information",
+        "position": {
+          "column": 0,
+          "line": 1518
+        },
+        "end_position": {
+          "column": 6,
+          "line": 1518
+        },
+        "message": "'Binius.BinaryBasefold.fiberwise_dist_lt_imp_dist_lt_unique_decoding_radius' depends on axioms: [propext,\n sorryAx,\n Classical.choice,\n Quot.sound]",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "'Binius.BinaryBasefold.fiberwise_dist_lt_imp_dist_lt_unique_decoding_radius' depends on axioms: [propext,\n sorryAx,\n Classical.choice,\n Quot.sound]",
+          "endPos": {
+            "column": 6,
+            "line": 1518
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P10/incomplete/B2/repeat_1/validation/lean/005_candidate_02/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 0,
+            "line": 1518
+          },
+          "severity": "information"
+        }
+      }
+    ],
+    "goals": [
+      "enc x ∈ ↑(E.product univ)"
+    ],
+    "local_context": [
+      "case hf\nr : ℕ\ninst✝⁹ : NeZero r\nL : Type\ninst✝⁸ : Field L\ninst✝⁷ : Fintype L\ninst✝⁶ : DecidableEq L\n𝔽q : Type\ninst✝⁵ : Field 𝔽q\ninst✝⁴ : Fintype 𝔽q\ninst✝³ : DecidableEq 𝔽q\nh_Fq_char_prime : Fact (Nat.Prime (ringChar 𝔽q))\nhF₂ : Fact (Fintype.card 𝔽q = 2)\ninst✝² : Algebra 𝔽q L\nβ : Fin r → L\nhβ_lin_indep : Fact (LinearIndependent 𝔽q β)\nh_β₀_eq_1 : Fact (β 0 = 1)\nℓ 𝓡 : ℕ\ninst✝¹ : NeZero 𝓡\nh_ℓ_add_R_rate : ℓ + 𝓡 < r\ni : Fin ℓ\nsteps : ℕ\ninst✝ : NeZero steps\nh_i_add_steps : ↑i + steps ≤ ℓ\nf : OracleFunction 𝔽q β ⟨↑i, ⋯⟩\nh_fw_dist_lt : fiberwiseClose 𝔽q β i steps h_i_add_steps f\nC_i : Submodule L (↥(sDomain 𝔽q β h_ℓ_add_R_rate ⟨↑⟨↑i, ⋯⟩, ⋯⟩) → L) := BBF_Code 𝔽q β ⟨↑i, ⋯⟩\nS : Set ℕ := (fun g => (fiberwiseDisagreementSet 𝔽q β i steps h_i_add_steps f ↑g).ncard) '' Set.univ\nhS_nonempty : S.Nonempty\ng_closest : ↥(sDomain 𝔽q β h_ℓ_add_R_rate ⟨↑⟨↑i, ⋯⟩, ⋯⟩) → L\nhg_mem : g_closest ∈ C_i\nhg_subtype : ⟨g_closest, hg_mem⟩ ∈ Set.univ\nhg_min : (fun g => (fiberwiseDisagreementSet 𝔽q β i steps h_i_add_steps f ↑g).ncard) ⟨g_closest, hg_mem⟩ = sInf S\nh_fw_eq :\n  fiberwiseDistance 𝔽q β i steps h_i_add_steps f =\n    (fiberwiseDisagreementSet 𝔽q β i steps h_i_add_steps f g_closest).ncard\nD : Finset ↥(sDomain 𝔽q β h_ℓ_add_R_rate ⟨↑⟨↑i, ⋯⟩, ⋯⟩) := {x | f x ≠ g_closest x}\nFW : Set ↥(sDomain 𝔽q β h_ℓ_add_R_rate ⟨↑i + steps, ⋯⟩) :=\n  fiberwiseDisagreementSet 𝔽q β i steps h_i_add_steps f g_closest\nthis : Fintype ↑FW := Fintype.ofFinite ↑FW\nE : Finset ↥(sDomain 𝔽q β h_ℓ_add_R_rate ⟨↑i + steps, ⋯⟩) := FW.toFinset\nq : ↥(sDomain 𝔽q β h_ℓ_add_R_rate ⟨↑i, ⋯⟩) → ↥(sDomain 𝔽q β h_ℓ_add_R_rate ⟨↑i + steps, ⋯⟩) :=\n  fun x => iteratedQuotientMap 𝔽q β h_ℓ_add_R_rate i steps h_i_add_steps x\nk : ↥(sDomain 𝔽q β h_ℓ_add_R_rate ⟨↑i, ⋯⟩) → Fin (2 ^ steps) :=\n  fun x => pointToIterateQuotientIndex 𝔽q β ⟨↑i, ⋯⟩ steps h_i_add_steps x\nenc : ↥(sDomain 𝔽q β h_ℓ_add_R_rate ⟨↑i, ⋯⟩) → ↥(sDomain 𝔽q β h_ℓ_add_R_rate ⟨↑i + steps, ⋯⟩) × Fin (2 ^ steps) :=\n  fun x => (q x, k x)\nx : ↥(sDomain 𝔽q β h_ℓ_add_R_rate ⟨↑i, ⋯⟩)\nhx : x ∈ ↑D"
+    ],
+    "sorries": [
+      {
+        "kind": "transitive_dependency",
+        "axiom": "sorryAx",
+        "position": null,
+        "end_position": null
+      }
+    ],
+    "backend_proof_status": null,
+    "statement_check": "fixed_context_preserved",
+    "axioms": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext",
+      "sorryAx"
+    ],
+    "metrics": {
+      "proof_tokens": 1117
+    },
+    "elapsed_ms": 21781,
+    "raw_log_path": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P10/incomplete/B2/repeat_1/validation/lean/005_candidate_02/stdout.log",
+    "detail": null,
+    "failure_kind": "proof_error"
+  },
+  "measurement": {
+    "proof_tokens": 1117,
+    "raw_heartbeats": null,
+    "token_reduction_pct": 23.858214042263125,
+    "heartbeat_reduction_pct": null,
+    "search_score": null
+  },
+  "facts": {
+    "diagnostics": [
+      {
+        "severity": "warning",
+        "position": {
+          "column": 84,
+          "line": 234
+        },
+        "end_position": {
+          "column": 96,
+          "line": 234
+        },
+        "message": "`not_lt_zero'` has been deprecated: Use `_root_.not_lt_zero` instead",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "`not_lt_zero'` has been deprecated: Use `_root_.not_lt_zero` instead",
+          "endPos": {
+            "column": 96,
+            "line": 234
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "Lean.Linter.deprecatedAttr",
+          "pos": {
+            "column": 84,
+            "line": 234
+          },
+          "severity": "warning"
+        },
+        "source_line": "    simp only [qMap_total_fiber, ↓reduceDIte, Nat.add_zero, eq_mp_eq_cast, cast_eq, not_lt_zero',",
+        "start_offset": 10734,
+        "start_byte_offset": 11464,
+        "end_offset": 10746,
+        "end_byte_offset": 11476,
+        "source_text": "not_lt_zero'"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 48,
+          "line": 326
+        },
+        "end_position": {
+          "column": 60,
+          "line": 326
+        },
+        "message": "`not_lt_zero'` has been deprecated: Use `_root_.not_lt_zero` instead",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "`not_lt_zero'` has been deprecated: Use `_root_.not_lt_zero` instead",
+          "endPos": {
+            "column": 60,
+            "line": 326
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "Lean.Linter.deprecatedAttr",
+          "pos": {
+            "column": 48,
+            "line": 326
+          },
+          "severity": "warning"
+        },
+        "source_line": "  simp only [fiber_coeff, add_lt_iff_neg_right, not_lt_zero', ↓reduceDIte, add_tsub_cancel_right,",
+        "start_offset": 15860,
+        "start_byte_offset": 16861,
+        "end_offset": 15872,
+        "end_byte_offset": 16873,
+        "source_text": "not_lt_zero'"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 4,
+          "line": 648
+        },
+        "end_position": {
+          "column": 14,
+          "line": 648
+        },
+        "message": "declaration uses `sorry`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "declaration uses `sorry`",
+          "endPos": {
+            "column": 14,
+            "line": 648
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "hasSorry",
+          "pos": {
+            "column": 4,
+            "line": 648
+          },
+          "severity": "warning"
+        },
+        "source_line": "def foldMatrix (i : Fin r) (steps : Fin (ℓ + 1)) (h_i_add_steps : i.val + steps < ℓ + 𝓡)",
+        "start_offset": 33101,
+        "start_byte_offset": 35080,
+        "end_offset": 33111,
+        "end_byte_offset": 35090,
+        "source_text": "foldMatrix"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 6,
+          "line": 684
+        },
+        "end_position": {
+          "column": 32,
+          "line": 684
+        },
+        "message": "declaration uses `sorry`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "declaration uses `sorry`",
+          "endPos": {
+            "column": 32,
+            "line": 684
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "hasSorry",
+          "pos": {
+            "column": 6,
+            "line": 684
+          },
+          "severity": "warning"
+        },
+        "source_line": "lemma iterated_fold_transitivity",
+        "start_offset": 34780,
+        "start_byte_offset": 36881,
+        "end_offset": 34806,
+        "end_byte_offset": 36907,
+        "source_text": "iterated_fold_transitivity"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 8,
+          "line": 798
+        },
+        "end_position": {
+          "column": 36,
+          "line": 798
+        },
+        "message": "declaration uses `sorry`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "declaration uses `sorry`",
+          "endPos": {
+            "column": 36,
+            "line": 798
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "hasSorry",
+          "pos": {
+            "column": 8,
+            "line": 798
+          },
+          "severity": "warning"
+        },
+        "source_line": "theorem iterated_fold_eq_matrix_form (i : Fin ℓ) (steps : ℕ) (h_i_add_steps : i + steps ≤ ℓ)",
+        "start_offset": 40551,
+        "start_byte_offset": 42971,
+        "end_offset": 40579,
+        "end_byte_offset": 42999,
+        "source_text": "iterated_fold_eq_matrix_form"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 15,
+          "line": 864
+        },
+        "end_position": {
+          "column": 29,
+          "line": 864
+        },
+        "message": "`Subtype.eq_iff` has been deprecated: Use `Subtype.ext_iff` instead\n\nNote: The updated constant has a different type:\n  ∀ {α : Sort u} {p : α → Prop} {a1 a2 : { x // p x }}, a1 = a2 ↔ ↑a1 = ↑a2\ninstead of\n  ∀ {α : Sort u_1} {p : α → Prop} {a1 a2 : { x // p x }}, a1 = a2 ↔ ↑a1 = ↑a2",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "`Subtype.eq_iff` has been deprecated: Use `Subtype.ext_iff` instead\n\nNote: The updated constant has a different type:\n  ∀ {α : Sort u} {p : α → Prop} {a1 a2 : { x // p x }}, a1 = a2 ↔ ↑a1 = ↑a2\ninstead of\n  ∀ {α : Sort u_1} {p : α → Prop} {a1 a2 : { x // p x }}, a1 = a2 ↔ ↑a1 = ↑a2",
+          "endPos": {
+            "column": 29,
+            "line": 864
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "Lean.Linter.deprecatedAttr",
+          "pos": {
+            "column": 15,
+            "line": 864
+          },
+          "severity": "warning"
+        },
+        "source_line": "    simp only [Subtype.eq_iff] at h",
+        "start_offset": 43800,
+        "start_byte_offset": 46512,
+        "end_offset": 43814,
+        "end_byte_offset": 46526,
+        "source_text": "Subtype.eq_iff"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 15,
+          "line": 872
+        },
+        "end_position": {
+          "column": 29,
+          "line": 872
+        },
+        "message": "`Subtype.eq_iff` has been deprecated: Use `Subtype.ext_iff` instead\n\nNote: The updated constant has a different type:\n  ∀ {α : Sort u} {p : α → Prop} {a1 a2 : { x // p x }}, a1 = a2 ↔ ↑a1 = ↑a2\ninstead of\n  ∀ {α : Sort u_1} {p : α → Prop} {a1 a2 : { x // p x }}, a1 = a2 ↔ ↑a1 = ↑a2",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "`Subtype.eq_iff` has been deprecated: Use `Subtype.ext_iff` instead\n\nNote: The updated constant has a different type:\n  ∀ {α : Sort u} {p : α → Prop} {a1 a2 : { x // p x }}, a1 = a2 ↔ ↑a1 = ↑a2\ninstead of\n  ∀ {α : Sort u_1} {p : α → Prop} {a1 a2 : { x // p x }}, a1 = a2 ↔ ↑a1 = ↑a2",
+          "endPos": {
+            "column": 29,
+            "line": 872
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "Lean.Linter.deprecatedAttr",
+          "pos": {
+            "column": 15,
+            "line": 872
+          },
+          "severity": "warning"
+        },
+        "source_line": "    simp only [Subtype.eq_iff] at h",
+        "start_offset": 44312,
+        "start_byte_offset": 47058,
+        "end_offset": 44326,
+        "end_byte_offset": 47072,
+        "source_text": "Subtype.eq_iff"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 28,
+          "line": 886
+        },
+        "end_position": {
+          "column": 60,
+          "line": 886
+        },
+        "message": "`AddSubmonoidClass.coe_finset_sum` has been deprecated: Use `AddSubmonoidClass.coe_finsetSum` instead",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "`AddSubmonoidClass.coe_finset_sum` has been deprecated: Use `AddSubmonoidClass.coe_finsetSum` instead",
+          "endPos": {
+            "column": 60,
+            "line": 886
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "Lean.Linter.deprecatedAttr",
+          "pos": {
+            "column": 28,
+            "line": 886
+          },
+          "severity": "warning"
+        },
+        "source_line": "    simp only [Fin.isValue, AddSubmonoidClass.coe_finset_sum, SetLike.val_smul]",
+        "start_offset": 44925,
+        "start_byte_offset": 47705,
+        "end_offset": 44957,
+        "end_byte_offset": 47737,
+        "source_text": "AddSubmonoidClass.coe_finset_sum"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 52,
+          "line": 924
+        },
+        "end_position": {
+          "column": 67,
+          "line": 924
+        },
+        "message": "`Nat.add_eq_zero` has been deprecated: Use `Nat.add_eq_zero_iff` instead",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "`Nat.add_eq_zero` has been deprecated: Use `Nat.add_eq_zero_iff` instead",
+          "endPos": {
+            "column": 67,
+            "line": 924
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "Lean.Linter.deprecatedAttr",
+          "pos": {
+            "column": 52,
+            "line": 924
+          },
+          "severity": "warning"
+        },
+        "source_line": "    simp only [mem_univ, congr_eqRec, Fin.val_succ, Nat.add_eq_zero, one_ne_zero, and_false,",
+        "start_offset": 46841,
+        "start_byte_offset": 49684,
+        "end_offset": 46856,
+        "end_byte_offset": 49699,
+        "source_text": "Nat.add_eq_zero"
+      },
+      {
+        "severity": "information",
+        "position": {
+          "column": 0,
+          "line": 1087
+        },
+        "end_position": {
+          "column": 6,
+          "line": 1087
+        },
+        "message": "hammingClose 𝔽q β : (i : Fin (ℓ + 1)) → OracleFunction 𝔽q β i → Prop",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "hammingClose 𝔽q β : (i : Fin (ℓ + 1)) → OracleFunction 𝔽q β i → Prop",
+          "endPos": {
+            "column": 6,
+            "line": 1087
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 0,
+            "line": 1087
+          },
+          "severity": "information"
+        },
+        "source_line": "#check hammingClose 𝔽q β (h_ℓ_add_R_rate := h_ℓ_add_R_rate)",
+        "start_offset": 55828,
+        "start_byte_offset": 59262,
+        "end_offset": 55834,
+        "end_byte_offset": 59268,
+        "source_text": "#check"
+      },
+      {
+        "severity": "error",
+        "position": {
+          "column": 6,
+          "line": 1299
+        },
+        "end_position": {
+          "column": 69,
+          "line": 1299
+        },
+        "message": "'change' tactic failed, pattern\n  q x ∈ E ∧ k x ∈ univ\nis not definitionally equal to target\n  enc x ∈ ↑(E.product univ)",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "'change' tactic failed, pattern\n  q x ∈ E ∧ k x ∈ univ\nis not definitionally equal to target\n  enc x ∈ ↑(E.product univ)",
+          "endPos": {
+            "column": 69,
+            "line": 1299
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 6,
+            "line": 1299
+          },
+          "severity": "error"
+        },
+        "source_line": "      change q x ∈ E ∧ k x ∈ (Finset.univ : Finset (Fin (2 ^ steps)))",
+        "start_offset": 67093,
+        "start_byte_offset": 71152,
+        "end_offset": 67156,
+        "end_byte_offset": 71221,
+        "source_text": "change q x ∈ E ∧ k x ∈ (Finset.univ : Finset (Fin (2 ^ steps)))",
+        "failed_tactic": "change q x ∈ E ∧ k x ∈ (Finset.univ : Finset (Fin (2 ^ steps)))",
+        "tactic_range": {
+          "position": {
+            "line": 1299,
+            "column": 6
+          },
+          "end_position": {
+            "line": 1299,
+            "column": 69
+          },
+          "start_offset": 67093,
+          "end_offset": 67156
+        },
+        "goals": [
+          "enc x ∈ ↑(E.product univ)"
+        ],
+        "local_context": [
+          "case hf\nr : ℕ\ninst✝⁹ : NeZero r\nL : Type\ninst✝⁸ : Field L\ninst✝⁷ : Fintype L\ninst✝⁶ : DecidableEq L\n𝔽q : Type\ninst✝⁵ : Field 𝔽q\ninst✝⁴ : Fintype 𝔽q\ninst✝³ : DecidableEq 𝔽q\nh_Fq_char_prime : Fact (Nat.Prime (ringChar 𝔽q))\nhF₂ : Fact (Fintype.card 𝔽q = 2)\ninst✝² : Algebra 𝔽q L\nβ : Fin r → L\nhβ_lin_indep : Fact (LinearIndependent 𝔽q β)\nh_β₀_eq_1 : Fact (β 0 = 1)\nℓ 𝓡 : ℕ\ninst✝¹ : NeZero 𝓡\nh_ℓ_add_R_rate : ℓ + 𝓡 < r\ni : Fin ℓ\nsteps : ℕ\ninst✝ : NeZero steps\nh_i_add_steps : ↑i + steps ≤ ℓ\nf : OracleFunction 𝔽q β ⟨↑i, ⋯⟩\nh_fw_dist_lt : fiberwiseClose 𝔽q β i steps h_i_add_steps f\nC_i : Submodule L (↥(sDomain 𝔽q β h_ℓ_add_R_rate ⟨↑⟨↑i, ⋯⟩, ⋯⟩) → L) := BBF_Code 𝔽q β ⟨↑i, ⋯⟩\nS : Set ℕ := (fun g => (fiberwiseDisagreementSet 𝔽q β i steps h_i_add_steps f ↑g).ncard) '' Set.univ\nhS_nonempty : S.Nonempty\ng_closest : ↥(sDomain 𝔽q β h_ℓ_add_R_rate ⟨↑⟨↑i, ⋯⟩, ⋯⟩) → L\nhg_mem : g_closest ∈ C_i\nhg_subtype : ⟨g_closest, hg_mem⟩ ∈ Set.univ\nhg_min : (fun g => (fiberwiseDisagreementSet 𝔽q β i steps h_i_add_steps f ↑g).ncard) ⟨g_closest, hg_mem⟩ = sInf S\nh_fw_eq :\n  fiberwiseDistance 𝔽q β i steps h_i_add_steps f =\n    (fiberwiseDisagreementSet 𝔽q β i steps h_i_add_steps f g_closest).ncard\nD : Finset ↥(sDomain 𝔽q β h_ℓ_add_R_rate ⟨↑⟨↑i, ⋯⟩, ⋯⟩) := {x | f x ≠ g_closest x}\nFW : Set ↥(sDomain 𝔽q β h_ℓ_add_R_rate ⟨↑i + steps, ⋯⟩) :=\n  fiberwiseDisagreementSet 𝔽q β i steps h_i_add_steps f g_closest\nthis : Fintype ↑FW := Fintype.ofFinite ↑FW\nE : Finset ↥(sDomain 𝔽q β h_ℓ_add_R_rate ⟨↑i + steps, ⋯⟩) := FW.toFinset\nq : ↥(sDomain 𝔽q β h_ℓ_add_R_rate ⟨↑i, ⋯⟩) → ↥(sDomain 𝔽q β h_ℓ_add_R_rate ⟨↑i + steps, ⋯⟩) :=\n  fun x => iteratedQuotientMap 𝔽q β h_ℓ_add_R_rate i steps h_i_add_steps x\nk : ↥(sDomain 𝔽q β h_ℓ_add_R_rate ⟨↑i, ⋯⟩) → Fin (2 ^ steps) :=\n  fun x => pointToIterateQuotientIndex 𝔽q β ⟨↑i, ⋯⟩ steps h_i_add_steps x\nenc : ↥(sDomain 𝔽q β h_ℓ_add_R_rate ⟨↑i, ⋯⟩) → ↥(sDomain 𝔽q β h_ℓ_add_R_rate ⟨↑i + steps, ⋯⟩) × Fin (2 ^ steps) :=\n  fun x => (q x, k x)\nx : ↥(sDomain 𝔽q β h_ℓ_add_R_rate ⟨↑i, ⋯⟩)\nhx : x ∈ ↑D"
+        ],
+        "proof_state_source": "lean_infotree_before_tactic",
+        "proof_state_raw": {
+          "depth": 24,
+          "end": 78352,
+          "goals_after": [
+            "case hf\nr : ℕ\ninst✝⁹ : NeZero r\nL : Type\ninst✝⁸ : Field L\ninst✝⁷ : Fintype L\ninst✝⁶ : DecidableEq L\n𝔽q : Type\ninst✝⁵ : Field 𝔽q\ninst✝⁴ : Fintype 𝔽q\ninst✝³ : DecidableEq 𝔽q\nh_Fq_char_prime : Fact (Nat.Prime (ringChar 𝔽q))\nhF₂ : Fact (Fintype.card 𝔽q = 2)\ninst✝² : Algebra 𝔽q L\nβ : Fin r → L\nhβ_lin_indep : Fact (LinearIndependent 𝔽q β)\nh_β₀_eq_1 : Fact (β 0 = 1)\nℓ 𝓡 : ℕ\ninst✝¹ : NeZero 𝓡\nh_ℓ_add_R_rate : ℓ + 𝓡 < r\ni : Fin ℓ\nsteps : ℕ\ninst✝ : NeZero steps\nh_i_add_steps : ↑i + steps ≤ ℓ\nf : OracleFunction 𝔽q β ⟨↑i, ⋯⟩\nh_fw_dist_lt : fiberwiseClose 𝔽q β i steps h_i_add_steps f\nC_i : Submodule L (↥(sDomain 𝔽q β h_ℓ_add_R_rate ⟨↑⟨↑i, ⋯⟩, ⋯⟩) → L) := BBF_Code 𝔽q β ⟨↑i, ⋯⟩\nS : Set ℕ := (fun g => (fiberwiseDisagreementSet 𝔽q β i steps h_i_add_steps f ↑g).ncard) '' Set.univ\nhS_nonempty : S.Nonempty\ng_closest : ↥(sDomain 𝔽q β h_ℓ_add_R_rate ⟨↑⟨↑i, ⋯⟩, ⋯⟩) → L\nhg_mem : g_closest ∈ C_i\nhg_subtype : ⟨g_closest, hg_mem⟩ ∈ Set.univ\nhg_min : (fun g => (fiberwiseDisagreementSet 𝔽q β i steps h_i_add_steps f ↑g).ncard) ⟨g_closest, hg_mem⟩ = sInf S\nh_fw_eq :\n  fiberwiseDistance 𝔽q β i steps h_i_add_steps f =\n    (fiberwiseDisagreementSet 𝔽q β i steps h_i_add_steps f g_closest).ncard\nD : Finset ↥(sDomain 𝔽q β h_ℓ_add_R_rate ⟨↑⟨↑i, ⋯⟩, ⋯⟩) := {x | f x ≠ g_closest x}\nFW : Set ↥(sDomain 𝔽q β h_ℓ_add_R_rate ⟨↑i + steps, ⋯⟩) :=\n  fiberwiseDisagreementSet 𝔽q β i steps h_i_add_steps f g_closest\nthis : Fintype ↑FW := Fintype.ofFinite ↑FW\nE : Finset ↥(sDomain 𝔽q β h_ℓ_add_R_rate ⟨↑i + steps, ⋯⟩) := FW.toFinset\nq : ↥(sDomain 𝔽q β h_ℓ_add_R_rate ⟨↑i, ⋯⟩) → ↥(sDomain 𝔽q β h_ℓ_add_R_rate ⟨↑i + steps, ⋯⟩) :=\n  fun x => iteratedQuotientMap 𝔽q β h_ℓ_add_R_rate i steps h_i_add_steps x\nk : ↥(sDomain 𝔽q β h_ℓ_add_R_rate ⟨↑i, ⋯⟩) → Fin (2 ^ steps) :=\n  fun x => pointToIterateQuotientIndex 𝔽q β ⟨↑i, ⋯⟩ steps h_i_add_steps x\nenc : ↥(sDomain 𝔽q β h_ℓ_add_R_rate ⟨↑i, ⋯⟩) → ↥(sDomain 𝔽q β h_ℓ_add_R_rate ⟨↑i + steps, ⋯⟩) × Fin (2 ^ steps) :=\n  fun x => (q x, k x)\nx : ↥(sDomain 𝔽q β h_ℓ_add_R_rate ⟨↑i, ⋯⟩)\nhx : x ∈ ↑D\n⊢ enc x ∈ ↑(E.product univ)"
+          ],
+          "goals_before": [
+            "case hf\nr : ℕ\ninst✝⁹ : NeZero r\nL : Type\ninst✝⁸ : Field L\ninst✝⁷ : Fintype L\ninst✝⁶ : DecidableEq L\n𝔽q : Type\ninst✝⁵ : Field 𝔽q\ninst✝⁴ : Fintype 𝔽q\ninst✝³ : DecidableEq 𝔽q\nh_Fq_char_prime : Fact (Nat.Prime (ringChar 𝔽q))\nhF₂ : Fact (Fintype.card 𝔽q = 2)\ninst✝² : Algebra 𝔽q L\nβ : Fin r → L\nhβ_lin_indep : Fact (LinearIndependent 𝔽q β)\nh_β₀_eq_1 : Fact (β 0 = 1)\nℓ 𝓡 : ℕ\ninst✝¹ : NeZero 𝓡\nh_ℓ_add_R_rate : ℓ + 𝓡 < r\ni : Fin ℓ\nsteps : ℕ\ninst✝ : NeZero steps\nh_i_add_steps : ↑i + steps ≤ ℓ\nf : OracleFunction 𝔽q β ⟨↑i, ⋯⟩\nh_fw_dist_lt : fiberwiseClose 𝔽q β i steps h_i_add_steps f\nC_i : Submodule L (↥(sDomain 𝔽q β h_ℓ_add_R_rate ⟨↑⟨↑i, ⋯⟩, ⋯⟩) → L) := BBF_Code 𝔽q β ⟨↑i, ⋯⟩\nS : Set ℕ := (fun g => (fiberwiseDisagreementSet 𝔽q β i steps h_i_add_steps f ↑g).ncard) '' Set.univ\nhS_nonempty : S.Nonempty\ng_closest : ↥(sDomain 𝔽q β h_ℓ_add_R_rate ⟨↑⟨↑i, ⋯⟩, ⋯⟩) → L\nhg_mem : g_closest ∈ C_i\nhg_subtype : ⟨g_closest, hg_mem⟩ ∈ Set.univ\nhg_min : (fun g => (fiberwiseDisagreementSet 𝔽q β i steps h_i_add_steps f ↑g).ncard) ⟨g_closest, hg_mem⟩ = sInf S\nh_fw_eq :\n  fiberwiseDistance 𝔽q β i steps h_i_add_steps f =\n    (fiberwiseDisagreementSet 𝔽q β i steps h_i_add_steps f g_closest).ncard\nD : Finset ↥(sDomain 𝔽q β h_ℓ_add_R_rate ⟨↑⟨↑i, ⋯⟩, ⋯⟩) := {x | f x ≠ g_closest x}\nFW : Set ↥(sDomain 𝔽q β h_ℓ_add_R_rate ⟨↑i + steps, ⋯⟩) :=\n  fiberwiseDisagreementSet 𝔽q β i steps h_i_add_steps f g_closest\nthis : Fintype ↑FW := Fintype.ofFinite ↑FW\nE : Finset ↥(sDomain 𝔽q β h_ℓ_add_R_rate ⟨↑i + steps, ⋯⟩) := FW.toFinset\nq : ↥(sDomain 𝔽q β h_ℓ_add_R_rate ⟨↑i, ⋯⟩) → ↥(sDomain 𝔽q β h_ℓ_add_R_rate ⟨↑i + steps, ⋯⟩) :=\n  fun x => iteratedQuotientMap 𝔽q β h_ℓ_add_R_rate i steps h_i_add_steps x\nk : ↥(sDomain 𝔽q β h_ℓ_add_R_rate ⟨↑i, ⋯⟩) → Fin (2 ^ steps) :=\n  fun x => pointToIterateQuotientIndex 𝔽q β ⟨↑i, ⋯⟩ steps h_i_add_steps x\nenc : ↥(sDomain 𝔽q β h_ℓ_add_R_rate ⟨↑i, ⋯⟩) → ↥(sDomain 𝔽q β h_ℓ_add_R_rate ⟨↑i + steps, ⋯⟩) × Fin (2 ^ steps) :=\n  fun x => (q x, k x)\nx : ↥(sDomain 𝔽q β h_ℓ_add_R_rate ⟨↑i, ⋯⟩)\nhx : x ∈ ↑D\n⊢ enc x ∈ ↑(E.product univ)"
+          ],
+          "kind": "tactic",
+          "start": 78283
+        }
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 8,
+          "line": 1398
+        },
+        "end_position": {
+          "column": 24,
+          "line": 1398
+        },
+        "message": "`mul_le_mul_left'` has been deprecated: Use `_root_.mul_le_mul_right` instead",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "`mul_le_mul_left'` has been deprecated: Use `_root_.mul_le_mul_right` instead",
+          "endPos": {
+            "column": 24,
+            "line": 1398
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "Lean.Linter.deprecatedAttr",
+          "pos": {
+            "column": 8,
+            "line": 1398
+          },
+          "severity": "warning"
+        },
+        "source_line": "        mul_le_mul_left' h_dist_le_hamming 2",
+        "start_offset": 71082,
+        "start_byte_offset": 75392,
+        "end_offset": 71098,
+        "end_byte_offset": 75408,
+        "source_text": "mul_le_mul_left'"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 6,
+          "line": 1402
+        },
+        "end_position": {
+          "column": 22,
+          "line": 1402
+        },
+        "message": "`mul_le_mul_left'` has been deprecated: Use `_root_.mul_le_mul_right` instead",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "`mul_le_mul_left'` has been deprecated: Use `_root_.mul_le_mul_right` instead",
+          "endPos": {
+            "column": 22,
+            "line": 1402
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "Lean.Linter.deprecatedAttr",
+          "pos": {
+            "column": 6,
+            "line": 1402
+          },
+          "severity": "warning"
+        },
+        "source_line": "      mul_le_mul_left' h_hamming_le_enat 2",
+        "start_offset": 71270,
+        "start_byte_offset": 75596,
+        "end_offset": 71286,
+        "end_byte_offset": 75612,
+        "source_text": "mul_le_mul_left'"
+      },
+      {
+        "severity": "information",
+        "position": {
+          "column": 0,
+          "line": 1517
+        },
+        "end_position": {
+          "column": 6,
+          "line": 1517
+        },
+        "message": "Binius.BinaryBasefold.fiberwise_dist_lt_imp_dist_lt_unique_decoding_radius {r : ℕ} [NeZero r] {L : Type} [Field L]\n  [Fintype L] [DecidableEq L] (𝔽q : Type) [Field 𝔽q] [Fintype 𝔽q] [DecidableEq 𝔽q]\n  [h_Fq_char_prime : Fact (Nat.Prime (ringChar 𝔽q))] [hF₂ : Fact (Fintype.card 𝔽q = 2)] [Algebra 𝔽q L] (β : Fin r → L)\n  [hβ_lin_indep : Fact (LinearIndependent 𝔽q β)] [h_β₀_eq_1 : Fact (β 0 = 1)] {ℓ 𝓡 : ℕ} [NeZero 𝓡]\n  {h_ℓ_add_R_rate : ℓ + 𝓡 < r} (i : Fin ℓ) (steps : ℕ) [NeZero steps] (h_i_add_steps : ↑i + steps ≤ ℓ)\n  (f : Binius.BinaryBasefold.OracleFunction 𝔽q β ⟨↑i, ⋯⟩)\n  (h_fw_dist_lt : Binius.BinaryBasefold.fiberwiseClose 𝔽q β i steps h_i_add_steps f) :\n  Binius.BinaryBasefold.hammingClose 𝔽q β ⟨↑i, ⋯⟩ f",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "Binius.BinaryBasefold.fiberwise_dist_lt_imp_dist_lt_unique_decoding_radius {r : ℕ} [NeZero r] {L : Type} [Field L]\n  [Fintype L] [DecidableEq L] (𝔽q : Type) [Field 𝔽q] [Fintype 𝔽q] [DecidableEq 𝔽q]\n  [h_Fq_char_prime : Fact (Nat.Prime (ringChar 𝔽q))] [hF₂ : Fact (Fintype.card 𝔽q = 2)] [Algebra 𝔽q L] (β : Fin r → L)\n  [hβ_lin_indep : Fact (LinearIndependent 𝔽q β)] [h_β₀_eq_1 : Fact (β 0 = 1)] {ℓ 𝓡 : ℕ} [NeZero 𝓡]\n  {h_ℓ_add_R_rate : ℓ + 𝓡 < r} (i : Fin ℓ) (steps : ℕ) [NeZero steps] (h_i_add_steps : ↑i + steps ≤ ℓ)\n  (f : Binius.BinaryBasefold.OracleFunction 𝔽q β ⟨↑i, ⋯⟩)\n  (h_fw_dist_lt : Binius.BinaryBasefold.fiberwiseClose 𝔽q β i steps h_i_add_steps f) :\n  Binius.BinaryBasefold.hammingClose 𝔽q β ⟨↑i, ⋯⟩ f",
+          "endPos": {
+            "column": 6,
+            "line": 1517
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 0,
+            "line": 1517
+          },
+          "severity": "information"
+        }
+      },
+      {
+        "severity": "information",
+        "position": {
+          "column": 0,
+          "line": 1518
+        },
+        "end_position": {
+          "column": 6,
+          "line": 1518
+        },
+        "message": "'Binius.BinaryBasefold.fiberwise_dist_lt_imp_dist_lt_unique_decoding_radius' depends on axioms: [propext,\n sorryAx,\n Classical.choice,\n Quot.sound]",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "'Binius.BinaryBasefold.fiberwise_dist_lt_imp_dist_lt_unique_decoding_radius' depends on axioms: [propext,\n sorryAx,\n Classical.choice,\n Quot.sound]",
+          "endPos": {
+            "column": 6,
+            "line": 1518
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 0,
+            "line": 1518
+          },
+          "severity": "information"
+        }
+      }
+    ],
+    "goals": [
+      "enc x ∈ ↑(E.product univ)"
+    ],
+    "local_context": [
+      "case hf\nr : ℕ\ninst✝⁹ : NeZero r\nL : Type\ninst✝⁸ : Field L\ninst✝⁷ : Fintype L\ninst✝⁶ : DecidableEq L\n𝔽q : Type\ninst✝⁵ : Field 𝔽q\ninst✝⁴ : Fintype 𝔽q\ninst✝³ : DecidableEq 𝔽q\nh_Fq_char_prime : Fact (Nat.Prime (ringChar 𝔽q))\nhF₂ : Fact (Fintype.card 𝔽q = 2)\ninst✝² : Algebra 𝔽q L\nβ : Fin r → L\nhβ_lin_indep : Fact (LinearIndependent 𝔽q β)\nh_β₀_eq_1 : Fact (β 0 = 1)\nℓ 𝓡 : ℕ\ninst✝¹ : NeZero 𝓡\nh_ℓ_add_R_rate : ℓ + 𝓡 < r\ni : Fin ℓ\nsteps : ℕ\ninst✝ : NeZero steps\nh_i_add_steps : ↑i + steps ≤ ℓ\nf : OracleFunction 𝔽q β ⟨↑i, ⋯⟩\nh_fw_dist_lt : fiberwiseClose 𝔽q β i steps h_i_add_steps f\nC_i : Submodule L (↥(sDomain 𝔽q β h_ℓ_add_R_rate ⟨↑⟨↑i, ⋯⟩, ⋯⟩) → L) := BBF_Code 𝔽q β ⟨↑i, ⋯⟩\nS : Set ℕ := (fun g => (fiberwiseDisagreementSet 𝔽q β i steps h_i_add_steps f ↑g).ncard) '' Set.univ\nhS_nonempty : S.Nonempty\ng_closest : ↥(sDomain 𝔽q β h_ℓ_add_R_rate ⟨↑⟨↑i, ⋯⟩, ⋯⟩) → L\nhg_mem : g_closest ∈ C_i\nhg_subtype : ⟨g_closest, hg_mem⟩ ∈ Set.univ\nhg_min : (fun g => (fiberwiseDisagreementSet 𝔽q β i steps h_i_add_steps f ↑g).ncard) ⟨g_closest, hg_mem⟩ = sInf S\nh_fw_eq :\n  fiberwiseDistance 𝔽q β i steps h_i_add_steps f =\n    (fiberwiseDisagreementSet 𝔽q β i steps h_i_add_steps f g_closest).ncard\nD : Finset ↥(sDomain 𝔽q β h_ℓ_add_R_rate ⟨↑⟨↑i, ⋯⟩, ⋯⟩) := {x | f x ≠ g_closest x}\nFW : Set ↥(sDomain 𝔽q β h_ℓ_add_R_rate ⟨↑i + steps, ⋯⟩) :=\n  fiberwiseDisagreementSet 𝔽q β i steps h_i_add_steps f g_closest\nthis : Fintype ↑FW := Fintype.ofFinite ↑FW\nE : Finset ↥(sDomain 𝔽q β h_ℓ_add_R_rate ⟨↑i + steps, ⋯⟩) := FW.toFinset\nq : ↥(sDomain 𝔽q β h_ℓ_add_R_rate ⟨↑i, ⋯⟩) → ↥(sDomain 𝔽q β h_ℓ_add_R_rate ⟨↑i + steps, ⋯⟩) :=\n  fun x => iteratedQuotientMap 𝔽q β h_ℓ_add_R_rate i steps h_i_add_steps x\nk : ↥(sDomain 𝔽q β h_ℓ_add_R_rate ⟨↑i, ⋯⟩) → Fin (2 ^ steps) :=\n  fun x => pointToIterateQuotientIndex 𝔽q β ⟨↑i, ⋯⟩ steps h_i_add_steps x\nenc : ↥(sDomain 𝔽q β h_ℓ_add_R_rate ⟨↑i, ⋯⟩) → ↥(sDomain 𝔽q β h_ℓ_add_R_rate ⟨↑i + steps, ⋯⟩) × Fin (2 ^ steps) :=\n  fun x => (q x, k x)\nx : ↥(sDomain 𝔽q β h_ℓ_add_R_rate ⟨↑i, ⋯⟩)\nhx : x ∈ ↑D"
+    ],
+    "sorries": [
+      {
+        "kind": "transitive_dependency",
+        "axiom": "sorryAx",
+        "position": null,
+        "end_position": null
+      }
+    ],
+    "axioms": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext",
+      "sorryAx"
+    ],
+    "detail": null,
+    "raw_lean_output": "{\"caption\":\"\",\"data\":\"`not_lt_zero'` has been deprecated: Use `_root_.not_lt_zero` instead\",\"endPos\":{\"column\":96,\"line\":234},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"Lean.Linter.deprecatedAttr\",\"pos\":{\"column\":84,\"line\":234},\"severity\":\"warning\"}\n{\"caption\":\"\",\"data\":\"`not_lt_zero'` has been deprecated: Use `_root_.not_lt_zero` instead\",\"endPos\":{\"column\":60,\"line\":326},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"Lean.Linter.deprecatedAttr\",\"pos\":{\"column\":48,\"line\":326},\"severity\":\"warning\"}\n{\"caption\":\"\",\"data\":\"declaration uses `sorry`\",\"endPos\":{\"column\":14,\"line\":648},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"hasSorry\",\"pos\":{\"column\":4,\"line\":648},\"severity\":\"warning\"}\n{\"caption\":\"\",\"data\":\"declaration uses `sorry`\",\"endPos\":{\"column\":32,\"line\":684},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"hasSorry\",\"pos\":{\"column\":6,\"line\":684},\"severity\":\"warning\"}\n{\"caption\":\"\",\"data\":\"declaration uses `sorry`\",\"endPos\":{\"column\":36,\"line\":798},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"hasSorry\",\"pos\":{\"column\":8,\"line\":798},\"severity\":\"warning\"}\n{\"caption\":\"\",\"data\":\"`Subtype.eq_iff` has been deprecated: Use `Subtype.ext_iff` instead\\n\\nNote: The updated constant has a different type:\\n  ∀ {α : Sort u} {p : α → Prop} {a1 a2 : { x // p x }}, a1 = a2 ↔ ↑a1 = ↑a2\\ninstead of\\n  ∀ {α : Sort u_1} {p : α → Prop} {a1 a2 : { x // p x }}, a1 = a2 ↔ ↑a1 = ↑a2\",\"endPos\":{\"column\":29,\"line\":864},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"Lean.Linter.deprecatedAttr\",\"pos\":{\"column\":15,\"line\":864},\"severity\":\"warning\"}\n{\"caption\":\"\",\"data\":\"`Subtype.eq_iff` has been deprecated: Use `Subtype.ext_iff` instead\\n\\nNote: The updated constant has a different type:\\n  ∀ {α : Sort u} {p : α → Prop} {a1 a2 : { x // p x }}, a1 = a2 ↔ ↑a1 = ↑a2\\ninstead of\\n  ∀ {α : Sort u_1} {p : α → Prop} {a1 a2 : { x // p x }}, a1 = a2 ↔ ↑a1 = ↑a2\",\"endPos\":{\"column\":29,\"line\":872},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"Lean.Linter.deprecatedAttr\",\"pos\":{\"column\":15,\"line\":872},\"severity\":\"warning\"}\n{\"caption\":\"\",\"data\":\"`AddSubmonoidClass.coe_finset_sum` has been deprecated: Use `AddSubmonoidClass.coe_finsetSum` instead\",\"endPos\":{\"column\":60,\"line\":886},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"Lean.Linter.deprecatedAttr\",\"pos\":{\"column\":28,\"line\":886},\"severity\":\"warning\"}\n{\"caption\":\"\",\"data\":\"`Nat.add_eq_zero` has been deprecated: Use `Nat.add_eq_zero_iff` instead\",\"endPos\":{\"column\":67,\"line\":924},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"Lean.Linter.deprecatedAttr\",\"pos\":{\"column\":52,\"line\":924},\"severity\":\"warning\"}\n{\"caption\":\"\",\"data\":\"hammingClose 𝔽q β : (i : Fin (ℓ + 1)) → OracleFunction 𝔽q β i → Prop\",\"endPos\":{\"column\":6,\"line\":1087},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"[anonymous]\",\"pos\":{\"column\":0,\"line\":1087},\"severity\":\"information\"}\n{\"caption\":\"\",\"data\":\"'change' tactic failed, pattern\\n  q x ∈ E ∧ k x ∈ univ\\nis not definitionally equal to target\\n  enc x ∈ ↑(E.product univ)\",\"endPos\":{\"column\":69,\"line\":1299},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"[anonymous]\",\"pos\":{\"column\":6,\"line\":1299},\"severity\":\"error\"}\n{\"caption\":\"\",\"data\":\"`mul_le_mul_left'` has been deprecated: Use `_root_.mul_le_mul_right` instead\",\"endPos\":{\"column\":24,\"line\":1398},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"Lean.Linter.deprecatedAttr\",\"pos\":{\"column\":8,\"line\":1398},\"severity\":\"warning\"}\n{\"caption\":\"\",\"data\":\"`mul_le_mul_left'` has been deprecated: Use `_root_.mul_le_mul_right` instead\",\"endPos\":{\"column\":22,\"line\":1402},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"Lean.Linter.deprecatedAttr\",\"pos\":{\"column\":6,\"line\":1402},\"severity\":\"warning\"}\n{\"caption\":\"\",\"data\":\"Binius.BinaryBasefold.fiberwise_dist_lt_imp_dist_lt_unique_decoding_radius {r : ℕ} [NeZero r] {L : Type} [Field L]\\n  [Fintype L] [DecidableEq L] (𝔽q : Type) [Field 𝔽q] [Fintype 𝔽q] [DecidableEq 𝔽q]\\n  [h_Fq_char_prime : Fact (Nat.Prime (ringChar 𝔽q))] [hF₂ : Fact (Fintype.card 𝔽q = 2)] [Algebra 𝔽q L] (β : Fin r → L)\\n  [hβ_lin_indep : Fact (LinearIndependent 𝔽q β)] [h_β₀_eq_1 : Fact (β 0 = 1)] {ℓ 𝓡 : ℕ} [NeZero 𝓡]\\n  {h_ℓ_add_R_rate : ℓ + 𝓡 < r} (i : Fin ℓ) (steps : ℕ) [NeZero steps] (h_i_add_steps : ↑i + steps ≤ ℓ)\\n  (f : Binius.BinaryBasefold.OracleFunction 𝔽q β ⟨↑i, ⋯⟩)\\n  (h_fw_dist_lt : Binius.BinaryBasefold.fiberwiseClose 𝔽q β i steps h_i_add_steps f) :\\n  Binius.BinaryBasefold.hammingClose 𝔽q β ⟨↑i, ⋯⟩ f\",\"endPos\":{\"column\":6,\"line\":1517},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"[anonymous]\",\"pos\":{\"column\":0,\"line\":1517},\"severity\":\"information\"}\n{\"caption\":\"\",\"data\":\"'Binius.BinaryBasefold.fiberwise_dist_lt_imp_dist_lt_unique_decoding_radius' depends on axioms: [propext,\\n sorryAx,\\n Classical.choice,\\n Quot.sound]\",\"endPos\":{\"column\":6,\"line\":1518},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"[anonymous]\",\"pos\":{\"column\":0,\"line\":1518},\"severity\":\"information\"}\n"
+  },
+  "diagnosis": "The disagreement set is finite only through its finite ambient type, so `Set.toFinset` could not synthesize the required `Fintype` instance. Install `Fintype.ofFinite` for that subtype, unfold the local encoding when proving product membership, and use explicit bound proofs in the reconstruction calculation.",
+  "duplicate_cache": false,
+  "available_at": 1792771373.166228,
+  "cumulative_calls": 2,
+  "cumulative_tokens": 114066,
+  "api_spend_usd": null
+}

@@ -1,0 +1,13 @@
+--- candidate_02.proof.lean
++++ candidate_03.proof.lean
+@@ -57,5 +57,8 @@
+     have := Fintype.card_pos (α := S)
+     omega
+   have he : 2 ^ (Fintype.card S - 1) * 2 = 2 ^ Fintype.card S := by
+-    rw [← hs, pow_succ]
++    calc
++      2 ^ (Fintype.card S - 1) * 2 = 2 ^ (Fintype.card S - 1 + 1) :=
++        (pow_succ 2 (Fintype.card S - 1)).symm
++      _ = 2 ^ Fintype.card S := congrArg (fun n : ℕ => 2 ^ n) hs
+   omega
+\ No newline at end of file

@@ -1,0 +1,79 @@
+by
+  classical
+  rcases boundedu with ⟨B, T, hbounds⟩
+  let S : Set ℤ := Set.Icc B T
+  letI : Fintype S := (Set.finite_Icc B T).fintype
+  let f : ℕ → (Fin 4 → S) := fun n i =>
+    ⟨u (n + i), hbounds (n + i)⟩
+  obtain ⟨a, b, hab, hfab⟩ :=
+    Finite.exists_ne_map_eq_of_infinite f
+  have hpq : ∃ p q : ℕ, p < q ∧ f p = f q := by
+    rcases lt_or_gt_of_ne hab with hlt | hgt
+    · exact ⟨a, b, hlt, hfab⟩
+    · exact ⟨b, a, hgt, hfab.symm⟩
+  rcases hpq with ⟨p, q, hpq, hstate⟩
+  let c := q - p
+  have hc : p + c = q := by
+    dsimp [c]
+    omega
+  have hcpos : 0 < c := by
+    dsimp [c]
+    omega
+  have hbase : ∀ i : Fin 4, u (p + (i : ℕ)) = u (q + (i : ℕ)) := by
+    intro i
+    simpa [f] using
+      congrArg (fun g : Fin 4 → S => (g i : ℤ)) hstate
+  have hperiod : ∀ k : ℕ, u (p + k + c) = u (p + k) := by
+    intro k
+    refine Nat.strong_induction_on k ?_
+    intro k ih
+    by_cases hk : k < 4
+    · have h := hbase ⟨k, hk⟩
+      have hidx : p + k + c = q + k := by omega
+      rw [hidx]
+      exact h.symm
+    · have hk4 : 4 ≤ k := by omega
+      have h1 := ih (k - 1) (by omega)
+      have h2 := ih (k - 2) (by omega)
+      have h3 := ih (k - 3) (by omega)
+      have h4 := ih (k - 4) (by omega)
+      have e1 : u ((p + k + c) - 1) = u ((p + k) - 1) := by
+        have hl : (p + k + c) - 1 = p + (k - 1) + c := by omega
+        have hr : (p + k) - 1 = p + (k - 1) := by omega
+        calc
+          u ((p + k + c) - 1) = u (p + (k - 1) + c) := by rw [hl]
+          _ = u (p + (k - 1)) := h1
+          _ = u ((p + k) - 1) := by rw [hr]
+      have e2 : u ((p + k + c) - 2) = u ((p + k) - 2) := by
+        have hl : (p + k + c) - 2 = p + (k - 2) + c := by omega
+        have hr : (p + k) - 2 = p + (k - 2) := by omega
+        calc
+          u ((p + k + c) - 2) = u (p + (k - 2) + c) := by rw [hl]
+          _ = u (p + (k - 2)) := h2
+          _ = u ((p + k) - 2) := by rw [hr]
+      have e3 : u ((p + k + c) - 3) = u ((p + k) - 3) := by
+        have hl : (p + k + c) - 3 = p + (k - 3) + c := by omega
+        have hr : (p + k) - 3 = p + (k - 3) := by omega
+        calc
+          u ((p + k + c) - 3) = u (p + (k - 3) + c) := by rw [hl]
+          _ = u (p + (k - 3)) := h3
+          _ = u ((p + k) - 3) := by rw [hr]
+      have e4 : u ((p + k + c) - 4) = u ((p + k) - 4) := by
+        have hl : (p + k + c) - 4 = p + (k - 4) + c := by omega
+        have hr : (p + k) - 4 = p + (k - 4) := by omega
+        calc
+          u ((p + k + c) - 4) = u (p + (k - 4) + c) := by rw [hl]
+          _ = u (p + (k - 4)) := h4
+          _ = u ((p + k) - 4) := by rw [hr]
+      have hleft := (hu (p + k + c) (by omega)).1
+      have hright := (hu (p + k) (by omega)).1
+      rw [e1, e2, e3, e4] at hleft
+      have hcast : (u (p + k + c) : ℝ) = (u (p + k) : ℝ) :=
+        hleft.trans hright.symm
+      exact_mod_cast hcast
+  refine ⟨p, c, hcpos, ?_⟩
+  intro n hn
+  have h := hperiod (n - p)
+  have hnp : p + (n - p) = n := by omega
+  rw [hnp] at h
+  exact h

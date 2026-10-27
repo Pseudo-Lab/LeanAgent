@@ -1,0 +1,29 @@
+--- candidate_02.proof.lean
++++ candidate_03.proof.lean
+@@ -6,15 +6,17 @@
+     · have Hfv := Hwf Hold
+       cases Hold
+       cases Hfv
+-      simp_all [extractOldExprVars,
+-        Imperative.HasVarsPure.getVars,
+-        Lambda.LExpr.LExpr.getVars,
+-        List.Subset]
+-    · simp_all [extractOldExprVars,
+-        Imperative.HasVarsPure.getVars,
+-        Lambda.LExpr.LExpr.getVars,
+-        List.Subset, Hold]
+-      grind
++      intro a Hin
++      unfold extractOldExprVars at Hin
++      simpa [Imperative.HasVarsPure.getVars,
++        Lambda.LExpr.LExpr.getVars] using Hin
++    · intro a Hin
++      cases fn <;> cases e <;>
++        simp_all [extractOldExprVars,
++          Imperative.HasVarsPure.getVars,
++          Lambda.LExpr.LExpr.getVars,
++          List.Subset] <;>
++        grind
+   all_goals
+     simp_all [extractOldExprVars,
+       Imperative.HasVarsPure.getVars,

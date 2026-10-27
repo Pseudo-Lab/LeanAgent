@@ -1,0 +1,67 @@
+--- candidate_02.proof.lean
++++ candidate_03.proof.lean
+@@ -1,23 +1,21 @@
+ by
+-  revert h hJ J hA A
+-  have hAsmooth : ∀ (A : ElectromagneticPotential d), ContDiff ℝ ∞ A →
+-      (∀ j, ContDiff ℝ 2 (fun y => A.electricField 𝓕.c t y j)) ∧
+-      (∀ j, Differentiable ℝ
+-        (fun s => ∂[j] (A.magneticFieldMatrix 𝓕.c s · (j, i)) x)) := by
+-    intro A hA
+-    constructor
+-    · intro j
+-      fun_prop
+-    · intro j
+-      fun_prop
+-  have hJsmooth : ∀ (J : LorentzCurrentDensity d), ContDiff ℝ ∞ J →
+-      Differentiable ℝ (fun y => J.chargeDensity 𝓕.c t y) ∧
+-      Differentiable ℝ (fun s => J.currentDensity 𝓕.c s x i) := by
+-    intro J hJ
+-    constructor <;> fun_prop
+-  intro A hA J hJ h
+-  obtain ⟨hcd, hBd⟩ := hAsmooth A hA
+-  obtain ⟨hρd, hJtd⟩ := hJsmooth J hJ
++  have hcd : ∀ j, ContDiff ℝ 2 (fun y => A.electricField 𝓕.c t y j) :=
++    fun j => electricField_space_contDiff _ (hA.of_le (right_eq_inf.mp rfl)) t j
++  have hBd : ∀ j, Differentiable ℝ
++      (fun s => ∂[j] (A.magneticFieldMatrix 𝓕.c s · (j, i)) x) := by
++    intro j
++    rw [Space.deriv_eq_fderiv_basis]
++    unfold magneticFieldMatrix
++    fun_prop
++  have hρd : Differentiable ℝ (fun y => J.chargeDensity 𝓕.c t y) := by
++    unfold LorentzCurrentDensity.chargeDensity
++    fun_prop
++  have hJtd : Differentiable ℝ (fun s => J.currentDensity 𝓕.c s x i) := by
++    unfold LorentzCurrentDensity.currentDensity
++    fun_prop
++  have hEt : Differentiable ℝ (fun s => A.electricField 𝓕.c s x) := by
++    unfold electricField
++    fun_prop
+   have hsd : ∀ j, Differentiable ℝ (∂[j] (fun y => A.electricField 𝓕.c t y j)) :=
+     fun j => Space.deriv_differentiable (hcd j) j
+   have hgauss :
+@@ -50,8 +48,11 @@
+         ∑ j, ∂[j] (A.magneticFieldMatrix 𝓕.c s · (j, i)) x -
+         (1 / 𝓕.ε₀) * J.currentDensity 𝓕.c s x i) by
+       funext s
+-      exact time_deriv_electricField_of_isExtrema hA J hJ h s x i]
+-  rw [Time.deriv_eq_fderiv_basis]
++      convert time_deriv_electricField_of_isExtrema hA J hJ h s x i using 1 <;> fun_trans]
++  change (fderiv ℝ
++      (fun s => 1 / (𝓕.μ₀ * 𝓕.ε₀) *
++        ∑ j, ∂[j] (A.magneticFieldMatrix 𝓕.c s · (j, i)) x -
++        (1 / 𝓕.ε₀) * J.currentDensity 𝓕.c s x i) t) 1 = _
+   rw [fderiv_fun_sub
+       ((Differentiable.fun_sum fun j _ => hBd j).const_mul _).differentiableAt
+       (hJtd.const_mul _).differentiableAt,
+@@ -59,7 +60,8 @@
+       (Differentiable.fun_sum fun j _ => hBd j).differentiableAt,
+     fderiv_const_mul hJtd.differentiableAt,
+     fderiv_fun_sum fun j _ => (hBd j).differentiableAt]
+-  simp only [← Time.deriv_eq_fderiv_basis]
++  simp only [ContinuousLinearMap.sub_apply, ContinuousLinearMap.smul_apply,
++    Finset.sum_apply, smul_eq_mul]
+   simp_rw [time_deriv_space_deriv_magneticFieldMatrix A
+     (hA.of_le (ENat.LEInfty.out))]
+   simp only [Finset.sum_sub_distrib]

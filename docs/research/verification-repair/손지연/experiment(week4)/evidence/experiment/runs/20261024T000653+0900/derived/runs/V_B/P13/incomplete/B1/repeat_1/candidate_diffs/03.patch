@@ -1,0 +1,50 @@
+--- candidate_02.proof.lean
++++ candidate_03.proof.lean
+@@ -29,20 +29,42 @@
+     intro k ih
+     by_cases hk : k < 4
+     · have h := hbase ⟨k, hk⟩
+-      convert h.symm using 1 <;> omega
++      have hidx : p + k + c = q + k := by omega
++      rw [hidx]
++      exact h.symm
+     · have hk4 : 4 ≤ k := by omega
+       have h1 := ih (k - 1) (by omega)
+       have h2 := ih (k - 2) (by omega)
+       have h3 := ih (k - 3) (by omega)
+       have h4 := ih (k - 4) (by omega)
+       have e1 : u ((p + k + c) - 1) = u ((p + k) - 1) := by
+-        convert h1 using 1 <;> omega
++        have hl : (p + k + c) - 1 = p + (k - 1) + c := by omega
++        have hr : (p + k) - 1 = p + (k - 1) := by omega
++        calc
++          u ((p + k + c) - 1) = u (p + (k - 1) + c) := by rw [hl]
++          _ = u (p + (k - 1)) := h1
++          _ = u ((p + k) - 1) := by rw [hr]
+       have e2 : u ((p + k + c) - 2) = u ((p + k) - 2) := by
+-        convert h2 using 1 <;> omega
++        have hl : (p + k + c) - 2 = p + (k - 2) + c := by omega
++        have hr : (p + k) - 2 = p + (k - 2) := by omega
++        calc
++          u ((p + k + c) - 2) = u (p + (k - 2) + c) := by rw [hl]
++          _ = u (p + (k - 2)) := h2
++          _ = u ((p + k) - 2) := by rw [hr]
+       have e3 : u ((p + k + c) - 3) = u ((p + k) - 3) := by
+-        convert h3 using 1 <;> omega
++        have hl : (p + k + c) - 3 = p + (k - 3) + c := by omega
++        have hr : (p + k) - 3 = p + (k - 3) := by omega
++        calc
++          u ((p + k + c) - 3) = u (p + (k - 3) + c) := by rw [hl]
++          _ = u (p + (k - 3)) := h3
++          _ = u ((p + k) - 3) := by rw [hr]
+       have e4 : u ((p + k + c) - 4) = u ((p + k) - 4) := by
+-        convert h4 using 1 <;> omega
++        have hl : (p + k + c) - 4 = p + (k - 4) + c := by omega
++        have hr : (p + k) - 4 = p + (k - 4) := by omega
++        calc
++          u ((p + k + c) - 4) = u (p + (k - 4) + c) := by rw [hl]
++          _ = u (p + (k - 4)) := h4
++          _ = u ((p + k) - 4) := by rw [hr]
+       have hleft := (hu (p + k + c) (by omega)).1
+       have hright := (hu (p + k) (by omega)).1
+       rw [e1, e2, e3, e4] at hleft

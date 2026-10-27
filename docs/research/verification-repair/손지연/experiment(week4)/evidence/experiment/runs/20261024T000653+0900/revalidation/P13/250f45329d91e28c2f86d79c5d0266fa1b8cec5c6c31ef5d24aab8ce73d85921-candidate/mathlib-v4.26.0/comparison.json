@@ -1,0 +1,483 @@
+{
+  "problem": 13,
+  "environment": "mathlib-v4.26.0",
+  "proof_sha256": "250f45329d91e28c2f86d79c5d0266fa1b8cec5c6c31ef5d24aab8ce73d85921",
+  "original_check_kind": "candidate",
+  "fields": {
+    "status": true,
+    "proof_sha256": true,
+    "axioms": true,
+    "diagnostics_exact": false,
+    "diagnostic_messages": true,
+    "proof_tokens": true,
+    "raw_heartbeats": null,
+    "environment_id": true
+  },
+  "semantic_match": true,
+  "all_available_fields_match": false,
+  "old": {
+    "task_id": "P13",
+    "attempt": "candidate_03",
+    "candidate_hash": "1d2e529d259194c022e2d4f244e08be6dc80e690bac306b3370a3540357c4bd6",
+    "environment_id": "c218c5dbbcf99921ca86ad4bf735357e5c523193eb17a84ce9e613754310a6b5",
+    "check_kind": "candidate",
+    "status": "proof_error",
+    "process_exit_code": 1,
+    "diagnostics": [
+      {
+        "severity": "error",
+        "position": {
+          "column": 42,
+          "line": 59
+        },
+        "end_position": {
+          "column": 47,
+          "line": 59
+        },
+        "message": "omega could not prove the goal:\na possible counterexample may satisfy the constraints\n  d - e ≥ 1\n  c ≥ 0\n  b ≥ 0\n  b - c ≤ 0\n  a ≥ 0\n  a - b ≥ 1\nwhere\n a := ↑j\n b := ↑i\n c := ↑n\n d := u (j + (n - i))\n e := u (n + (j - i))",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "omega could not prove the goal:\na possible counterexample may satisfy the constraints\n  d - e ≥ 1\n  c ≥ 0\n  b ≥ 0\n  b - c ≤ 0\n  a ≥ 0\n  a - b ≥ 1\nwhere\n a := ↑j\n b := ↑i\n c := ↑n\n d := u (j + (n - i))\n e := u (n + (j - i))",
+          "endPos": {
+            "column": 47,
+            "line": 59
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/P_A/P13/normal/A3/repeat_1/validation/lean/008_candidate_03/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 42,
+            "line": 59
+          },
+          "severity": "error"
+        },
+        "source_line": "  convert (hseq (n - i)).symm using 1 <;> omega",
+        "start_offset": 2320,
+        "start_byte_offset": 2430,
+        "end_offset": 2325,
+        "end_byte_offset": 2435,
+        "source_text": "omega",
+        "failed_tactic": "omega",
+        "tactic_range": {
+          "position": {
+            "line": 59,
+            "column": 42
+          },
+          "end_position": {
+            "line": 59,
+            "column": 47
+          },
+          "start_offset": 2320,
+          "end_offset": 2325
+        },
+        "goals": [
+          "u (n + (j - i)) = u (j + (n - i))"
+        ],
+        "local_context": [
+          "case h.e'_2\nu : ℕ → ℤ\nhu :\n  ∀ n ≥ 4,\n    ↑(u n) =\n        (↑(u (n - 1)) + ↑(u (n - 2)) + ↑(u (n - 3)) * ↑(u (n - 4))) /\n          (↑(u (n - 1)) * ↑(u (n - 2)) + ↑(u (n - 3)) + ↑(u (n - 4))) ∧\n      u (n - 1) * u (n - 2) + u (n - 3) + u (n - 4) ≠ 0\nB T : ℤ\nhB : ∀ (n : ℕ), B ≤ u n ∧ u n ≤ T\nf : ℕ → ℤ × ℤ × ℤ × ℤ := fun n => (u n, u (n + 1), u (n + 2), u (n + 3))\nhf : (range f).Finite\ni j : ℕ\nhij : i < j\nhfij : f i = f j\nhrec :\n  ∀ (a : ℕ),\n    ↑(u (a + 4)) =\n      (↑(u (a + 3)) + ↑(u (a + 2)) + ↑(u (a + 1)) * ↑(u a)) / (↑(u (a + 3)) * ↑(u (a + 2)) + ↑(u (a + 1)) + ↑(u a))\nhstep : ∀ {a b : ℕ}, f a = f b → f (a + 1) = f (b + 1)\nhs : ∀ (k : ℕ), f (i + k) = f (j + k)\nhseq : ∀ (m : ℕ), u (i + m) = u (j + m)\nn : ℕ\nhn : n ≥ i"
+        ],
+        "proof_state_source": "lean_infotree_before_tactic",
+        "proof_state_raw": {
+          "depth": 16,
+          "end": 9566,
+          "goals_after": [],
+          "goals_before": [
+            "case h.e'_2\nu : ℕ → ℤ\nhu :\n  ∀ n ≥ 4,\n    ↑(u n) =\n        (↑(u (n - 1)) + ↑(u (n - 2)) + ↑(u (n - 3)) * ↑(u (n - 4))) /\n          (↑(u (n - 1)) * ↑(u (n - 2)) + ↑(u (n - 3)) + ↑(u (n - 4))) ∧\n      u (n - 1) * u (n - 2) + u (n - 3) + u (n - 4) ≠ 0\nB T : ℤ\nhB : ∀ (n : ℕ), B ≤ u n ∧ u n ≤ T\nf : ℕ → ℤ × ℤ × ℤ × ℤ := fun n => (u n, u (n + 1), u (n + 2), u (n + 3))\nhf : (range f).Finite\ni j : ℕ\nhij : i < j\nhfij : f i = f j\nhrec :\n  ∀ (a : ℕ),\n    ↑(u (a + 4)) =\n      (↑(u (a + 3)) + ↑(u (a + 2)) + ↑(u (a + 1)) * ↑(u a)) / (↑(u (a + 3)) * ↑(u (a + 2)) + ↑(u (a + 1)) + ↑(u a))\nhstep : ∀ {a b : ℕ}, f a = f b → f (a + 1) = f (b + 1)\nhs : ∀ (k : ℕ), f (i + k) = f (j + k)\nhseq : ∀ (m : ℕ), u (i + m) = u (j + m)\nn : ℕ\nhn : n ≥ i\n⊢ u (n + (j - i)) = u (j + (n - i))"
+          ],
+          "kind": "tactic",
+          "start": 9561
+        }
+      },
+      {
+        "severity": "error",
+        "position": {
+          "column": 42,
+          "line": 59
+        },
+        "end_position": {
+          "column": 47,
+          "line": 59
+        },
+        "message": "omega could not prove the goal:\na possible counterexample may satisfy the constraints\n  d - e ≥ 1\n  c ≥ 0\n  b ≥ 0\n  b - c ≤ 0\n  a ≥ 0\n  a - b ≥ 1\nwhere\n a := ↑j\n b := ↑i\n c := ↑n\n d := u (i + (n - i))\n e := u n",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "omega could not prove the goal:\na possible counterexample may satisfy the constraints\n  d - e ≥ 1\n  c ≥ 0\n  b ≥ 0\n  b - c ≤ 0\n  a ≥ 0\n  a - b ≥ 1\nwhere\n a := ↑j\n b := ↑i\n c := ↑n\n d := u (i + (n - i))\n e := u n",
+          "endPos": {
+            "column": 47,
+            "line": 59
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/P_A/P13/normal/A3/repeat_1/validation/lean/008_candidate_03/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 42,
+            "line": 59
+          },
+          "severity": "error"
+        },
+        "source_line": "  convert (hseq (n - i)).symm using 1 <;> omega",
+        "start_offset": 2320,
+        "start_byte_offset": 2430,
+        "end_offset": 2325,
+        "end_byte_offset": 2435,
+        "source_text": "omega",
+        "failed_tactic": "omega",
+        "tactic_range": {
+          "position": {
+            "line": 59,
+            "column": 42
+          },
+          "end_position": {
+            "line": 59,
+            "column": 47
+          },
+          "start_offset": 2320,
+          "end_offset": 2325
+        },
+        "goals": [
+          "u (n + (j - i)) = u (j + (n - i))"
+        ],
+        "local_context": [
+          "case h.e'_2\nu : ℕ → ℤ\nhu :\n  ∀ n ≥ 4,\n    ↑(u n) =\n        (↑(u (n - 1)) + ↑(u (n - 2)) + ↑(u (n - 3)) * ↑(u (n - 4))) /\n          (↑(u (n - 1)) * ↑(u (n - 2)) + ↑(u (n - 3)) + ↑(u (n - 4))) ∧\n      u (n - 1) * u (n - 2) + u (n - 3) + u (n - 4) ≠ 0\nB T : ℤ\nhB : ∀ (n : ℕ), B ≤ u n ∧ u n ≤ T\nf : ℕ → ℤ × ℤ × ℤ × ℤ := fun n => (u n, u (n + 1), u (n + 2), u (n + 3))\nhf : (range f).Finite\ni j : ℕ\nhij : i < j\nhfij : f i = f j\nhrec :\n  ∀ (a : ℕ),\n    ↑(u (a + 4)) =\n      (↑(u (a + 3)) + ↑(u (a + 2)) + ↑(u (a + 1)) * ↑(u a)) / (↑(u (a + 3)) * ↑(u (a + 2)) + ↑(u (a + 1)) + ↑(u a))\nhstep : ∀ {a b : ℕ}, f a = f b → f (a + 1) = f (b + 1)\nhs : ∀ (k : ℕ), f (i + k) = f (j + k)\nhseq : ∀ (m : ℕ), u (i + m) = u (j + m)\nn : ℕ\nhn : n ≥ i"
+        ],
+        "proof_state_source": "lean_infotree_before_tactic",
+        "proof_state_raw": {
+          "depth": 16,
+          "end": 9566,
+          "goals_after": [],
+          "goals_before": [
+            "case h.e'_2\nu : ℕ → ℤ\nhu :\n  ∀ n ≥ 4,\n    ↑(u n) =\n        (↑(u (n - 1)) + ↑(u (n - 2)) + ↑(u (n - 3)) * ↑(u (n - 4))) /\n          (↑(u (n - 1)) * ↑(u (n - 2)) + ↑(u (n - 3)) + ↑(u (n - 4))) ∧\n      u (n - 1) * u (n - 2) + u (n - 3) + u (n - 4) ≠ 0\nB T : ℤ\nhB : ∀ (n : ℕ), B ≤ u n ∧ u n ≤ T\nf : ℕ → ℤ × ℤ × ℤ × ℤ := fun n => (u n, u (n + 1), u (n + 2), u (n + 3))\nhf : (range f).Finite\ni j : ℕ\nhij : i < j\nhfij : f i = f j\nhrec :\n  ∀ (a : ℕ),\n    ↑(u (a + 4)) =\n      (↑(u (a + 3)) + ↑(u (a + 2)) + ↑(u (a + 1)) * ↑(u a)) / (↑(u (a + 3)) * ↑(u (a + 2)) + ↑(u (a + 1)) + ↑(u a))\nhstep : ∀ {a b : ℕ}, f a = f b → f (a + 1) = f (b + 1)\nhs : ∀ (k : ℕ), f (i + k) = f (j + k)\nhseq : ∀ (m : ℕ), u (i + m) = u (j + m)\nn : ℕ\nhn : n ≥ i\n⊢ u (n + (j - i)) = u (j + (n - i))"
+          ],
+          "kind": "tactic",
+          "start": 9561
+        }
+      },
+      {
+        "severity": "information",
+        "position": {
+          "column": 0,
+          "line": 61
+        },
+        "end_position": {
+          "column": 6,
+          "line": 61
+        },
+        "message": "putnam_1964_a4 (u : ℕ → ℤ) (boundedu : ∃ B T, ∀ (n : ℕ), B ≤ u n ∧ u n ≤ T)\n  (hu :\n    ∀ n ≥ 4,\n      ↑(u n) =\n          (↑(u (n - 1)) + ↑(u (n - 2)) + ↑(u (n - 3)) * ↑(u (n - 4))) /\n            (↑(u (n - 1)) * ↑(u (n - 2)) + ↑(u (n - 3)) + ↑(u (n - 4))) ∧\n        u (n - 1) * u (n - 2) + u (n - 3) + u (n - 4) ≠ 0) :\n  ∃ N, ∃ c > 0, ∀ n ≥ N, u (n + c) = u n",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "putnam_1964_a4 (u : ℕ → ℤ) (boundedu : ∃ B T, ∀ (n : ℕ), B ≤ u n ∧ u n ≤ T)\n  (hu :\n    ∀ n ≥ 4,\n      ↑(u n) =\n          (↑(u (n - 1)) + ↑(u (n - 2)) + ↑(u (n - 3)) * ↑(u (n - 4))) /\n            (↑(u (n - 1)) * ↑(u (n - 2)) + ↑(u (n - 3)) + ↑(u (n - 4))) ∧\n        u (n - 1) * u (n - 2) + u (n - 3) + u (n - 4) ≠ 0) :\n  ∃ N, ∃ c > 0, ∀ n ≥ N, u (n + c) = u n",
+          "endPos": {
+            "column": 6,
+            "line": 61
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/P_A/P13/normal/A3/repeat_1/validation/lean/008_candidate_03/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 0,
+            "line": 61
+          },
+          "severity": "information"
+        }
+      },
+      {
+        "severity": "information",
+        "position": {
+          "column": 0,
+          "line": 62
+        },
+        "end_position": {
+          "column": 6,
+          "line": 62
+        },
+        "message": "'putnam_1964_a4' depends on axioms: [propext, sorryAx, Classical.choice, Quot.sound]",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "'putnam_1964_a4' depends on axioms: [propext, sorryAx, Classical.choice, Quot.sound]",
+          "endPos": {
+            "column": 6,
+            "line": 62
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/P_A/P13/normal/A3/repeat_1/validation/lean/008_candidate_03/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 0,
+            "line": 62
+          },
+          "severity": "information"
+        }
+      }
+    ],
+    "goals": [
+      "u (n + (j - i)) = u (j + (n - i))"
+    ],
+    "local_context": [
+      "case h.e'_2\nu : ℕ → ℤ\nhu :\n  ∀ n ≥ 4,\n    ↑(u n) =\n        (↑(u (n - 1)) + ↑(u (n - 2)) + ↑(u (n - 3)) * ↑(u (n - 4))) /\n          (↑(u (n - 1)) * ↑(u (n - 2)) + ↑(u (n - 3)) + ↑(u (n - 4))) ∧\n      u (n - 1) * u (n - 2) + u (n - 3) + u (n - 4) ≠ 0\nB T : ℤ\nhB : ∀ (n : ℕ), B ≤ u n ∧ u n ≤ T\nf : ℕ → ℤ × ℤ × ℤ × ℤ := fun n => (u n, u (n + 1), u (n + 2), u (n + 3))\nhf : (range f).Finite\ni j : ℕ\nhij : i < j\nhfij : f i = f j\nhrec :\n  ∀ (a : ℕ),\n    ↑(u (a + 4)) =\n      (↑(u (a + 3)) + ↑(u (a + 2)) + ↑(u (a + 1)) * ↑(u a)) / (↑(u (a + 3)) * ↑(u (a + 2)) + ↑(u (a + 1)) + ↑(u a))\nhstep : ∀ {a b : ℕ}, f a = f b → f (a + 1) = f (b + 1)\nhs : ∀ (k : ℕ), f (i + k) = f (j + k)\nhseq : ∀ (m : ℕ), u (i + m) = u (j + m)\nn : ℕ\nhn : n ≥ i"
+    ],
+    "sorries": [
+      {
+        "kind": "transitive_dependency",
+        "axiom": "sorryAx",
+        "position": null,
+        "end_position": null
+      }
+    ],
+    "backend_proof_status": null,
+    "statement_check": "fixed_context_preserved",
+    "axioms": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext",
+      "sorryAx"
+    ],
+    "metrics": {
+      "proof_tokens": 739
+    },
+    "elapsed_ms": 9794,
+    "raw_log_path": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/P_A/P13/normal/A3/repeat_1/validation/lean/008_candidate_03/stdout.log",
+    "detail": null,
+    "failure_kind": "proof_error"
+  },
+  "actual": {
+    "task_id": "P13",
+    "attempt": "saved_candidate",
+    "candidate_hash": "1d2e529d259194c022e2d4f244e08be6dc80e690bac306b3370a3540357c4bd6",
+    "environment_id": "c218c5dbbcf99921ca86ad4bf735357e5c523193eb17a84ce9e613754310a6b5",
+    "check_kind": "candidate",
+    "status": "proof_error",
+    "process_exit_code": 1,
+    "diagnostics": [
+      {
+        "severity": "error",
+        "position": {
+          "column": 42,
+          "line": 59
+        },
+        "end_position": {
+          "column": 47,
+          "line": 59
+        },
+        "message": "omega could not prove the goal:\na possible counterexample may satisfy the constraints\n  d - e ≥ 1\n  c ≥ 0\n  b ≥ 0\n  b - c ≤ 0\n  a ≥ 0\n  a - b ≥ 1\nwhere\n a := ↑j\n b := ↑i\n c := ↑n\n d := u (j + (n - i))\n e := u (n + (j - i))",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "omega could not prove the goal:\na possible counterexample may satisfy the constraints\n  d - e ≥ 1\n  c ≥ 0\n  b ≥ 0\n  b - c ≤ 0\n  a ≥ 0\n  a - b ≥ 1\nwhere\n a := ↑j\n b := ↑i\n c := ↑n\n d := u (j + (n - i))\n e := u (n + (j - i))",
+          "endPos": {
+            "column": 47,
+            "line": 59
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/revalidation/P13/250f45329d91e28c2f86d79c5d0266fa1b8cec5c6c31ef5d24aab8ce73d85921-candidate/mathlib-v4.26.0/fresh/lean/002_saved_candidate/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 42,
+            "line": 59
+          },
+          "severity": "error"
+        },
+        "source_line": "  convert (hseq (n - i)).symm using 1 <;> omega",
+        "start_offset": 2320,
+        "start_byte_offset": 2430,
+        "end_offset": 2325,
+        "end_byte_offset": 2435,
+        "source_text": "omega",
+        "failed_tactic": "omega",
+        "tactic_range": {
+          "position": {
+            "line": 59,
+            "column": 42
+          },
+          "end_position": {
+            "line": 59,
+            "column": 47
+          },
+          "start_offset": 2320,
+          "end_offset": 2325
+        },
+        "goals": [
+          "u (n + (j - i)) = u (j + (n - i))"
+        ],
+        "local_context": [
+          "case h.e'_2\nu : ℕ → ℤ\nhu :\n  ∀ n ≥ 4,\n    ↑(u n) =\n        (↑(u (n - 1)) + ↑(u (n - 2)) + ↑(u (n - 3)) * ↑(u (n - 4))) /\n          (↑(u (n - 1)) * ↑(u (n - 2)) + ↑(u (n - 3)) + ↑(u (n - 4))) ∧\n      u (n - 1) * u (n - 2) + u (n - 3) + u (n - 4) ≠ 0\nB T : ℤ\nhB : ∀ (n : ℕ), B ≤ u n ∧ u n ≤ T\nf : ℕ → ℤ × ℤ × ℤ × ℤ := fun n => (u n, u (n + 1), u (n + 2), u (n + 3))\nhf : (range f).Finite\ni j : ℕ\nhij : i < j\nhfij : f i = f j\nhrec :\n  ∀ (a : ℕ),\n    ↑(u (a + 4)) =\n      (↑(u (a + 3)) + ↑(u (a + 2)) + ↑(u (a + 1)) * ↑(u a)) / (↑(u (a + 3)) * ↑(u (a + 2)) + ↑(u (a + 1)) + ↑(u a))\nhstep : ∀ {a b : ℕ}, f a = f b → f (a + 1) = f (b + 1)\nhs : ∀ (k : ℕ), f (i + k) = f (j + k)\nhseq : ∀ (m : ℕ), u (i + m) = u (j + m)\nn : ℕ\nhn : n ≥ i"
+        ],
+        "proof_state_source": "lean_infotree_before_tactic",
+        "proof_state_raw": {
+          "depth": 16,
+          "end": 9566,
+          "goals_after": [],
+          "goals_before": [
+            "case h.e'_2\nu : ℕ → ℤ\nhu :\n  ∀ n ≥ 4,\n    ↑(u n) =\n        (↑(u (n - 1)) + ↑(u (n - 2)) + ↑(u (n - 3)) * ↑(u (n - 4))) /\n          (↑(u (n - 1)) * ↑(u (n - 2)) + ↑(u (n - 3)) + ↑(u (n - 4))) ∧\n      u (n - 1) * u (n - 2) + u (n - 3) + u (n - 4) ≠ 0\nB T : ℤ\nhB : ∀ (n : ℕ), B ≤ u n ∧ u n ≤ T\nf : ℕ → ℤ × ℤ × ℤ × ℤ := fun n => (u n, u (n + 1), u (n + 2), u (n + 3))\nhf : (range f).Finite\ni j : ℕ\nhij : i < j\nhfij : f i = f j\nhrec :\n  ∀ (a : ℕ),\n    ↑(u (a + 4)) =\n      (↑(u (a + 3)) + ↑(u (a + 2)) + ↑(u (a + 1)) * ↑(u a)) / (↑(u (a + 3)) * ↑(u (a + 2)) + ↑(u (a + 1)) + ↑(u a))\nhstep : ∀ {a b : ℕ}, f a = f b → f (a + 1) = f (b + 1)\nhs : ∀ (k : ℕ), f (i + k) = f (j + k)\nhseq : ∀ (m : ℕ), u (i + m) = u (j + m)\nn : ℕ\nhn : n ≥ i\n⊢ u (n + (j - i)) = u (j + (n - i))"
+          ],
+          "kind": "tactic",
+          "start": 9561
+        }
+      },
+      {
+        "severity": "error",
+        "position": {
+          "column": 42,
+          "line": 59
+        },
+        "end_position": {
+          "column": 47,
+          "line": 59
+        },
+        "message": "omega could not prove the goal:\na possible counterexample may satisfy the constraints\n  d - e ≥ 1\n  c ≥ 0\n  b ≥ 0\n  b - c ≤ 0\n  a ≥ 0\n  a - b ≥ 1\nwhere\n a := ↑j\n b := ↑i\n c := ↑n\n d := u (i + (n - i))\n e := u n",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "omega could not prove the goal:\na possible counterexample may satisfy the constraints\n  d - e ≥ 1\n  c ≥ 0\n  b ≥ 0\n  b - c ≤ 0\n  a ≥ 0\n  a - b ≥ 1\nwhere\n a := ↑j\n b := ↑i\n c := ↑n\n d := u (i + (n - i))\n e := u n",
+          "endPos": {
+            "column": 47,
+            "line": 59
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/revalidation/P13/250f45329d91e28c2f86d79c5d0266fa1b8cec5c6c31ef5d24aab8ce73d85921-candidate/mathlib-v4.26.0/fresh/lean/002_saved_candidate/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 42,
+            "line": 59
+          },
+          "severity": "error"
+        },
+        "source_line": "  convert (hseq (n - i)).symm using 1 <;> omega",
+        "start_offset": 2320,
+        "start_byte_offset": 2430,
+        "end_offset": 2325,
+        "end_byte_offset": 2435,
+        "source_text": "omega",
+        "failed_tactic": "omega",
+        "tactic_range": {
+          "position": {
+            "line": 59,
+            "column": 42
+          },
+          "end_position": {
+            "line": 59,
+            "column": 47
+          },
+          "start_offset": 2320,
+          "end_offset": 2325
+        },
+        "goals": [
+          "u (n + (j - i)) = u (j + (n - i))"
+        ],
+        "local_context": [
+          "case h.e'_2\nu : ℕ → ℤ\nhu :\n  ∀ n ≥ 4,\n    ↑(u n) =\n        (↑(u (n - 1)) + ↑(u (n - 2)) + ↑(u (n - 3)) * ↑(u (n - 4))) /\n          (↑(u (n - 1)) * ↑(u (n - 2)) + ↑(u (n - 3)) + ↑(u (n - 4))) ∧\n      u (n - 1) * u (n - 2) + u (n - 3) + u (n - 4) ≠ 0\nB T : ℤ\nhB : ∀ (n : ℕ), B ≤ u n ∧ u n ≤ T\nf : ℕ → ℤ × ℤ × ℤ × ℤ := fun n => (u n, u (n + 1), u (n + 2), u (n + 3))\nhf : (range f).Finite\ni j : ℕ\nhij : i < j\nhfij : f i = f j\nhrec :\n  ∀ (a : ℕ),\n    ↑(u (a + 4)) =\n      (↑(u (a + 3)) + ↑(u (a + 2)) + ↑(u (a + 1)) * ↑(u a)) / (↑(u (a + 3)) * ↑(u (a + 2)) + ↑(u (a + 1)) + ↑(u a))\nhstep : ∀ {a b : ℕ}, f a = f b → f (a + 1) = f (b + 1)\nhs : ∀ (k : ℕ), f (i + k) = f (j + k)\nhseq : ∀ (m : ℕ), u (i + m) = u (j + m)\nn : ℕ\nhn : n ≥ i"
+        ],
+        "proof_state_source": "lean_infotree_before_tactic",
+        "proof_state_raw": {
+          "depth": 16,
+          "end": 9566,
+          "goals_after": [],
+          "goals_before": [
+            "case h.e'_2\nu : ℕ → ℤ\nhu :\n  ∀ n ≥ 4,\n    ↑(u n) =\n        (↑(u (n - 1)) + ↑(u (n - 2)) + ↑(u (n - 3)) * ↑(u (n - 4))) /\n          (↑(u (n - 1)) * ↑(u (n - 2)) + ↑(u (n - 3)) + ↑(u (n - 4))) ∧\n      u (n - 1) * u (n - 2) + u (n - 3) + u (n - 4) ≠ 0\nB T : ℤ\nhB : ∀ (n : ℕ), B ≤ u n ∧ u n ≤ T\nf : ℕ → ℤ × ℤ × ℤ × ℤ := fun n => (u n, u (n + 1), u (n + 2), u (n + 3))\nhf : (range f).Finite\ni j : ℕ\nhij : i < j\nhfij : f i = f j\nhrec :\n  ∀ (a : ℕ),\n    ↑(u (a + 4)) =\n      (↑(u (a + 3)) + ↑(u (a + 2)) + ↑(u (a + 1)) * ↑(u a)) / (↑(u (a + 3)) * ↑(u (a + 2)) + ↑(u (a + 1)) + ↑(u a))\nhstep : ∀ {a b : ℕ}, f a = f b → f (a + 1) = f (b + 1)\nhs : ∀ (k : ℕ), f (i + k) = f (j + k)\nhseq : ∀ (m : ℕ), u (i + m) = u (j + m)\nn : ℕ\nhn : n ≥ i\n⊢ u (n + (j - i)) = u (j + (n - i))"
+          ],
+          "kind": "tactic",
+          "start": 9561
+        }
+      },
+      {
+        "severity": "information",
+        "position": {
+          "column": 0,
+          "line": 61
+        },
+        "end_position": {
+          "column": 6,
+          "line": 61
+        },
+        "message": "putnam_1964_a4 (u : ℕ → ℤ) (boundedu : ∃ B T, ∀ (n : ℕ), B ≤ u n ∧ u n ≤ T)\n  (hu :\n    ∀ n ≥ 4,\n      ↑(u n) =\n          (↑(u (n - 1)) + ↑(u (n - 2)) + ↑(u (n - 3)) * ↑(u (n - 4))) /\n            (↑(u (n - 1)) * ↑(u (n - 2)) + ↑(u (n - 3)) + ↑(u (n - 4))) ∧\n        u (n - 1) * u (n - 2) + u (n - 3) + u (n - 4) ≠ 0) :\n  ∃ N, ∃ c > 0, ∀ n ≥ N, u (n + c) = u n",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "putnam_1964_a4 (u : ℕ → ℤ) (boundedu : ∃ B T, ∀ (n : ℕ), B ≤ u n ∧ u n ≤ T)\n  (hu :\n    ∀ n ≥ 4,\n      ↑(u n) =\n          (↑(u (n - 1)) + ↑(u (n - 2)) + ↑(u (n - 3)) * ↑(u (n - 4))) /\n            (↑(u (n - 1)) * ↑(u (n - 2)) + ↑(u (n - 3)) + ↑(u (n - 4))) ∧\n        u (n - 1) * u (n - 2) + u (n - 3) + u (n - 4) ≠ 0) :\n  ∃ N, ∃ c > 0, ∀ n ≥ N, u (n + c) = u n",
+          "endPos": {
+            "column": 6,
+            "line": 61
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/revalidation/P13/250f45329d91e28c2f86d79c5d0266fa1b8cec5c6c31ef5d24aab8ce73d85921-candidate/mathlib-v4.26.0/fresh/lean/002_saved_candidate/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 0,
+            "line": 61
+          },
+          "severity": "information"
+        }
+      },
+      {
+        "severity": "information",
+        "position": {
+          "column": 0,
+          "line": 62
+        },
+        "end_position": {
+          "column": 6,
+          "line": 62
+        },
+        "message": "'putnam_1964_a4' depends on axioms: [propext, sorryAx, Classical.choice, Quot.sound]",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "'putnam_1964_a4' depends on axioms: [propext, sorryAx, Classical.choice, Quot.sound]",
+          "endPos": {
+            "column": 6,
+            "line": 62
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/revalidation/P13/250f45329d91e28c2f86d79c5d0266fa1b8cec5c6c31ef5d24aab8ce73d85921-candidate/mathlib-v4.26.0/fresh/lean/002_saved_candidate/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 0,
+            "line": 62
+          },
+          "severity": "information"
+        }
+      }
+    ],
+    "goals": [
+      "u (n + (j - i)) = u (j + (n - i))"
+    ],
+    "local_context": [
+      "case h.e'_2\nu : ℕ → ℤ\nhu :\n  ∀ n ≥ 4,\n    ↑(u n) =\n        (↑(u (n - 1)) + ↑(u (n - 2)) + ↑(u (n - 3)) * ↑(u (n - 4))) /\n          (↑(u (n - 1)) * ↑(u (n - 2)) + ↑(u (n - 3)) + ↑(u (n - 4))) ∧\n      u (n - 1) * u (n - 2) + u (n - 3) + u (n - 4) ≠ 0\nB T : ℤ\nhB : ∀ (n : ℕ), B ≤ u n ∧ u n ≤ T\nf : ℕ → ℤ × ℤ × ℤ × ℤ := fun n => (u n, u (n + 1), u (n + 2), u (n + 3))\nhf : (range f).Finite\ni j : ℕ\nhij : i < j\nhfij : f i = f j\nhrec :\n  ∀ (a : ℕ),\n    ↑(u (a + 4)) =\n      (↑(u (a + 3)) + ↑(u (a + 2)) + ↑(u (a + 1)) * ↑(u a)) / (↑(u (a + 3)) * ↑(u (a + 2)) + ↑(u (a + 1)) + ↑(u a))\nhstep : ∀ {a b : ℕ}, f a = f b → f (a + 1) = f (b + 1)\nhs : ∀ (k : ℕ), f (i + k) = f (j + k)\nhseq : ∀ (m : ℕ), u (i + m) = u (j + m)\nn : ℕ\nhn : n ≥ i"
+    ],
+    "sorries": [
+      {
+        "kind": "transitive_dependency",
+        "axiom": "sorryAx",
+        "position": null,
+        "end_position": null
+      }
+    ],
+    "backend_proof_status": null,
+    "statement_check": "fixed_context_preserved",
+    "axioms": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext",
+      "sorryAx"
+    ],
+    "metrics": {
+      "proof_tokens": 739
+    },
+    "elapsed_ms": 10254,
+    "raw_log_path": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/revalidation/P13/250f45329d91e28c2f86d79c5d0266fa1b8cec5c6c31ef5d24aab8ce73d85921-candidate/mathlib-v4.26.0/fresh/lean/002_saved_candidate/stdout.log",
+    "detail": null,
+    "failure_kind": "proof_error"
+  },
+  "new_model_calls": 0
+}

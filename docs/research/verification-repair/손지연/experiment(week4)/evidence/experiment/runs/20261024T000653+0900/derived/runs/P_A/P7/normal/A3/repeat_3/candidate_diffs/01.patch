@@ -1,0 +1,116 @@
+--- initial.proof.lean
++++ candidate_01.proof.lean
+@@ -5,77 +5,57 @@
+   case var mem => grind
+   case app t₁ _ _ t₂ l r ih_l ih_r =>
+     right
+-    cases ih_l rfl l with
+-    | inl val_l =>
+-        cases ih_r rfl r with
+-        | inl val_r =>
+-            have ⟨σ, t₁, eq⟩ := l.canonical_form_abs val_l
+-            exists t₁ ^ᵗᵗ t₂
+-            grind
+-        | inr red_r =>
+-            obtain ⟨t₂', _⟩ := red_r
+-            exists t₁.app t₂'
+-            grind
+-    | inr red_l =>
+-        obtain ⟨t₁', _⟩ := red_l
+-        exists t₁'.app t₂
++    rcases ih_l rfl l with val_l | ⟨t₁', red_l⟩
++    · rcases ih_r rfl r with val_r | ⟨t₂', red_r⟩
++      · obtain ⟨σ, u, eq⟩ := l.canonical_form_abs val_l
++        exists u ^ᵗᵗ t₂
+         grind
++      · exists t₁.app t₂'
++        grind
++    · exists t₁'.app t₂
++      grind
+   case tapp σ' der _ ih =>
+     right
+-    specialize ih rfl der
+-    cases ih with
+-    | inl val =>
+-        obtain ⟨_, t, _⟩ := der.canonical_form_tabs val
+-        exists t ^ᵗᵞ σ'
+-        grind
+-    | inr red =>
+-        obtain ⟨t', _⟩ := red
+-        exists .tapp t' σ'
+-        grind
++    rcases ih rfl der with val | ⟨t', red⟩
++    · obtain ⟨_, u, _⟩ := der.canonical_form_tabs val
++      exists u ^ᵗᵞ σ'
++      grind
++    · exists .tapp t' σ'
++      grind
+   case let' t₁ σ t₂ τ L der _ ih _ =>
+     right
+-    cases ih rfl der with
+-    | inl _ =>
+-        exists t₂ ^ᵗᵗ t₁
+-        grind
+-    | inr red =>
+-        obtain ⟨t₁', _⟩ := red
+-        exists t₁'.let' t₂
+-        grind
++    rcases ih rfl der with val | ⟨t₁', red⟩
++    · exists t₂ ^ᵗᵗ t₁
++      grind
++    · exists t₁'.let' t₂
++      grind
+   case inl der _ ih =>
+-    cases (ih rfl der) with
+-    | inl val => grind
+-    | inr red =>
+-        right
+-        obtain ⟨t', _⟩ := red
+-        exists .inl t'
+-        grind
++    rcases ih rfl der with val | ⟨t', red⟩
++    · grind
++    · right
++      exists .inl t'
++      grind
+   case inr der _ ih =>
+-    cases (ih rfl der) with
+-    | inl val => grind
+-    | inr red =>
+-        right
+-        obtain ⟨t', _⟩ := red
+-        exists .inr t'
+-        grind
++    rcases ih rfl der with val | ⟨t', red⟩
++    · grind
++    · right
++      exists .inr t'
++      grind
+   case case t₁ _ _ t₂ _ t₃ _ der _ _ ih _ _ =>
+     right
+-    cases ih rfl der with
+-    | inl val =>
+-        have ⟨t₁, lr⟩ := der.canonical_form_sum val
+-        cases lr <;> [exists t₂ ^ᵗᵗ t₁; exists t₃ ^ᵗᵗ t₁] <;> grind
+-    | inr red =>
+-        obtain ⟨t₁', _⟩ := red
+-        exists t₁'.case t₂ t₃
+-        grind
++    rcases ih rfl der with val | ⟨t₁', red⟩
++    · obtain ⟨u, lr⟩ := der.canonical_form_sum val
++      cases lr <;> [exists t₂ ^ᵗᵗ u; exists t₃ ^ᵗᵗ u] <;> grind
++    · exists t₁'.case t₂ t₃
++      grind
+   case sub => grind
+-  case abs σ _ τ L _ _=>
++  case abs σ _ τ L _ _ =>
+     left
+     constructor
+     apply LC.abs L
+     · grind only [→ wf, cases Term.LC]
+     · grind only [→ wf]
+-  case tabs L _ _=>
++  case tabs L _ _ =>
+     left
+     constructor
+     apply LC.tabs L

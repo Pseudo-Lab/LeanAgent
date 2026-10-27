@@ -1,0 +1,19 @@
+--- candidate_02.proof.lean
++++ candidate_03.proof.lean
+@@ -2,10 +2,12 @@
+   intros Hnorm
+   have append_mono {a b c d : List Expression.Ident}
+       (hab : a.Subset b) (hcd : c.Subset d) :
+-      (a ++ c).Subset (b ++ d) :=
+-    List.append_subset.mpr ⟨
+-      List.Subset.trans hab List.subset_append_left,
+-      List.subset_append_of_subset_right hcd⟩
++      (a ++ c).Subset (b ++ d) := by
++    intro x hx
++    simp only [List.mem_append] at hx ⊢
++    cases hx with
++    | inl hx => exact Or.inl (hab hx)
++    | inr hx => exact Or.inr (hcd hx)
+   induction post <;>
+     simp [Imperative.HasVarsPure.getVars, extractOldExprVars,
+           Lambda.LExpr.LExpr.getVars] at * <;>

@@ -1,0 +1,279 @@
+{
+  "family": "P_A",
+  "problem": 7,
+  "condition": "A1",
+  "repeat": 2,
+  "error_category": null,
+  "max_calls": 3,
+  "target": "Cslib.LambdaCalculus.LocallyNameless.Fsub.Typing.progress",
+  "prefix": "/-\nCopyright (c) 2025 Chris Henson. All rights reserved.\nReleased under Apache 2.0 license as described in the file LICENSE.\nAuthors: Chris Henson\n-/\n\nmodule\n\npublic import Cslib.Languages.LambdaCalculus.LocallyNameless.Fsub.Typing\n\n/-! # λ-calculus\n\nThe λ-calculus with polymorphism and subtyping, with a locally nameless representation of syntax.\nThis file proves type safety.\n\n## References\n\n* [A. Chargueraud, *The Locally Nameless Representation*][Chargueraud2012]\n* See also <https://www.cis.upenn.edu/~plclub/popl08-tutorial/code/>, from which\n  this is adapted\n\n-/\n\npublic section\n\nnamespace Cslib\n\nvariable {Var : Type*} [HasFresh Var] [DecidableEq Var]\n\nnamespace LambdaCalculus.LocallyNameless.Fsub\n\nopen Context List Env.Wf Term Ty\n\nvariable {t : Term Var}\n\n/-- Any reduction step preserves typing. -/\nlemma Typing.preservation (der : Typing Γ t τ) (step : t ⭢βᵛ t') : Typing Γ t' τ := by\n  induction der generalizing t'\n  case app Γ _ σ τ _ _ _ _ _ =>\n    cases step\n    case appₗ | appᵣ => grind\n    case abs der _ _ =>\n      have sub : Sub Γ (σ.arrow τ) (σ.arrow τ) := by grind [Sub.refl]\n      have ⟨_, _, ⟨_, _⟩⟩ := der.abs_inv sub\n      grind [fresh_exists <| free_union [fvTm] Var, openTm_substTm_intro, subst_tm, Sub.weaken]\n  case tapp Γ _ σ τ σ' _ _ _ =>\n    cases step\n    case tabs der _ _ =>\n      have sub : Sub Γ (σ.all τ) (σ.all τ) := by grind [Sub.refl]\n      have ⟨_, _, ⟨_, _⟩⟩ := der.tabs_inv sub\n      have ⟨X, mem⟩ := fresh_exists <| free_union [Ty.fv, fvTy] Var\n      simp at mem\n      have : Γ = (Context.mapVal (·[X := σ']) []) ++ Γ := by grind\n      rw [openTy_substTy_intro (X := X), open_subst_intro (X := X)] <;> grind [subst_ty]\n    case tapp => grind\n  case let' Γ _ _ _ _ L der _ ih₁ _ =>\n    cases step\n    case let_bind red₁ _ => apply Typing.let' L (ih₁ red₁); grind\n    case let_body =>\n      grind [fresh_exists <| free_union [fvTm] Var, openTm_substTm_intro, subst_tm]\n  case case Γ _ σ τ _ _ _ L _ _ _ ih₁ _ _ =>\n    have sub : Sub Γ (σ.sum τ) (σ.sum τ) := by grind [Sub.refl]\n    have : Γ = [] ++ Γ := by rfl\n    cases step\n    case «case» red₁ _ _ => apply Typing.case L (ih₁ red₁) <;> grind\n    case case_inl der _ _ =>\n      have ⟨_, ⟨_, _⟩⟩ := der.inl_inv sub\n      grind [fresh_exists <| free_union [fvTm] Var, openTm_substTm_intro, subst_tm]\n    case case_inr der _ _ =>\n      have ⟨_, ⟨_, _⟩⟩ := der.inr_inv sub\n      grind [fresh_exists <| free_union [fvTm] Var, openTm_substTm_intro, subst_tm]\n  all_goals grind [cases Red]\n\nset_option linter.tacticAnalysis.verifyGrindOnly false in\n/-- Any typable term either has a reduction step or is a value. -/\nlemma Typing.progress (der : Typing [] t τ) : t.Value ∨ ∃ t', t ⭢βᵛ t' := ",
+  "suffix": "\n\nend LambdaCalculus.LocallyNameless.Fsub\n\nend Cslib\n",
+  "original_body": "by\n  generalize eq : [] = Γ at der\n  have der' : Typing Γ t τ := der\n  induction der <;> subst eq\n  case var mem => grind\n  case app t₁ _ _ t₂ l r ih_l ih_r =>\n    right\n    cases ih_l rfl l with\n    | inl val_l =>\n        cases ih_r rfl r with\n        | inl val_r =>\n            have ⟨σ, t₁, eq⟩ := l.canonical_form_abs val_l\n            exists t₁ ^ᵗᵗ t₂\n            grind\n        | inr red_r =>\n            obtain ⟨t₂', _⟩ := red_r\n            exists t₁.app t₂'\n            grind\n    | inr red_l =>\n        obtain ⟨t₁', _⟩ := red_l\n        exists t₁'.app t₂\n        grind\n  case tapp σ' der _ ih =>\n    right\n    specialize ih rfl der\n    cases ih with\n    | inl val =>\n        obtain ⟨_, t, _⟩ := der.canonical_form_tabs val\n        exists t ^ᵗᵞ σ'\n        grind\n    | inr red =>\n        obtain ⟨t', _⟩ := red\n        exists .tapp t' σ'\n        grind\n  case let' t₁ σ t₂ τ L der _ ih _ =>\n    right\n    cases ih rfl der with\n    | inl _ =>\n        exists t₂ ^ᵗᵗ t₁\n        grind\n    | inr red =>\n        obtain ⟨t₁', _⟩ := red\n        exists t₁'.let' t₂\n        grind\n  case inl der _ ih =>\n    cases (ih rfl der) with\n    | inl val => grind\n    | inr red =>\n        right\n        obtain ⟨t', _⟩ := red\n        exists .inl t'\n        grind\n  case inr der _ ih =>\n    cases (ih rfl der) with\n    | inl val => grind\n    | inr red =>\n        right\n        obtain ⟨t', _⟩ := red\n        exists .inr t'\n        grind\n  case case t₁ _ _ t₂ _ t₃ _ der _ _ ih _ _ =>\n    right\n    cases ih rfl der with\n    | inl val =>\n        have ⟨t₁, lr⟩ := der.canonical_form_sum val\n        cases lr <;> [exists t₂ ^ᵗᵗ t₁; exists t₃ ^ᵗᵗ t₁] <;> grind\n    | inr red =>\n        obtain ⟨t₁', _⟩ := red\n        exists t₁'.case t₂ t₃\n        grind\n  case sub => grind\n  case abs σ _ τ L _ _=>\n    left\n    constructor\n    apply LC.abs L\n    · grind only [→ wf, cases Term.LC]\n    · grind only [→ wf]\n  case tabs L _ _=>\n    left\n    constructor\n    apply LC.tabs L\n    · grind only [→ wf, cases Term.LC]\n    · grind only [→ wf]",
+  "initial_body": "by\n  generalize eq : [] = Γ at der\n  have der' : Typing Γ t τ := der\n  induction der <;> subst eq\n  case var mem => grind\n  case app t₁ _ _ t₂ l r ih_l ih_r =>\n    right\n    cases ih_l rfl l with\n    | inl val_l =>\n        cases ih_r rfl r with\n        | inl val_r =>\n            have ⟨σ, t₁, eq⟩ := l.canonical_form_abs val_l\n            exists t₁ ^ᵗᵗ t₂\n            grind\n        | inr red_r =>\n            obtain ⟨t₂', _⟩ := red_r\n            exists t₁.app t₂'\n            grind\n    | inr red_l =>\n        obtain ⟨t₁', _⟩ := red_l\n        exists t₁'.app t₂\n        grind\n  case tapp σ' der _ ih =>\n    right\n    specialize ih rfl der\n    cases ih with\n    | inl val =>\n        obtain ⟨_, t, _⟩ := der.canonical_form_tabs val\n        exists t ^ᵗᵞ σ'\n        grind\n    | inr red =>\n        obtain ⟨t', _⟩ := red\n        exists .tapp t' σ'\n        grind\n  case let' t₁ σ t₂ τ L der _ ih _ =>\n    right\n    cases ih rfl der with\n    | inl _ =>\n        exists t₂ ^ᵗᵗ t₁\n        grind\n    | inr red =>\n        obtain ⟨t₁', _⟩ := red\n        exists t₁'.let' t₂\n        grind\n  case inl der _ ih =>\n    cases (ih rfl der) with\n    | inl val => grind\n    | inr red =>\n        right\n        obtain ⟨t', _⟩ := red\n        exists .inl t'\n        grind\n  case inr der _ ih =>\n    cases (ih rfl der) with\n    | inl val => grind\n    | inr red =>\n        right\n        obtain ⟨t', _⟩ := red\n        exists .inr t'\n        grind\n  case case t₁ _ _ t₂ _ t₃ _ der _ _ ih _ _ =>\n    right\n    cases ih rfl der with\n    | inl val =>\n        have ⟨t₁, lr⟩ := der.canonical_form_sum val\n        cases lr <;> [exists t₂ ^ᵗᵗ t₁; exists t₃ ^ᵗᵗ t₁] <;> grind\n    | inr red =>\n        obtain ⟨t₁', _⟩ := red\n        exists t₁'.case t₂ t₃\n        grind\n  case sub => grind\n  case abs σ _ τ L _ _=>\n    left\n    constructor\n    apply LC.abs L\n    · grind only [→ wf, cases Term.LC]\n    · grind only [→ wf]\n  case tabs L _ _=>\n    left\n    constructor\n    apply LC.tabs L\n    · grind only [→ wf, cases Term.LC]\n    · grind only [→ wf]",
+  "initial_status": "candidate_pass",
+  "initial_facts": {
+    "diagnostics": [
+      {
+        "severity": "information",
+        "position": {
+          "column": 0,
+          "line": 164
+        },
+        "end_position": {
+          "column": 6,
+          "line": 164
+        },
+        "message": "Cslib.LambdaCalculus.LocallyNameless.Fsub.Typing.progress.{u_1} {Var : Type u_1} [Cslib.HasFresh Var] [DecidableEq Var]\n  {t : Cslib.LambdaCalculus.LocallyNameless.Fsub.Term Var} {τ : Cslib.LambdaCalculus.LocallyNameless.Fsub.Ty Var}\n  (der : Cslib.LambdaCalculus.LocallyNameless.Fsub.Typing [] t τ) : t.Value ∨ ∃ t', t.Red t'",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "Cslib.LambdaCalculus.LocallyNameless.Fsub.Typing.progress.{u_1} {Var : Type u_1} [Cslib.HasFresh Var] [DecidableEq Var]\n  {t : Cslib.LambdaCalculus.LocallyNameless.Fsub.Term Var} {τ : Cslib.LambdaCalculus.LocallyNameless.Fsub.Ty Var}\n  (der : Cslib.LambdaCalculus.LocallyNameless.Fsub.Typing [] t τ) : t.Value ∨ ∃ t', t.Red t'",
+          "endPos": {
+            "column": 6,
+            "line": 164
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 0,
+            "line": 164
+          },
+          "severity": "information"
+        }
+      },
+      {
+        "severity": "information",
+        "position": {
+          "column": 0,
+          "line": 165
+        },
+        "end_position": {
+          "column": 6,
+          "line": 165
+        },
+        "message": "'Cslib.LambdaCalculus.LocallyNameless.Fsub.Typing.progress' depends on axioms: [propext, Classical.choice, Quot.sound]",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "'Cslib.LambdaCalculus.LocallyNameless.Fsub.Typing.progress' depends on axioms: [propext, Classical.choice, Quot.sound]",
+          "endPos": {
+            "column": 6,
+            "line": 165
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 0,
+            "line": 165
+          },
+          "severity": "information"
+        }
+      }
+    ],
+    "goals": null,
+    "local_context": null,
+    "sorries": [],
+    "axioms": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext"
+    ],
+    "detail": null,
+    "raw_lean_output": "{\"caption\":\"\",\"data\":\"Cslib.LambdaCalculus.LocallyNameless.Fsub.Typing.progress.{u_1} {Var : Type u_1} [Cslib.HasFresh Var] [DecidableEq Var]\\n  {t : Cslib.LambdaCalculus.LocallyNameless.Fsub.Term Var} {τ : Cslib.LambdaCalculus.LocallyNameless.Fsub.Ty Var}\\n  (der : Cslib.LambdaCalculus.LocallyNameless.Fsub.Typing [] t τ) : t.Value ∨ ∃ t', t.Red t'\",\"endPos\":{\"column\":6,\"line\":164},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"[anonymous]\",\"pos\":{\"column\":0,\"line\":164},\"severity\":\"information\"}\n{\"caption\":\"\",\"data\":\"'Cslib.LambdaCalculus.LocallyNameless.Fsub.Typing.progress' depends on axioms: [propext, Classical.choice, Quot.sound]\",\"endPos\":{\"column\":6,\"line\":165},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"[anonymous]\",\"pos\":{\"column\":0,\"line\":165},\"severity\":\"information\"}\n"
+  },
+  "baseline_metrics": {
+    "proof_tokens": 406,
+    "raw_heartbeats": 59926888,
+    "heartbeats": 59926
+  },
+  "initial_measurement": {
+    "proof_tokens": 406,
+    "raw_heartbeats": 59926888,
+    "token_reduction_pct": 0.0,
+    "heartbeat_reduction_pct": 0.0,
+    "search_score": 0.0
+  },
+  "original_candidate": {
+    "call": 0,
+    "origin": "original",
+    "body": "by\n  generalize eq : [] = Γ at der\n  have der' : Typing Γ t τ := der\n  induction der <;> subst eq\n  case var mem => grind\n  case app t₁ _ _ t₂ l r ih_l ih_r =>\n    right\n    cases ih_l rfl l with\n    | inl val_l =>\n        cases ih_r rfl r with\n        | inl val_r =>\n            have ⟨σ, t₁, eq⟩ := l.canonical_form_abs val_l\n            exists t₁ ^ᵗᵗ t₂\n            grind\n        | inr red_r =>\n            obtain ⟨t₂', _⟩ := red_r\n            exists t₁.app t₂'\n            grind\n    | inr red_l =>\n        obtain ⟨t₁', _⟩ := red_l\n        exists t₁'.app t₂\n        grind\n  case tapp σ' der _ ih =>\n    right\n    specialize ih rfl der\n    cases ih with\n    | inl val =>\n        obtain ⟨_, t, _⟩ := der.canonical_form_tabs val\n        exists t ^ᵗᵞ σ'\n        grind\n    | inr red =>\n        obtain ⟨t', _⟩ := red\n        exists .tapp t' σ'\n        grind\n  case let' t₁ σ t₂ τ L der _ ih _ =>\n    right\n    cases ih rfl der with\n    | inl _ =>\n        exists t₂ ^ᵗᵗ t₁\n        grind\n    | inr red =>\n        obtain ⟨t₁', _⟩ := red\n        exists t₁'.let' t₂\n        grind\n  case inl der _ ih =>\n    cases (ih rfl der) with\n    | inl val => grind\n    | inr red =>\n        right\n        obtain ⟨t', _⟩ := red\n        exists .inl t'\n        grind\n  case inr der _ ih =>\n    cases (ih rfl der) with\n    | inl val => grind\n    | inr red =>\n        right\n        obtain ⟨t', _⟩ := red\n        exists .inr t'\n        grind\n  case case t₁ _ _ t₂ _ t₃ _ der _ _ ih _ _ =>\n    right\n    cases ih rfl der with\n    | inl val =>\n        have ⟨t₁, lr⟩ := der.canonical_form_sum val\n        cases lr <;> [exists t₂ ^ᵗᵗ t₁; exists t₃ ^ᵗᵗ t₁] <;> grind\n    | inr red =>\n        obtain ⟨t₁', _⟩ := red\n        exists t₁'.case t₂ t₃\n        grind\n  case sub => grind\n  case abs σ _ τ L _ _=>\n    left\n    constructor\n    apply LC.abs L\n    · grind only [→ wf, cases Term.LC]\n    · grind only [→ wf]\n  case tabs L _ _=>\n    left\n    constructor\n    apply LC.tabs L\n    · grind only [→ wf, cases Term.LC]\n    · grind only [→ wf]",
+    "proof_sha256": "0772a1ac31a82528089bd1e796e62febb0532d37285a7e48619b3d1d0b3d12fc",
+    "eligible": true,
+    "verification": {
+      "task_id": "P7",
+      "attempt": "baseline",
+      "candidate_hash": "84599a77c2cabc8cf698ee2749dec333ac08ace7ded115f20ff775a1c6c72233",
+      "environment_id": "539810be844b4918624a39f96635209e5268d60962b8f167956106aaa6dbee0f",
+      "check_kind": "reference",
+      "status": "candidate_pass",
+      "process_exit_code": 0,
+      "diagnostics": [
+        {
+          "severity": "information",
+          "position": {
+            "column": 0,
+            "line": 164
+          },
+          "end_position": {
+            "column": 6,
+            "line": 164
+          },
+          "message": "Cslib.LambdaCalculus.LocallyNameless.Fsub.Typing.progress.{u_1} {Var : Type u_1} [Cslib.HasFresh Var] [DecidableEq Var]\n  {t : Cslib.LambdaCalculus.LocallyNameless.Fsub.Term Var} {τ : Cslib.LambdaCalculus.LocallyNameless.Fsub.Ty Var}\n  (der : Cslib.LambdaCalculus.LocallyNameless.Fsub.Typing [] t τ) : t.Value ∨ ∃ t', t.Red t'",
+          "source": "lean_cli",
+          "raw": {
+            "caption": "",
+            "data": "Cslib.LambdaCalculus.LocallyNameless.Fsub.Typing.progress.{u_1} {Var : Type u_1} [Cslib.HasFresh Var] [DecidableEq Var]\n  {t : Cslib.LambdaCalculus.LocallyNameless.Fsub.Term Var} {τ : Cslib.LambdaCalculus.LocallyNameless.Fsub.Ty Var}\n  (der : Cslib.LambdaCalculus.LocallyNameless.Fsub.Typing [] t τ) : t.Value ∨ ∃ t', t.Red t'",
+            "endPos": {
+              "column": 6,
+              "line": 164
+            },
+            "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/baseline/P7/lean/003_baseline/candidate.lean",
+            "isSilent": false,
+            "keepFullRange": false,
+            "kind": "[anonymous]",
+            "pos": {
+              "column": 0,
+              "line": 164
+            },
+            "severity": "information"
+          }
+        },
+        {
+          "severity": "information",
+          "position": {
+            "column": 0,
+            "line": 165
+          },
+          "end_position": {
+            "column": 6,
+            "line": 165
+          },
+          "message": "'Cslib.LambdaCalculus.LocallyNameless.Fsub.Typing.progress' depends on axioms: [propext, Classical.choice, Quot.sound]",
+          "source": "lean_cli",
+          "raw": {
+            "caption": "",
+            "data": "'Cslib.LambdaCalculus.LocallyNameless.Fsub.Typing.progress' depends on axioms: [propext, Classical.choice, Quot.sound]",
+            "endPos": {
+              "column": 6,
+              "line": 165
+            },
+            "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/baseline/P7/lean/003_baseline/candidate.lean",
+            "isSilent": false,
+            "keepFullRange": false,
+            "kind": "[anonymous]",
+            "pos": {
+              "column": 0,
+              "line": 165
+            },
+            "severity": "information"
+          }
+        }
+      ],
+      "goals": null,
+      "local_context": null,
+      "sorries": [],
+      "backend_proof_status": null,
+      "statement_check": "fixed_context_preserved",
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "metrics": {
+        "proof_tokens": 406,
+        "raw_heartbeats": 59926888,
+        "heartbeats": 59926
+      },
+      "elapsed_ms": 6678,
+      "raw_log_path": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/baseline/P7/lean/003_baseline/stdout.log",
+      "detail": null,
+      "failure_kind": null
+    },
+    "measurement": {
+      "proof_tokens": 406,
+      "raw_heartbeats": 59926888,
+      "token_reduction_pct": 0.0,
+      "heartbeat_reduction_pct": 0.0,
+      "search_score": 0.0
+    },
+    "facts": {
+      "diagnostics": [
+        {
+          "severity": "information",
+          "position": {
+            "column": 0,
+            "line": 164
+          },
+          "end_position": {
+            "column": 6,
+            "line": 164
+          },
+          "message": "Cslib.LambdaCalculus.LocallyNameless.Fsub.Typing.progress.{u_1} {Var : Type u_1} [Cslib.HasFresh Var] [DecidableEq Var]\n  {t : Cslib.LambdaCalculus.LocallyNameless.Fsub.Term Var} {τ : Cslib.LambdaCalculus.LocallyNameless.Fsub.Ty Var}\n  (der : Cslib.LambdaCalculus.LocallyNameless.Fsub.Typing [] t τ) : t.Value ∨ ∃ t', t.Red t'",
+          "source": "lean_cli",
+          "raw": {
+            "caption": "",
+            "data": "Cslib.LambdaCalculus.LocallyNameless.Fsub.Typing.progress.{u_1} {Var : Type u_1} [Cslib.HasFresh Var] [DecidableEq Var]\n  {t : Cslib.LambdaCalculus.LocallyNameless.Fsub.Term Var} {τ : Cslib.LambdaCalculus.LocallyNameless.Fsub.Ty Var}\n  (der : Cslib.LambdaCalculus.LocallyNameless.Fsub.Typing [] t τ) : t.Value ∨ ∃ t', t.Red t'",
+            "endPos": {
+              "column": 6,
+              "line": 164
+            },
+            "fileName": "<local-path>",
+            "isSilent": false,
+            "keepFullRange": false,
+            "kind": "[anonymous]",
+            "pos": {
+              "column": 0,
+              "line": 164
+            },
+            "severity": "information"
+          }
+        },
+        {
+          "severity": "information",
+          "position": {
+            "column": 0,
+            "line": 165
+          },
+          "end_position": {
+            "column": 6,
+            "line": 165
+          },
+          "message": "'Cslib.LambdaCalculus.LocallyNameless.Fsub.Typing.progress' depends on axioms: [propext, Classical.choice, Quot.sound]",
+          "source": "lean_cli",
+          "raw": {
+            "caption": "",
+            "data": "'Cslib.LambdaCalculus.LocallyNameless.Fsub.Typing.progress' depends on axioms: [propext, Classical.choice, Quot.sound]",
+            "endPos": {
+              "column": 6,
+              "line": 165
+            },
+            "fileName": "<local-path>",
+            "isSilent": false,
+            "keepFullRange": false,
+            "kind": "[anonymous]",
+            "pos": {
+              "column": 0,
+              "line": 165
+            },
+            "severity": "information"
+          }
+        }
+      ],
+      "goals": null,
+      "local_context": null,
+      "sorries": [],
+      "axioms": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ],
+      "detail": null,
+      "raw_lean_output": "{\"caption\":\"\",\"data\":\"Cslib.LambdaCalculus.LocallyNameless.Fsub.Typing.progress.{u_1} {Var : Type u_1} [Cslib.HasFresh Var] [DecidableEq Var]\\n  {t : Cslib.LambdaCalculus.LocallyNameless.Fsub.Term Var} {τ : Cslib.LambdaCalculus.LocallyNameless.Fsub.Ty Var}\\n  (der : Cslib.LambdaCalculus.LocallyNameless.Fsub.Typing [] t τ) : t.Value ∨ ∃ t', t.Red t'\",\"endPos\":{\"column\":6,\"line\":164},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"[anonymous]\",\"pos\":{\"column\":0,\"line\":164},\"severity\":\"information\"}\n{\"caption\":\"\",\"data\":\"'Cslib.LambdaCalculus.LocallyNameless.Fsub.Typing.progress' depends on axioms: [propext, Classical.choice, Quot.sound]\",\"endPos\":{\"column\":6,\"line\":165},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"[anonymous]\",\"pos\":{\"column\":0,\"line\":165},\"severity\":\"information\"}\n"
+    },
+    "diagnosis": null
+  }
+}

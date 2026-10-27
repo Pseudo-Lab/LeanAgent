@@ -1,0 +1,44 @@
+--- candidate_01.proof.lean
++++ candidate_02.proof.lean
+@@ -3,23 +3,23 @@
+   induction hxy generalizing z
+   case refl =>
+     exact ⟨z, hxz, ParallelReduction.refl z⟩
+-  case red_I =>
++  case red_I a =>
+     cases hxz
+     case refl =>
+-      exact ⟨y, ParallelReduction.refl y, ParallelReduction.red_I y⟩
++      exact ⟨a, ParallelReduction.refl a, ParallelReduction.red_I a⟩
+     case red_I =>
+-      exact ⟨y, ParallelReduction.refl y, ParallelReduction.refl y⟩
++      exact ⟨a, ParallelReduction.refl a, ParallelReduction.refl a⟩
+     case par u v hu hv =>
+       rw [I_irreducible _ hu]
+       exact ⟨v, hv, ParallelReduction.red_I v⟩
+-  case red_K b =>
++  case red_K a b =>
+     cases hxz
+     case refl =>
+-      exact ⟨y, ParallelReduction.refl y, ParallelReduction.red_K y b⟩
++      exact ⟨a, ParallelReduction.refl a, ParallelReduction.red_K a b⟩
+     case red_K =>
+-      exact ⟨y, ParallelReduction.refl y, ParallelReduction.refl y⟩
++      exact ⟨a, ParallelReduction.refl a, ParallelReduction.refl a⟩
+     case par u v hu hv =>
+-      obtain ⟨d, hd, hdu⟩ := Ka_irreducible y u hu
++      obtain ⟨d, hd, hdu⟩ := Ka_irreducible a u hu
+       rw [hdu]
+       exact ⟨d, hd, ParallelReduction.red_K d v⟩
+   case red_S a b c =>
+@@ -43,8 +43,8 @@
+     case red_I =>
+       rw [I_irreducible _ ha]
+       exact ⟨b', ParallelReduction.red_I b', hb⟩
+-    case red_K c =>
+-      obtain ⟨d, hd, hda⟩ := Ka_irreducible c a' ha
++    case red_K =>
++      obtain ⟨d, hd, hda⟩ := Ka_irreducible z a' ha
+       rw [hda]
+       exact ⟨d, ParallelReduction.red_K d b', hd⟩
+     case red_S c d =>

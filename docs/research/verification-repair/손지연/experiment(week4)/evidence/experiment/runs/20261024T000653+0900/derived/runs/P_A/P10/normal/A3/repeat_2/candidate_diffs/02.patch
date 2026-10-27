@@ -1,0 +1,100 @@
+--- candidate_01.proof.lean
++++ candidate_02.proof.lean
+@@ -5,13 +5,12 @@
+   let C_i := BBF_Code 𝔽q β (h_ℓ_add_R_rate := h_ℓ_add_R_rate) ⟨i, by omega⟩
+   let d_H := Code.distFromCode f C_i
+   let d_i := BBF_CodeDistance ℓ 𝓡 ⟨i, by omega⟩
+-  let d_i_plus_steps := BBF_CodeDistance ℓ 𝓡 ⟨i.val + steps, by omega⟩
++  let d_i_plus_steps := BBF_CodeDistance ℓ 𝓡 ⟨i + steps, by omega⟩
+   have h_d_i_gt_0 : d_i > 0 := by
+     dsimp [d_i, BBF_CodeDistance]
+     have he : ℓ - i.val < ℓ + 𝓡 - i.val := by
+-      exact Nat.sub_lt_sub_right (by omega) (by
+-        apply Nat.lt_add_of_pos_right
+-        exact pos_of_neZero 𝓡)
++      exact Nat.sub_lt_sub_right (by omega)
++        (Nat.lt_add_of_pos_right (pos_of_neZero 𝓡))
+     have hp : 2 ^ (ℓ - i.val) < 2 ^ (ℓ + 𝓡 - i.val) :=
+       Nat.pow_lt_pow_right (by norm_num) he
+     omega
+@@ -22,8 +21,7 @@
+       (fiberwiseDisagreementSet 𝔽q β i steps h_i_add_steps f g').ncard := by
+     let S := (fun g : C_i =>
+       (fiberwiseDisagreementSet 𝔽q β i steps h_i_add_steps f g).ncard) '' Set.univ
+-    have hS : S.Nonempty := Set.image_nonempty.mpr Set.univ_nonempty
+-    have hm : sInf S ∈ S := Nat.sInf_mem hS
++    have hm := Nat.sInf_mem (Set.image_nonempty.mpr Set.univ_nonempty : S.Nonempty)
+     rw [Set.mem_image] at hm
+     rcases hm with ⟨g, _, hg⟩
+     exact ⟨g, g.property, hg.symm⟩
+@@ -36,46 +34,36 @@
+     rw [hd]
+     set Y := fiberwiseDisagreementSet 𝔽q β i steps h_i_add_steps f g'
+     letI : Fintype Y := Fintype.ofFinite Y
+-    have hs : ΔH ⊆ Finset.biUnion Y.toFinset (fun y =>
+-        ((qMap_total_fiber 𝔽q β (i := ⟨i, by omega⟩) (steps := steps)
+-          (h_i_add_steps := by apply Nat.lt_add_of_pos_right_of_le; omega) (y := y)) ''
+-          (Finset.univ : Finset (Fin (2 ^ steps)))).toFinset) := by
++    let A := fun y : Y =>
++      ((qMap_total_fiber 𝔽q β (i := ⟨i, by omega⟩) (steps := steps)
++        (h_i_add_steps := by apply Nat.lt_add_of_pos_right_of_le; omega) (y := y)) ''
++        (Finset.univ : Finset (Fin (2 ^ steps)))).toFinset
++    have hs : ΔH ⊆ Finset.biUnion Y.toFinset A := by
+       intro x hx
+       simp only [ΔH, Finset.mem_filter] at hx
+       let y := iteratedQuotientMap 𝔽q β h_ℓ_add_R_rate i steps h_i_add_steps x
+       have hy : y ∈ Y := by
+-        change ∃ z, iteratedQuotientMap 𝔽q β h_ℓ_add_R_rate i steps h_i_add_steps z = y ∧
+-          f z ≠ g' z
+         exact ⟨x, rfl, hx.2⟩
+       apply Finset.mem_biUnion.mpr
+-      refine ⟨y, ?_, ?_⟩
+-      · rw [Set.mem_toFinset]
+-        exact hy
+-      · rw [Set.mem_toFinset, Set.mem_image]
+-        refine ⟨pointToIterateQuotientIndex (i := ⟨i, by omega⟩) (steps := steps)
+-          (h_i_add_steps := by omega) (x := x), by simp, ?_⟩
+-        exact (is_fiber_iff_generates_quotient_point 𝔽q β i steps (by omega)
+-          (x := x) (y := y)).mp rfl
+-    apply (Finset.card_le_card hs).trans
+-    rw [Finset.card_biUnion]
+-    · simp only [Set.toFinset_card]
+-      have hc := card_qMap_total_fiber 𝔽q β
+-        (h_ℓ_add_R_rate := h_ℓ_add_R_rate) i steps h_i_add_steps
+-      simp only [Set.image_univ, Fintype.card_ofFinset, Subtype.forall] at hc
+-      have hc' : ∀ y ∈ Y.toFinset,
+-          Fintype.card ((qMap_total_fiber 𝔽q β (i := ⟨i, by omega⟩) (steps := steps)
+-            (h_i_add_steps := by apply Nat.lt_add_of_pos_right_of_le; omega) (y := y)) ''
+-            ↑(Finset.univ : Finset (Fin (2 ^ steps)))) = 2 ^ steps := by
+-        intro y _
+-        have h := hc (a := y) (b := Submodule.coe_mem y)
+-        simpa only [coe_univ, Set.image_univ, Fintype.card_ofFinset] using h
+-      rw [Finset.sum_congr rfl hc']
+-      simp only [sum_const, Set.toFinset_card, smul_eq_mul]
+-      conv_rhs => rw [← _root_.Nat.card_coe_set_eq]
+-      simp only [card_eq_fintype_card, le_refl]
+-    · intro y₁ _ y₂ _ hne
+-      exact qMap_total_fiber_disjoint (i := ⟨i, by omega⟩) (steps := steps)
+-        (h_i_add_steps := by omega) (y₁ := y₁) (y₂ := y₂) hne
++      refine ⟨⟨y, hy⟩, by simp, ?_⟩
++      simp only [A, Set.mem_toFinset, Set.mem_image]
++      refine ⟨pointToIterateQuotientIndex (i := ⟨i, by omega⟩) (steps := steps)
++        (h_i_add_steps := by omega) (x := x), by simp, ?_⟩
++      exact (is_fiber_iff_generates_quotient_point 𝔽q β i steps (by omega)
++        (x := x) (y := y)).mp rfl
++    have hc := card_qMap_total_fiber 𝔽q β
++      (h_ℓ_add_R_rate := h_ℓ_add_R_rate) i steps h_i_add_steps
++    simp only [Set.image_univ, Fintype.card_ofFinset, Subtype.forall] at hc
++    have hc' : ∀ y ∈ Y.toFinset, (A y).card = 2 ^ steps := by
++      intro y _
++      have h := hc (a := y) (b := Submodule.coe_mem y)
++      simpa only [A, coe_univ, Set.image_univ, Fintype.card_ofFinset] using h
++    calc
++      ΔH.card ≤ (Finset.biUnion Y.toFinset A).card := Finset.card_le_card hs
++      _ ≤ ∑ y ∈ Y.toFinset, (A y).card := Finset.card_biUnion_le
++      _ = Y.ncard * 2 ^ steps := by
++        rw [Finset.sum_congr rfl hc']
++        simp only [sum_const, smul_eq_mul, Set.toFinset_card]
+   have h_dist_bridge : d_H ≤ d_fw * 2 ^ steps := by
+     apply le_trans (b := hammingDist f g')
+     · simp only [distFromCode, SetLike.mem_coe, hammingDist, ne_eq, d_H]

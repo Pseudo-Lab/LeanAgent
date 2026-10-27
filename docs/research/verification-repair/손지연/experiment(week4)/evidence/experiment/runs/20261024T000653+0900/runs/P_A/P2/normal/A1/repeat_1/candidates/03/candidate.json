@@ -1,0 +1,1577 @@
+{
+  "call": 3,
+  "origin": "generated",
+  "body": "by\n  intro Hnorm\n  induction post <;>\n    simp [Imperative.HasVarsPure.getVars, extractOldExprVars,\n      Lambda.LExpr.LExpr.getVars] at * <;>\n    try simp_all\n  case app fn e fn_ih e_ih =>\n    unfold extractOldExprVars\n    split\n    · simp [Lambda.LExpr.LExpr.getVars]\n      intro x Hin\n      exact Hin\n    · next Hfalse =>\n      cases Hnorm with\n      | app Hfn He Hnold =>\n        exfalso\n        specialize Hnold (by constructor)\n        cases Hnold\n        exact Hfalse rfl\n    · cases Hnorm with\n      | app Hfn He _ =>\n        apply List.append_subset.mpr\n        exact ⟨fn_ih Hfn, e_ih He⟩\n  case abs ih =>\n    cases Hnorm\n    apply ih <;> assumption\n  case quant trih eih =>\n    cases Hnorm\n    apply List.append_subset.mpr\n    constructor\n    · apply trih <;> assumption\n    · apply eih <;> assumption\n  case ite cih tih eih =>\n    cases Hnorm\n    apply List.append_subset.mpr\n    constructor\n    · apply cih <;> assumption\n    · apply List.append_subset.mpr\n      constructor\n      · apply tih <;> assumption\n      · apply eih <;> assumption\n  case eq ih1 ih2 =>\n    cases Hnorm\n    apply List.append_subset.mpr\n    constructor\n    · apply ih1 <;> assumption\n    · apply ih2 <;> assumption",
+  "proof_sha256": "ec724fa089197dfcf963d87945558ee50834540f4cf8ba2a506d76d210417a0d",
+  "full_source_sha256": "d9abb3b2768e73834b755f29fe8955e1f4859eeb238a24978e06fafd562e6bce",
+  "eligible": false,
+  "verification": {
+    "task_id": "P2",
+    "attempt": "candidate_03",
+    "candidate_hash": "d9abb3b2768e73834b755f29fe8955e1f4859eeb238a24978e06fafd562e6bce",
+    "environment_id": "78838691b7ea5b4fe226207f8c51008d414262a54febefbcea237fd4aa2d6cfa",
+    "check_kind": "candidate",
+    "status": "proof_error",
+    "process_exit_code": 1,
+    "diagnostics": [
+      {
+        "severity": "warning",
+        "position": {
+          "column": 8,
+          "line": 171
+        },
+        "end_position": {
+          "column": 29,
+          "line": 171
+        },
+        "message": "declaration uses 'sorry'",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "declaration uses 'sorry'",
+          "endPos": {
+            "column": 29,
+            "line": 171
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/P_A/P2/normal/A1/repeat_1/validation/lean/008_candidate_03/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "hasSorry",
+          "pos": {
+            "column": 8,
+            "line": 171
+          },
+          "severity": "warning"
+        },
+        "source_line": "theorem callElimBlockNoExcept :",
+        "start_offset": 5227,
+        "start_byte_offset": 5259,
+        "end_offset": 5248,
+        "end_byte_offset": 5280,
+        "source_text": "callElimBlockNoExcept"
+      },
+      {
+        "severity": "error",
+        "position": {
+          "column": 21,
+          "line": 2880
+        },
+        "end_position": {
+          "column": 24,
+          "line": 2880
+        },
+        "message": "Application type mismatch: The argument\n  rfl\nhas type\n  ?m.285 = ?m.285\nof sort `Prop` but is expected to have type\n  { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\nof sort `Type` in the application\n  Hfalse rfl",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "Application type mismatch: The argument\n  rfl\nhas type\n  ?m.285 = ?m.285\nof sort `Prop` but is expected to have type\n  { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\nof sort `Type` in the application\n  Hfalse rfl",
+          "endPos": {
+            "column": 24,
+            "line": 2880
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/P_A/P2/normal/A1/repeat_1/validation/lean/008_candidate_03/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 21,
+            "line": 2880
+          },
+          "severity": "error"
+        },
+        "source_line": "        exact Hfalse rfl",
+        "start_offset": 91722,
+        "start_byte_offset": 93125,
+        "end_offset": 91725,
+        "end_byte_offset": 93128,
+        "source_text": "rfl",
+        "failed_tactic": "exact Hfalse rfl",
+        "tactic_range": {
+          "position": {
+            "line": 2880,
+            "column": 8
+          },
+          "end_position": {
+            "line": 2880,
+            "column": 24
+          },
+          "start_offset": 91709,
+          "end_offset": 91725
+        },
+        "goals": [
+          "False"
+        ],
+        "local_context": [
+          "case app.fvar\nm✝¹ : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\ne1✝ e2✝ : Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\nm✝ : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\nty✝¹ : Option { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.TypeType\nfn_ih :\n  NormalizedOldExpr (Lambda.LExpr.op m✝ { name := \"old\", metadata := Visibility.unres } ty✝¹) →\n    (extractOldExprVars (Lambda.LExpr.op m✝ { name := \"old\", metadata := Visibility.unres } ty✝¹)).Subset\n      (Lambda.LExpr.LExpr.getVars (Lambda.LExpr.op m✝ { name := \"old\", metadata := Visibility.unres } ty✝¹))\nHfn : NormalizedOldExpr (Lambda.LExpr.op m✝ { name := \"old\", metadata := Visibility.unres } ty✝¹)\nv✝ :\n  Lambda.Identifier\n    { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.IDMeta\nty✝ : Option { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.TypeType\ne_ih :\n  NormalizedOldExpr (Lambda.LExpr.fvar () v✝ ty✝) →\n    (extractOldExprVars (Lambda.LExpr.fvar () v✝ ty✝)).Subset (Lambda.LExpr.LExpr.getVars (Lambda.LExpr.fvar () v✝ ty✝))\nHfalse :\n  ∀ (m : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata)\n    (v :\n      Lambda.Identifier\n        { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.IDMeta)\n    (ty :\n      Option { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.TypeType),\n    Lambda.LExpr.fvar () v✝ ty✝ = Lambda.LExpr.fvar m v ty → False\nHe : NormalizedOldExpr (Lambda.LExpr.fvar () v✝ ty✝)"
+        ],
+        "proof_state_source": "lean_infotree_before_tactic",
+        "proof_state_raw": {
+          "depth": 25,
+          "end": 100259,
+          "goals_after": [
+            "case app.fvar\nm✝¹ : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\ne1✝ e2✝ : Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\nm✝ : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\nty✝¹ : Option { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.TypeType\nfn_ih :\n  NormalizedOldExpr (Lambda.LExpr.op m✝ { name := \"old\", metadata := Visibility.unres } ty✝¹) →\n    (extractOldExprVars (Lambda.LExpr.op m✝ { name := \"old\", metadata := Visibility.unres } ty✝¹)).Subset\n      (Lambda.LExpr.LExpr.getVars (Lambda.LExpr.op m✝ { name := \"old\", metadata := Visibility.unres } ty✝¹))\nHfn : NormalizedOldExpr (Lambda.LExpr.op m✝ { name := \"old\", metadata := Visibility.unres } ty✝¹)\nv✝ :\n  Lambda.Identifier\n    { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.IDMeta\nty✝ : Option { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.TypeType\ne_ih :\n  NormalizedOldExpr (Lambda.LExpr.fvar () v✝ ty✝) →\n    (extractOldExprVars (Lambda.LExpr.fvar () v✝ ty✝)).Subset (Lambda.LExpr.LExpr.getVars (Lambda.LExpr.fvar () v✝ ty✝))\nHfalse :\n  ∀ (m : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata)\n    (v :\n      Lambda.Identifier\n        { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.IDMeta)\n    (ty :\n      Option { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.TypeType),\n    Lambda.LExpr.fvar () v✝ ty✝ = Lambda.LExpr.fvar m v ty → False\nHe : NormalizedOldExpr (Lambda.LExpr.fvar () v✝ ty✝)\n⊢ False"
+          ],
+          "goals_before": [
+            "case app.fvar\nm✝¹ : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\ne1✝ e2✝ : Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\nm✝ : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\nty✝¹ : Option { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.TypeType\nfn_ih :\n  NormalizedOldExpr (Lambda.LExpr.op m✝ { name := \"old\", metadata := Visibility.unres } ty✝¹) →\n    (extractOldExprVars (Lambda.LExpr.op m✝ { name := \"old\", metadata := Visibility.unres } ty✝¹)).Subset\n      (Lambda.LExpr.LExpr.getVars (Lambda.LExpr.op m✝ { name := \"old\", metadata := Visibility.unres } ty✝¹))\nHfn : NormalizedOldExpr (Lambda.LExpr.op m✝ { name := \"old\", metadata := Visibility.unres } ty✝¹)\nv✝ :\n  Lambda.Identifier\n    { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.IDMeta\nty✝ : Option { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.TypeType\ne_ih :\n  NormalizedOldExpr (Lambda.LExpr.fvar () v✝ ty✝) →\n    (extractOldExprVars (Lambda.LExpr.fvar () v✝ ty✝)).Subset (Lambda.LExpr.LExpr.getVars (Lambda.LExpr.fvar () v✝ ty✝))\nHfalse :\n  ∀ (m : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata)\n    (v :\n      Lambda.Identifier\n        { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.IDMeta)\n    (ty :\n      Option { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.TypeType),\n    Lambda.LExpr.fvar () v✝ ty✝ = Lambda.LExpr.fvar m v ty → False\nHe : NormalizedOldExpr (Lambda.LExpr.fvar () v✝ ty✝)\n⊢ False"
+          ],
+          "kind": "tactic",
+          "start": 100243
+        }
+      },
+      {
+        "severity": "error",
+        "position": {
+          "column": 15,
+          "line": 2884
+        },
+        "end_position": {
+          "column": 24,
+          "line": 2884
+        },
+        "message": "Application type mismatch: The argument\n  fn_ih Hfn\nhas type\n  (extractOldExprVars fn).Subset (Lambda.LExpr.LExpr.getVars fn)\nbut is expected to have type\n  extractOldExprVars fn ⊆ Lambda.LExpr.LExpr.getVars fn ++ Lambda.LExpr.LExpr.getVars e\nin the application\n  And.intro (fn_ih Hfn)",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "Application type mismatch: The argument\n  fn_ih Hfn\nhas type\n  (extractOldExprVars fn).Subset (Lambda.LExpr.LExpr.getVars fn)\nbut is expected to have type\n  extractOldExprVars fn ⊆ Lambda.LExpr.LExpr.getVars fn ++ Lambda.LExpr.LExpr.getVars e\nin the application\n  And.intro (fn_ih Hfn)",
+          "endPos": {
+            "column": 24,
+            "line": 2884
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/P_A/P2/normal/A1/repeat_1/validation/lean/008_candidate_03/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 15,
+            "line": 2884
+          },
+          "severity": "error"
+        },
+        "source_line": "        exact ⟨fn_ih Hfn, e_ih He⟩",
+        "start_offset": 91825,
+        "start_byte_offset": 93231,
+        "end_offset": 91834,
+        "end_byte_offset": 93240,
+        "source_text": "fn_ih Hfn",
+        "expected_actual_types": {
+          "actual": "(extractOldExprVars fn).Subset (Lambda.LExpr.LExpr.getVars fn)",
+          "expected": "extractOldExprVars fn ⊆ Lambda.LExpr.LExpr.getVars fn ++ Lambda.LExpr.LExpr.getVars e"
+        },
+        "failed_tactic": "exact ⟨fn_ih Hfn, e_ih He⟩",
+        "tactic_range": {
+          "position": {
+            "line": 2884,
+            "column": 8
+          },
+          "end_position": {
+            "line": 2884,
+            "column": 34
+          },
+          "start_offset": 91818,
+          "end_offset": 91844
+        },
+        "goals": [
+          "extractOldExprVars fn ⊆ Lambda.LExpr.LExpr.getVars fn ++ Lambda.LExpr.LExpr.getVars e ∧\n    extractOldExprVars e ⊆ Lambda.LExpr.LExpr.getVars fn ++ Lambda.LExpr.LExpr.getVars e"
+        ],
+        "local_context": [
+          "case h_3.app\nm✝ : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\nfn e : Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\nfn_ih : NormalizedOldExpr fn → (extractOldExprVars fn).Subset (Lambda.LExpr.LExpr.getVars fn)\ne_ih : NormalizedOldExpr e → (extractOldExprVars e).Subset (Lambda.LExpr.LExpr.getVars e)\ne1✝ e2✝ : Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\nx✝¹ :\n  ∀ (m : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata)\n    (ty :\n      Option { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.TypeType),\n    fn = Lambda.LExpr.op m { name := \"old\", metadata := Visibility.unres } ty → False\nx✝ :\n  ∀ (m : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata)\n    (ty :\n      Option { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.TypeType)\n    (m_1 :\n      { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata)\n    (v :\n      Lambda.Identifier\n        { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.IDMeta)\n    (ty_1 :\n      Option { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.TypeType),\n    fn = Lambda.LExpr.op m { name := \"old\", metadata := Visibility.unres } ty → e = Lambda.LExpr.fvar m_1 v ty_1 → False\nHfn : NormalizedOldExpr fn\nHe : NormalizedOldExpr e\na✝ : IsOldPred fn → IsFvar e"
+        ],
+        "proof_state_source": "lean_infotree_before_tactic",
+        "proof_state_raw": {
+          "depth": 20,
+          "end": 100383,
+          "goals_after": [],
+          "goals_before": [
+            "case h_3.app\nm✝ : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\nfn e : Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\nfn_ih : NormalizedOldExpr fn → (extractOldExprVars fn).Subset (Lambda.LExpr.LExpr.getVars fn)\ne_ih : NormalizedOldExpr e → (extractOldExprVars e).Subset (Lambda.LExpr.LExpr.getVars e)\ne1✝ e2✝ : Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\nx✝¹ :\n  ∀ (m : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata)\n    (ty :\n      Option { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.TypeType),\n    fn = Lambda.LExpr.op m { name := \"old\", metadata := Visibility.unres } ty → False\nx✝ :\n  ∀ (m : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata)\n    (ty :\n      Option { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.TypeType)\n    (m_1 :\n      { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata)\n    (v :\n      Lambda.Identifier\n        { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.IDMeta)\n    (ty_1 :\n      Option { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.TypeType),\n    fn = Lambda.LExpr.op m { name := \"old\", metadata := Visibility.unres } ty → e = Lambda.LExpr.fvar m_1 v ty_1 → False\nHfn : NormalizedOldExpr fn\nHe : NormalizedOldExpr e\na✝ : IsOldPred fn → IsFvar e\n⊢ extractOldExprVars fn ⊆ Lambda.LExpr.LExpr.getVars fn ++ Lambda.LExpr.LExpr.getVars e ∧\n    extractOldExprVars e ⊆ Lambda.LExpr.LExpr.getVars fn ++ Lambda.LExpr.LExpr.getVars e"
+          ],
+          "kind": "tactic",
+          "start": 100353
+        }
+      },
+      {
+        "severity": "error",
+        "position": {
+          "column": 6,
+          "line": 2892
+        },
+        "end_position": {
+          "column": 16,
+          "line": 2892
+        },
+        "message": "Tactic `apply` failed: could not unify the conclusion of `trih`\n  (extractOldExprVars trigger✝).Subset (Lambda.LExpr.LExpr.getVars trigger✝)\nwith the goal\n  extractOldExprVars trigger✝ ⊆ Lambda.LExpr.LExpr.getVars trigger✝ ++ Lambda.LExpr.LExpr.getVars e✝\n\nNote: The full type of `trih` is\n  NormalizedOldExpr trigger✝ → (extractOldExprVars trigger✝).Subset (Lambda.LExpr.LExpr.getVars trigger✝)\n\ncase quant.left\nm✝ : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\nk✝ : Lambda.QuantifierKind\nty✝ : Option { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.TypeType\ntrigger✝ e✝ :\n  Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\ntrih : NormalizedOldExpr trigger✝ → (extractOldExprVars trigger✝).Subset (Lambda.LExpr.LExpr.getVars trigger✝)\neih : NormalizedOldExpr e✝ → (extractOldExprVars e✝).Subset (Lambda.LExpr.LExpr.getVars e✝)\na✝¹ : NormalizedOldExpr trigger✝\na✝ : NormalizedOldExpr e✝\n⊢ extractOldExprVars trigger✝ ⊆ Lambda.LExpr.LExpr.getVars trigger✝ ++ Lambda.LExpr.LExpr.getVars e✝",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "Tactic `apply` failed: could not unify the conclusion of `trih`\n  (extractOldExprVars trigger✝).Subset (Lambda.LExpr.LExpr.getVars trigger✝)\nwith the goal\n  extractOldExprVars trigger✝ ⊆ Lambda.LExpr.LExpr.getVars trigger✝ ++ Lambda.LExpr.LExpr.getVars e✝\n\nNote: The full type of `trih` is\n  NormalizedOldExpr trigger✝ → (extractOldExprVars trigger✝).Subset (Lambda.LExpr.LExpr.getVars trigger✝)\n\ncase quant.left\nm✝ : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\nk✝ : Lambda.QuantifierKind\nty✝ : Option { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.TypeType\ntrigger✝ e✝ :\n  Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\ntrih : NormalizedOldExpr trigger✝ → (extractOldExprVars trigger✝).Subset (Lambda.LExpr.LExpr.getVars trigger✝)\neih : NormalizedOldExpr e✝ → (extractOldExprVars e✝).Subset (Lambda.LExpr.LExpr.getVars e✝)\na✝¹ : NormalizedOldExpr trigger✝\na✝ : NormalizedOldExpr e✝\n⊢ extractOldExprVars trigger✝ ⊆ Lambda.LExpr.LExpr.getVars trigger✝ ++ Lambda.LExpr.LExpr.getVars e✝",
+          "endPos": {
+            "column": 16,
+            "line": 2892
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/P_A/P2/normal/A1/repeat_1/validation/lean/008_candidate_03/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 6,
+            "line": 2892
+          },
+          "severity": "error"
+        },
+        "source_line": "    · apply trih <;> assumption",
+        "start_offset": 92002,
+        "start_byte_offset": 93411,
+        "end_offset": 92012,
+        "end_byte_offset": 93421,
+        "source_text": "apply trih",
+        "failed_tactic": "apply trih",
+        "tactic_range": {
+          "position": {
+            "line": 2892,
+            "column": 6
+          },
+          "end_position": {
+            "line": 2892,
+            "column": 16
+          },
+          "start_offset": 92002,
+          "end_offset": 92012
+        },
+        "goals": [
+          "extractOldExprVars trigger✝ ⊆ Lambda.LExpr.LExpr.getVars trigger✝ ++ Lambda.LExpr.LExpr.getVars e✝"
+        ],
+        "local_context": [
+          "case quant.left\nm✝ : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\nk✝ : Lambda.QuantifierKind\nty✝ : Option { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.TypeType\ntrigger✝ e✝ :\n  Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\ntrih : NormalizedOldExpr trigger✝ → (extractOldExprVars trigger✝).Subset (Lambda.LExpr.LExpr.getVars trigger✝)\neih : NormalizedOldExpr e✝ → (extractOldExprVars e✝).Subset (Lambda.LExpr.LExpr.getVars e✝)\na✝¹ : NormalizedOldExpr trigger✝\na✝ : NormalizedOldExpr e✝"
+        ],
+        "proof_state_source": "lean_infotree_before_tactic",
+        "proof_state_raw": {
+          "depth": 19,
+          "end": 100552,
+          "goals_after": [
+            "case quant.left\nm✝ : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\nk✝ : Lambda.QuantifierKind\nty✝ : Option { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.TypeType\ntrigger✝ e✝ :\n  Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\ntrih : NormalizedOldExpr trigger✝ → (extractOldExprVars trigger✝).Subset (Lambda.LExpr.LExpr.getVars trigger✝)\neih : NormalizedOldExpr e✝ → (extractOldExprVars e✝).Subset (Lambda.LExpr.LExpr.getVars e✝)\na✝¹ : NormalizedOldExpr trigger✝\na✝ : NormalizedOldExpr e✝\n⊢ extractOldExprVars trigger✝ ⊆ Lambda.LExpr.LExpr.getVars trigger✝ ++ Lambda.LExpr.LExpr.getVars e✝"
+          ],
+          "goals_before": [
+            "case quant.left\nm✝ : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\nk✝ : Lambda.QuantifierKind\nty✝ : Option { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.TypeType\ntrigger✝ e✝ :\n  Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\ntrih : NormalizedOldExpr trigger✝ → (extractOldExprVars trigger✝).Subset (Lambda.LExpr.LExpr.getVars trigger✝)\neih : NormalizedOldExpr e✝ → (extractOldExprVars e✝).Subset (Lambda.LExpr.LExpr.getVars e✝)\na✝¹ : NormalizedOldExpr trigger✝\na✝ : NormalizedOldExpr e✝\n⊢ extractOldExprVars trigger✝ ⊆ Lambda.LExpr.LExpr.getVars trigger✝ ++ Lambda.LExpr.LExpr.getVars e✝"
+          ],
+          "kind": "tactic",
+          "start": 100542
+        }
+      },
+      {
+        "severity": "error",
+        "position": {
+          "column": 6,
+          "line": 2893
+        },
+        "end_position": {
+          "column": 15,
+          "line": 2893
+        },
+        "message": "Tactic `apply` failed: could not unify the conclusion of `eih`\n  (extractOldExprVars e✝).Subset (Lambda.LExpr.LExpr.getVars e✝)\nwith the goal\n  extractOldExprVars e✝ ⊆ Lambda.LExpr.LExpr.getVars trigger✝ ++ Lambda.LExpr.LExpr.getVars e✝\n\nNote: The full type of `eih` is\n  NormalizedOldExpr e✝ → (extractOldExprVars e✝).Subset (Lambda.LExpr.LExpr.getVars e✝)\n\ncase quant.right\nm✝ : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\nk✝ : Lambda.QuantifierKind\nty✝ : Option { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.TypeType\ntrigger✝ e✝ :\n  Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\ntrih : NormalizedOldExpr trigger✝ → (extractOldExprVars trigger✝).Subset (Lambda.LExpr.LExpr.getVars trigger✝)\neih : NormalizedOldExpr e✝ → (extractOldExprVars e✝).Subset (Lambda.LExpr.LExpr.getVars e✝)\na✝¹ : NormalizedOldExpr trigger✝\na✝ : NormalizedOldExpr e✝\n⊢ extractOldExprVars e✝ ⊆ Lambda.LExpr.LExpr.getVars trigger✝ ++ Lambda.LExpr.LExpr.getVars e✝",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "Tactic `apply` failed: could not unify the conclusion of `eih`\n  (extractOldExprVars e✝).Subset (Lambda.LExpr.LExpr.getVars e✝)\nwith the goal\n  extractOldExprVars e✝ ⊆ Lambda.LExpr.LExpr.getVars trigger✝ ++ Lambda.LExpr.LExpr.getVars e✝\n\nNote: The full type of `eih` is\n  NormalizedOldExpr e✝ → (extractOldExprVars e✝).Subset (Lambda.LExpr.LExpr.getVars e✝)\n\ncase quant.right\nm✝ : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\nk✝ : Lambda.QuantifierKind\nty✝ : Option { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.TypeType\ntrigger✝ e✝ :\n  Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\ntrih : NormalizedOldExpr trigger✝ → (extractOldExprVars trigger✝).Subset (Lambda.LExpr.LExpr.getVars trigger✝)\neih : NormalizedOldExpr e✝ → (extractOldExprVars e✝).Subset (Lambda.LExpr.LExpr.getVars e✝)\na✝¹ : NormalizedOldExpr trigger✝\na✝ : NormalizedOldExpr e✝\n⊢ extractOldExprVars e✝ ⊆ Lambda.LExpr.LExpr.getVars trigger✝ ++ Lambda.LExpr.LExpr.getVars e✝",
+          "endPos": {
+            "column": 15,
+            "line": 2893
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/P_A/P2/normal/A1/repeat_1/validation/lean/008_candidate_03/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 6,
+            "line": 2893
+          },
+          "severity": "error"
+        },
+        "source_line": "    · apply eih <;> assumption",
+        "start_offset": 92034,
+        "start_byte_offset": 93444,
+        "end_offset": 92043,
+        "end_byte_offset": 93453,
+        "source_text": "apply eih",
+        "failed_tactic": "apply eih",
+        "tactic_range": {
+          "position": {
+            "line": 2893,
+            "column": 6
+          },
+          "end_position": {
+            "line": 2893,
+            "column": 15
+          },
+          "start_offset": 92034,
+          "end_offset": 92043
+        },
+        "goals": [
+          "extractOldExprVars e✝ ⊆ Lambda.LExpr.LExpr.getVars trigger✝ ++ Lambda.LExpr.LExpr.getVars e✝"
+        ],
+        "local_context": [
+          "case quant.right\nm✝ : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\nk✝ : Lambda.QuantifierKind\nty✝ : Option { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.TypeType\ntrigger✝ e✝ :\n  Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\ntrih : NormalizedOldExpr trigger✝ → (extractOldExprVars trigger✝).Subset (Lambda.LExpr.LExpr.getVars trigger✝)\neih : NormalizedOldExpr e✝ → (extractOldExprVars e✝).Subset (Lambda.LExpr.LExpr.getVars e✝)\na✝¹ : NormalizedOldExpr trigger✝\na✝ : NormalizedOldExpr e✝"
+        ],
+        "proof_state_source": "lean_infotree_before_tactic",
+        "proof_state_raw": {
+          "depth": 19,
+          "end": 100584,
+          "goals_after": [
+            "case quant.right\nm✝ : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\nk✝ : Lambda.QuantifierKind\nty✝ : Option { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.TypeType\ntrigger✝ e✝ :\n  Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\ntrih : NormalizedOldExpr trigger✝ → (extractOldExprVars trigger✝).Subset (Lambda.LExpr.LExpr.getVars trigger✝)\neih : NormalizedOldExpr e✝ → (extractOldExprVars e✝).Subset (Lambda.LExpr.LExpr.getVars e✝)\na✝¹ : NormalizedOldExpr trigger✝\na✝ : NormalizedOldExpr e✝\n⊢ extractOldExprVars e✝ ⊆ Lambda.LExpr.LExpr.getVars trigger✝ ++ Lambda.LExpr.LExpr.getVars e✝"
+          ],
+          "goals_before": [
+            "case quant.right\nm✝ : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\nk✝ : Lambda.QuantifierKind\nty✝ : Option { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.TypeType\ntrigger✝ e✝ :\n  Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\ntrih : NormalizedOldExpr trigger✝ → (extractOldExprVars trigger✝).Subset (Lambda.LExpr.LExpr.getVars trigger✝)\neih : NormalizedOldExpr e✝ → (extractOldExprVars e✝).Subset (Lambda.LExpr.LExpr.getVars e✝)\na✝¹ : NormalizedOldExpr trigger✝\na✝ : NormalizedOldExpr e✝\n⊢ extractOldExprVars e✝ ⊆ Lambda.LExpr.LExpr.getVars trigger✝ ++ Lambda.LExpr.LExpr.getVars e✝"
+          ],
+          "kind": "tactic",
+          "start": 100575
+        }
+      },
+      {
+        "severity": "error",
+        "position": {
+          "column": 6,
+          "line": 2898
+        },
+        "end_position": {
+          "column": 15,
+          "line": 2898
+        },
+        "message": "Tactic `apply` failed: could not unify the conclusion of `cih`\n  (extractOldExprVars c✝).Subset (Lambda.LExpr.LExpr.getVars c✝)\nwith the goal\n  extractOldExprVars c✝ ⊆\n    Lambda.LExpr.LExpr.getVars c✝ ++ (Lambda.LExpr.LExpr.getVars t✝ ++ Lambda.LExpr.LExpr.getVars e✝)\n\nNote: The full type of `cih` is\n  NormalizedOldExpr c✝ → (extractOldExprVars c✝).Subset (Lambda.LExpr.LExpr.getVars c✝)\n\ncase ite.left\nm✝ : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\nc✝ t✝ e✝ : Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\ncih : NormalizedOldExpr c✝ → (extractOldExprVars c✝).Subset (Lambda.LExpr.LExpr.getVars c✝)\ntih : NormalizedOldExpr t✝ → (extractOldExprVars t✝).Subset (Lambda.LExpr.LExpr.getVars t✝)\neih : NormalizedOldExpr e✝ → (extractOldExprVars e✝).Subset (Lambda.LExpr.LExpr.getVars e✝)\na✝² : NormalizedOldExpr c✝\na✝¹ : NormalizedOldExpr t✝\na✝ : NormalizedOldExpr e✝\n⊢ extractOldExprVars c✝ ⊆\n    Lambda.LExpr.LExpr.getVars c✝ ++ (Lambda.LExpr.LExpr.getVars t✝ ++ Lambda.LExpr.LExpr.getVars e✝)",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "Tactic `apply` failed: could not unify the conclusion of `cih`\n  (extractOldExprVars c✝).Subset (Lambda.LExpr.LExpr.getVars c✝)\nwith the goal\n  extractOldExprVars c✝ ⊆\n    Lambda.LExpr.LExpr.getVars c✝ ++ (Lambda.LExpr.LExpr.getVars t✝ ++ Lambda.LExpr.LExpr.getVars e✝)\n\nNote: The full type of `cih` is\n  NormalizedOldExpr c✝ → (extractOldExprVars c✝).Subset (Lambda.LExpr.LExpr.getVars c✝)\n\ncase ite.left\nm✝ : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\nc✝ t✝ e✝ : Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\ncih : NormalizedOldExpr c✝ → (extractOldExprVars c✝).Subset (Lambda.LExpr.LExpr.getVars c✝)\ntih : NormalizedOldExpr t✝ → (extractOldExprVars t✝).Subset (Lambda.LExpr.LExpr.getVars t✝)\neih : NormalizedOldExpr e✝ → (extractOldExprVars e✝).Subset (Lambda.LExpr.LExpr.getVars e✝)\na✝² : NormalizedOldExpr c✝\na✝¹ : NormalizedOldExpr t✝\na✝ : NormalizedOldExpr e✝\n⊢ extractOldExprVars c✝ ⊆\n    Lambda.LExpr.LExpr.getVars c✝ ++ (Lambda.LExpr.LExpr.getVars t✝ ++ Lambda.LExpr.LExpr.getVars e✝)",
+          "endPos": {
+            "column": 15,
+            "line": 2898
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/P_A/P2/normal/A1/repeat_1/validation/lean/008_candidate_03/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 6,
+            "line": 2898
+          },
+          "severity": "error"
+        },
+        "source_line": "    · apply cih <;> assumption",
+        "start_offset": 92156,
+        "start_byte_offset": 93567,
+        "end_offset": 92165,
+        "end_byte_offset": 93576,
+        "source_text": "apply cih",
+        "failed_tactic": "apply cih",
+        "tactic_range": {
+          "position": {
+            "line": 2898,
+            "column": 6
+          },
+          "end_position": {
+            "line": 2898,
+            "column": 15
+          },
+          "start_offset": 92156,
+          "end_offset": 92165
+        },
+        "goals": [
+          "extractOldExprVars c✝ ⊆\n    Lambda.LExpr.LExpr.getVars c✝ ++ (Lambda.LExpr.LExpr.getVars t✝ ++ Lambda.LExpr.LExpr.getVars e✝)"
+        ],
+        "local_context": [
+          "case ite.left\nm✝ : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\nc✝ t✝ e✝ : Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\ncih : NormalizedOldExpr c✝ → (extractOldExprVars c✝).Subset (Lambda.LExpr.LExpr.getVars c✝)\ntih : NormalizedOldExpr t✝ → (extractOldExprVars t✝).Subset (Lambda.LExpr.LExpr.getVars t✝)\neih : NormalizedOldExpr e✝ → (extractOldExprVars e✝).Subset (Lambda.LExpr.LExpr.getVars e✝)\na✝² : NormalizedOldExpr c✝\na✝¹ : NormalizedOldExpr t✝\na✝ : NormalizedOldExpr e✝"
+        ],
+        "proof_state_source": "lean_infotree_before_tactic",
+        "proof_state_raw": {
+          "depth": 19,
+          "end": 100707,
+          "goals_after": [
+            "case ite.left\nm✝ : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\nc✝ t✝ e✝ : Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\ncih : NormalizedOldExpr c✝ → (extractOldExprVars c✝).Subset (Lambda.LExpr.LExpr.getVars c✝)\ntih : NormalizedOldExpr t✝ → (extractOldExprVars t✝).Subset (Lambda.LExpr.LExpr.getVars t✝)\neih : NormalizedOldExpr e✝ → (extractOldExprVars e✝).Subset (Lambda.LExpr.LExpr.getVars e✝)\na✝² : NormalizedOldExpr c✝\na✝¹ : NormalizedOldExpr t✝\na✝ : NormalizedOldExpr e✝\n⊢ extractOldExprVars c✝ ⊆\n    Lambda.LExpr.LExpr.getVars c✝ ++ (Lambda.LExpr.LExpr.getVars t✝ ++ Lambda.LExpr.LExpr.getVars e✝)"
+          ],
+          "goals_before": [
+            "case ite.left\nm✝ : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\nc✝ t✝ e✝ : Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\ncih : NormalizedOldExpr c✝ → (extractOldExprVars c✝).Subset (Lambda.LExpr.LExpr.getVars c✝)\ntih : NormalizedOldExpr t✝ → (extractOldExprVars t✝).Subset (Lambda.LExpr.LExpr.getVars t✝)\neih : NormalizedOldExpr e✝ → (extractOldExprVars e✝).Subset (Lambda.LExpr.LExpr.getVars e✝)\na✝² : NormalizedOldExpr c✝\na✝¹ : NormalizedOldExpr t✝\na✝ : NormalizedOldExpr e✝\n⊢ extractOldExprVars c✝ ⊆\n    Lambda.LExpr.LExpr.getVars c✝ ++ (Lambda.LExpr.LExpr.getVars t✝ ++ Lambda.LExpr.LExpr.getVars e✝)"
+          ],
+          "kind": "tactic",
+          "start": 100698
+        }
+      },
+      {
+        "severity": "error",
+        "position": {
+          "column": 8,
+          "line": 2901
+        },
+        "end_position": {
+          "column": 17,
+          "line": 2901
+        },
+        "message": "Tactic `apply` failed: could not unify the conclusion of `tih`\n  (extractOldExprVars t✝).Subset (Lambda.LExpr.LExpr.getVars t✝)\nwith the goal\n  extractOldExprVars t✝ ⊆\n    Lambda.LExpr.LExpr.getVars c✝ ++ (Lambda.LExpr.LExpr.getVars t✝ ++ Lambda.LExpr.LExpr.getVars e✝)\n\nNote: The full type of `tih` is\n  NormalizedOldExpr t✝ → (extractOldExprVars t✝).Subset (Lambda.LExpr.LExpr.getVars t✝)\n\ncase ite.right.left\nm✝ : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\nc✝ t✝ e✝ : Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\ncih : NormalizedOldExpr c✝ → (extractOldExprVars c✝).Subset (Lambda.LExpr.LExpr.getVars c✝)\ntih : NormalizedOldExpr t✝ → (extractOldExprVars t✝).Subset (Lambda.LExpr.LExpr.getVars t✝)\neih : NormalizedOldExpr e✝ → (extractOldExprVars e✝).Subset (Lambda.LExpr.LExpr.getVars e✝)\na✝² : NormalizedOldExpr c✝\na✝¹ : NormalizedOldExpr t✝\na✝ : NormalizedOldExpr e✝\n⊢ extractOldExprVars t✝ ⊆\n    Lambda.LExpr.LExpr.getVars c✝ ++ (Lambda.LExpr.LExpr.getVars t✝ ++ Lambda.LExpr.LExpr.getVars e✝)",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "Tactic `apply` failed: could not unify the conclusion of `tih`\n  (extractOldExprVars t✝).Subset (Lambda.LExpr.LExpr.getVars t✝)\nwith the goal\n  extractOldExprVars t✝ ⊆\n    Lambda.LExpr.LExpr.getVars c✝ ++ (Lambda.LExpr.LExpr.getVars t✝ ++ Lambda.LExpr.LExpr.getVars e✝)\n\nNote: The full type of `tih` is\n  NormalizedOldExpr t✝ → (extractOldExprVars t✝).Subset (Lambda.LExpr.LExpr.getVars t✝)\n\ncase ite.right.left\nm✝ : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\nc✝ t✝ e✝ : Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\ncih : NormalizedOldExpr c✝ → (extractOldExprVars c✝).Subset (Lambda.LExpr.LExpr.getVars c✝)\ntih : NormalizedOldExpr t✝ → (extractOldExprVars t✝).Subset (Lambda.LExpr.LExpr.getVars t✝)\neih : NormalizedOldExpr e✝ → (extractOldExprVars e✝).Subset (Lambda.LExpr.LExpr.getVars e✝)\na✝² : NormalizedOldExpr c✝\na✝¹ : NormalizedOldExpr t✝\na✝ : NormalizedOldExpr e✝\n⊢ extractOldExprVars t✝ ⊆\n    Lambda.LExpr.LExpr.getVars c✝ ++ (Lambda.LExpr.LExpr.getVars t✝ ++ Lambda.LExpr.LExpr.getVars e✝)",
+          "endPos": {
+            "column": 17,
+            "line": 2901
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/P_A/P2/normal/A1/repeat_1/validation/lean/008_candidate_03/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 8,
+            "line": 2901
+          },
+          "severity": "error"
+        },
+        "source_line": "      · apply tih <;> assumption",
+        "start_offset": 92242,
+        "start_byte_offset": 93655,
+        "end_offset": 92251,
+        "end_byte_offset": 93664,
+        "source_text": "apply tih",
+        "failed_tactic": "apply tih",
+        "tactic_range": {
+          "position": {
+            "line": 2901,
+            "column": 8
+          },
+          "end_position": {
+            "line": 2901,
+            "column": 17
+          },
+          "start_offset": 92242,
+          "end_offset": 92251
+        },
+        "goals": [
+          "extractOldExprVars t✝ ⊆\n    Lambda.LExpr.LExpr.getVars c✝ ++ (Lambda.LExpr.LExpr.getVars t✝ ++ Lambda.LExpr.LExpr.getVars e✝)"
+        ],
+        "local_context": [
+          "case ite.right.left\nm✝ : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\nc✝ t✝ e✝ : Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\ncih : NormalizedOldExpr c✝ → (extractOldExprVars c✝).Subset (Lambda.LExpr.LExpr.getVars c✝)\ntih : NormalizedOldExpr t✝ → (extractOldExprVars t✝).Subset (Lambda.LExpr.LExpr.getVars t✝)\neih : NormalizedOldExpr e✝ → (extractOldExprVars e✝).Subset (Lambda.LExpr.LExpr.getVars e✝)\na✝² : NormalizedOldExpr c✝\na✝¹ : NormalizedOldExpr t✝\na✝ : NormalizedOldExpr e✝"
+        ],
+        "proof_state_source": "lean_infotree_before_tactic",
+        "proof_state_raw": {
+          "depth": 22,
+          "end": 100795,
+          "goals_after": [
+            "case ite.right.left\nm✝ : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\nc✝ t✝ e✝ : Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\ncih : NormalizedOldExpr c✝ → (extractOldExprVars c✝).Subset (Lambda.LExpr.LExpr.getVars c✝)\ntih : NormalizedOldExpr t✝ → (extractOldExprVars t✝).Subset (Lambda.LExpr.LExpr.getVars t✝)\neih : NormalizedOldExpr e✝ → (extractOldExprVars e✝).Subset (Lambda.LExpr.LExpr.getVars e✝)\na✝² : NormalizedOldExpr c✝\na✝¹ : NormalizedOldExpr t✝\na✝ : NormalizedOldExpr e✝\n⊢ extractOldExprVars t✝ ⊆\n    Lambda.LExpr.LExpr.getVars c✝ ++ (Lambda.LExpr.LExpr.getVars t✝ ++ Lambda.LExpr.LExpr.getVars e✝)"
+          ],
+          "goals_before": [
+            "case ite.right.left\nm✝ : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\nc✝ t✝ e✝ : Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\ncih : NormalizedOldExpr c✝ → (extractOldExprVars c✝).Subset (Lambda.LExpr.LExpr.getVars c✝)\ntih : NormalizedOldExpr t✝ → (extractOldExprVars t✝).Subset (Lambda.LExpr.LExpr.getVars t✝)\neih : NormalizedOldExpr e✝ → (extractOldExprVars e✝).Subset (Lambda.LExpr.LExpr.getVars e✝)\na✝² : NormalizedOldExpr c✝\na✝¹ : NormalizedOldExpr t✝\na✝ : NormalizedOldExpr e✝\n⊢ extractOldExprVars t✝ ⊆\n    Lambda.LExpr.LExpr.getVars c✝ ++ (Lambda.LExpr.LExpr.getVars t✝ ++ Lambda.LExpr.LExpr.getVars e✝)"
+          ],
+          "kind": "tactic",
+          "start": 100786
+        }
+      },
+      {
+        "severity": "error",
+        "position": {
+          "column": 8,
+          "line": 2902
+        },
+        "end_position": {
+          "column": 17,
+          "line": 2902
+        },
+        "message": "Tactic `apply` failed: could not unify the conclusion of `eih`\n  (extractOldExprVars e✝).Subset (Lambda.LExpr.LExpr.getVars e✝)\nwith the goal\n  extractOldExprVars e✝ ⊆\n    Lambda.LExpr.LExpr.getVars c✝ ++ (Lambda.LExpr.LExpr.getVars t✝ ++ Lambda.LExpr.LExpr.getVars e✝)\n\nNote: The full type of `eih` is\n  NormalizedOldExpr e✝ → (extractOldExprVars e✝).Subset (Lambda.LExpr.LExpr.getVars e✝)\n\ncase ite.right.right\nm✝ : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\nc✝ t✝ e✝ : Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\ncih : NormalizedOldExpr c✝ → (extractOldExprVars c✝).Subset (Lambda.LExpr.LExpr.getVars c✝)\ntih : NormalizedOldExpr t✝ → (extractOldExprVars t✝).Subset (Lambda.LExpr.LExpr.getVars t✝)\neih : NormalizedOldExpr e✝ → (extractOldExprVars e✝).Subset (Lambda.LExpr.LExpr.getVars e✝)\na✝² : NormalizedOldExpr c✝\na✝¹ : NormalizedOldExpr t✝\na✝ : NormalizedOldExpr e✝\n⊢ extractOldExprVars e✝ ⊆\n    Lambda.LExpr.LExpr.getVars c✝ ++ (Lambda.LExpr.LExpr.getVars t✝ ++ Lambda.LExpr.LExpr.getVars e✝)",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "Tactic `apply` failed: could not unify the conclusion of `eih`\n  (extractOldExprVars e✝).Subset (Lambda.LExpr.LExpr.getVars e✝)\nwith the goal\n  extractOldExprVars e✝ ⊆\n    Lambda.LExpr.LExpr.getVars c✝ ++ (Lambda.LExpr.LExpr.getVars t✝ ++ Lambda.LExpr.LExpr.getVars e✝)\n\nNote: The full type of `eih` is\n  NormalizedOldExpr e✝ → (extractOldExprVars e✝).Subset (Lambda.LExpr.LExpr.getVars e✝)\n\ncase ite.right.right\nm✝ : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\nc✝ t✝ e✝ : Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\ncih : NormalizedOldExpr c✝ → (extractOldExprVars c✝).Subset (Lambda.LExpr.LExpr.getVars c✝)\ntih : NormalizedOldExpr t✝ → (extractOldExprVars t✝).Subset (Lambda.LExpr.LExpr.getVars t✝)\neih : NormalizedOldExpr e✝ → (extractOldExprVars e✝).Subset (Lambda.LExpr.LExpr.getVars e✝)\na✝² : NormalizedOldExpr c✝\na✝¹ : NormalizedOldExpr t✝\na✝ : NormalizedOldExpr e✝\n⊢ extractOldExprVars e✝ ⊆\n    Lambda.LExpr.LExpr.getVars c✝ ++ (Lambda.LExpr.LExpr.getVars t✝ ++ Lambda.LExpr.LExpr.getVars e✝)",
+          "endPos": {
+            "column": 17,
+            "line": 2902
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/P_A/P2/normal/A1/repeat_1/validation/lean/008_candidate_03/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 8,
+            "line": 2902
+          },
+          "severity": "error"
+        },
+        "source_line": "      · apply eih <;> assumption",
+        "start_offset": 92275,
+        "start_byte_offset": 93689,
+        "end_offset": 92284,
+        "end_byte_offset": 93698,
+        "source_text": "apply eih",
+        "failed_tactic": "apply eih",
+        "tactic_range": {
+          "position": {
+            "line": 2902,
+            "column": 8
+          },
+          "end_position": {
+            "line": 2902,
+            "column": 17
+          },
+          "start_offset": 92275,
+          "end_offset": 92284
+        },
+        "goals": [
+          "extractOldExprVars e✝ ⊆\n    Lambda.LExpr.LExpr.getVars c✝ ++ (Lambda.LExpr.LExpr.getVars t✝ ++ Lambda.LExpr.LExpr.getVars e✝)"
+        ],
+        "local_context": [
+          "case ite.right.right\nm✝ : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\nc✝ t✝ e✝ : Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\ncih : NormalizedOldExpr c✝ → (extractOldExprVars c✝).Subset (Lambda.LExpr.LExpr.getVars c✝)\ntih : NormalizedOldExpr t✝ → (extractOldExprVars t✝).Subset (Lambda.LExpr.LExpr.getVars t✝)\neih : NormalizedOldExpr e✝ → (extractOldExprVars e✝).Subset (Lambda.LExpr.LExpr.getVars e✝)\na✝² : NormalizedOldExpr c✝\na✝¹ : NormalizedOldExpr t✝\na✝ : NormalizedOldExpr e✝"
+        ],
+        "proof_state_source": "lean_infotree_before_tactic",
+        "proof_state_raw": {
+          "depth": 22,
+          "end": 100829,
+          "goals_after": [
+            "case ite.right.right\nm✝ : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\nc✝ t✝ e✝ : Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\ncih : NormalizedOldExpr c✝ → (extractOldExprVars c✝).Subset (Lambda.LExpr.LExpr.getVars c✝)\ntih : NormalizedOldExpr t✝ → (extractOldExprVars t✝).Subset (Lambda.LExpr.LExpr.getVars t✝)\neih : NormalizedOldExpr e✝ → (extractOldExprVars e✝).Subset (Lambda.LExpr.LExpr.getVars e✝)\na✝² : NormalizedOldExpr c✝\na✝¹ : NormalizedOldExpr t✝\na✝ : NormalizedOldExpr e✝\n⊢ extractOldExprVars e✝ ⊆\n    Lambda.LExpr.LExpr.getVars c✝ ++ (Lambda.LExpr.LExpr.getVars t✝ ++ Lambda.LExpr.LExpr.getVars e✝)"
+          ],
+          "goals_before": [
+            "case ite.right.right\nm✝ : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\nc✝ t✝ e✝ : Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\ncih : NormalizedOldExpr c✝ → (extractOldExprVars c✝).Subset (Lambda.LExpr.LExpr.getVars c✝)\ntih : NormalizedOldExpr t✝ → (extractOldExprVars t✝).Subset (Lambda.LExpr.LExpr.getVars t✝)\neih : NormalizedOldExpr e✝ → (extractOldExprVars e✝).Subset (Lambda.LExpr.LExpr.getVars e✝)\na✝² : NormalizedOldExpr c✝\na✝¹ : NormalizedOldExpr t✝\na✝ : NormalizedOldExpr e✝\n⊢ extractOldExprVars e✝ ⊆\n    Lambda.LExpr.LExpr.getVars c✝ ++ (Lambda.LExpr.LExpr.getVars t✝ ++ Lambda.LExpr.LExpr.getVars e✝)"
+          ],
+          "kind": "tactic",
+          "start": 100820
+        }
+      },
+      {
+        "severity": "error",
+        "position": {
+          "column": 6,
+          "line": 2907
+        },
+        "end_position": {
+          "column": 15,
+          "line": 2907
+        },
+        "message": "Tactic `apply` failed: could not unify the conclusion of `ih1`\n  (extractOldExprVars e1✝).Subset (Lambda.LExpr.LExpr.getVars e1✝)\nwith the goal\n  extractOldExprVars e1✝ ⊆ Lambda.LExpr.LExpr.getVars e1✝ ++ Lambda.LExpr.LExpr.getVars e2✝\n\nNote: The full type of `ih1` is\n  NormalizedOldExpr e1✝ → (extractOldExprVars e1✝).Subset (Lambda.LExpr.LExpr.getVars e1✝)\n\ncase eq.left\nm✝ : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\ne1✝ e2✝ : Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\nih1 : NormalizedOldExpr e1✝ → (extractOldExprVars e1✝).Subset (Lambda.LExpr.LExpr.getVars e1✝)\nih2 : NormalizedOldExpr e2✝ → (extractOldExprVars e2✝).Subset (Lambda.LExpr.LExpr.getVars e2✝)\na✝¹ : NormalizedOldExpr e1✝\na✝ : NormalizedOldExpr e2✝\n⊢ extractOldExprVars e1✝ ⊆ Lambda.LExpr.LExpr.getVars e1✝ ++ Lambda.LExpr.LExpr.getVars e2✝",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "Tactic `apply` failed: could not unify the conclusion of `ih1`\n  (extractOldExprVars e1✝).Subset (Lambda.LExpr.LExpr.getVars e1✝)\nwith the goal\n  extractOldExprVars e1✝ ⊆ Lambda.LExpr.LExpr.getVars e1✝ ++ Lambda.LExpr.LExpr.getVars e2✝\n\nNote: The full type of `ih1` is\n  NormalizedOldExpr e1✝ → (extractOldExprVars e1✝).Subset (Lambda.LExpr.LExpr.getVars e1✝)\n\ncase eq.left\nm✝ : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\ne1✝ e2✝ : Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\nih1 : NormalizedOldExpr e1✝ → (extractOldExprVars e1✝).Subset (Lambda.LExpr.LExpr.getVars e1✝)\nih2 : NormalizedOldExpr e2✝ → (extractOldExprVars e2✝).Subset (Lambda.LExpr.LExpr.getVars e2✝)\na✝¹ : NormalizedOldExpr e1✝\na✝ : NormalizedOldExpr e2✝\n⊢ extractOldExprVars e1✝ ⊆ Lambda.LExpr.LExpr.getVars e1✝ ++ Lambda.LExpr.LExpr.getVars e2✝",
+          "endPos": {
+            "column": 15,
+            "line": 2907
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/P_A/P2/normal/A1/repeat_1/validation/lean/008_candidate_03/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 6,
+            "line": 2907
+          },
+          "severity": "error"
+        },
+        "source_line": "    · apply ih1 <;> assumption",
+        "start_offset": 92392,
+        "start_byte_offset": 93807,
+        "end_offset": 92401,
+        "end_byte_offset": 93816,
+        "source_text": "apply ih1",
+        "failed_tactic": "apply ih1",
+        "tactic_range": {
+          "position": {
+            "line": 2907,
+            "column": 6
+          },
+          "end_position": {
+            "line": 2907,
+            "column": 15
+          },
+          "start_offset": 92392,
+          "end_offset": 92401
+        },
+        "goals": [
+          "extractOldExprVars e1✝ ⊆ Lambda.LExpr.LExpr.getVars e1✝ ++ Lambda.LExpr.LExpr.getVars e2✝"
+        ],
+        "local_context": [
+          "case eq.left\nm✝ : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\ne1✝ e2✝ : Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\nih1 : NormalizedOldExpr e1✝ → (extractOldExprVars e1✝).Subset (Lambda.LExpr.LExpr.getVars e1✝)\nih2 : NormalizedOldExpr e2✝ → (extractOldExprVars e2✝).Subset (Lambda.LExpr.LExpr.getVars e2✝)\na✝¹ : NormalizedOldExpr e1✝\na✝ : NormalizedOldExpr e2✝"
+        ],
+        "proof_state_source": "lean_infotree_before_tactic",
+        "proof_state_raw": {
+          "depth": 19,
+          "end": 100947,
+          "goals_after": [
+            "case eq.left\nm✝ : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\ne1✝ e2✝ : Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\nih1 : NormalizedOldExpr e1✝ → (extractOldExprVars e1✝).Subset (Lambda.LExpr.LExpr.getVars e1✝)\nih2 : NormalizedOldExpr e2✝ → (extractOldExprVars e2✝).Subset (Lambda.LExpr.LExpr.getVars e2✝)\na✝¹ : NormalizedOldExpr e1✝\na✝ : NormalizedOldExpr e2✝\n⊢ extractOldExprVars e1✝ ⊆ Lambda.LExpr.LExpr.getVars e1✝ ++ Lambda.LExpr.LExpr.getVars e2✝"
+          ],
+          "goals_before": [
+            "case eq.left\nm✝ : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\ne1✝ e2✝ : Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\nih1 : NormalizedOldExpr e1✝ → (extractOldExprVars e1✝).Subset (Lambda.LExpr.LExpr.getVars e1✝)\nih2 : NormalizedOldExpr e2✝ → (extractOldExprVars e2✝).Subset (Lambda.LExpr.LExpr.getVars e2✝)\na✝¹ : NormalizedOldExpr e1✝\na✝ : NormalizedOldExpr e2✝\n⊢ extractOldExprVars e1✝ ⊆ Lambda.LExpr.LExpr.getVars e1✝ ++ Lambda.LExpr.LExpr.getVars e2✝"
+          ],
+          "kind": "tactic",
+          "start": 100938
+        }
+      },
+      {
+        "severity": "error",
+        "position": {
+          "column": 6,
+          "line": 2908
+        },
+        "end_position": {
+          "column": 15,
+          "line": 2908
+        },
+        "message": "Tactic `apply` failed: could not unify the conclusion of `ih2`\n  (extractOldExprVars e2✝).Subset (Lambda.LExpr.LExpr.getVars e2✝)\nwith the goal\n  extractOldExprVars e2✝ ⊆ Lambda.LExpr.LExpr.getVars e1✝ ++ Lambda.LExpr.LExpr.getVars e2✝\n\nNote: The full type of `ih2` is\n  NormalizedOldExpr e2✝ → (extractOldExprVars e2✝).Subset (Lambda.LExpr.LExpr.getVars e2✝)\n\ncase eq.right\nm✝ : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\ne1✝ e2✝ : Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\nih1 : NormalizedOldExpr e1✝ → (extractOldExprVars e1✝).Subset (Lambda.LExpr.LExpr.getVars e1✝)\nih2 : NormalizedOldExpr e2✝ → (extractOldExprVars e2✝).Subset (Lambda.LExpr.LExpr.getVars e2✝)\na✝¹ : NormalizedOldExpr e1✝\na✝ : NormalizedOldExpr e2✝\n⊢ extractOldExprVars e2✝ ⊆ Lambda.LExpr.LExpr.getVars e1✝ ++ Lambda.LExpr.LExpr.getVars e2✝",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "Tactic `apply` failed: could not unify the conclusion of `ih2`\n  (extractOldExprVars e2✝).Subset (Lambda.LExpr.LExpr.getVars e2✝)\nwith the goal\n  extractOldExprVars e2✝ ⊆ Lambda.LExpr.LExpr.getVars e1✝ ++ Lambda.LExpr.LExpr.getVars e2✝\n\nNote: The full type of `ih2` is\n  NormalizedOldExpr e2✝ → (extractOldExprVars e2✝).Subset (Lambda.LExpr.LExpr.getVars e2✝)\n\ncase eq.right\nm✝ : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\ne1✝ e2✝ : Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\nih1 : NormalizedOldExpr e1✝ → (extractOldExprVars e1✝).Subset (Lambda.LExpr.LExpr.getVars e1✝)\nih2 : NormalizedOldExpr e2✝ → (extractOldExprVars e2✝).Subset (Lambda.LExpr.LExpr.getVars e2✝)\na✝¹ : NormalizedOldExpr e1✝\na✝ : NormalizedOldExpr e2✝\n⊢ extractOldExprVars e2✝ ⊆ Lambda.LExpr.LExpr.getVars e1✝ ++ Lambda.LExpr.LExpr.getVars e2✝",
+          "endPos": {
+            "column": 15,
+            "line": 2908
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/P_A/P2/normal/A1/repeat_1/validation/lean/008_candidate_03/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 6,
+            "line": 2908
+          },
+          "severity": "error"
+        },
+        "source_line": "    · apply ih2 <;> assumption",
+        "start_offset": 92423,
+        "start_byte_offset": 93839,
+        "end_offset": 92432,
+        "end_byte_offset": 93848,
+        "source_text": "apply ih2",
+        "failed_tactic": "apply ih2",
+        "tactic_range": {
+          "position": {
+            "line": 2908,
+            "column": 6
+          },
+          "end_position": {
+            "line": 2908,
+            "column": 15
+          },
+          "start_offset": 92423,
+          "end_offset": 92432
+        },
+        "goals": [
+          "extractOldExprVars e2✝ ⊆ Lambda.LExpr.LExpr.getVars e1✝ ++ Lambda.LExpr.LExpr.getVars e2✝"
+        ],
+        "local_context": [
+          "case eq.right\nm✝ : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\ne1✝ e2✝ : Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\nih1 : NormalizedOldExpr e1✝ → (extractOldExprVars e1✝).Subset (Lambda.LExpr.LExpr.getVars e1✝)\nih2 : NormalizedOldExpr e2✝ → (extractOldExprVars e2✝).Subset (Lambda.LExpr.LExpr.getVars e2✝)\na✝¹ : NormalizedOldExpr e1✝\na✝ : NormalizedOldExpr e2✝"
+        ],
+        "proof_state_source": "lean_infotree_before_tactic",
+        "proof_state_raw": {
+          "depth": 19,
+          "end": 100979,
+          "goals_after": [
+            "case eq.right\nm✝ : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\ne1✝ e2✝ : Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\nih1 : NormalizedOldExpr e1✝ → (extractOldExprVars e1✝).Subset (Lambda.LExpr.LExpr.getVars e1✝)\nih2 : NormalizedOldExpr e2✝ → (extractOldExprVars e2✝).Subset (Lambda.LExpr.LExpr.getVars e2✝)\na✝¹ : NormalizedOldExpr e1✝\na✝ : NormalizedOldExpr e2✝\n⊢ extractOldExprVars e2✝ ⊆ Lambda.LExpr.LExpr.getVars e1✝ ++ Lambda.LExpr.LExpr.getVars e2✝"
+          ],
+          "goals_before": [
+            "case eq.right\nm✝ : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\ne1✝ e2✝ : Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\nih1 : NormalizedOldExpr e1✝ → (extractOldExprVars e1✝).Subset (Lambda.LExpr.LExpr.getVars e1✝)\nih2 : NormalizedOldExpr e2✝ → (extractOldExprVars e2✝).Subset (Lambda.LExpr.LExpr.getVars e2✝)\na✝¹ : NormalizedOldExpr e1✝\na✝ : NormalizedOldExpr e2✝\n⊢ extractOldExprVars e2✝ ⊆ Lambda.LExpr.LExpr.getVars e1✝ ++ Lambda.LExpr.LExpr.getVars e2✝"
+          ],
+          "kind": "tactic",
+          "start": 100970
+        }
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 8,
+          "line": 3252
+        },
+        "end_position": {
+          "column": 32,
+          "line": 3252
+        },
+        "message": "declaration uses 'sorry'",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "declaration uses 'sorry'",
+          "endPos": {
+            "column": 32,
+            "line": 3252
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/P_A/P2/normal/A1/repeat_1/validation/lean/008_candidate_03/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "hasSorry",
+          "pos": {
+            "column": 8,
+            "line": 3252
+          },
+          "severity": "warning"
+        },
+        "source_line": "theorem callElimStatementCorrect [LawfulBEq Expression.Expr] :",
+        "start_offset": 103783,
+        "start_byte_offset": 105221,
+        "end_offset": 103807,
+        "end_byte_offset": 105245,
+        "source_text": "callElimStatementCorrect"
+      },
+      {
+        "severity": "information",
+        "position": {
+          "column": 0,
+          "line": 4672
+        },
+        "end_position": {
+          "column": 6,
+          "line": 4672
+        },
+        "message": "CallElimCorrect.extractedOldExprInVars {post : Core.Expression.Expr} :\n  Core.OldExpressions.NormalizedOldExpr post →\n    (Core.OldExpressions.extractOldExprVars post).Subset (Imperative.HasVarsPure.getVars post)",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "CallElimCorrect.extractedOldExprInVars {post : Core.Expression.Expr} :\n  Core.OldExpressions.NormalizedOldExpr post →\n    (Core.OldExpressions.extractOldExprVars post).Subset (Imperative.HasVarsPure.getVars post)",
+          "endPos": {
+            "column": 6,
+            "line": 4672
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/P_A/P2/normal/A1/repeat_1/validation/lean/008_candidate_03/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 0,
+            "line": 4672
+          },
+          "severity": "information"
+        }
+      },
+      {
+        "severity": "information",
+        "position": {
+          "column": 0,
+          "line": 4673
+        },
+        "end_position": {
+          "column": 6,
+          "line": 4673
+        },
+        "message": "'CallElimCorrect.extractedOldExprInVars' depends on axioms: [propext, sorryAx, Quot.sound]",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "'CallElimCorrect.extractedOldExprInVars' depends on axioms: [propext, sorryAx, Quot.sound]",
+          "endPos": {
+            "column": 6,
+            "line": 4673
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/P_A/P2/normal/A1/repeat_1/validation/lean/008_candidate_03/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 0,
+            "line": 4673
+          },
+          "severity": "information"
+        }
+      }
+    ],
+    "goals": [
+      "False"
+    ],
+    "local_context": [
+      "case app.fvar\nm✝¹ : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\ne1✝ e2✝ : Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\nm✝ : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\nty✝¹ : Option { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.TypeType\nfn_ih :\n  NormalizedOldExpr (Lambda.LExpr.op m✝ { name := \"old\", metadata := Visibility.unres } ty✝¹) →\n    (extractOldExprVars (Lambda.LExpr.op m✝ { name := \"old\", metadata := Visibility.unres } ty✝¹)).Subset\n      (Lambda.LExpr.LExpr.getVars (Lambda.LExpr.op m✝ { name := \"old\", metadata := Visibility.unres } ty✝¹))\nHfn : NormalizedOldExpr (Lambda.LExpr.op m✝ { name := \"old\", metadata := Visibility.unres } ty✝¹)\nv✝ :\n  Lambda.Identifier\n    { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.IDMeta\nty✝ : Option { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.TypeType\ne_ih :\n  NormalizedOldExpr (Lambda.LExpr.fvar () v✝ ty✝) →\n    (extractOldExprVars (Lambda.LExpr.fvar () v✝ ty✝)).Subset (Lambda.LExpr.LExpr.getVars (Lambda.LExpr.fvar () v✝ ty✝))\nHfalse :\n  ∀ (m : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata)\n    (v :\n      Lambda.Identifier\n        { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.IDMeta)\n    (ty :\n      Option { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.TypeType),\n    Lambda.LExpr.fvar () v✝ ty✝ = Lambda.LExpr.fvar m v ty → False\nHe : NormalizedOldExpr (Lambda.LExpr.fvar () v✝ ty✝)"
+    ],
+    "sorries": [
+      {
+        "kind": "transitive_dependency",
+        "axiom": "sorryAx",
+        "position": null,
+        "end_position": null
+      }
+    ],
+    "backend_proof_status": null,
+    "statement_check": "fixed_context_preserved",
+    "axioms": [
+      "Quot.sound",
+      "propext",
+      "sorryAx"
+    ],
+    "metrics": {
+      "proof_tokens": 164
+    },
+    "elapsed_ms": 7310,
+    "raw_log_path": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/P_A/P2/normal/A1/repeat_1/validation/lean/008_candidate_03/stdout.log",
+    "detail": null,
+    "failure_kind": "proof_error"
+  },
+  "measurement": {
+    "proof_tokens": 164,
+    "raw_heartbeats": null,
+    "token_reduction_pct": 26.45739910313901,
+    "heartbeat_reduction_pct": null,
+    "search_score": null
+  },
+  "facts": {
+    "diagnostics": [
+      {
+        "severity": "warning",
+        "position": {
+          "column": 8,
+          "line": 171
+        },
+        "end_position": {
+          "column": 29,
+          "line": 171
+        },
+        "message": "declaration uses 'sorry'",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "declaration uses 'sorry'",
+          "endPos": {
+            "column": 29,
+            "line": 171
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "hasSorry",
+          "pos": {
+            "column": 8,
+            "line": 171
+          },
+          "severity": "warning"
+        },
+        "source_line": "theorem callElimBlockNoExcept :",
+        "start_offset": 5227,
+        "start_byte_offset": 5259,
+        "end_offset": 5248,
+        "end_byte_offset": 5280,
+        "source_text": "callElimBlockNoExcept"
+      },
+      {
+        "severity": "error",
+        "position": {
+          "column": 21,
+          "line": 2880
+        },
+        "end_position": {
+          "column": 24,
+          "line": 2880
+        },
+        "message": "Application type mismatch: The argument\n  rfl\nhas type\n  ?m.285 = ?m.285\nof sort `Prop` but is expected to have type\n  { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\nof sort `Type` in the application\n  Hfalse rfl",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "Application type mismatch: The argument\n  rfl\nhas type\n  ?m.285 = ?m.285\nof sort `Prop` but is expected to have type\n  { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\nof sort `Type` in the application\n  Hfalse rfl",
+          "endPos": {
+            "column": 24,
+            "line": 2880
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 21,
+            "line": 2880
+          },
+          "severity": "error"
+        },
+        "source_line": "        exact Hfalse rfl",
+        "start_offset": 91722,
+        "start_byte_offset": 93125,
+        "end_offset": 91725,
+        "end_byte_offset": 93128,
+        "source_text": "rfl",
+        "failed_tactic": "exact Hfalse rfl",
+        "tactic_range": {
+          "position": {
+            "line": 2880,
+            "column": 8
+          },
+          "end_position": {
+            "line": 2880,
+            "column": 24
+          },
+          "start_offset": 91709,
+          "end_offset": 91725
+        },
+        "goals": [
+          "False"
+        ],
+        "local_context": [
+          "case app.fvar\nm✝¹ : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\ne1✝ e2✝ : Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\nm✝ : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\nty✝¹ : Option { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.TypeType\nfn_ih :\n  NormalizedOldExpr (Lambda.LExpr.op m✝ { name := \"old\", metadata := Visibility.unres } ty✝¹) →\n    (extractOldExprVars (Lambda.LExpr.op m✝ { name := \"old\", metadata := Visibility.unres } ty✝¹)).Subset\n      (Lambda.LExpr.LExpr.getVars (Lambda.LExpr.op m✝ { name := \"old\", metadata := Visibility.unres } ty✝¹))\nHfn : NormalizedOldExpr (Lambda.LExpr.op m✝ { name := \"old\", metadata := Visibility.unres } ty✝¹)\nv✝ :\n  Lambda.Identifier\n    { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.IDMeta\nty✝ : Option { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.TypeType\ne_ih :\n  NormalizedOldExpr (Lambda.LExpr.fvar () v✝ ty✝) →\n    (extractOldExprVars (Lambda.LExpr.fvar () v✝ ty✝)).Subset (Lambda.LExpr.LExpr.getVars (Lambda.LExpr.fvar () v✝ ty✝))\nHfalse :\n  ∀ (m : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata)\n    (v :\n      Lambda.Identifier\n        { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.IDMeta)\n    (ty :\n      Option { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.TypeType),\n    Lambda.LExpr.fvar () v✝ ty✝ = Lambda.LExpr.fvar m v ty → False\nHe : NormalizedOldExpr (Lambda.LExpr.fvar () v✝ ty✝)"
+        ],
+        "proof_state_source": "lean_infotree_before_tactic",
+        "proof_state_raw": {
+          "depth": 25,
+          "end": 100259,
+          "goals_after": [
+            "case app.fvar\nm✝¹ : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\ne1✝ e2✝ : Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\nm✝ : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\nty✝¹ : Option { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.TypeType\nfn_ih :\n  NormalizedOldExpr (Lambda.LExpr.op m✝ { name := \"old\", metadata := Visibility.unres } ty✝¹) →\n    (extractOldExprVars (Lambda.LExpr.op m✝ { name := \"old\", metadata := Visibility.unres } ty✝¹)).Subset\n      (Lambda.LExpr.LExpr.getVars (Lambda.LExpr.op m✝ { name := \"old\", metadata := Visibility.unres } ty✝¹))\nHfn : NormalizedOldExpr (Lambda.LExpr.op m✝ { name := \"old\", metadata := Visibility.unres } ty✝¹)\nv✝ :\n  Lambda.Identifier\n    { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.IDMeta\nty✝ : Option { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.TypeType\ne_ih :\n  NormalizedOldExpr (Lambda.LExpr.fvar () v✝ ty✝) →\n    (extractOldExprVars (Lambda.LExpr.fvar () v✝ ty✝)).Subset (Lambda.LExpr.LExpr.getVars (Lambda.LExpr.fvar () v✝ ty✝))\nHfalse :\n  ∀ (m : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata)\n    (v :\n      Lambda.Identifier\n        { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.IDMeta)\n    (ty :\n      Option { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.TypeType),\n    Lambda.LExpr.fvar () v✝ ty✝ = Lambda.LExpr.fvar m v ty → False\nHe : NormalizedOldExpr (Lambda.LExpr.fvar () v✝ ty✝)\n⊢ False"
+          ],
+          "goals_before": [
+            "case app.fvar\nm✝¹ : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\ne1✝ e2✝ : Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\nm✝ : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\nty✝¹ : Option { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.TypeType\nfn_ih :\n  NormalizedOldExpr (Lambda.LExpr.op m✝ { name := \"old\", metadata := Visibility.unres } ty✝¹) →\n    (extractOldExprVars (Lambda.LExpr.op m✝ { name := \"old\", metadata := Visibility.unres } ty✝¹)).Subset\n      (Lambda.LExpr.LExpr.getVars (Lambda.LExpr.op m✝ { name := \"old\", metadata := Visibility.unres } ty✝¹))\nHfn : NormalizedOldExpr (Lambda.LExpr.op m✝ { name := \"old\", metadata := Visibility.unres } ty✝¹)\nv✝ :\n  Lambda.Identifier\n    { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.IDMeta\nty✝ : Option { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.TypeType\ne_ih :\n  NormalizedOldExpr (Lambda.LExpr.fvar () v✝ ty✝) →\n    (extractOldExprVars (Lambda.LExpr.fvar () v✝ ty✝)).Subset (Lambda.LExpr.LExpr.getVars (Lambda.LExpr.fvar () v✝ ty✝))\nHfalse :\n  ∀ (m : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata)\n    (v :\n      Lambda.Identifier\n        { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.IDMeta)\n    (ty :\n      Option { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.TypeType),\n    Lambda.LExpr.fvar () v✝ ty✝ = Lambda.LExpr.fvar m v ty → False\nHe : NormalizedOldExpr (Lambda.LExpr.fvar () v✝ ty✝)\n⊢ False"
+          ],
+          "kind": "tactic",
+          "start": 100243
+        }
+      },
+      {
+        "severity": "error",
+        "position": {
+          "column": 15,
+          "line": 2884
+        },
+        "end_position": {
+          "column": 24,
+          "line": 2884
+        },
+        "message": "Application type mismatch: The argument\n  fn_ih Hfn\nhas type\n  (extractOldExprVars fn).Subset (Lambda.LExpr.LExpr.getVars fn)\nbut is expected to have type\n  extractOldExprVars fn ⊆ Lambda.LExpr.LExpr.getVars fn ++ Lambda.LExpr.LExpr.getVars e\nin the application\n  And.intro (fn_ih Hfn)",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "Application type mismatch: The argument\n  fn_ih Hfn\nhas type\n  (extractOldExprVars fn).Subset (Lambda.LExpr.LExpr.getVars fn)\nbut is expected to have type\n  extractOldExprVars fn ⊆ Lambda.LExpr.LExpr.getVars fn ++ Lambda.LExpr.LExpr.getVars e\nin the application\n  And.intro (fn_ih Hfn)",
+          "endPos": {
+            "column": 24,
+            "line": 2884
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 15,
+            "line": 2884
+          },
+          "severity": "error"
+        },
+        "source_line": "        exact ⟨fn_ih Hfn, e_ih He⟩",
+        "start_offset": 91825,
+        "start_byte_offset": 93231,
+        "end_offset": 91834,
+        "end_byte_offset": 93240,
+        "source_text": "fn_ih Hfn",
+        "expected_actual_types": {
+          "actual": "(extractOldExprVars fn).Subset (Lambda.LExpr.LExpr.getVars fn)",
+          "expected": "extractOldExprVars fn ⊆ Lambda.LExpr.LExpr.getVars fn ++ Lambda.LExpr.LExpr.getVars e"
+        },
+        "failed_tactic": "exact ⟨fn_ih Hfn, e_ih He⟩",
+        "tactic_range": {
+          "position": {
+            "line": 2884,
+            "column": 8
+          },
+          "end_position": {
+            "line": 2884,
+            "column": 34
+          },
+          "start_offset": 91818,
+          "end_offset": 91844
+        },
+        "goals": [
+          "extractOldExprVars fn ⊆ Lambda.LExpr.LExpr.getVars fn ++ Lambda.LExpr.LExpr.getVars e ∧\n    extractOldExprVars e ⊆ Lambda.LExpr.LExpr.getVars fn ++ Lambda.LExpr.LExpr.getVars e"
+        ],
+        "local_context": [
+          "case h_3.app\nm✝ : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\nfn e : Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\nfn_ih : NormalizedOldExpr fn → (extractOldExprVars fn).Subset (Lambda.LExpr.LExpr.getVars fn)\ne_ih : NormalizedOldExpr e → (extractOldExprVars e).Subset (Lambda.LExpr.LExpr.getVars e)\ne1✝ e2✝ : Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\nx✝¹ :\n  ∀ (m : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata)\n    (ty :\n      Option { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.TypeType),\n    fn = Lambda.LExpr.op m { name := \"old\", metadata := Visibility.unres } ty → False\nx✝ :\n  ∀ (m : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata)\n    (ty :\n      Option { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.TypeType)\n    (m_1 :\n      { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata)\n    (v :\n      Lambda.Identifier\n        { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.IDMeta)\n    (ty_1 :\n      Option { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.TypeType),\n    fn = Lambda.LExpr.op m { name := \"old\", metadata := Visibility.unres } ty → e = Lambda.LExpr.fvar m_1 v ty_1 → False\nHfn : NormalizedOldExpr fn\nHe : NormalizedOldExpr e\na✝ : IsOldPred fn → IsFvar e"
+        ],
+        "proof_state_source": "lean_infotree_before_tactic",
+        "proof_state_raw": {
+          "depth": 20,
+          "end": 100383,
+          "goals_after": [],
+          "goals_before": [
+            "case h_3.app\nm✝ : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\nfn e : Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\nfn_ih : NormalizedOldExpr fn → (extractOldExprVars fn).Subset (Lambda.LExpr.LExpr.getVars fn)\ne_ih : NormalizedOldExpr e → (extractOldExprVars e).Subset (Lambda.LExpr.LExpr.getVars e)\ne1✝ e2✝ : Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\nx✝¹ :\n  ∀ (m : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata)\n    (ty :\n      Option { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.TypeType),\n    fn = Lambda.LExpr.op m { name := \"old\", metadata := Visibility.unres } ty → False\nx✝ :\n  ∀ (m : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata)\n    (ty :\n      Option { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.TypeType)\n    (m_1 :\n      { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata)\n    (v :\n      Lambda.Identifier\n        { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.IDMeta)\n    (ty_1 :\n      Option { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.TypeType),\n    fn = Lambda.LExpr.op m { name := \"old\", metadata := Visibility.unres } ty → e = Lambda.LExpr.fvar m_1 v ty_1 → False\nHfn : NormalizedOldExpr fn\nHe : NormalizedOldExpr e\na✝ : IsOldPred fn → IsFvar e\n⊢ extractOldExprVars fn ⊆ Lambda.LExpr.LExpr.getVars fn ++ Lambda.LExpr.LExpr.getVars e ∧\n    extractOldExprVars e ⊆ Lambda.LExpr.LExpr.getVars fn ++ Lambda.LExpr.LExpr.getVars e"
+          ],
+          "kind": "tactic",
+          "start": 100353
+        }
+      },
+      {
+        "severity": "error",
+        "position": {
+          "column": 6,
+          "line": 2892
+        },
+        "end_position": {
+          "column": 16,
+          "line": 2892
+        },
+        "message": "Tactic `apply` failed: could not unify the conclusion of `trih`\n  (extractOldExprVars trigger✝).Subset (Lambda.LExpr.LExpr.getVars trigger✝)\nwith the goal\n  extractOldExprVars trigger✝ ⊆ Lambda.LExpr.LExpr.getVars trigger✝ ++ Lambda.LExpr.LExpr.getVars e✝\n\nNote: The full type of `trih` is\n  NormalizedOldExpr trigger✝ → (extractOldExprVars trigger✝).Subset (Lambda.LExpr.LExpr.getVars trigger✝)\n\ncase quant.left\nm✝ : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\nk✝ : Lambda.QuantifierKind\nty✝ : Option { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.TypeType\ntrigger✝ e✝ :\n  Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\ntrih : NormalizedOldExpr trigger✝ → (extractOldExprVars trigger✝).Subset (Lambda.LExpr.LExpr.getVars trigger✝)\neih : NormalizedOldExpr e✝ → (extractOldExprVars e✝).Subset (Lambda.LExpr.LExpr.getVars e✝)\na✝¹ : NormalizedOldExpr trigger✝\na✝ : NormalizedOldExpr e✝\n⊢ extractOldExprVars trigger✝ ⊆ Lambda.LExpr.LExpr.getVars trigger✝ ++ Lambda.LExpr.LExpr.getVars e✝",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "Tactic `apply` failed: could not unify the conclusion of `trih`\n  (extractOldExprVars trigger✝).Subset (Lambda.LExpr.LExpr.getVars trigger✝)\nwith the goal\n  extractOldExprVars trigger✝ ⊆ Lambda.LExpr.LExpr.getVars trigger✝ ++ Lambda.LExpr.LExpr.getVars e✝\n\nNote: The full type of `trih` is\n  NormalizedOldExpr trigger✝ → (extractOldExprVars trigger✝).Subset (Lambda.LExpr.LExpr.getVars trigger✝)\n\ncase quant.left\nm✝ : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\nk✝ : Lambda.QuantifierKind\nty✝ : Option { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.TypeType\ntrigger✝ e✝ :\n  Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\ntrih : NormalizedOldExpr trigger✝ → (extractOldExprVars trigger✝).Subset (Lambda.LExpr.LExpr.getVars trigger✝)\neih : NormalizedOldExpr e✝ → (extractOldExprVars e✝).Subset (Lambda.LExpr.LExpr.getVars e✝)\na✝¹ : NormalizedOldExpr trigger✝\na✝ : NormalizedOldExpr e✝\n⊢ extractOldExprVars trigger✝ ⊆ Lambda.LExpr.LExpr.getVars trigger✝ ++ Lambda.LExpr.LExpr.getVars e✝",
+          "endPos": {
+            "column": 16,
+            "line": 2892
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 6,
+            "line": 2892
+          },
+          "severity": "error"
+        },
+        "source_line": "    · apply trih <;> assumption",
+        "start_offset": 92002,
+        "start_byte_offset": 93411,
+        "end_offset": 92012,
+        "end_byte_offset": 93421,
+        "source_text": "apply trih",
+        "failed_tactic": "apply trih",
+        "tactic_range": {
+          "position": {
+            "line": 2892,
+            "column": 6
+          },
+          "end_position": {
+            "line": 2892,
+            "column": 16
+          },
+          "start_offset": 92002,
+          "end_offset": 92012
+        },
+        "goals": [
+          "extractOldExprVars trigger✝ ⊆ Lambda.LExpr.LExpr.getVars trigger✝ ++ Lambda.LExpr.LExpr.getVars e✝"
+        ],
+        "local_context": [
+          "case quant.left\nm✝ : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\nk✝ : Lambda.QuantifierKind\nty✝ : Option { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.TypeType\ntrigger✝ e✝ :\n  Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\ntrih : NormalizedOldExpr trigger✝ → (extractOldExprVars trigger✝).Subset (Lambda.LExpr.LExpr.getVars trigger✝)\neih : NormalizedOldExpr e✝ → (extractOldExprVars e✝).Subset (Lambda.LExpr.LExpr.getVars e✝)\na✝¹ : NormalizedOldExpr trigger✝\na✝ : NormalizedOldExpr e✝"
+        ],
+        "proof_state_source": "lean_infotree_before_tactic",
+        "proof_state_raw": {
+          "depth": 19,
+          "end": 100552,
+          "goals_after": [
+            "case quant.left\nm✝ : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\nk✝ : Lambda.QuantifierKind\nty✝ : Option { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.TypeType\ntrigger✝ e✝ :\n  Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\ntrih : NormalizedOldExpr trigger✝ → (extractOldExprVars trigger✝).Subset (Lambda.LExpr.LExpr.getVars trigger✝)\neih : NormalizedOldExpr e✝ → (extractOldExprVars e✝).Subset (Lambda.LExpr.LExpr.getVars e✝)\na✝¹ : NormalizedOldExpr trigger✝\na✝ : NormalizedOldExpr e✝\n⊢ extractOldExprVars trigger✝ ⊆ Lambda.LExpr.LExpr.getVars trigger✝ ++ Lambda.LExpr.LExpr.getVars e✝"
+          ],
+          "goals_before": [
+            "case quant.left\nm✝ : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\nk✝ : Lambda.QuantifierKind\nty✝ : Option { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.TypeType\ntrigger✝ e✝ :\n  Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\ntrih : NormalizedOldExpr trigger✝ → (extractOldExprVars trigger✝).Subset (Lambda.LExpr.LExpr.getVars trigger✝)\neih : NormalizedOldExpr e✝ → (extractOldExprVars e✝).Subset (Lambda.LExpr.LExpr.getVars e✝)\na✝¹ : NormalizedOldExpr trigger✝\na✝ : NormalizedOldExpr e✝\n⊢ extractOldExprVars trigger✝ ⊆ Lambda.LExpr.LExpr.getVars trigger✝ ++ Lambda.LExpr.LExpr.getVars e✝"
+          ],
+          "kind": "tactic",
+          "start": 100542
+        }
+      },
+      {
+        "severity": "error",
+        "position": {
+          "column": 6,
+          "line": 2893
+        },
+        "end_position": {
+          "column": 15,
+          "line": 2893
+        },
+        "message": "Tactic `apply` failed: could not unify the conclusion of `eih`\n  (extractOldExprVars e✝).Subset (Lambda.LExpr.LExpr.getVars e✝)\nwith the goal\n  extractOldExprVars e✝ ⊆ Lambda.LExpr.LExpr.getVars trigger✝ ++ Lambda.LExpr.LExpr.getVars e✝\n\nNote: The full type of `eih` is\n  NormalizedOldExpr e✝ → (extractOldExprVars e✝).Subset (Lambda.LExpr.LExpr.getVars e✝)\n\ncase quant.right\nm✝ : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\nk✝ : Lambda.QuantifierKind\nty✝ : Option { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.TypeType\ntrigger✝ e✝ :\n  Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\ntrih : NormalizedOldExpr trigger✝ → (extractOldExprVars trigger✝).Subset (Lambda.LExpr.LExpr.getVars trigger✝)\neih : NormalizedOldExpr e✝ → (extractOldExprVars e✝).Subset (Lambda.LExpr.LExpr.getVars e✝)\na✝¹ : NormalizedOldExpr trigger✝\na✝ : NormalizedOldExpr e✝\n⊢ extractOldExprVars e✝ ⊆ Lambda.LExpr.LExpr.getVars trigger✝ ++ Lambda.LExpr.LExpr.getVars e✝",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "Tactic `apply` failed: could not unify the conclusion of `eih`\n  (extractOldExprVars e✝).Subset (Lambda.LExpr.LExpr.getVars e✝)\nwith the goal\n  extractOldExprVars e✝ ⊆ Lambda.LExpr.LExpr.getVars trigger✝ ++ Lambda.LExpr.LExpr.getVars e✝\n\nNote: The full type of `eih` is\n  NormalizedOldExpr e✝ → (extractOldExprVars e✝).Subset (Lambda.LExpr.LExpr.getVars e✝)\n\ncase quant.right\nm✝ : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\nk✝ : Lambda.QuantifierKind\nty✝ : Option { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.TypeType\ntrigger✝ e✝ :\n  Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\ntrih : NormalizedOldExpr trigger✝ → (extractOldExprVars trigger✝).Subset (Lambda.LExpr.LExpr.getVars trigger✝)\neih : NormalizedOldExpr e✝ → (extractOldExprVars e✝).Subset (Lambda.LExpr.LExpr.getVars e✝)\na✝¹ : NormalizedOldExpr trigger✝\na✝ : NormalizedOldExpr e✝\n⊢ extractOldExprVars e✝ ⊆ Lambda.LExpr.LExpr.getVars trigger✝ ++ Lambda.LExpr.LExpr.getVars e✝",
+          "endPos": {
+            "column": 15,
+            "line": 2893
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 6,
+            "line": 2893
+          },
+          "severity": "error"
+        },
+        "source_line": "    · apply eih <;> assumption",
+        "start_offset": 92034,
+        "start_byte_offset": 93444,
+        "end_offset": 92043,
+        "end_byte_offset": 93453,
+        "source_text": "apply eih",
+        "failed_tactic": "apply eih",
+        "tactic_range": {
+          "position": {
+            "line": 2893,
+            "column": 6
+          },
+          "end_position": {
+            "line": 2893,
+            "column": 15
+          },
+          "start_offset": 92034,
+          "end_offset": 92043
+        },
+        "goals": [
+          "extractOldExprVars e✝ ⊆ Lambda.LExpr.LExpr.getVars trigger✝ ++ Lambda.LExpr.LExpr.getVars e✝"
+        ],
+        "local_context": [
+          "case quant.right\nm✝ : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\nk✝ : Lambda.QuantifierKind\nty✝ : Option { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.TypeType\ntrigger✝ e✝ :\n  Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\ntrih : NormalizedOldExpr trigger✝ → (extractOldExprVars trigger✝).Subset (Lambda.LExpr.LExpr.getVars trigger✝)\neih : NormalizedOldExpr e✝ → (extractOldExprVars e✝).Subset (Lambda.LExpr.LExpr.getVars e✝)\na✝¹ : NormalizedOldExpr trigger✝\na✝ : NormalizedOldExpr e✝"
+        ],
+        "proof_state_source": "lean_infotree_before_tactic",
+        "proof_state_raw": {
+          "depth": 19,
+          "end": 100584,
+          "goals_after": [
+            "case quant.right\nm✝ : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\nk✝ : Lambda.QuantifierKind\nty✝ : Option { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.TypeType\ntrigger✝ e✝ :\n  Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\ntrih : NormalizedOldExpr trigger✝ → (extractOldExprVars trigger✝).Subset (Lambda.LExpr.LExpr.getVars trigger✝)\neih : NormalizedOldExpr e✝ → (extractOldExprVars e✝).Subset (Lambda.LExpr.LExpr.getVars e✝)\na✝¹ : NormalizedOldExpr trigger✝\na✝ : NormalizedOldExpr e✝\n⊢ extractOldExprVars e✝ ⊆ Lambda.LExpr.LExpr.getVars trigger✝ ++ Lambda.LExpr.LExpr.getVars e✝"
+          ],
+          "goals_before": [
+            "case quant.right\nm✝ : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\nk✝ : Lambda.QuantifierKind\nty✝ : Option { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.TypeType\ntrigger✝ e✝ :\n  Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\ntrih : NormalizedOldExpr trigger✝ → (extractOldExprVars trigger✝).Subset (Lambda.LExpr.LExpr.getVars trigger✝)\neih : NormalizedOldExpr e✝ → (extractOldExprVars e✝).Subset (Lambda.LExpr.LExpr.getVars e✝)\na✝¹ : NormalizedOldExpr trigger✝\na✝ : NormalizedOldExpr e✝\n⊢ extractOldExprVars e✝ ⊆ Lambda.LExpr.LExpr.getVars trigger✝ ++ Lambda.LExpr.LExpr.getVars e✝"
+          ],
+          "kind": "tactic",
+          "start": 100575
+        }
+      },
+      {
+        "severity": "error",
+        "position": {
+          "column": 6,
+          "line": 2898
+        },
+        "end_position": {
+          "column": 15,
+          "line": 2898
+        },
+        "message": "Tactic `apply` failed: could not unify the conclusion of `cih`\n  (extractOldExprVars c✝).Subset (Lambda.LExpr.LExpr.getVars c✝)\nwith the goal\n  extractOldExprVars c✝ ⊆\n    Lambda.LExpr.LExpr.getVars c✝ ++ (Lambda.LExpr.LExpr.getVars t✝ ++ Lambda.LExpr.LExpr.getVars e✝)\n\nNote: The full type of `cih` is\n  NormalizedOldExpr c✝ → (extractOldExprVars c✝).Subset (Lambda.LExpr.LExpr.getVars c✝)\n\ncase ite.left\nm✝ : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\nc✝ t✝ e✝ : Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\ncih : NormalizedOldExpr c✝ → (extractOldExprVars c✝).Subset (Lambda.LExpr.LExpr.getVars c✝)\ntih : NormalizedOldExpr t✝ → (extractOldExprVars t✝).Subset (Lambda.LExpr.LExpr.getVars t✝)\neih : NormalizedOldExpr e✝ → (extractOldExprVars e✝).Subset (Lambda.LExpr.LExpr.getVars e✝)\na✝² : NormalizedOldExpr c✝\na✝¹ : NormalizedOldExpr t✝\na✝ : NormalizedOldExpr e✝\n⊢ extractOldExprVars c✝ ⊆\n    Lambda.LExpr.LExpr.getVars c✝ ++ (Lambda.LExpr.LExpr.getVars t✝ ++ Lambda.LExpr.LExpr.getVars e✝)",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "Tactic `apply` failed: could not unify the conclusion of `cih`\n  (extractOldExprVars c✝).Subset (Lambda.LExpr.LExpr.getVars c✝)\nwith the goal\n  extractOldExprVars c✝ ⊆\n    Lambda.LExpr.LExpr.getVars c✝ ++ (Lambda.LExpr.LExpr.getVars t✝ ++ Lambda.LExpr.LExpr.getVars e✝)\n\nNote: The full type of `cih` is\n  NormalizedOldExpr c✝ → (extractOldExprVars c✝).Subset (Lambda.LExpr.LExpr.getVars c✝)\n\ncase ite.left\nm✝ : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\nc✝ t✝ e✝ : Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\ncih : NormalizedOldExpr c✝ → (extractOldExprVars c✝).Subset (Lambda.LExpr.LExpr.getVars c✝)\ntih : NormalizedOldExpr t✝ → (extractOldExprVars t✝).Subset (Lambda.LExpr.LExpr.getVars t✝)\neih : NormalizedOldExpr e✝ → (extractOldExprVars e✝).Subset (Lambda.LExpr.LExpr.getVars e✝)\na✝² : NormalizedOldExpr c✝\na✝¹ : NormalizedOldExpr t✝\na✝ : NormalizedOldExpr e✝\n⊢ extractOldExprVars c✝ ⊆\n    Lambda.LExpr.LExpr.getVars c✝ ++ (Lambda.LExpr.LExpr.getVars t✝ ++ Lambda.LExpr.LExpr.getVars e✝)",
+          "endPos": {
+            "column": 15,
+            "line": 2898
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 6,
+            "line": 2898
+          },
+          "severity": "error"
+        },
+        "source_line": "    · apply cih <;> assumption",
+        "start_offset": 92156,
+        "start_byte_offset": 93567,
+        "end_offset": 92165,
+        "end_byte_offset": 93576,
+        "source_text": "apply cih",
+        "failed_tactic": "apply cih",
+        "tactic_range": {
+          "position": {
+            "line": 2898,
+            "column": 6
+          },
+          "end_position": {
+            "line": 2898,
+            "column": 15
+          },
+          "start_offset": 92156,
+          "end_offset": 92165
+        },
+        "goals": [
+          "extractOldExprVars c✝ ⊆\n    Lambda.LExpr.LExpr.getVars c✝ ++ (Lambda.LExpr.LExpr.getVars t✝ ++ Lambda.LExpr.LExpr.getVars e✝)"
+        ],
+        "local_context": [
+          "case ite.left\nm✝ : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\nc✝ t✝ e✝ : Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\ncih : NormalizedOldExpr c✝ → (extractOldExprVars c✝).Subset (Lambda.LExpr.LExpr.getVars c✝)\ntih : NormalizedOldExpr t✝ → (extractOldExprVars t✝).Subset (Lambda.LExpr.LExpr.getVars t✝)\neih : NormalizedOldExpr e✝ → (extractOldExprVars e✝).Subset (Lambda.LExpr.LExpr.getVars e✝)\na✝² : NormalizedOldExpr c✝\na✝¹ : NormalizedOldExpr t✝\na✝ : NormalizedOldExpr e✝"
+        ],
+        "proof_state_source": "lean_infotree_before_tactic",
+        "proof_state_raw": {
+          "depth": 19,
+          "end": 100707,
+          "goals_after": [
+            "case ite.left\nm✝ : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\nc✝ t✝ e✝ : Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\ncih : NormalizedOldExpr c✝ → (extractOldExprVars c✝).Subset (Lambda.LExpr.LExpr.getVars c✝)\ntih : NormalizedOldExpr t✝ → (extractOldExprVars t✝).Subset (Lambda.LExpr.LExpr.getVars t✝)\neih : NormalizedOldExpr e✝ → (extractOldExprVars e✝).Subset (Lambda.LExpr.LExpr.getVars e✝)\na✝² : NormalizedOldExpr c✝\na✝¹ : NormalizedOldExpr t✝\na✝ : NormalizedOldExpr e✝\n⊢ extractOldExprVars c✝ ⊆\n    Lambda.LExpr.LExpr.getVars c✝ ++ (Lambda.LExpr.LExpr.getVars t✝ ++ Lambda.LExpr.LExpr.getVars e✝)"
+          ],
+          "goals_before": [
+            "case ite.left\nm✝ : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\nc✝ t✝ e✝ : Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\ncih : NormalizedOldExpr c✝ → (extractOldExprVars c✝).Subset (Lambda.LExpr.LExpr.getVars c✝)\ntih : NormalizedOldExpr t✝ → (extractOldExprVars t✝).Subset (Lambda.LExpr.LExpr.getVars t✝)\neih : NormalizedOldExpr e✝ → (extractOldExprVars e✝).Subset (Lambda.LExpr.LExpr.getVars e✝)\na✝² : NormalizedOldExpr c✝\na✝¹ : NormalizedOldExpr t✝\na✝ : NormalizedOldExpr e✝\n⊢ extractOldExprVars c✝ ⊆\n    Lambda.LExpr.LExpr.getVars c✝ ++ (Lambda.LExpr.LExpr.getVars t✝ ++ Lambda.LExpr.LExpr.getVars e✝)"
+          ],
+          "kind": "tactic",
+          "start": 100698
+        }
+      },
+      {
+        "severity": "error",
+        "position": {
+          "column": 8,
+          "line": 2901
+        },
+        "end_position": {
+          "column": 17,
+          "line": 2901
+        },
+        "message": "Tactic `apply` failed: could not unify the conclusion of `tih`\n  (extractOldExprVars t✝).Subset (Lambda.LExpr.LExpr.getVars t✝)\nwith the goal\n  extractOldExprVars t✝ ⊆\n    Lambda.LExpr.LExpr.getVars c✝ ++ (Lambda.LExpr.LExpr.getVars t✝ ++ Lambda.LExpr.LExpr.getVars e✝)\n\nNote: The full type of `tih` is\n  NormalizedOldExpr t✝ → (extractOldExprVars t✝).Subset (Lambda.LExpr.LExpr.getVars t✝)\n\ncase ite.right.left\nm✝ : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\nc✝ t✝ e✝ : Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\ncih : NormalizedOldExpr c✝ → (extractOldExprVars c✝).Subset (Lambda.LExpr.LExpr.getVars c✝)\ntih : NormalizedOldExpr t✝ → (extractOldExprVars t✝).Subset (Lambda.LExpr.LExpr.getVars t✝)\neih : NormalizedOldExpr e✝ → (extractOldExprVars e✝).Subset (Lambda.LExpr.LExpr.getVars e✝)\na✝² : NormalizedOldExpr c✝\na✝¹ : NormalizedOldExpr t✝\na✝ : NormalizedOldExpr e✝\n⊢ extractOldExprVars t✝ ⊆\n    Lambda.LExpr.LExpr.getVars c✝ ++ (Lambda.LExpr.LExpr.getVars t✝ ++ Lambda.LExpr.LExpr.getVars e✝)",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "Tactic `apply` failed: could not unify the conclusion of `tih`\n  (extractOldExprVars t✝).Subset (Lambda.LExpr.LExpr.getVars t✝)\nwith the goal\n  extractOldExprVars t✝ ⊆\n    Lambda.LExpr.LExpr.getVars c✝ ++ (Lambda.LExpr.LExpr.getVars t✝ ++ Lambda.LExpr.LExpr.getVars e✝)\n\nNote: The full type of `tih` is\n  NormalizedOldExpr t✝ → (extractOldExprVars t✝).Subset (Lambda.LExpr.LExpr.getVars t✝)\n\ncase ite.right.left\nm✝ : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\nc✝ t✝ e✝ : Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\ncih : NormalizedOldExpr c✝ → (extractOldExprVars c✝).Subset (Lambda.LExpr.LExpr.getVars c✝)\ntih : NormalizedOldExpr t✝ → (extractOldExprVars t✝).Subset (Lambda.LExpr.LExpr.getVars t✝)\neih : NormalizedOldExpr e✝ → (extractOldExprVars e✝).Subset (Lambda.LExpr.LExpr.getVars e✝)\na✝² : NormalizedOldExpr c✝\na✝¹ : NormalizedOldExpr t✝\na✝ : NormalizedOldExpr e✝\n⊢ extractOldExprVars t✝ ⊆\n    Lambda.LExpr.LExpr.getVars c✝ ++ (Lambda.LExpr.LExpr.getVars t✝ ++ Lambda.LExpr.LExpr.getVars e✝)",
+          "endPos": {
+            "column": 17,
+            "line": 2901
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 8,
+            "line": 2901
+          },
+          "severity": "error"
+        },
+        "source_line": "      · apply tih <;> assumption",
+        "start_offset": 92242,
+        "start_byte_offset": 93655,
+        "end_offset": 92251,
+        "end_byte_offset": 93664,
+        "source_text": "apply tih",
+        "failed_tactic": "apply tih",
+        "tactic_range": {
+          "position": {
+            "line": 2901,
+            "column": 8
+          },
+          "end_position": {
+            "line": 2901,
+            "column": 17
+          },
+          "start_offset": 92242,
+          "end_offset": 92251
+        },
+        "goals": [
+          "extractOldExprVars t✝ ⊆\n    Lambda.LExpr.LExpr.getVars c✝ ++ (Lambda.LExpr.LExpr.getVars t✝ ++ Lambda.LExpr.LExpr.getVars e✝)"
+        ],
+        "local_context": [
+          "case ite.right.left\nm✝ : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\nc✝ t✝ e✝ : Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\ncih : NormalizedOldExpr c✝ → (extractOldExprVars c✝).Subset (Lambda.LExpr.LExpr.getVars c✝)\ntih : NormalizedOldExpr t✝ → (extractOldExprVars t✝).Subset (Lambda.LExpr.LExpr.getVars t✝)\neih : NormalizedOldExpr e✝ → (extractOldExprVars e✝).Subset (Lambda.LExpr.LExpr.getVars e✝)\na✝² : NormalizedOldExpr c✝\na✝¹ : NormalizedOldExpr t✝\na✝ : NormalizedOldExpr e✝"
+        ],
+        "proof_state_source": "lean_infotree_before_tactic",
+        "proof_state_raw": {
+          "depth": 22,
+          "end": 100795,
+          "goals_after": [
+            "case ite.right.left\nm✝ : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\nc✝ t✝ e✝ : Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\ncih : NormalizedOldExpr c✝ → (extractOldExprVars c✝).Subset (Lambda.LExpr.LExpr.getVars c✝)\ntih : NormalizedOldExpr t✝ → (extractOldExprVars t✝).Subset (Lambda.LExpr.LExpr.getVars t✝)\neih : NormalizedOldExpr e✝ → (extractOldExprVars e✝).Subset (Lambda.LExpr.LExpr.getVars e✝)\na✝² : NormalizedOldExpr c✝\na✝¹ : NormalizedOldExpr t✝\na✝ : NormalizedOldExpr e✝\n⊢ extractOldExprVars t✝ ⊆\n    Lambda.LExpr.LExpr.getVars c✝ ++ (Lambda.LExpr.LExpr.getVars t✝ ++ Lambda.LExpr.LExpr.getVars e✝)"
+          ],
+          "goals_before": [
+            "case ite.right.left\nm✝ : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\nc✝ t✝ e✝ : Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\ncih : NormalizedOldExpr c✝ → (extractOldExprVars c✝).Subset (Lambda.LExpr.LExpr.getVars c✝)\ntih : NormalizedOldExpr t✝ → (extractOldExprVars t✝).Subset (Lambda.LExpr.LExpr.getVars t✝)\neih : NormalizedOldExpr e✝ → (extractOldExprVars e✝).Subset (Lambda.LExpr.LExpr.getVars e✝)\na✝² : NormalizedOldExpr c✝\na✝¹ : NormalizedOldExpr t✝\na✝ : NormalizedOldExpr e✝\n⊢ extractOldExprVars t✝ ⊆\n    Lambda.LExpr.LExpr.getVars c✝ ++ (Lambda.LExpr.LExpr.getVars t✝ ++ Lambda.LExpr.LExpr.getVars e✝)"
+          ],
+          "kind": "tactic",
+          "start": 100786
+        }
+      },
+      {
+        "severity": "error",
+        "position": {
+          "column": 8,
+          "line": 2902
+        },
+        "end_position": {
+          "column": 17,
+          "line": 2902
+        },
+        "message": "Tactic `apply` failed: could not unify the conclusion of `eih`\n  (extractOldExprVars e✝).Subset (Lambda.LExpr.LExpr.getVars e✝)\nwith the goal\n  extractOldExprVars e✝ ⊆\n    Lambda.LExpr.LExpr.getVars c✝ ++ (Lambda.LExpr.LExpr.getVars t✝ ++ Lambda.LExpr.LExpr.getVars e✝)\n\nNote: The full type of `eih` is\n  NormalizedOldExpr e✝ → (extractOldExprVars e✝).Subset (Lambda.LExpr.LExpr.getVars e✝)\n\ncase ite.right.right\nm✝ : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\nc✝ t✝ e✝ : Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\ncih : NormalizedOldExpr c✝ → (extractOldExprVars c✝).Subset (Lambda.LExpr.LExpr.getVars c✝)\ntih : NormalizedOldExpr t✝ → (extractOldExprVars t✝).Subset (Lambda.LExpr.LExpr.getVars t✝)\neih : NormalizedOldExpr e✝ → (extractOldExprVars e✝).Subset (Lambda.LExpr.LExpr.getVars e✝)\na✝² : NormalizedOldExpr c✝\na✝¹ : NormalizedOldExpr t✝\na✝ : NormalizedOldExpr e✝\n⊢ extractOldExprVars e✝ ⊆\n    Lambda.LExpr.LExpr.getVars c✝ ++ (Lambda.LExpr.LExpr.getVars t✝ ++ Lambda.LExpr.LExpr.getVars e✝)",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "Tactic `apply` failed: could not unify the conclusion of `eih`\n  (extractOldExprVars e✝).Subset (Lambda.LExpr.LExpr.getVars e✝)\nwith the goal\n  extractOldExprVars e✝ ⊆\n    Lambda.LExpr.LExpr.getVars c✝ ++ (Lambda.LExpr.LExpr.getVars t✝ ++ Lambda.LExpr.LExpr.getVars e✝)\n\nNote: The full type of `eih` is\n  NormalizedOldExpr e✝ → (extractOldExprVars e✝).Subset (Lambda.LExpr.LExpr.getVars e✝)\n\ncase ite.right.right\nm✝ : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\nc✝ t✝ e✝ : Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\ncih : NormalizedOldExpr c✝ → (extractOldExprVars c✝).Subset (Lambda.LExpr.LExpr.getVars c✝)\ntih : NormalizedOldExpr t✝ → (extractOldExprVars t✝).Subset (Lambda.LExpr.LExpr.getVars t✝)\neih : NormalizedOldExpr e✝ → (extractOldExprVars e✝).Subset (Lambda.LExpr.LExpr.getVars e✝)\na✝² : NormalizedOldExpr c✝\na✝¹ : NormalizedOldExpr t✝\na✝ : NormalizedOldExpr e✝\n⊢ extractOldExprVars e✝ ⊆\n    Lambda.LExpr.LExpr.getVars c✝ ++ (Lambda.LExpr.LExpr.getVars t✝ ++ Lambda.LExpr.LExpr.getVars e✝)",
+          "endPos": {
+            "column": 17,
+            "line": 2902
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 8,
+            "line": 2902
+          },
+          "severity": "error"
+        },
+        "source_line": "      · apply eih <;> assumption",
+        "start_offset": 92275,
+        "start_byte_offset": 93689,
+        "end_offset": 92284,
+        "end_byte_offset": 93698,
+        "source_text": "apply eih",
+        "failed_tactic": "apply eih",
+        "tactic_range": {
+          "position": {
+            "line": 2902,
+            "column": 8
+          },
+          "end_position": {
+            "line": 2902,
+            "column": 17
+          },
+          "start_offset": 92275,
+          "end_offset": 92284
+        },
+        "goals": [
+          "extractOldExprVars e✝ ⊆\n    Lambda.LExpr.LExpr.getVars c✝ ++ (Lambda.LExpr.LExpr.getVars t✝ ++ Lambda.LExpr.LExpr.getVars e✝)"
+        ],
+        "local_context": [
+          "case ite.right.right\nm✝ : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\nc✝ t✝ e✝ : Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\ncih : NormalizedOldExpr c✝ → (extractOldExprVars c✝).Subset (Lambda.LExpr.LExpr.getVars c✝)\ntih : NormalizedOldExpr t✝ → (extractOldExprVars t✝).Subset (Lambda.LExpr.LExpr.getVars t✝)\neih : NormalizedOldExpr e✝ → (extractOldExprVars e✝).Subset (Lambda.LExpr.LExpr.getVars e✝)\na✝² : NormalizedOldExpr c✝\na✝¹ : NormalizedOldExpr t✝\na✝ : NormalizedOldExpr e✝"
+        ],
+        "proof_state_source": "lean_infotree_before_tactic",
+        "proof_state_raw": {
+          "depth": 22,
+          "end": 100829,
+          "goals_after": [
+            "case ite.right.right\nm✝ : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\nc✝ t✝ e✝ : Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\ncih : NormalizedOldExpr c✝ → (extractOldExprVars c✝).Subset (Lambda.LExpr.LExpr.getVars c✝)\ntih : NormalizedOldExpr t✝ → (extractOldExprVars t✝).Subset (Lambda.LExpr.LExpr.getVars t✝)\neih : NormalizedOldExpr e✝ → (extractOldExprVars e✝).Subset (Lambda.LExpr.LExpr.getVars e✝)\na✝² : NormalizedOldExpr c✝\na✝¹ : NormalizedOldExpr t✝\na✝ : NormalizedOldExpr e✝\n⊢ extractOldExprVars e✝ ⊆\n    Lambda.LExpr.LExpr.getVars c✝ ++ (Lambda.LExpr.LExpr.getVars t✝ ++ Lambda.LExpr.LExpr.getVars e✝)"
+          ],
+          "goals_before": [
+            "case ite.right.right\nm✝ : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\nc✝ t✝ e✝ : Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\ncih : NormalizedOldExpr c✝ → (extractOldExprVars c✝).Subset (Lambda.LExpr.LExpr.getVars c✝)\ntih : NormalizedOldExpr t✝ → (extractOldExprVars t✝).Subset (Lambda.LExpr.LExpr.getVars t✝)\neih : NormalizedOldExpr e✝ → (extractOldExprVars e✝).Subset (Lambda.LExpr.LExpr.getVars e✝)\na✝² : NormalizedOldExpr c✝\na✝¹ : NormalizedOldExpr t✝\na✝ : NormalizedOldExpr e✝\n⊢ extractOldExprVars e✝ ⊆\n    Lambda.LExpr.LExpr.getVars c✝ ++ (Lambda.LExpr.LExpr.getVars t✝ ++ Lambda.LExpr.LExpr.getVars e✝)"
+          ],
+          "kind": "tactic",
+          "start": 100820
+        }
+      },
+      {
+        "severity": "error",
+        "position": {
+          "column": 6,
+          "line": 2907
+        },
+        "end_position": {
+          "column": 15,
+          "line": 2907
+        },
+        "message": "Tactic `apply` failed: could not unify the conclusion of `ih1`\n  (extractOldExprVars e1✝).Subset (Lambda.LExpr.LExpr.getVars e1✝)\nwith the goal\n  extractOldExprVars e1✝ ⊆ Lambda.LExpr.LExpr.getVars e1✝ ++ Lambda.LExpr.LExpr.getVars e2✝\n\nNote: The full type of `ih1` is\n  NormalizedOldExpr e1✝ → (extractOldExprVars e1✝).Subset (Lambda.LExpr.LExpr.getVars e1✝)\n\ncase eq.left\nm✝ : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\ne1✝ e2✝ : Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\nih1 : NormalizedOldExpr e1✝ → (extractOldExprVars e1✝).Subset (Lambda.LExpr.LExpr.getVars e1✝)\nih2 : NormalizedOldExpr e2✝ → (extractOldExprVars e2✝).Subset (Lambda.LExpr.LExpr.getVars e2✝)\na✝¹ : NormalizedOldExpr e1✝\na✝ : NormalizedOldExpr e2✝\n⊢ extractOldExprVars e1✝ ⊆ Lambda.LExpr.LExpr.getVars e1✝ ++ Lambda.LExpr.LExpr.getVars e2✝",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "Tactic `apply` failed: could not unify the conclusion of `ih1`\n  (extractOldExprVars e1✝).Subset (Lambda.LExpr.LExpr.getVars e1✝)\nwith the goal\n  extractOldExprVars e1✝ ⊆ Lambda.LExpr.LExpr.getVars e1✝ ++ Lambda.LExpr.LExpr.getVars e2✝\n\nNote: The full type of `ih1` is\n  NormalizedOldExpr e1✝ → (extractOldExprVars e1✝).Subset (Lambda.LExpr.LExpr.getVars e1✝)\n\ncase eq.left\nm✝ : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\ne1✝ e2✝ : Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\nih1 : NormalizedOldExpr e1✝ → (extractOldExprVars e1✝).Subset (Lambda.LExpr.LExpr.getVars e1✝)\nih2 : NormalizedOldExpr e2✝ → (extractOldExprVars e2✝).Subset (Lambda.LExpr.LExpr.getVars e2✝)\na✝¹ : NormalizedOldExpr e1✝\na✝ : NormalizedOldExpr e2✝\n⊢ extractOldExprVars e1✝ ⊆ Lambda.LExpr.LExpr.getVars e1✝ ++ Lambda.LExpr.LExpr.getVars e2✝",
+          "endPos": {
+            "column": 15,
+            "line": 2907
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 6,
+            "line": 2907
+          },
+          "severity": "error"
+        },
+        "source_line": "    · apply ih1 <;> assumption",
+        "start_offset": 92392,
+        "start_byte_offset": 93807,
+        "end_offset": 92401,
+        "end_byte_offset": 93816,
+        "source_text": "apply ih1",
+        "failed_tactic": "apply ih1",
+        "tactic_range": {
+          "position": {
+            "line": 2907,
+            "column": 6
+          },
+          "end_position": {
+            "line": 2907,
+            "column": 15
+          },
+          "start_offset": 92392,
+          "end_offset": 92401
+        },
+        "goals": [
+          "extractOldExprVars e1✝ ⊆ Lambda.LExpr.LExpr.getVars e1✝ ++ Lambda.LExpr.LExpr.getVars e2✝"
+        ],
+        "local_context": [
+          "case eq.left\nm✝ : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\ne1✝ e2✝ : Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\nih1 : NormalizedOldExpr e1✝ → (extractOldExprVars e1✝).Subset (Lambda.LExpr.LExpr.getVars e1✝)\nih2 : NormalizedOldExpr e2✝ → (extractOldExprVars e2✝).Subset (Lambda.LExpr.LExpr.getVars e2✝)\na✝¹ : NormalizedOldExpr e1✝\na✝ : NormalizedOldExpr e2✝"
+        ],
+        "proof_state_source": "lean_infotree_before_tactic",
+        "proof_state_raw": {
+          "depth": 19,
+          "end": 100947,
+          "goals_after": [
+            "case eq.left\nm✝ : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\ne1✝ e2✝ : Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\nih1 : NormalizedOldExpr e1✝ → (extractOldExprVars e1✝).Subset (Lambda.LExpr.LExpr.getVars e1✝)\nih2 : NormalizedOldExpr e2✝ → (extractOldExprVars e2✝).Subset (Lambda.LExpr.LExpr.getVars e2✝)\na✝¹ : NormalizedOldExpr e1✝\na✝ : NormalizedOldExpr e2✝\n⊢ extractOldExprVars e1✝ ⊆ Lambda.LExpr.LExpr.getVars e1✝ ++ Lambda.LExpr.LExpr.getVars e2✝"
+          ],
+          "goals_before": [
+            "case eq.left\nm✝ : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\ne1✝ e2✝ : Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\nih1 : NormalizedOldExpr e1✝ → (extractOldExprVars e1✝).Subset (Lambda.LExpr.LExpr.getVars e1✝)\nih2 : NormalizedOldExpr e2✝ → (extractOldExprVars e2✝).Subset (Lambda.LExpr.LExpr.getVars e2✝)\na✝¹ : NormalizedOldExpr e1✝\na✝ : NormalizedOldExpr e2✝\n⊢ extractOldExprVars e1✝ ⊆ Lambda.LExpr.LExpr.getVars e1✝ ++ Lambda.LExpr.LExpr.getVars e2✝"
+          ],
+          "kind": "tactic",
+          "start": 100938
+        }
+      },
+      {
+        "severity": "error",
+        "position": {
+          "column": 6,
+          "line": 2908
+        },
+        "end_position": {
+          "column": 15,
+          "line": 2908
+        },
+        "message": "Tactic `apply` failed: could not unify the conclusion of `ih2`\n  (extractOldExprVars e2✝).Subset (Lambda.LExpr.LExpr.getVars e2✝)\nwith the goal\n  extractOldExprVars e2✝ ⊆ Lambda.LExpr.LExpr.getVars e1✝ ++ Lambda.LExpr.LExpr.getVars e2✝\n\nNote: The full type of `ih2` is\n  NormalizedOldExpr e2✝ → (extractOldExprVars e2✝).Subset (Lambda.LExpr.LExpr.getVars e2✝)\n\ncase eq.right\nm✝ : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\ne1✝ e2✝ : Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\nih1 : NormalizedOldExpr e1✝ → (extractOldExprVars e1✝).Subset (Lambda.LExpr.LExpr.getVars e1✝)\nih2 : NormalizedOldExpr e2✝ → (extractOldExprVars e2✝).Subset (Lambda.LExpr.LExpr.getVars e2✝)\na✝¹ : NormalizedOldExpr e1✝\na✝ : NormalizedOldExpr e2✝\n⊢ extractOldExprVars e2✝ ⊆ Lambda.LExpr.LExpr.getVars e1✝ ++ Lambda.LExpr.LExpr.getVars e2✝",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "Tactic `apply` failed: could not unify the conclusion of `ih2`\n  (extractOldExprVars e2✝).Subset (Lambda.LExpr.LExpr.getVars e2✝)\nwith the goal\n  extractOldExprVars e2✝ ⊆ Lambda.LExpr.LExpr.getVars e1✝ ++ Lambda.LExpr.LExpr.getVars e2✝\n\nNote: The full type of `ih2` is\n  NormalizedOldExpr e2✝ → (extractOldExprVars e2✝).Subset (Lambda.LExpr.LExpr.getVars e2✝)\n\ncase eq.right\nm✝ : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\ne1✝ e2✝ : Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\nih1 : NormalizedOldExpr e1✝ → (extractOldExprVars e1✝).Subset (Lambda.LExpr.LExpr.getVars e1✝)\nih2 : NormalizedOldExpr e2✝ → (extractOldExprVars e2✝).Subset (Lambda.LExpr.LExpr.getVars e2✝)\na✝¹ : NormalizedOldExpr e1✝\na✝ : NormalizedOldExpr e2✝\n⊢ extractOldExprVars e2✝ ⊆ Lambda.LExpr.LExpr.getVars e1✝ ++ Lambda.LExpr.LExpr.getVars e2✝",
+          "endPos": {
+            "column": 15,
+            "line": 2908
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 6,
+            "line": 2908
+          },
+          "severity": "error"
+        },
+        "source_line": "    · apply ih2 <;> assumption",
+        "start_offset": 92423,
+        "start_byte_offset": 93839,
+        "end_offset": 92432,
+        "end_byte_offset": 93848,
+        "source_text": "apply ih2",
+        "failed_tactic": "apply ih2",
+        "tactic_range": {
+          "position": {
+            "line": 2908,
+            "column": 6
+          },
+          "end_position": {
+            "line": 2908,
+            "column": 15
+          },
+          "start_offset": 92423,
+          "end_offset": 92432
+        },
+        "goals": [
+          "extractOldExprVars e2✝ ⊆ Lambda.LExpr.LExpr.getVars e1✝ ++ Lambda.LExpr.LExpr.getVars e2✝"
+        ],
+        "local_context": [
+          "case eq.right\nm✝ : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\ne1✝ e2✝ : Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\nih1 : NormalizedOldExpr e1✝ → (extractOldExprVars e1✝).Subset (Lambda.LExpr.LExpr.getVars e1✝)\nih2 : NormalizedOldExpr e2✝ → (extractOldExprVars e2✝).Subset (Lambda.LExpr.LExpr.getVars e2✝)\na✝¹ : NormalizedOldExpr e1✝\na✝ : NormalizedOldExpr e2✝"
+        ],
+        "proof_state_source": "lean_infotree_before_tactic",
+        "proof_state_raw": {
+          "depth": 19,
+          "end": 100979,
+          "goals_after": [
+            "case eq.right\nm✝ : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\ne1✝ e2✝ : Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\nih1 : NormalizedOldExpr e1✝ → (extractOldExprVars e1✝).Subset (Lambda.LExpr.LExpr.getVars e1✝)\nih2 : NormalizedOldExpr e2✝ → (extractOldExprVars e2✝).Subset (Lambda.LExpr.LExpr.getVars e2✝)\na✝¹ : NormalizedOldExpr e1✝\na✝ : NormalizedOldExpr e2✝\n⊢ extractOldExprVars e2✝ ⊆ Lambda.LExpr.LExpr.getVars e1✝ ++ Lambda.LExpr.LExpr.getVars e2✝"
+          ],
+          "goals_before": [
+            "case eq.right\nm✝ : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\ne1✝ e2✝ : Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\nih1 : NormalizedOldExpr e1✝ → (extractOldExprVars e1✝).Subset (Lambda.LExpr.LExpr.getVars e1✝)\nih2 : NormalizedOldExpr e2✝ → (extractOldExprVars e2✝).Subset (Lambda.LExpr.LExpr.getVars e2✝)\na✝¹ : NormalizedOldExpr e1✝\na✝ : NormalizedOldExpr e2✝\n⊢ extractOldExprVars e2✝ ⊆ Lambda.LExpr.LExpr.getVars e1✝ ++ Lambda.LExpr.LExpr.getVars e2✝"
+          ],
+          "kind": "tactic",
+          "start": 100970
+        }
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 8,
+          "line": 3252
+        },
+        "end_position": {
+          "column": 32,
+          "line": 3252
+        },
+        "message": "declaration uses 'sorry'",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "declaration uses 'sorry'",
+          "endPos": {
+            "column": 32,
+            "line": 3252
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "hasSorry",
+          "pos": {
+            "column": 8,
+            "line": 3252
+          },
+          "severity": "warning"
+        },
+        "source_line": "theorem callElimStatementCorrect [LawfulBEq Expression.Expr] :",
+        "start_offset": 103783,
+        "start_byte_offset": 105221,
+        "end_offset": 103807,
+        "end_byte_offset": 105245,
+        "source_text": "callElimStatementCorrect"
+      },
+      {
+        "severity": "information",
+        "position": {
+          "column": 0,
+          "line": 4672
+        },
+        "end_position": {
+          "column": 6,
+          "line": 4672
+        },
+        "message": "CallElimCorrect.extractedOldExprInVars {post : Core.Expression.Expr} :\n  Core.OldExpressions.NormalizedOldExpr post →\n    (Core.OldExpressions.extractOldExprVars post).Subset (Imperative.HasVarsPure.getVars post)",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "CallElimCorrect.extractedOldExprInVars {post : Core.Expression.Expr} :\n  Core.OldExpressions.NormalizedOldExpr post →\n    (Core.OldExpressions.extractOldExprVars post).Subset (Imperative.HasVarsPure.getVars post)",
+          "endPos": {
+            "column": 6,
+            "line": 4672
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 0,
+            "line": 4672
+          },
+          "severity": "information"
+        }
+      },
+      {
+        "severity": "information",
+        "position": {
+          "column": 0,
+          "line": 4673
+        },
+        "end_position": {
+          "column": 6,
+          "line": 4673
+        },
+        "message": "'CallElimCorrect.extractedOldExprInVars' depends on axioms: [propext, sorryAx, Quot.sound]",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "'CallElimCorrect.extractedOldExprInVars' depends on axioms: [propext, sorryAx, Quot.sound]",
+          "endPos": {
+            "column": 6,
+            "line": 4673
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 0,
+            "line": 4673
+          },
+          "severity": "information"
+        }
+      }
+    ],
+    "goals": [
+      "False"
+    ],
+    "local_context": [
+      "case app.fvar\nm✝¹ : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\ne1✝ e2✝ : Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\nm✝ : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\nty✝¹ : Option { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.TypeType\nfn_ih :\n  NormalizedOldExpr (Lambda.LExpr.op m✝ { name := \"old\", metadata := Visibility.unres } ty✝¹) →\n    (extractOldExprVars (Lambda.LExpr.op m✝ { name := \"old\", metadata := Visibility.unres } ty✝¹)).Subset\n      (Lambda.LExpr.LExpr.getVars (Lambda.LExpr.op m✝ { name := \"old\", metadata := Visibility.unres } ty✝¹))\nHfn : NormalizedOldExpr (Lambda.LExpr.op m✝ { name := \"old\", metadata := Visibility.unres } ty✝¹)\nv✝ :\n  Lambda.Identifier\n    { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.IDMeta\nty✝ : Option { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.TypeType\ne_ih :\n  NormalizedOldExpr (Lambda.LExpr.fvar () v✝ ty✝) →\n    (extractOldExprVars (Lambda.LExpr.fvar () v✝ ty✝)).Subset (Lambda.LExpr.LExpr.getVars (Lambda.LExpr.fvar () v✝ ty✝))\nHfalse :\n  ∀ (m : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata)\n    (v :\n      Lambda.Identifier\n        { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.IDMeta)\n    (ty :\n      Option { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.TypeType),\n    Lambda.LExpr.fvar () v✝ ty✝ = Lambda.LExpr.fvar m v ty → False\nHe : NormalizedOldExpr (Lambda.LExpr.fvar () v✝ ty✝)"
+    ],
+    "sorries": [
+      {
+        "kind": "transitive_dependency",
+        "axiom": "sorryAx",
+        "position": null,
+        "end_position": null
+      }
+    ],
+    "axioms": [
+      "Quot.sound",
+      "propext",
+      "sorryAx"
+    ],
+    "detail": null,
+    "raw_lean_output": "{\"caption\":\"\",\"data\":\"declaration uses 'sorry'\",\"endPos\":{\"column\":29,\"line\":171},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"hasSorry\",\"pos\":{\"column\":8,\"line\":171},\"severity\":\"warning\"}\n{\"caption\":\"\",\"data\":\"Application type mismatch: The argument\\n  rfl\\nhas type\\n  ?m.285 = ?m.285\\nof sort `Prop` but is expected to have type\\n  { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\\nof sort `Type` in the application\\n  Hfalse rfl\",\"endPos\":{\"column\":24,\"line\":2880},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"[anonymous]\",\"pos\":{\"column\":21,\"line\":2880},\"severity\":\"error\"}\n{\"caption\":\"\",\"data\":\"Application type mismatch: The argument\\n  fn_ih Hfn\\nhas type\\n  (extractOldExprVars fn).Subset (Lambda.LExpr.LExpr.getVars fn)\\nbut is expected to have type\\n  extractOldExprVars fn ⊆ Lambda.LExpr.LExpr.getVars fn ++ Lambda.LExpr.LExpr.getVars e\\nin the application\\n  And.intro (fn_ih Hfn)\",\"endPos\":{\"column\":24,\"line\":2884},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"[anonymous]\",\"pos\":{\"column\":15,\"line\":2884},\"severity\":\"error\"}\n{\"caption\":\"\",\"data\":\"Tactic `apply` failed: could not unify the conclusion of `trih`\\n  (extractOldExprVars trigger✝).Subset (Lambda.LExpr.LExpr.getVars trigger✝)\\nwith the goal\\n  extractOldExprVars trigger✝ ⊆ Lambda.LExpr.LExpr.getVars trigger✝ ++ Lambda.LExpr.LExpr.getVars e✝\\n\\nNote: The full type of `trih` is\\n  NormalizedOldExpr trigger✝ → (extractOldExprVars trigger✝).Subset (Lambda.LExpr.LExpr.getVars trigger✝)\\n\\ncase quant.left\\nm✝ : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\\nk✝ : Lambda.QuantifierKind\\nty✝ : Option { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.TypeType\\ntrigger✝ e✝ :\\n  Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\\ntrih : NormalizedOldExpr trigger✝ → (extractOldExprVars trigger✝).Subset (Lambda.LExpr.LExpr.getVars trigger✝)\\neih : NormalizedOldExpr e✝ → (extractOldExprVars e✝).Subset (Lambda.LExpr.LExpr.getVars e✝)\\na✝¹ : NormalizedOldExpr trigger✝\\na✝ : NormalizedOldExpr e✝\\n⊢ extractOldExprVars trigger✝ ⊆ Lambda.LExpr.LExpr.getVars trigger✝ ++ Lambda.LExpr.LExpr.getVars e✝\",\"endPos\":{\"column\":16,\"line\":2892},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"[anonymous]\",\"pos\":{\"column\":6,\"line\":2892},\"severity\":\"error\"}\n{\"caption\":\"\",\"data\":\"Tactic `apply` failed: could not unify the conclusion of `eih`\\n  (extractOldExprVars e✝).Subset (Lambda.LExpr.LExpr.getVars e✝)\\nwith the goal\\n  extractOldExprVars e✝ ⊆ Lambda.LExpr.LExpr.getVars trigger✝ ++ Lambda.LExpr.LExpr.getVars e✝\\n\\nNote: The full type of `eih` is\\n  NormalizedOldExpr e✝ → (extractOldExprVars e✝).Subset (Lambda.LExpr.LExpr.getVars e✝)\\n\\ncase quant.right\\nm✝ : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\\nk✝ : Lambda.QuantifierKind\\nty✝ : Option { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.TypeType\\ntrigger✝ e✝ :\\n  Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\\ntrih : NormalizedOldExpr trigger✝ → (extractOldExprVars trigger✝).Subset (Lambda.LExpr.LExpr.getVars trigger✝)\\neih : NormalizedOldExpr e✝ → (extractOldExprVars e✝).Subset (Lambda.LExpr.LExpr.getVars e✝)\\na✝¹ : NormalizedOldExpr trigger✝\\na✝ : NormalizedOldExpr e✝\\n⊢ extractOldExprVars e✝ ⊆ Lambda.LExpr.LExpr.getVars trigger✝ ++ Lambda.LExpr.LExpr.getVars e✝\",\"endPos\":{\"column\":15,\"line\":2893},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"[anonymous]\",\"pos\":{\"column\":6,\"line\":2893},\"severity\":\"error\"}\n{\"caption\":\"\",\"data\":\"Tactic `apply` failed: could not unify the conclusion of `cih`\\n  (extractOldExprVars c✝).Subset (Lambda.LExpr.LExpr.getVars c✝)\\nwith the goal\\n  extractOldExprVars c✝ ⊆\\n    Lambda.LExpr.LExpr.getVars c✝ ++ (Lambda.LExpr.LExpr.getVars t✝ ++ Lambda.LExpr.LExpr.getVars e✝)\\n\\nNote: The full type of `cih` is\\n  NormalizedOldExpr c✝ → (extractOldExprVars c✝).Subset (Lambda.LExpr.LExpr.getVars c✝)\\n\\ncase ite.left\\nm✝ : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\\nc✝ t✝ e✝ : Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\\ncih : NormalizedOldExpr c✝ → (extractOldExprVars c✝).Subset (Lambda.LExpr.LExpr.getVars c✝)\\ntih : NormalizedOldExpr t✝ → (extractOldExprVars t✝).Subset (Lambda.LExpr.LExpr.getVars t✝)\\neih : NormalizedOldExpr e✝ → (extractOldExprVars e✝).Subset (Lambda.LExpr.LExpr.getVars e✝)\\na✝² : NormalizedOldExpr c✝\\na✝¹ : NormalizedOldExpr t✝\\na✝ : NormalizedOldExpr e✝\\n⊢ extractOldExprVars c✝ ⊆\\n    Lambda.LExpr.LExpr.getVars c✝ ++ (Lambda.LExpr.LExpr.getVars t✝ ++ Lambda.LExpr.LExpr.getVars e✝)\",\"endPos\":{\"column\":15,\"line\":2898},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"[anonymous]\",\"pos\":{\"column\":6,\"line\":2898},\"severity\":\"error\"}\n{\"caption\":\"\",\"data\":\"Tactic `apply` failed: could not unify the conclusion of `tih`\\n  (extractOldExprVars t✝).Subset (Lambda.LExpr.LExpr.getVars t✝)\\nwith the goal\\n  extractOldExprVars t✝ ⊆\\n    Lambda.LExpr.LExpr.getVars c✝ ++ (Lambda.LExpr.LExpr.getVars t✝ ++ Lambda.LExpr.LExpr.getVars e✝)\\n\\nNote: The full type of `tih` is\\n  NormalizedOldExpr t✝ → (extractOldExprVars t✝).Subset (Lambda.LExpr.LExpr.getVars t✝)\\n\\ncase ite.right.left\\nm✝ : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\\nc✝ t✝ e✝ : Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\\ncih : NormalizedOldExpr c✝ → (extractOldExprVars c✝).Subset (Lambda.LExpr.LExpr.getVars c✝)\\ntih : NormalizedOldExpr t✝ → (extractOldExprVars t✝).Subset (Lambda.LExpr.LExpr.getVars t✝)\\neih : NormalizedOldExpr e✝ → (extractOldExprVars e✝).Subset (Lambda.LExpr.LExpr.getVars e✝)\\na✝² : NormalizedOldExpr c✝\\na✝¹ : NormalizedOldExpr t✝\\na✝ : NormalizedOldExpr e✝\\n⊢ extractOldExprVars t✝ ⊆\\n    Lambda.LExpr.LExpr.getVars c✝ ++ (Lambda.LExpr.LExpr.getVars t✝ ++ Lambda.LExpr.LExpr.getVars e✝)\",\"endPos\":{\"column\":17,\"line\":2901},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"[anonymous]\",\"pos\":{\"column\":8,\"line\":2901},\"severity\":\"error\"}\n{\"caption\":\"\",\"data\":\"Tactic `apply` failed: could not unify the conclusion of `eih`\\n  (extractOldExprVars e✝).Subset (Lambda.LExpr.LExpr.getVars e✝)\\nwith the goal\\n  extractOldExprVars e✝ ⊆\\n    Lambda.LExpr.LExpr.getVars c✝ ++ (Lambda.LExpr.LExpr.getVars t✝ ++ Lambda.LExpr.LExpr.getVars e✝)\\n\\nNote: The full type of `eih` is\\n  NormalizedOldExpr e✝ → (extractOldExprVars e✝).Subset (Lambda.LExpr.LExpr.getVars e✝)\\n\\ncase ite.right.right\\nm✝ : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\\nc✝ t✝ e✝ : Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\\ncih : NormalizedOldExpr c✝ → (extractOldExprVars c✝).Subset (Lambda.LExpr.LExpr.getVars c✝)\\ntih : NormalizedOldExpr t✝ → (extractOldExprVars t✝).Subset (Lambda.LExpr.LExpr.getVars t✝)\\neih : NormalizedOldExpr e✝ → (extractOldExprVars e✝).Subset (Lambda.LExpr.LExpr.getVars e✝)\\na✝² : NormalizedOldExpr c✝\\na✝¹ : NormalizedOldExpr t✝\\na✝ : NormalizedOldExpr e✝\\n⊢ extractOldExprVars e✝ ⊆\\n    Lambda.LExpr.LExpr.getVars c✝ ++ (Lambda.LExpr.LExpr.getVars t✝ ++ Lambda.LExpr.LExpr.getVars e✝)\",\"endPos\":{\"column\":17,\"line\":2902},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"[anonymous]\",\"pos\":{\"column\":8,\"line\":2902},\"severity\":\"error\"}\n{\"caption\":\"\",\"data\":\"Tactic `apply` failed: could not unify the conclusion of `ih1`\\n  (extractOldExprVars e1✝).Subset (Lambda.LExpr.LExpr.getVars e1✝)\\nwith the goal\\n  extractOldExprVars e1✝ ⊆ Lambda.LExpr.LExpr.getVars e1✝ ++ Lambda.LExpr.LExpr.getVars e2✝\\n\\nNote: The full type of `ih1` is\\n  NormalizedOldExpr e1✝ → (extractOldExprVars e1✝).Subset (Lambda.LExpr.LExpr.getVars e1✝)\\n\\ncase eq.left\\nm✝ : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\\ne1✝ e2✝ : Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\\nih1 : NormalizedOldExpr e1✝ → (extractOldExprVars e1✝).Subset (Lambda.LExpr.LExpr.getVars e1✝)\\nih2 : NormalizedOldExpr e2✝ → (extractOldExprVars e2✝).Subset (Lambda.LExpr.LExpr.getVars e2✝)\\na✝¹ : NormalizedOldExpr e1✝\\na✝ : NormalizedOldExpr e2✝\\n⊢ extractOldExprVars e1✝ ⊆ Lambda.LExpr.LExpr.getVars e1✝ ++ Lambda.LExpr.LExpr.getVars e2✝\",\"endPos\":{\"column\":15,\"line\":2907},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"[anonymous]\",\"pos\":{\"column\":6,\"line\":2907},\"severity\":\"error\"}\n{\"caption\":\"\",\"data\":\"Tactic `apply` failed: could not unify the conclusion of `ih2`\\n  (extractOldExprVars e2✝).Subset (Lambda.LExpr.LExpr.getVars e2✝)\\nwith the goal\\n  extractOldExprVars e2✝ ⊆ Lambda.LExpr.LExpr.getVars e1✝ ++ Lambda.LExpr.LExpr.getVars e2✝\\n\\nNote: The full type of `ih2` is\\n  NormalizedOldExpr e2✝ → (extractOldExprVars e2✝).Subset (Lambda.LExpr.LExpr.getVars e2✝)\\n\\ncase eq.right\\nm✝ : { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }.base.Metadata\\ne1✝ e2✝ : Lambda.LExpr { base := { Metadata := ExpressionMetadata, IDMeta := Visibility }, TypeType := Lambda.LMonoTy }\\nih1 : NormalizedOldExpr e1✝ → (extractOldExprVars e1✝).Subset (Lambda.LExpr.LExpr.getVars e1✝)\\nih2 : NormalizedOldExpr e2✝ → (extractOldExprVars e2✝).Subset (Lambda.LExpr.LExpr.getVars e2✝)\\na✝¹ : NormalizedOldExpr e1✝\\na✝ : NormalizedOldExpr e2✝\\n⊢ extractOldExprVars e2✝ ⊆ Lambda.LExpr.LExpr.getVars e1✝ ++ Lambda.LExpr.LExpr.getVars e2✝\",\"endPos\":{\"column\":15,\"line\":2908},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"[anonymous]\",\"pos\":{\"column\":6,\"line\":2908},\"severity\":\"error\"}\n{\"caption\":\"\",\"data\":\"declaration uses 'sorry'\",\"endPos\":{\"column\":32,\"line\":3252},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"hasSorry\",\"pos\":{\"column\":8,\"line\":3252},\"severity\":\"warning\"}\n{\"caption\":\"\",\"data\":\"CallElimCorrect.extractedOldExprInVars {post : Core.Expression.Expr} :\\n  Core.OldExpressions.NormalizedOldExpr post →\\n    (Core.OldExpressions.extractOldExprVars post).Subset (Imperative.HasVarsPure.getVars post)\",\"endPos\":{\"column\":6,\"line\":4672},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"[anonymous]\",\"pos\":{\"column\":0,\"line\":4672},\"severity\":\"information\"}\n{\"caption\":\"\",\"data\":\"'CallElimCorrect.extractedOldExprInVars' depends on axioms: [propext, sorryAx, Quot.sound]\",\"endPos\":{\"column\":6,\"line\":4673},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"[anonymous]\",\"pos\":{\"column\":0,\"line\":4673},\"severity\":\"information\"}\n"
+  },
+  "diagnosis": "The proof repeatedly composes each induction hypothesis with trivial membership functions for list append. Using `List.append_subset.mpr` expresses those structural subset goals directly, reducing both proof syntax and elaboration work while preserving the special normalized-application contradiction case.",
+  "duplicate_cache": false,
+  "available_at": 1792769206.080405,
+  "cumulative_calls": 3,
+  "cumulative_tokens": 191890,
+  "api_spend_usd": null
+}

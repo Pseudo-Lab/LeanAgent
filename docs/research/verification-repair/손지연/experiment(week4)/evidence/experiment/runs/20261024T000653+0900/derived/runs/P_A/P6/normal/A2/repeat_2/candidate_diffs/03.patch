@@ -1,0 +1,25 @@
+--- candidate_02.proof.lean
++++ candidate_03.proof.lean
+@@ -32,11 +32,12 @@
+             simp [mul_sub, sub_mul, ← ofCrAnListF_append]
+             rw [timeOrderF_ofCrAnListF, timeOrderF_ofCrAnListF]
+           simp only [map_smul, sub_right_inj]
++          exact smul_comm _ _ _
+         _ = crAnTimeOrderSign (φs' ++ φ :: ψ :: φs) •
+             (ι (ofCrAnListF (crAnTimeOrderList (φs' ++ φ :: ψ :: φs))) -
+               𝓢(𝓕.crAnStatistics φ, 𝓕.crAnStatistics ψ) •
+               ι (ofCrAnListF (crAnTimeOrderList (φs' ++ ψ :: φ :: φs)))) := by
+-          rw [crAnTimeOrderSign_swap_eq_time hφψ hψφ]
++          rw [crAnTimeOrderSign_swap_eq_time hφψ hψφ, smul_sub]
+         _ = crAnTimeOrderSign (φs' ++ [φ, ψ] ++ φs) •
+             (ι (ofCrAnListF l1) * ι (ofCrAnListF [φ, ψ]) * ι (ofCrAnListF l2) -
+               𝓢(𝓕.crAnStatistics φ, 𝓕.crAnStatistics ψ) •
+@@ -50,7 +51,7 @@
+           rw [crAnTimeOrderList,
+             show φs' ++ ψ :: φ :: φs = φs' ++ [ψ, φ] ++ φs by simp, h2]
+           simp only [decide_not, Bool.decide_and, ofCrAnListF_append, map_mul,
+-            sorted, l1, l2, List.append_assoc, mul_assoc]
++            sorted, l1, l2, List.append_assoc, mul_assoc, Algebra.smul_mul_assoc]
+         _ = crAnTimeOrderSign (φs' ++ [φ, ψ] ++ φs) •
+             (ι (ofCrAnListF l1) *
+               (ι (ofCrAnListF [φ, ψ]) -

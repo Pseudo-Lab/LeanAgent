@@ -1,0 +1,1930 @@
+{
+  "records": [
+    {
+      "depth": 4,
+      "end": 20751,
+      "goals_after": [
+        "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nhEs : ∀ (j : Fin d), ContDiff ℝ 2 fun y => (electricField 𝓕.c A t y).ofLp j\nhEd : ∀ (j k : Fin d), Differentiable ℝ (Space.deriv k fun y => (electricField 𝓕.c A t y).ofLp j)\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+      ],
+      "goals_before": [
+        "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+      ],
+      "kind": "tactic",
+      "start": 14502,
+      "raw": {
+        "depth": 4,
+        "end": 27882,
+        "goals_after": [
+          "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nhEs : ∀ (j : Fin d), ContDiff ℝ 2 fun y => (electricField 𝓕.c A t y).ofLp j\nhEd : ∀ (j k : Fin d), Differentiable ℝ (Space.deriv k fun y => (electricField 𝓕.c A t y).ofLp j)\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+        ],
+        "goals_before": [
+          "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+        ],
+        "kind": "tactic",
+        "start": 21633
+      },
+      "start_offset": 13857,
+      "end_offset": 19473,
+      "position": {
+        "line": 384,
+        "column": 60
+      },
+      "end_position": {
+        "line": 516,
+        "column": 16
+      },
+      "source_text": "by\n  have hA2 : ContDiff ℝ 2 A := hA.of_le (right_eq_inf.mp rfl)\n  have hEs : ∀ j, ContDiff ℝ 2 (fun y => A.electricField 𝓕.c t y j) :=\n    fun j => electricField_apply_contDiff_space (i := j) (hA.of_le (by simp)) t\n  have hEd : ∀ j k, Differentiable ℝ (∂[k] (fun y => A.electricField 𝓕.c t y j)) :=\n    fun j k => Space.deriv_differentiable (hEs j) k\n  have hBt : ∀ j, Differentiable ℝ\n      (fun s => ∂[j] (fun y => A.magneticFieldMatrix 𝓕.c s y (j, i)) x) :=\n    fun j => Space.space_deriv_differentiable_time (i := j)\n      (magneticFieldMatrix_contDiff _ hA2 (j, i)) x\n  have hJt : Differentiable ℝ (fun s => J.currentDensity 𝓕.c s x i) :=\n    LorentzCurrentDensity.currentDensity_apply_differentiable_time\n      (hJ.differentiable (by simp)) x i\n  calc _\n    _ = ∂ₜ (fun t =>\n      1 / (𝓕.μ₀ * 𝓕.ε₀) * ∑ j, Space.deriv j\n        (fun x => magneticFieldMatrix 𝓕.c A t x (j, i)) x -\n      1 / 𝓕.ε₀ * LorentzCurrentDensity.currentDensity 𝓕.c J t x i) t := by\n        conv_lhs =>\n          enter [1]\n          change fun t => ∂ₜ (A.electricField 𝓕.c · x i) t\n          enter [t]\n          rw [Time.deriv_euclid (electricField_differentiable_time hA2 _),\n            time_deriv_electricField_of_isExtrema hA J hJ h]\n    _ = 1 / (𝓕.μ₀ * 𝓕.ε₀) * ∂ₜ\n        (fun t => ∑ j, ∂[j] (A.magneticFieldMatrix 𝓕.c t · (j, i)) x) t -\n      1 / 𝓕.ε₀ * ∂ₜ (J.currentDensity 𝓕.c · x i) t := by\n      rw [Time.deriv_eq]\n      rw [fderiv_fun_sub]\n      simp only [one_div, mul_inv_rev, FunLike.coe_sub, Pi.sub_apply]\n      rw [fderiv_const_mul (Differentiable.fun_sum fun j _ => hBt j).differentiableAt]\n      rw [fderiv_const_mul hJt.differentiableAt]\n      simp [Time.deriv_eq]\n      · exact ((Differentiable.fun_sum fun j _ => hBt j).const_mul _).differentiableAt\n      · exact hJt.differentiableAt.const_mul _\n    _ = 1 / (𝓕.μ₀ * 𝓕.ε₀) *\n        (∑ j, ∂ₜ (fun t => ∂[j] (A.magneticFieldMatrix 𝓕.c t · (j, i)) x) t) -\n      1 / 𝓕.ε₀ * ∂ₜ (J.currentDensity 𝓕.c · x i) t := by\n      congr\n      rw [Time.deriv_eq]\n      rw [fderiv_fun_sum fun i _ => (hBt i).differentiableAt]\n      simp only [FunLike.coe_sum, Finset.sum_apply]\n      rfl\n    _ = 1 / (𝓕.μ₀ * 𝓕.ε₀) *\n        (∑ j, ∂[j] (fun x => ∂ₜ (A.magneticFieldMatrix 𝓕.c · x (j, i)) t) x) -\n      1 / 𝓕.ε₀ * ∂ₜ (J.currentDensity 𝓕.c · x i) t := by\n      congr\n      simp only [Finset.sum_apply]\n      congr\n      funext k\n      rw [Space.time_deriv_comm_space_deriv]\n      exact magneticFieldMatrix_contDiff _ hA2 (j, i)\n    _ = 1 / (𝓕.μ₀ * 𝓕.ε₀) *\n        (∑ j, ∂[j] (fun x => ∂[j] (A.electricField 𝓕.c t · i) x -\n          ∂[i] (A.electricField 𝓕.c t · j) x) x) -\n      1 / 𝓕.ε₀ * ∂ₜ (J.currentDensity 𝓕.c · x i) t := by\n      congr\n      simp only [Finset.sum_apply]\n      congr\n      funext k\n      congr\n      funext x\n      rw [time_deriv_magneticFieldMatrix _ hA2]\n    _ = 1 / (𝓕.μ₀ * 𝓕.ε₀) *\n        ∑ j, (∂[j] (fun x => ∂[j] (A.electricField 𝓕.c t · i) x) x -\n          ∂[j] (fun x => ∂[i] (A.electricField 𝓕.c t · j) x) x) -\n      1 / 𝓕.ε₀ * ∂ₜ (J.currentDensity 𝓕.c · x i) t := by\n      congr\n      simp only [Finset.sum_apply]\n      congr\n      funext j\n      rw [Space.deriv_eq_fderiv_basis]\n      rw [fderiv_fun_sub (hEd _ _).differentiableAt (hEd _ _).differentiableAt]\n      simp [← Space.deriv_eq_fderiv_basis]\n    _ = 1 / (𝓕.μ₀ * 𝓕.ε₀) *\n        ∑ j, ∂[j] (fun x => ∂[j] (A.electricField 𝓕.c t · i) x) x -\n      1 / (𝓕.μ₀ * 𝓕.ε₀) *\n        ∑ j, ∂[j] (fun x => ∂[i] (A.electricField 𝓕.c t · j) x) x -\n      1 / 𝓕.ε₀ * ∂ₜ (J.currentDensity 𝓕.c · x i) t := by\n      simp [mul_sub]\n    _ = 1 / (𝓕.μ₀ * 𝓕.ε₀) *\n        ∑ j, ∂[j] (fun x => ∂[j] (A.electricField 𝓕.c t · i) x) x -\n      1 / (𝓕.μ₀ * 𝓕.ε₀) *\n        ∑ j, ∂[i] (fun x => ∂[j] (A.electricField 𝓕.c t · j) x) x -\n      1 / 𝓕.ε₀ * ∂ₜ (J.currentDensity 𝓕.c · x i) t := by\n      congr\n      funext j\n      rw [Space.deriv_commute _ (hEs _), Space.deriv_eq_fderiv_basis]\n    _ = 1 / (𝓕.μ₀ * 𝓕.ε₀) *\n        ∑ j, ∂[j] (fun x => ∂[j] (A.electricField 𝓕.c t · i) x) x -\n      1 / (𝓕.μ₀ * 𝓕.ε₀) *\n        ∂[i] (fun x => ∑ j, ∂[j] (A.electricField 𝓕.c t · j) x) x -\n      1 / 𝓕.ε₀ * ∂ₜ (J.currentDensity 𝓕.c · x i) t := by\n      congr\n      rw [Space.deriv_eq_fderiv_basis]\n      rw [fderiv_fun_sum]\n      simp [← Space.deriv_eq_fderiv_basis]\n      intro j _\n      exact (hEd j j).differentiableAt\n    _ = 1 / (𝓕.μ₀ * 𝓕.ε₀) *\n        ∑ j, ∂[j] (fun x => ∂[j] (A.electricField 𝓕.c t · i) x) x -\n      1 / (𝓕.μ₀ * 𝓕.ε₀) *\n        ∂[i] (fun x => (∇ ⬝ (A.electricField 𝓕.c t)) x) x -\n      1 / 𝓕.ε₀ * ∂ₜ (J.currentDensity 𝓕.c · x i) t := by\n      rfl\n    _ = 1 / (𝓕.μ₀ * 𝓕.ε₀) *\n        ∑ j, (∂[j] (∂[j] (A.electricField 𝓕.c t · i)) x) -\n      1 / (𝓕.μ₀ * 𝓕.ε₀ ^ 2) * ∂[i] (J.chargeDensity 𝓕.c t ·) x -\n      1 / 𝓕.ε₀ * ∂ₜ (J.currentDensity 𝓕.c · x i) t := by\n      congr 2\n      rw [isExtrema_iff_gauss_ampere_magneticFieldMatrix] at h\n      conv_lhs =>\n        enter [2, 2, x]\n        rw [(h t x).1]\n      trans 1 / (𝓕.μ₀ * 𝓕.ε₀) * Space.deriv i\n          (fun x => (1 / 𝓕.ε₀) * J.chargeDensity 𝓕.c t x) x\n      · congr\n        funext x\n        ring\n      · rw [Space.deriv_eq_fderiv_basis]\n        rw [fderiv_const_mul]\n        simp [← Space.deriv_eq_fderiv_basis]\n        field_simp\n        apply Differentiable.differentiableAt\n        apply LorentzCurrentDensity.chargeDensity_differentiable_space\n        exact hJ.differentiable (by simp)\n      · exact hA\n      · exact hJ\n    _ = 𝓕.c ^ 2 * ∑ j, (∂[j] (∂[j] (A.electricField 𝓕.c t · i)) x) -\n        𝓕.c ^ 2 / 𝓕.ε₀ * ∂[i] (J.chargeDensity 𝓕.c t ·) x -\n        𝓕.c ^ 2 * 𝓕.μ₀ * ∂ₜ (J.currentDensity 𝓕.c · x i) t := by\n      simp [FreeSpace.c_sq]\n      field_simp"
+    },
+    {
+      "depth": 5,
+      "end": 14504,
+      "goals_after": [
+        "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nhEs : ∀ (j : Fin d), ContDiff ℝ 2 fun y => (electricField 𝓕.c A t y).ofLp j\nhEd : ∀ (j k : Fin d), Differentiable ℝ (Space.deriv k fun y => (electricField 𝓕.c A t y).ofLp j)\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+      ],
+      "goals_before": [
+        "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+      ],
+      "kind": "tactic",
+      "start": 14502,
+      "raw": {
+        "depth": 5,
+        "end": 21635,
+        "goals_after": [
+          "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nhEs : ∀ (j : Fin d), ContDiff ℝ 2 fun y => (electricField 𝓕.c A t y).ofLp j\nhEd : ∀ (j k : Fin d), Differentiable ℝ (Space.deriv k fun y => (electricField 𝓕.c A t y).ofLp j)\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+        ],
+        "goals_before": [
+          "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+        ],
+        "kind": "tactic",
+        "start": 21633
+      },
+      "start_offset": 13857,
+      "end_offset": 13859,
+      "position": {
+        "line": 384,
+        "column": 60
+      },
+      "end_position": {
+        "line": 384,
+        "column": 62
+      },
+      "source_text": "by"
+    },
+    {
+      "depth": 6,
+      "end": 20751,
+      "goals_after": [
+        "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nhEs : ∀ (j : Fin d), ContDiff ℝ 2 fun y => (electricField 𝓕.c A t y).ofLp j\nhEd : ∀ (j k : Fin d), Differentiable ℝ (Space.deriv k fun y => (electricField 𝓕.c A t y).ofLp j)\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+      ],
+      "goals_before": [
+        "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+      ],
+      "kind": "tactic",
+      "start": 14507,
+      "raw": {
+        "depth": 6,
+        "end": 27882,
+        "goals_after": [
+          "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nhEs : ∀ (j : Fin d), ContDiff ℝ 2 fun y => (electricField 𝓕.c A t y).ofLp j\nhEd : ∀ (j k : Fin d), Differentiable ℝ (Space.deriv k fun y => (electricField 𝓕.c A t y).ofLp j)\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+        ],
+        "goals_before": [
+          "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+        ],
+        "kind": "tactic",
+        "start": 21638
+      },
+      "start_offset": 13862,
+      "end_offset": 19473,
+      "position": {
+        "line": 385,
+        "column": 2
+      },
+      "end_position": {
+        "line": 516,
+        "column": 16
+      },
+      "source_text": "have hA2 : ContDiff ℝ 2 A := hA.of_le (right_eq_inf.mp rfl)\n  have hEs : ∀ j, ContDiff ℝ 2 (fun y => A.electricField 𝓕.c t y j) :=\n    fun j => electricField_apply_contDiff_space (i := j) (hA.of_le (by simp)) t\n  have hEd : ∀ j k, Differentiable ℝ (∂[k] (fun y => A.electricField 𝓕.c t y j)) :=\n    fun j k => Space.deriv_differentiable (hEs j) k\n  have hBt : ∀ j, Differentiable ℝ\n      (fun s => ∂[j] (fun y => A.magneticFieldMatrix 𝓕.c s y (j, i)) x) :=\n    fun j => Space.space_deriv_differentiable_time (i := j)\n      (magneticFieldMatrix_contDiff _ hA2 (j, i)) x\n  have hJt : Differentiable ℝ (fun s => J.currentDensity 𝓕.c s x i) :=\n    LorentzCurrentDensity.currentDensity_apply_differentiable_time\n      (hJ.differentiable (by simp)) x i\n  calc _\n    _ = ∂ₜ (fun t =>\n      1 / (𝓕.μ₀ * 𝓕.ε₀) * ∑ j, Space.deriv j\n        (fun x => magneticFieldMatrix 𝓕.c A t x (j, i)) x -\n      1 / 𝓕.ε₀ * LorentzCurrentDensity.currentDensity 𝓕.c J t x i) t := by\n        conv_lhs =>\n          enter [1]\n          change fun t => ∂ₜ (A.electricField 𝓕.c · x i) t\n          enter [t]\n          rw [Time.deriv_euclid (electricField_differentiable_time hA2 _),\n            time_deriv_electricField_of_isExtrema hA J hJ h]\n    _ = 1 / (𝓕.μ₀ * 𝓕.ε₀) * ∂ₜ\n        (fun t => ∑ j, ∂[j] (A.magneticFieldMatrix 𝓕.c t · (j, i)) x) t -\n      1 / 𝓕.ε₀ * ∂ₜ (J.currentDensity 𝓕.c · x i) t := by\n      rw [Time.deriv_eq]\n      rw [fderiv_fun_sub]\n      simp only [one_div, mul_inv_rev, FunLike.coe_sub, Pi.sub_apply]\n      rw [fderiv_const_mul (Differentiable.fun_sum fun j _ => hBt j).differentiableAt]\n      rw [fderiv_const_mul hJt.differentiableAt]\n      simp [Time.deriv_eq]\n      · exact ((Differentiable.fun_sum fun j _ => hBt j).const_mul _).differentiableAt\n      · exact hJt.differentiableAt.const_mul _\n    _ = 1 / (𝓕.μ₀ * 𝓕.ε₀) *\n        (∑ j, ∂ₜ (fun t => ∂[j] (A.magneticFieldMatrix 𝓕.c t · (j, i)) x) t) -\n      1 / 𝓕.ε₀ * ∂ₜ (J.currentDensity 𝓕.c · x i) t := by\n      congr\n      rw [Time.deriv_eq]\n      rw [fderiv_fun_sum fun i _ => (hBt i).differentiableAt]\n      simp only [FunLike.coe_sum, Finset.sum_apply]\n      rfl\n    _ = 1 / (𝓕.μ₀ * 𝓕.ε₀) *\n        (∑ j, ∂[j] (fun x => ∂ₜ (A.magneticFieldMatrix 𝓕.c · x (j, i)) t) x) -\n      1 / 𝓕.ε₀ * ∂ₜ (J.currentDensity 𝓕.c · x i) t := by\n      congr\n      simp only [Finset.sum_apply]\n      congr\n      funext k\n      rw [Space.time_deriv_comm_space_deriv]\n      exact magneticFieldMatrix_contDiff _ hA2 (j, i)\n    _ = 1 / (𝓕.μ₀ * 𝓕.ε₀) *\n        (∑ j, ∂[j] (fun x => ∂[j] (A.electricField 𝓕.c t · i) x -\n          ∂[i] (A.electricField 𝓕.c t · j) x) x) -\n      1 / 𝓕.ε₀ * ∂ₜ (J.currentDensity 𝓕.c · x i) t := by\n      congr\n      simp only [Finset.sum_apply]\n      congr\n      funext k\n      congr\n      funext x\n      rw [time_deriv_magneticFieldMatrix _ hA2]\n    _ = 1 / (𝓕.μ₀ * 𝓕.ε₀) *\n        ∑ j, (∂[j] (fun x => ∂[j] (A.electricField 𝓕.c t · i) x) x -\n          ∂[j] (fun x => ∂[i] (A.electricField 𝓕.c t · j) x) x) -\n      1 / 𝓕.ε₀ * ∂ₜ (J.currentDensity 𝓕.c · x i) t := by\n      congr\n      simp only [Finset.sum_apply]\n      congr\n      funext j\n      rw [Space.deriv_eq_fderiv_basis]\n      rw [fderiv_fun_sub (hEd _ _).differentiableAt (hEd _ _).differentiableAt]\n      simp [← Space.deriv_eq_fderiv_basis]\n    _ = 1 / (𝓕.μ₀ * 𝓕.ε₀) *\n        ∑ j, ∂[j] (fun x => ∂[j] (A.electricField 𝓕.c t · i) x) x -\n      1 / (𝓕.μ₀ * 𝓕.ε₀) *\n        ∑ j, ∂[j] (fun x => ∂[i] (A.electricField 𝓕.c t · j) x) x -\n      1 / 𝓕.ε₀ * ∂ₜ (J.currentDensity 𝓕.c · x i) t := by\n      simp [mul_sub]\n    _ = 1 / (𝓕.μ₀ * 𝓕.ε₀) *\n        ∑ j, ∂[j] (fun x => ∂[j] (A.electricField 𝓕.c t · i) x) x -\n      1 / (𝓕.μ₀ * 𝓕.ε₀) *\n        ∑ j, ∂[i] (fun x => ∂[j] (A.electricField 𝓕.c t · j) x) x -\n      1 / 𝓕.ε₀ * ∂ₜ (J.currentDensity 𝓕.c · x i) t := by\n      congr\n      funext j\n      rw [Space.deriv_commute _ (hEs _), Space.deriv_eq_fderiv_basis]\n    _ = 1 / (𝓕.μ₀ * 𝓕.ε₀) *\n        ∑ j, ∂[j] (fun x => ∂[j] (A.electricField 𝓕.c t · i) x) x -\n      1 / (𝓕.μ₀ * 𝓕.ε₀) *\n        ∂[i] (fun x => ∑ j, ∂[j] (A.electricField 𝓕.c t · j) x) x -\n      1 / 𝓕.ε₀ * ∂ₜ (J.currentDensity 𝓕.c · x i) t := by\n      congr\n      rw [Space.deriv_eq_fderiv_basis]\n      rw [fderiv_fun_sum]\n      simp [← Space.deriv_eq_fderiv_basis]\n      intro j _\n      exact (hEd j j).differentiableAt\n    _ = 1 / (𝓕.μ₀ * 𝓕.ε₀) *\n        ∑ j, ∂[j] (fun x => ∂[j] (A.electricField 𝓕.c t · i) x) x -\n      1 / (𝓕.μ₀ * 𝓕.ε₀) *\n        ∂[i] (fun x => (∇ ⬝ (A.electricField 𝓕.c t)) x) x -\n      1 / 𝓕.ε₀ * ∂ₜ (J.currentDensity 𝓕.c · x i) t := by\n      rfl\n    _ = 1 / (𝓕.μ₀ * 𝓕.ε₀) *\n        ∑ j, (∂[j] (∂[j] (A.electricField 𝓕.c t · i)) x) -\n      1 / (𝓕.μ₀ * 𝓕.ε₀ ^ 2) * ∂[i] (J.chargeDensity 𝓕.c t ·) x -\n      1 / 𝓕.ε₀ * ∂ₜ (J.currentDensity 𝓕.c · x i) t := by\n      congr 2\n      rw [isExtrema_iff_gauss_ampere_magneticFieldMatrix] at h\n      conv_lhs =>\n        enter [2, 2, x]\n        rw [(h t x).1]\n      trans 1 / (𝓕.μ₀ * 𝓕.ε₀) * Space.deriv i\n          (fun x => (1 / 𝓕.ε₀) * J.chargeDensity 𝓕.c t x) x\n      · congr\n        funext x\n        ring\n      · rw [Space.deriv_eq_fderiv_basis]\n        rw [fderiv_const_mul]\n        simp [← Space.deriv_eq_fderiv_basis]\n        field_simp\n        apply Differentiable.differentiableAt\n        apply LorentzCurrentDensity.chargeDensity_differentiable_space\n        exact hJ.differentiable (by simp)\n      · exact hA\n      · exact hJ\n    _ = 𝓕.c ^ 2 * ∑ j, (∂[j] (∂[j] (A.electricField 𝓕.c t · i)) x) -\n        𝓕.c ^ 2 / 𝓕.ε₀ * ∂[i] (J.chargeDensity 𝓕.c t ·) x -\n        𝓕.c ^ 2 * 𝓕.μ₀ * ∂ₜ (J.currentDensity 𝓕.c · x i) t := by\n      simp [FreeSpace.c_sq]\n      field_simp"
+    },
+    {
+      "depth": 7,
+      "end": 20751,
+      "goals_after": [
+        "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nhEs : ∀ (j : Fin d), ContDiff ℝ 2 fun y => (electricField 𝓕.c A t y).ofLp j\nhEd : ∀ (j k : Fin d), Differentiable ℝ (Space.deriv k fun y => (electricField 𝓕.c A t y).ofLp j)\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+      ],
+      "goals_before": [
+        "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+      ],
+      "kind": "tactic",
+      "start": 14507,
+      "raw": {
+        "depth": 7,
+        "end": 27882,
+        "goals_after": [
+          "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nhEs : ∀ (j : Fin d), ContDiff ℝ 2 fun y => (electricField 𝓕.c A t y).ofLp j\nhEd : ∀ (j k : Fin d), Differentiable ℝ (Space.deriv k fun y => (electricField 𝓕.c A t y).ofLp j)\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+        ],
+        "goals_before": [
+          "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+        ],
+        "kind": "tactic",
+        "start": 21638
+      },
+      "start_offset": 13862,
+      "end_offset": 19473,
+      "position": {
+        "line": 385,
+        "column": 2
+      },
+      "end_position": {
+        "line": 516,
+        "column": 16
+      },
+      "source_text": "have hA2 : ContDiff ℝ 2 A := hA.of_le (right_eq_inf.mp rfl)\n  have hEs : ∀ j, ContDiff ℝ 2 (fun y => A.electricField 𝓕.c t y j) :=\n    fun j => electricField_apply_contDiff_space (i := j) (hA.of_le (by simp)) t\n  have hEd : ∀ j k, Differentiable ℝ (∂[k] (fun y => A.electricField 𝓕.c t y j)) :=\n    fun j k => Space.deriv_differentiable (hEs j) k\n  have hBt : ∀ j, Differentiable ℝ\n      (fun s => ∂[j] (fun y => A.magneticFieldMatrix 𝓕.c s y (j, i)) x) :=\n    fun j => Space.space_deriv_differentiable_time (i := j)\n      (magneticFieldMatrix_contDiff _ hA2 (j, i)) x\n  have hJt : Differentiable ℝ (fun s => J.currentDensity 𝓕.c s x i) :=\n    LorentzCurrentDensity.currentDensity_apply_differentiable_time\n      (hJ.differentiable (by simp)) x i\n  calc _\n    _ = ∂ₜ (fun t =>\n      1 / (𝓕.μ₀ * 𝓕.ε₀) * ∑ j, Space.deriv j\n        (fun x => magneticFieldMatrix 𝓕.c A t x (j, i)) x -\n      1 / 𝓕.ε₀ * LorentzCurrentDensity.currentDensity 𝓕.c J t x i) t := by\n        conv_lhs =>\n          enter [1]\n          change fun t => ∂ₜ (A.electricField 𝓕.c · x i) t\n          enter [t]\n          rw [Time.deriv_euclid (electricField_differentiable_time hA2 _),\n            time_deriv_electricField_of_isExtrema hA J hJ h]\n    _ = 1 / (𝓕.μ₀ * 𝓕.ε₀) * ∂ₜ\n        (fun t => ∑ j, ∂[j] (A.magneticFieldMatrix 𝓕.c t · (j, i)) x) t -\n      1 / 𝓕.ε₀ * ∂ₜ (J.currentDensity 𝓕.c · x i) t := by\n      rw [Time.deriv_eq]\n      rw [fderiv_fun_sub]\n      simp only [one_div, mul_inv_rev, FunLike.coe_sub, Pi.sub_apply]\n      rw [fderiv_const_mul (Differentiable.fun_sum fun j _ => hBt j).differentiableAt]\n      rw [fderiv_const_mul hJt.differentiableAt]\n      simp [Time.deriv_eq]\n      · exact ((Differentiable.fun_sum fun j _ => hBt j).const_mul _).differentiableAt\n      · exact hJt.differentiableAt.const_mul _\n    _ = 1 / (𝓕.μ₀ * 𝓕.ε₀) *\n        (∑ j, ∂ₜ (fun t => ∂[j] (A.magneticFieldMatrix 𝓕.c t · (j, i)) x) t) -\n      1 / 𝓕.ε₀ * ∂ₜ (J.currentDensity 𝓕.c · x i) t := by\n      congr\n      rw [Time.deriv_eq]\n      rw [fderiv_fun_sum fun i _ => (hBt i).differentiableAt]\n      simp only [FunLike.coe_sum, Finset.sum_apply]\n      rfl\n    _ = 1 / (𝓕.μ₀ * 𝓕.ε₀) *\n        (∑ j, ∂[j] (fun x => ∂ₜ (A.magneticFieldMatrix 𝓕.c · x (j, i)) t) x) -\n      1 / 𝓕.ε₀ * ∂ₜ (J.currentDensity 𝓕.c · x i) t := by\n      congr\n      simp only [Finset.sum_apply]\n      congr\n      funext k\n      rw [Space.time_deriv_comm_space_deriv]\n      exact magneticFieldMatrix_contDiff _ hA2 (j, i)\n    _ = 1 / (𝓕.μ₀ * 𝓕.ε₀) *\n        (∑ j, ∂[j] (fun x => ∂[j] (A.electricField 𝓕.c t · i) x -\n          ∂[i] (A.electricField 𝓕.c t · j) x) x) -\n      1 / 𝓕.ε₀ * ∂ₜ (J.currentDensity 𝓕.c · x i) t := by\n      congr\n      simp only [Finset.sum_apply]\n      congr\n      funext k\n      congr\n      funext x\n      rw [time_deriv_magneticFieldMatrix _ hA2]\n    _ = 1 / (𝓕.μ₀ * 𝓕.ε₀) *\n        ∑ j, (∂[j] (fun x => ∂[j] (A.electricField 𝓕.c t · i) x) x -\n          ∂[j] (fun x => ∂[i] (A.electricField 𝓕.c t · j) x) x) -\n      1 / 𝓕.ε₀ * ∂ₜ (J.currentDensity 𝓕.c · x i) t := by\n      congr\n      simp only [Finset.sum_apply]\n      congr\n      funext j\n      rw [Space.deriv_eq_fderiv_basis]\n      rw [fderiv_fun_sub (hEd _ _).differentiableAt (hEd _ _).differentiableAt]\n      simp [← Space.deriv_eq_fderiv_basis]\n    _ = 1 / (𝓕.μ₀ * 𝓕.ε₀) *\n        ∑ j, ∂[j] (fun x => ∂[j] (A.electricField 𝓕.c t · i) x) x -\n      1 / (𝓕.μ₀ * 𝓕.ε₀) *\n        ∑ j, ∂[j] (fun x => ∂[i] (A.electricField 𝓕.c t · j) x) x -\n      1 / 𝓕.ε₀ * ∂ₜ (J.currentDensity 𝓕.c · x i) t := by\n      simp [mul_sub]\n    _ = 1 / (𝓕.μ₀ * 𝓕.ε₀) *\n        ∑ j, ∂[j] (fun x => ∂[j] (A.electricField 𝓕.c t · i) x) x -\n      1 / (𝓕.μ₀ * 𝓕.ε₀) *\n        ∑ j, ∂[i] (fun x => ∂[j] (A.electricField 𝓕.c t · j) x) x -\n      1 / 𝓕.ε₀ * ∂ₜ (J.currentDensity 𝓕.c · x i) t := by\n      congr\n      funext j\n      rw [Space.deriv_commute _ (hEs _), Space.deriv_eq_fderiv_basis]\n    _ = 1 / (𝓕.μ₀ * 𝓕.ε₀) *\n        ∑ j, ∂[j] (fun x => ∂[j] (A.electricField 𝓕.c t · i) x) x -\n      1 / (𝓕.μ₀ * 𝓕.ε₀) *\n        ∂[i] (fun x => ∑ j, ∂[j] (A.electricField 𝓕.c t · j) x) x -\n      1 / 𝓕.ε₀ * ∂ₜ (J.currentDensity 𝓕.c · x i) t := by\n      congr\n      rw [Space.deriv_eq_fderiv_basis]\n      rw [fderiv_fun_sum]\n      simp [← Space.deriv_eq_fderiv_basis]\n      intro j _\n      exact (hEd j j).differentiableAt\n    _ = 1 / (𝓕.μ₀ * 𝓕.ε₀) *\n        ∑ j, ∂[j] (fun x => ∂[j] (A.electricField 𝓕.c t · i) x) x -\n      1 / (𝓕.μ₀ * 𝓕.ε₀) *\n        ∂[i] (fun x => (∇ ⬝ (A.electricField 𝓕.c t)) x) x -\n      1 / 𝓕.ε₀ * ∂ₜ (J.currentDensity 𝓕.c · x i) t := by\n      rfl\n    _ = 1 / (𝓕.μ₀ * 𝓕.ε₀) *\n        ∑ j, (∂[j] (∂[j] (A.electricField 𝓕.c t · i)) x) -\n      1 / (𝓕.μ₀ * 𝓕.ε₀ ^ 2) * ∂[i] (J.chargeDensity 𝓕.c t ·) x -\n      1 / 𝓕.ε₀ * ∂ₜ (J.currentDensity 𝓕.c · x i) t := by\n      congr 2\n      rw [isExtrema_iff_gauss_ampere_magneticFieldMatrix] at h\n      conv_lhs =>\n        enter [2, 2, x]\n        rw [(h t x).1]\n      trans 1 / (𝓕.μ₀ * 𝓕.ε₀) * Space.deriv i\n          (fun x => (1 / 𝓕.ε₀) * J.chargeDensity 𝓕.c t x) x\n      · congr\n        funext x\n        ring\n      · rw [Space.deriv_eq_fderiv_basis]\n        rw [fderiv_const_mul]\n        simp [← Space.deriv_eq_fderiv_basis]\n        field_simp\n        apply Differentiable.differentiableAt\n        apply LorentzCurrentDensity.chargeDensity_differentiable_space\n        exact hJ.differentiable (by simp)\n      · exact hA\n      · exact hJ\n    _ = 𝓕.c ^ 2 * ∑ j, (∂[j] (∂[j] (A.electricField 𝓕.c t · i)) x) -\n        𝓕.c ^ 2 / 𝓕.ε₀ * ∂[i] (J.chargeDensity 𝓕.c t ·) x -\n        𝓕.c ^ 2 * 𝓕.μ₀ * ∂ₜ (J.currentDensity 𝓕.c · x i) t := by\n      simp [FreeSpace.c_sq]\n      field_simp"
+    },
+    {
+      "depth": 8,
+      "end": 14568,
+      "goals_after": [
+        "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+      ],
+      "goals_before": [
+        "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+      ],
+      "kind": "tactic",
+      "start": 14507,
+      "raw": {
+        "depth": 8,
+        "end": 21699,
+        "goals_after": [
+          "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+        ],
+        "goals_before": [
+          "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+        ],
+        "kind": "tactic",
+        "start": 21638
+      },
+      "start_offset": 13862,
+      "end_offset": 13921,
+      "position": {
+        "line": 385,
+        "column": 2
+      },
+      "end_position": {
+        "line": 385,
+        "column": 61
+      },
+      "source_text": "have hA2 : ContDiff ℝ 2 A := hA.of_le (right_eq_inf.mp rfl)"
+    },
+    {
+      "depth": 9,
+      "end": 14568,
+      "goals_after": [
+        "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+      ],
+      "goals_before": [
+        "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+      ],
+      "kind": "tactic",
+      "start": 14507,
+      "raw": {
+        "depth": 9,
+        "end": 21699,
+        "goals_after": [
+          "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+        ],
+        "goals_before": [
+          "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+        ],
+        "kind": "tactic",
+        "start": 21638
+      },
+      "start_offset": 13862,
+      "end_offset": 13921,
+      "position": {
+        "line": 385,
+        "column": 2
+      },
+      "end_position": {
+        "line": 385,
+        "column": 61
+      },
+      "source_text": "have hA2 : ContDiff ℝ 2 A := hA.of_le (right_eq_inf.mp rfl)"
+    },
+    {
+      "depth": 10,
+      "end": 14568,
+      "goals_after": [
+        "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+      ],
+      "goals_before": [
+        "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+      ],
+      "kind": "tactic",
+      "start": 14507,
+      "raw": {
+        "depth": 10,
+        "end": 21699,
+        "goals_after": [
+          "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+        ],
+        "goals_before": [
+          "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+        ],
+        "kind": "tactic",
+        "start": 21638
+      },
+      "start_offset": 13862,
+      "end_offset": 13921,
+      "position": {
+        "line": 385,
+        "column": 2
+      },
+      "end_position": {
+        "line": 385,
+        "column": 61
+      },
+      "source_text": "have hA2 : ContDiff ℝ 2 A := hA.of_le (right_eq_inf.mp rfl)"
+    },
+    {
+      "depth": 11,
+      "end": 14568,
+      "goals_after": [
+        "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+      ],
+      "goals_before": [
+        "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+      ],
+      "kind": "tactic",
+      "start": 14507,
+      "raw": {
+        "depth": 11,
+        "end": 21699,
+        "goals_after": [
+          "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+        ],
+        "goals_before": [
+          "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+        ],
+        "kind": "tactic",
+        "start": 21638
+      },
+      "start_offset": 13862,
+      "end_offset": 13921,
+      "position": {
+        "line": 385,
+        "column": 2
+      },
+      "end_position": {
+        "line": 385,
+        "column": 61
+      },
+      "source_text": "have hA2 : ContDiff ℝ 2 A := hA.of_le (right_eq_inf.mp rfl)"
+    },
+    {
+      "depth": 11,
+      "end": 14568,
+      "goals_after": [
+        "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+      ],
+      "goals_before": [
+        "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+      ],
+      "kind": "tactic",
+      "start": 14507,
+      "raw": {
+        "depth": 11,
+        "end": 21699,
+        "goals_after": [
+          "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+        ],
+        "goals_before": [
+          "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+        ],
+        "kind": "tactic",
+        "start": 21638
+      },
+      "start_offset": 13862,
+      "end_offset": 13921,
+      "position": {
+        "line": 385,
+        "column": 2
+      },
+      "end_position": {
+        "line": 385,
+        "column": 61
+      },
+      "source_text": "have hA2 : ContDiff ℝ 2 A := hA.of_le (right_eq_inf.mp rfl)"
+    },
+    {
+      "depth": 12,
+      "end": 14568,
+      "goals_after": [
+        "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+      ],
+      "goals_before": [
+        "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+      ],
+      "kind": "tactic",
+      "start": 14507,
+      "raw": {
+        "depth": 12,
+        "end": 21699,
+        "goals_after": [
+          "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+        ],
+        "goals_before": [
+          "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+        ],
+        "kind": "tactic",
+        "start": 21638
+      },
+      "start_offset": 13862,
+      "end_offset": 13921,
+      "position": {
+        "line": 385,
+        "column": 2
+      },
+      "end_position": {
+        "line": 385,
+        "column": 61
+      },
+      "source_text": "have hA2 : ContDiff ℝ 2 A := hA.of_le (right_eq_inf.mp rfl)"
+    },
+    {
+      "depth": 13,
+      "end": 14568,
+      "goals_after": [
+        "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+      ],
+      "goals_before": [
+        "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+      ],
+      "kind": "tactic",
+      "start": 14507,
+      "raw": {
+        "depth": 13,
+        "end": 21699,
+        "goals_after": [
+          "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+        ],
+        "goals_before": [
+          "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+        ],
+        "kind": "tactic",
+        "start": 21638
+      },
+      "start_offset": 13862,
+      "end_offset": 13921,
+      "position": {
+        "line": 385,
+        "column": 2
+      },
+      "end_position": {
+        "line": 385,
+        "column": 61
+      },
+      "source_text": "have hA2 : ContDiff ℝ 2 A := hA.of_le (right_eq_inf.mp rfl)"
+    },
+    {
+      "depth": 14,
+      "end": 14568,
+      "goals_after": [
+        "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+      ],
+      "goals_before": [
+        "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+      ],
+      "kind": "tactic",
+      "start": 14507,
+      "raw": {
+        "depth": 14,
+        "end": 21699,
+        "goals_after": [
+          "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+        ],
+        "goals_before": [
+          "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+        ],
+        "kind": "tactic",
+        "start": 21638
+      },
+      "start_offset": 13862,
+      "end_offset": 13921,
+      "position": {
+        "line": 385,
+        "column": 2
+      },
+      "end_position": {
+        "line": 385,
+        "column": 61
+      },
+      "source_text": "have hA2 : ContDiff ℝ 2 A := hA.of_le (right_eq_inf.mp rfl)"
+    },
+    {
+      "depth": 15,
+      "end": 14568,
+      "goals_after": [
+        "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+      ],
+      "goals_before": [
+        "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+      ],
+      "kind": "tactic",
+      "start": 14507,
+      "raw": {
+        "depth": 15,
+        "end": 21699,
+        "goals_after": [
+          "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+        ],
+        "goals_before": [
+          "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+        ],
+        "kind": "tactic",
+        "start": 21638
+      },
+      "start_offset": 13862,
+      "end_offset": 13921,
+      "position": {
+        "line": 385,
+        "column": 2
+      },
+      "end_position": {
+        "line": 385,
+        "column": 61
+      },
+      "source_text": "have hA2 : ContDiff ℝ 2 A := hA.of_le (right_eq_inf.mp rfl)"
+    },
+    {
+      "depth": 16,
+      "end": 14568,
+      "goals_after": [
+        "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+      ],
+      "goals_before": [
+        "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+      ],
+      "kind": "tactic",
+      "start": 14507,
+      "raw": {
+        "depth": 16,
+        "end": 21699,
+        "goals_after": [
+          "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+        ],
+        "goals_before": [
+          "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+        ],
+        "kind": "tactic",
+        "start": 21638
+      },
+      "start_offset": 13862,
+      "end_offset": 13921,
+      "position": {
+        "line": 385,
+        "column": 2
+      },
+      "end_position": {
+        "line": 385,
+        "column": 61
+      },
+      "source_text": "have hA2 : ContDiff ℝ 2 A := hA.of_le (right_eq_inf.mp rfl)"
+    },
+    {
+      "depth": 16,
+      "end": 14568,
+      "goals_after": [
+        "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+      ],
+      "goals_before": [
+        "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+      ],
+      "kind": "tactic",
+      "start": 14507,
+      "raw": {
+        "depth": 16,
+        "end": 21699,
+        "goals_after": [
+          "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+        ],
+        "goals_before": [
+          "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+        ],
+        "kind": "tactic",
+        "start": 21638
+      },
+      "start_offset": 13862,
+      "end_offset": 13921,
+      "position": {
+        "line": 385,
+        "column": 2
+      },
+      "end_position": {
+        "line": 385,
+        "column": 61
+      },
+      "source_text": "have hA2 : ContDiff ℝ 2 A := hA.of_le (right_eq_inf.mp rfl)"
+    },
+    {
+      "depth": 16,
+      "end": 14568,
+      "goals_after": [
+        "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+      ],
+      "goals_before": [
+        "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+      ],
+      "kind": "tactic",
+      "start": 14507,
+      "raw": {
+        "depth": 16,
+        "end": 21699,
+        "goals_after": [
+          "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+        ],
+        "goals_before": [
+          "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+        ],
+        "kind": "tactic",
+        "start": 21638
+      },
+      "start_offset": 13862,
+      "end_offset": 13921,
+      "position": {
+        "line": 385,
+        "column": 2
+      },
+      "end_position": {
+        "line": 385,
+        "column": 61
+      },
+      "source_text": "have hA2 : ContDiff ℝ 2 A := hA.of_le (right_eq_inf.mp rfl)"
+    },
+    {
+      "depth": 8,
+      "end": 14726,
+      "goals_after": [
+        "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nhEs : ∀ (j : Fin d), ContDiff ℝ 2 fun y => (electricField 𝓕.c A t y).ofLp j\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+      ],
+      "goals_before": [
+        "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+      ],
+      "kind": "tactic",
+      "start": 14571,
+      "raw": {
+        "depth": 8,
+        "end": 21857,
+        "goals_after": [
+          "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nhEs : ∀ (j : Fin d), ContDiff ℝ 2 fun y => (electricField 𝓕.c A t y).ofLp j\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+        ],
+        "goals_before": [
+          "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+        ],
+        "kind": "tactic",
+        "start": 21702
+      },
+      "start_offset": 13924,
+      "end_offset": 14072,
+      "position": {
+        "line": 386,
+        "column": 2
+      },
+      "end_position": {
+        "line": 387,
+        "column": 79
+      },
+      "source_text": "have hEs : ∀ j, ContDiff ℝ 2 (fun y => A.electricField 𝓕.c t y j) :=\n    fun j => electricField_apply_contDiff_space (i := j) (hA.of_le (by simp)) t"
+    },
+    {
+      "depth": 9,
+      "end": 14726,
+      "goals_after": [
+        "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nhEs : ∀ (j : Fin d), ContDiff ℝ 2 fun y => (electricField 𝓕.c A t y).ofLp j\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+      ],
+      "goals_before": [
+        "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+      ],
+      "kind": "tactic",
+      "start": 14571,
+      "raw": {
+        "depth": 9,
+        "end": 21857,
+        "goals_after": [
+          "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nhEs : ∀ (j : Fin d), ContDiff ℝ 2 fun y => (electricField 𝓕.c A t y).ofLp j\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+        ],
+        "goals_before": [
+          "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+        ],
+        "kind": "tactic",
+        "start": 21702
+      },
+      "start_offset": 13924,
+      "end_offset": 14072,
+      "position": {
+        "line": 386,
+        "column": 2
+      },
+      "end_position": {
+        "line": 387,
+        "column": 79
+      },
+      "source_text": "have hEs : ∀ j, ContDiff ℝ 2 (fun y => A.electricField 𝓕.c t y j) :=\n    fun j => electricField_apply_contDiff_space (i := j) (hA.of_le (by simp)) t"
+    },
+    {
+      "depth": 10,
+      "end": 14726,
+      "goals_after": [
+        "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nhEs : ∀ (j : Fin d), ContDiff ℝ 2 fun y => (electricField 𝓕.c A t y).ofLp j\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+      ],
+      "goals_before": [
+        "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+      ],
+      "kind": "tactic",
+      "start": 14571,
+      "raw": {
+        "depth": 10,
+        "end": 21857,
+        "goals_after": [
+          "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nhEs : ∀ (j : Fin d), ContDiff ℝ 2 fun y => (electricField 𝓕.c A t y).ofLp j\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+        ],
+        "goals_before": [
+          "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+        ],
+        "kind": "tactic",
+        "start": 21702
+      },
+      "start_offset": 13924,
+      "end_offset": 14072,
+      "position": {
+        "line": 386,
+        "column": 2
+      },
+      "end_position": {
+        "line": 387,
+        "column": 79
+      },
+      "source_text": "have hEs : ∀ j, ContDiff ℝ 2 (fun y => A.electricField 𝓕.c t y j) :=\n    fun j => electricField_apply_contDiff_space (i := j) (hA.of_le (by simp)) t"
+    },
+    {
+      "depth": 11,
+      "end": 14726,
+      "goals_after": [
+        "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+      ],
+      "goals_before": [
+        "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+      ],
+      "kind": "tactic",
+      "start": 14571,
+      "raw": {
+        "depth": 11,
+        "end": 21857,
+        "goals_after": [
+          "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+        ],
+        "goals_before": [
+          "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+        ],
+        "kind": "tactic",
+        "start": 21702
+      },
+      "start_offset": 13924,
+      "end_offset": 14072,
+      "position": {
+        "line": 386,
+        "column": 2
+      },
+      "end_position": {
+        "line": 387,
+        "column": 79
+      },
+      "source_text": "have hEs : ∀ j, ContDiff ℝ 2 (fun y => A.electricField 𝓕.c t y j) :=\n    fun j => electricField_apply_contDiff_space (i := j) (hA.of_le (by simp)) t"
+    },
+    {
+      "depth": 11,
+      "end": 14726,
+      "goals_after": [
+        "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nhEs : ∀ (j : Fin d), ContDiff ℝ 2 fun y => (electricField 𝓕.c A t y).ofLp j\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+      ],
+      "goals_before": [
+        "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+      ],
+      "kind": "tactic",
+      "start": 14571,
+      "raw": {
+        "depth": 11,
+        "end": 21857,
+        "goals_after": [
+          "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nhEs : ∀ (j : Fin d), ContDiff ℝ 2 fun y => (electricField 𝓕.c A t y).ofLp j\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+        ],
+        "goals_before": [
+          "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+        ],
+        "kind": "tactic",
+        "start": 21702
+      },
+      "start_offset": 13924,
+      "end_offset": 14072,
+      "position": {
+        "line": 386,
+        "column": 2
+      },
+      "end_position": {
+        "line": 387,
+        "column": 79
+      },
+      "source_text": "have hEs : ∀ j, ContDiff ℝ 2 (fun y => A.electricField 𝓕.c t y j) :=\n    fun j => electricField_apply_contDiff_space (i := j) (hA.of_le (by simp)) t"
+    },
+    {
+      "depth": 12,
+      "end": 14726,
+      "goals_after": [
+        "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nhEs : ∀ (j : Fin d), ContDiff ℝ 2 fun y => (electricField 𝓕.c A t y).ofLp j\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+      ],
+      "goals_before": [
+        "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+      ],
+      "kind": "tactic",
+      "start": 14571,
+      "raw": {
+        "depth": 12,
+        "end": 21857,
+        "goals_after": [
+          "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nhEs : ∀ (j : Fin d), ContDiff ℝ 2 fun y => (electricField 𝓕.c A t y).ofLp j\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+        ],
+        "goals_before": [
+          "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+        ],
+        "kind": "tactic",
+        "start": 21702
+      },
+      "start_offset": 13924,
+      "end_offset": 14072,
+      "position": {
+        "line": 386,
+        "column": 2
+      },
+      "end_position": {
+        "line": 387,
+        "column": 79
+      },
+      "source_text": "have hEs : ∀ j, ContDiff ℝ 2 (fun y => A.electricField 𝓕.c t y j) :=\n    fun j => electricField_apply_contDiff_space (i := j) (hA.of_le (by simp)) t"
+    },
+    {
+      "depth": 13,
+      "end": 14726,
+      "goals_after": [
+        "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nhEs : ∀ (j : Fin d), ContDiff ℝ 2 fun y => (electricField 𝓕.c A t y).ofLp j\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+      ],
+      "goals_before": [
+        "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+      ],
+      "kind": "tactic",
+      "start": 14571,
+      "raw": {
+        "depth": 13,
+        "end": 21857,
+        "goals_after": [
+          "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nhEs : ∀ (j : Fin d), ContDiff ℝ 2 fun y => (electricField 𝓕.c A t y).ofLp j\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+        ],
+        "goals_before": [
+          "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+        ],
+        "kind": "tactic",
+        "start": 21702
+      },
+      "start_offset": 13924,
+      "end_offset": 14072,
+      "position": {
+        "line": 386,
+        "column": 2
+      },
+      "end_position": {
+        "line": 387,
+        "column": 79
+      },
+      "source_text": "have hEs : ∀ j, ContDiff ℝ 2 (fun y => A.electricField 𝓕.c t y j) :=\n    fun j => electricField_apply_contDiff_space (i := j) (hA.of_le (by simp)) t"
+    },
+    {
+      "depth": 14,
+      "end": 14726,
+      "goals_after": [
+        "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nhEs : ∀ (j : Fin d), ContDiff ℝ 2 fun y => (electricField 𝓕.c A t y).ofLp j\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+      ],
+      "goals_before": [
+        "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+      ],
+      "kind": "tactic",
+      "start": 14571,
+      "raw": {
+        "depth": 14,
+        "end": 21857,
+        "goals_after": [
+          "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nhEs : ∀ (j : Fin d), ContDiff ℝ 2 fun y => (electricField 𝓕.c A t y).ofLp j\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+        ],
+        "goals_before": [
+          "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+        ],
+        "kind": "tactic",
+        "start": 21702
+      },
+      "start_offset": 13924,
+      "end_offset": 14072,
+      "position": {
+        "line": 386,
+        "column": 2
+      },
+      "end_position": {
+        "line": 387,
+        "column": 79
+      },
+      "source_text": "have hEs : ∀ j, ContDiff ℝ 2 (fun y => A.electricField 𝓕.c t y j) :=\n    fun j => electricField_apply_contDiff_space (i := j) (hA.of_le (by simp)) t"
+    },
+    {
+      "depth": 15,
+      "end": 14726,
+      "goals_after": [
+        "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nhEs : ∀ (j : Fin d), ContDiff ℝ 2 fun y => (electricField 𝓕.c A t y).ofLp j\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+      ],
+      "goals_before": [
+        "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+      ],
+      "kind": "tactic",
+      "start": 14571,
+      "raw": {
+        "depth": 15,
+        "end": 21857,
+        "goals_after": [
+          "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nhEs : ∀ (j : Fin d), ContDiff ℝ 2 fun y => (electricField 𝓕.c A t y).ofLp j\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+        ],
+        "goals_before": [
+          "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+        ],
+        "kind": "tactic",
+        "start": 21702
+      },
+      "start_offset": 13924,
+      "end_offset": 14072,
+      "position": {
+        "line": 386,
+        "column": 2
+      },
+      "end_position": {
+        "line": 387,
+        "column": 79
+      },
+      "source_text": "have hEs : ∀ j, ContDiff ℝ 2 (fun y => A.electricField 𝓕.c t y j) :=\n    fun j => electricField_apply_contDiff_space (i := j) (hA.of_le (by simp)) t"
+    },
+    {
+      "depth": 16,
+      "end": 14726,
+      "goals_after": [
+        "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nhEs : ∀ (j : Fin d), ContDiff ℝ 2 fun y => (electricField 𝓕.c A t y).ofLp j\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+      ],
+      "goals_before": [
+        "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+      ],
+      "kind": "tactic",
+      "start": 14571,
+      "raw": {
+        "depth": 16,
+        "end": 21857,
+        "goals_after": [
+          "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nhEs : ∀ (j : Fin d), ContDiff ℝ 2 fun y => (electricField 𝓕.c A t y).ofLp j\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+        ],
+        "goals_before": [
+          "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+        ],
+        "kind": "tactic",
+        "start": 21702
+      },
+      "start_offset": 13924,
+      "end_offset": 14072,
+      "position": {
+        "line": 386,
+        "column": 2
+      },
+      "end_position": {
+        "line": 387,
+        "column": 79
+      },
+      "source_text": "have hEs : ∀ j, ContDiff ℝ 2 (fun y => A.electricField 𝓕.c t y j) :=\n    fun j => electricField_apply_contDiff_space (i := j) (hA.of_le (by simp)) t"
+    },
+    {
+      "depth": 24,
+      "end": 14722,
+      "goals_after": [
+        "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nj : Fin d\n⊢ 2 + 1 ≤ ∞"
+      ],
+      "goals_before": [
+        "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nj : Fin d\n⊢ 2 + 1 ≤ ∞"
+      ],
+      "kind": "tactic",
+      "start": 14715,
+      "raw": {
+        "depth": 24,
+        "end": 21853,
+        "goals_after": [
+          "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nj : Fin d\n⊢ 2 + 1 ≤ ∞"
+        ],
+        "goals_before": [
+          "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nj : Fin d\n⊢ 2 + 1 ≤ ∞"
+        ],
+        "kind": "tactic",
+        "start": 21846
+      },
+      "start_offset": 14061,
+      "end_offset": 14068,
+      "position": {
+        "line": 387,
+        "column": 68
+      },
+      "end_position": {
+        "line": 387,
+        "column": 75
+      },
+      "source_text": "by simp"
+    },
+    {
+      "depth": 25,
+      "end": 14717,
+      "goals_after": [
+        "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nj : Fin d\n⊢ 2 + 1 ≤ ∞"
+      ],
+      "goals_before": [
+        "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nj : Fin d\n⊢ 2 + 1 ≤ ∞"
+      ],
+      "kind": "tactic",
+      "start": 14715,
+      "raw": {
+        "depth": 25,
+        "end": 21848,
+        "goals_after": [
+          "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nj : Fin d\n⊢ 2 + 1 ≤ ∞"
+        ],
+        "goals_before": [
+          "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nj : Fin d\n⊢ 2 + 1 ≤ ∞"
+        ],
+        "kind": "tactic",
+        "start": 21846
+      },
+      "start_offset": 14061,
+      "end_offset": 14063,
+      "position": {
+        "line": 387,
+        "column": 68
+      },
+      "end_position": {
+        "line": 387,
+        "column": 70
+      },
+      "source_text": "by"
+    },
+    {
+      "depth": 26,
+      "end": 14722,
+      "goals_after": [
+        "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nj : Fin d\n⊢ 2 + 1 ≤ ∞"
+      ],
+      "goals_before": [
+        "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nj : Fin d\n⊢ 2 + 1 ≤ ∞"
+      ],
+      "kind": "tactic",
+      "start": 14718,
+      "raw": {
+        "depth": 26,
+        "end": 21853,
+        "goals_after": [
+          "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nj : Fin d\n⊢ 2 + 1 ≤ ∞"
+        ],
+        "goals_before": [
+          "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nj : Fin d\n⊢ 2 + 1 ≤ ∞"
+        ],
+        "kind": "tactic",
+        "start": 21849
+      },
+      "start_offset": 14064,
+      "end_offset": 14068,
+      "position": {
+        "line": 387,
+        "column": 71
+      },
+      "end_position": {
+        "line": 387,
+        "column": 75
+      },
+      "source_text": "simp"
+    },
+    {
+      "depth": 27,
+      "end": 14722,
+      "goals_after": [
+        "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nj : Fin d\n⊢ 2 + 1 ≤ ∞"
+      ],
+      "goals_before": [
+        "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nj : Fin d\n⊢ 2 + 1 ≤ ∞"
+      ],
+      "kind": "tactic",
+      "start": 14718,
+      "raw": {
+        "depth": 27,
+        "end": 21853,
+        "goals_after": [
+          "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nj : Fin d\n⊢ 2 + 1 ≤ ∞"
+        ],
+        "goals_before": [
+          "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nj : Fin d\n⊢ 2 + 1 ≤ ∞"
+        ],
+        "kind": "tactic",
+        "start": 21849
+      },
+      "start_offset": 14064,
+      "end_offset": 14068,
+      "position": {
+        "line": 387,
+        "column": 71
+      },
+      "end_position": {
+        "line": 387,
+        "column": 75
+      },
+      "source_text": "simp"
+    },
+    {
+      "depth": 28,
+      "end": 14722,
+      "goals_after": [
+        "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nj : Fin d\n⊢ 2 + 1 ≤ ∞"
+      ],
+      "goals_before": [
+        "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nj : Fin d\n⊢ 2 + 1 ≤ ∞"
+      ],
+      "kind": "tactic",
+      "start": 14718,
+      "raw": {
+        "depth": 28,
+        "end": 21853,
+        "goals_after": [
+          "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nj : Fin d\n⊢ 2 + 1 ≤ ∞"
+        ],
+        "goals_before": [
+          "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nj : Fin d\n⊢ 2 + 1 ≤ ∞"
+        ],
+        "kind": "tactic",
+        "start": 21849
+      },
+      "start_offset": 14064,
+      "end_offset": 14068,
+      "position": {
+        "line": 387,
+        "column": 71
+      },
+      "end_position": {
+        "line": 387,
+        "column": 75
+      },
+      "source_text": "simp"
+    },
+    {
+      "depth": 16,
+      "end": 14726,
+      "goals_after": [
+        "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nhEs : ∀ (j : Fin d), ContDiff ℝ 2 fun y => (electricField 𝓕.c A t y).ofLp j\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+      ],
+      "goals_before": [
+        "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nhEs : ∀ (j : Fin d), ContDiff ℝ 2 fun y => (electricField 𝓕.c A t y).ofLp j\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+      ],
+      "kind": "tactic",
+      "start": 14571,
+      "raw": {
+        "depth": 16,
+        "end": 21857,
+        "goals_after": [
+          "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nhEs : ∀ (j : Fin d), ContDiff ℝ 2 fun y => (electricField 𝓕.c A t y).ofLp j\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+        ],
+        "goals_before": [
+          "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nhEs : ∀ (j : Fin d), ContDiff ℝ 2 fun y => (electricField 𝓕.c A t y).ofLp j\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+        ],
+        "kind": "tactic",
+        "start": 21702
+      },
+      "start_offset": 13924,
+      "end_offset": 14072,
+      "position": {
+        "line": 386,
+        "column": 2
+      },
+      "end_position": {
+        "line": 387,
+        "column": 79
+      },
+      "source_text": "have hEs : ∀ j, ContDiff ℝ 2 (fun y => A.electricField 𝓕.c t y j) :=\n    fun j => electricField_apply_contDiff_space (i := j) (hA.of_le (by simp)) t"
+    },
+    {
+      "depth": 16,
+      "end": 14726,
+      "goals_after": [
+        "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nhEs : ∀ (j : Fin d), ContDiff ℝ 2 fun y => (electricField 𝓕.c A t y).ofLp j\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+      ],
+      "goals_before": [
+        "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nhEs : ∀ (j : Fin d), ContDiff ℝ 2 fun y => (electricField 𝓕.c A t y).ofLp j\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+      ],
+      "kind": "tactic",
+      "start": 14571,
+      "raw": {
+        "depth": 16,
+        "end": 21857,
+        "goals_after": [
+          "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nhEs : ∀ (j : Fin d), ContDiff ℝ 2 fun y => (electricField 𝓕.c A t y).ofLp j\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+        ],
+        "goals_before": [
+          "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nhEs : ∀ (j : Fin d), ContDiff ℝ 2 fun y => (electricField 𝓕.c A t y).ofLp j\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+        ],
+        "kind": "tactic",
+        "start": 21702
+      },
+      "start_offset": 13924,
+      "end_offset": 14072,
+      "position": {
+        "line": 386,
+        "column": 2
+      },
+      "end_position": {
+        "line": 387,
+        "column": 79
+      },
+      "source_text": "have hEs : ∀ j, ContDiff ℝ 2 (fun y => A.electricField 𝓕.c t y j) :=\n    fun j => electricField_apply_contDiff_space (i := j) (hA.of_le (by simp)) t"
+    },
+    {
+      "depth": 8,
+      "end": 14871,
+      "goals_after": [
+        "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nhEs : ∀ (j : Fin d), ContDiff ℝ 2 fun y => (electricField 𝓕.c A t y).ofLp j\nhEd : ∀ (j k : Fin d), Differentiable ℝ (Space.deriv k fun y => (electricField 𝓕.c A t y).ofLp j)\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+      ],
+      "goals_before": [
+        "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nhEs : ∀ (j : Fin d), ContDiff ℝ 2 fun y => (electricField 𝓕.c A t y).ofLp j\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+      ],
+      "kind": "tactic",
+      "start": 14729,
+      "raw": {
+        "depth": 8,
+        "end": 22002,
+        "goals_after": [
+          "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nhEs : ∀ (j : Fin d), ContDiff ℝ 2 fun y => (electricField 𝓕.c A t y).ofLp j\nhEd : ∀ (j k : Fin d), Differentiable ℝ (Space.deriv k fun y => (electricField 𝓕.c A t y).ofLp j)\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+        ],
+        "goals_before": [
+          "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nhEs : ∀ (j : Fin d), ContDiff ℝ 2 fun y => (electricField 𝓕.c A t y).ofLp j\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+        ],
+        "kind": "tactic",
+        "start": 21860
+      },
+      "start_offset": 14075,
+      "end_offset": 14208,
+      "position": {
+        "line": 388,
+        "column": 2
+      },
+      "end_position": {
+        "line": 389,
+        "column": 51
+      },
+      "source_text": "have hEd : ∀ j k, Differentiable ℝ (∂[k] (fun y => A.electricField 𝓕.c t y j)) :=\n    fun j k => Space.deriv_differentiable (hEs j) k"
+    },
+    {
+      "depth": 9,
+      "end": 14871,
+      "goals_after": [
+        "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nhEs : ∀ (j : Fin d), ContDiff ℝ 2 fun y => (electricField 𝓕.c A t y).ofLp j\nhEd : ∀ (j k : Fin d), Differentiable ℝ (Space.deriv k fun y => (electricField 𝓕.c A t y).ofLp j)\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+      ],
+      "goals_before": [
+        "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nhEs : ∀ (j : Fin d), ContDiff ℝ 2 fun y => (electricField 𝓕.c A t y).ofLp j\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+      ],
+      "kind": "tactic",
+      "start": 14729,
+      "raw": {
+        "depth": 9,
+        "end": 22002,
+        "goals_after": [
+          "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nhEs : ∀ (j : Fin d), ContDiff ℝ 2 fun y => (electricField 𝓕.c A t y).ofLp j\nhEd : ∀ (j k : Fin d), Differentiable ℝ (Space.deriv k fun y => (electricField 𝓕.c A t y).ofLp j)\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+        ],
+        "goals_before": [
+          "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nhEs : ∀ (j : Fin d), ContDiff ℝ 2 fun y => (electricField 𝓕.c A t y).ofLp j\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+        ],
+        "kind": "tactic",
+        "start": 21860
+      },
+      "start_offset": 14075,
+      "end_offset": 14208,
+      "position": {
+        "line": 388,
+        "column": 2
+      },
+      "end_position": {
+        "line": 389,
+        "column": 51
+      },
+      "source_text": "have hEd : ∀ j k, Differentiable ℝ (∂[k] (fun y => A.electricField 𝓕.c t y j)) :=\n    fun j k => Space.deriv_differentiable (hEs j) k"
+    },
+    {
+      "depth": 10,
+      "end": 14871,
+      "goals_after": [
+        "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nhEs : ∀ (j : Fin d), ContDiff ℝ 2 fun y => (electricField 𝓕.c A t y).ofLp j\nhEd : ∀ (j k : Fin d), Differentiable ℝ (Space.deriv k fun y => (electricField 𝓕.c A t y).ofLp j)\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+      ],
+      "goals_before": [
+        "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nhEs : ∀ (j : Fin d), ContDiff ℝ 2 fun y => (electricField 𝓕.c A t y).ofLp j\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+      ],
+      "kind": "tactic",
+      "start": 14729,
+      "raw": {
+        "depth": 10,
+        "end": 22002,
+        "goals_after": [
+          "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nhEs : ∀ (j : Fin d), ContDiff ℝ 2 fun y => (electricField 𝓕.c A t y).ofLp j\nhEd : ∀ (j k : Fin d), Differentiable ℝ (Space.deriv k fun y => (electricField 𝓕.c A t y).ofLp j)\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+        ],
+        "goals_before": [
+          "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nhEs : ∀ (j : Fin d), ContDiff ℝ 2 fun y => (electricField 𝓕.c A t y).ofLp j\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+        ],
+        "kind": "tactic",
+        "start": 21860
+      },
+      "start_offset": 14075,
+      "end_offset": 14208,
+      "position": {
+        "line": 388,
+        "column": 2
+      },
+      "end_position": {
+        "line": 389,
+        "column": 51
+      },
+      "source_text": "have hEd : ∀ j k, Differentiable ℝ (∂[k] (fun y => A.electricField 𝓕.c t y j)) :=\n    fun j k => Space.deriv_differentiable (hEs j) k"
+    },
+    {
+      "depth": 11,
+      "end": 14871,
+      "goals_after": [
+        "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nhEs : ∀ (j : Fin d), ContDiff ℝ 2 fun y => (electricField 𝓕.c A t y).ofLp j\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+      ],
+      "goals_before": [
+        "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nhEs : ∀ (j : Fin d), ContDiff ℝ 2 fun y => (electricField 𝓕.c A t y).ofLp j\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+      ],
+      "kind": "tactic",
+      "start": 14729,
+      "raw": {
+        "depth": 11,
+        "end": 22002,
+        "goals_after": [
+          "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nhEs : ∀ (j : Fin d), ContDiff ℝ 2 fun y => (electricField 𝓕.c A t y).ofLp j\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+        ],
+        "goals_before": [
+          "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nhEs : ∀ (j : Fin d), ContDiff ℝ 2 fun y => (electricField 𝓕.c A t y).ofLp j\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+        ],
+        "kind": "tactic",
+        "start": 21860
+      },
+      "start_offset": 14075,
+      "end_offset": 14208,
+      "position": {
+        "line": 388,
+        "column": 2
+      },
+      "end_position": {
+        "line": 389,
+        "column": 51
+      },
+      "source_text": "have hEd : ∀ j k, Differentiable ℝ (∂[k] (fun y => A.electricField 𝓕.c t y j)) :=\n    fun j k => Space.deriv_differentiable (hEs j) k"
+    },
+    {
+      "depth": 11,
+      "end": 14871,
+      "goals_after": [
+        "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nhEs : ∀ (j : Fin d), ContDiff ℝ 2 fun y => (electricField 𝓕.c A t y).ofLp j\nhEd : ∀ (j k : Fin d), Differentiable ℝ (Space.deriv k fun y => (electricField 𝓕.c A t y).ofLp j)\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+      ],
+      "goals_before": [
+        "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nhEs : ∀ (j : Fin d), ContDiff ℝ 2 fun y => (electricField 𝓕.c A t y).ofLp j\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+      ],
+      "kind": "tactic",
+      "start": 14729,
+      "raw": {
+        "depth": 11,
+        "end": 22002,
+        "goals_after": [
+          "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nhEs : ∀ (j : Fin d), ContDiff ℝ 2 fun y => (electricField 𝓕.c A t y).ofLp j\nhEd : ∀ (j k : Fin d), Differentiable ℝ (Space.deriv k fun y => (electricField 𝓕.c A t y).ofLp j)\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+        ],
+        "goals_before": [
+          "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nhEs : ∀ (j : Fin d), ContDiff ℝ 2 fun y => (electricField 𝓕.c A t y).ofLp j\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+        ],
+        "kind": "tactic",
+        "start": 21860
+      },
+      "start_offset": 14075,
+      "end_offset": 14208,
+      "position": {
+        "line": 388,
+        "column": 2
+      },
+      "end_position": {
+        "line": 389,
+        "column": 51
+      },
+      "source_text": "have hEd : ∀ j k, Differentiable ℝ (∂[k] (fun y => A.electricField 𝓕.c t y j)) :=\n    fun j k => Space.deriv_differentiable (hEs j) k"
+    },
+    {
+      "depth": 12,
+      "end": 14871,
+      "goals_after": [
+        "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nhEs : ∀ (j : Fin d), ContDiff ℝ 2 fun y => (electricField 𝓕.c A t y).ofLp j\nhEd : ∀ (j k : Fin d), Differentiable ℝ (Space.deriv k fun y => (electricField 𝓕.c A t y).ofLp j)\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+      ],
+      "goals_before": [
+        "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nhEs : ∀ (j : Fin d), ContDiff ℝ 2 fun y => (electricField 𝓕.c A t y).ofLp j\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+      ],
+      "kind": "tactic",
+      "start": 14729,
+      "raw": {
+        "depth": 12,
+        "end": 22002,
+        "goals_after": [
+          "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nhEs : ∀ (j : Fin d), ContDiff ℝ 2 fun y => (electricField 𝓕.c A t y).ofLp j\nhEd : ∀ (j k : Fin d), Differentiable ℝ (Space.deriv k fun y => (electricField 𝓕.c A t y).ofLp j)\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+        ],
+        "goals_before": [
+          "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nhEs : ∀ (j : Fin d), ContDiff ℝ 2 fun y => (electricField 𝓕.c A t y).ofLp j\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+        ],
+        "kind": "tactic",
+        "start": 21860
+      },
+      "start_offset": 14075,
+      "end_offset": 14208,
+      "position": {
+        "line": 388,
+        "column": 2
+      },
+      "end_position": {
+        "line": 389,
+        "column": 51
+      },
+      "source_text": "have hEd : ∀ j k, Differentiable ℝ (∂[k] (fun y => A.electricField 𝓕.c t y j)) :=\n    fun j k => Space.deriv_differentiable (hEs j) k"
+    },
+    {
+      "depth": 13,
+      "end": 14871,
+      "goals_after": [
+        "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nhEs : ∀ (j : Fin d), ContDiff ℝ 2 fun y => (electricField 𝓕.c A t y).ofLp j\nhEd : ∀ (j k : Fin d), Differentiable ℝ (Space.deriv k fun y => (electricField 𝓕.c A t y).ofLp j)\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+      ],
+      "goals_before": [
+        "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nhEs : ∀ (j : Fin d), ContDiff ℝ 2 fun y => (electricField 𝓕.c A t y).ofLp j\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+      ],
+      "kind": "tactic",
+      "start": 14729,
+      "raw": {
+        "depth": 13,
+        "end": 22002,
+        "goals_after": [
+          "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nhEs : ∀ (j : Fin d), ContDiff ℝ 2 fun y => (electricField 𝓕.c A t y).ofLp j\nhEd : ∀ (j k : Fin d), Differentiable ℝ (Space.deriv k fun y => (electricField 𝓕.c A t y).ofLp j)\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+        ],
+        "goals_before": [
+          "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nhEs : ∀ (j : Fin d), ContDiff ℝ 2 fun y => (electricField 𝓕.c A t y).ofLp j\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+        ],
+        "kind": "tactic",
+        "start": 21860
+      },
+      "start_offset": 14075,
+      "end_offset": 14208,
+      "position": {
+        "line": 388,
+        "column": 2
+      },
+      "end_position": {
+        "line": 389,
+        "column": 51
+      },
+      "source_text": "have hEd : ∀ j k, Differentiable ℝ (∂[k] (fun y => A.electricField 𝓕.c t y j)) :=\n    fun j k => Space.deriv_differentiable (hEs j) k"
+    },
+    {
+      "depth": 14,
+      "end": 14871,
+      "goals_after": [
+        "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nhEs : ∀ (j : Fin d), ContDiff ℝ 2 fun y => (electricField 𝓕.c A t y).ofLp j\nhEd : ∀ (j k : Fin d), Differentiable ℝ (Space.deriv k fun y => (electricField 𝓕.c A t y).ofLp j)\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+      ],
+      "goals_before": [
+        "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nhEs : ∀ (j : Fin d), ContDiff ℝ 2 fun y => (electricField 𝓕.c A t y).ofLp j\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+      ],
+      "kind": "tactic",
+      "start": 14729,
+      "raw": {
+        "depth": 14,
+        "end": 22002,
+        "goals_after": [
+          "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nhEs : ∀ (j : Fin d), ContDiff ℝ 2 fun y => (electricField 𝓕.c A t y).ofLp j\nhEd : ∀ (j k : Fin d), Differentiable ℝ (Space.deriv k fun y => (electricField 𝓕.c A t y).ofLp j)\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+        ],
+        "goals_before": [
+          "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nhEs : ∀ (j : Fin d), ContDiff ℝ 2 fun y => (electricField 𝓕.c A t y).ofLp j\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+        ],
+        "kind": "tactic",
+        "start": 21860
+      },
+      "start_offset": 14075,
+      "end_offset": 14208,
+      "position": {
+        "line": 388,
+        "column": 2
+      },
+      "end_position": {
+        "line": 389,
+        "column": 51
+      },
+      "source_text": "have hEd : ∀ j k, Differentiable ℝ (∂[k] (fun y => A.electricField 𝓕.c t y j)) :=\n    fun j k => Space.deriv_differentiable (hEs j) k"
+    },
+    {
+      "depth": 15,
+      "end": 14871,
+      "goals_after": [
+        "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nhEs : ∀ (j : Fin d), ContDiff ℝ 2 fun y => (electricField 𝓕.c A t y).ofLp j\nhEd : ∀ (j k : Fin d), Differentiable ℝ (Space.deriv k fun y => (electricField 𝓕.c A t y).ofLp j)\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+      ],
+      "goals_before": [
+        "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nhEs : ∀ (j : Fin d), ContDiff ℝ 2 fun y => (electricField 𝓕.c A t y).ofLp j\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+      ],
+      "kind": "tactic",
+      "start": 14729,
+      "raw": {
+        "depth": 15,
+        "end": 22002,
+        "goals_after": [
+          "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nhEs : ∀ (j : Fin d), ContDiff ℝ 2 fun y => (electricField 𝓕.c A t y).ofLp j\nhEd : ∀ (j k : Fin d), Differentiable ℝ (Space.deriv k fun y => (electricField 𝓕.c A t y).ofLp j)\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+        ],
+        "goals_before": [
+          "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nhEs : ∀ (j : Fin d), ContDiff ℝ 2 fun y => (electricField 𝓕.c A t y).ofLp j\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+        ],
+        "kind": "tactic",
+        "start": 21860
+      },
+      "start_offset": 14075,
+      "end_offset": 14208,
+      "position": {
+        "line": 388,
+        "column": 2
+      },
+      "end_position": {
+        "line": 389,
+        "column": 51
+      },
+      "source_text": "have hEd : ∀ j k, Differentiable ℝ (∂[k] (fun y => A.electricField 𝓕.c t y j)) :=\n    fun j k => Space.deriv_differentiable (hEs j) k"
+    },
+    {
+      "depth": 16,
+      "end": 14871,
+      "goals_after": [
+        "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nhEs : ∀ (j : Fin d), ContDiff ℝ 2 fun y => (electricField 𝓕.c A t y).ofLp j\nhEd : ∀ (j k : Fin d), Differentiable ℝ (Space.deriv k fun y => (electricField 𝓕.c A t y).ofLp j)\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+      ],
+      "goals_before": [
+        "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nhEs : ∀ (j : Fin d), ContDiff ℝ 2 fun y => (electricField 𝓕.c A t y).ofLp j\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+      ],
+      "kind": "tactic",
+      "start": 14729,
+      "raw": {
+        "depth": 16,
+        "end": 22002,
+        "goals_after": [
+          "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nhEs : ∀ (j : Fin d), ContDiff ℝ 2 fun y => (electricField 𝓕.c A t y).ofLp j\nhEd : ∀ (j k : Fin d), Differentiable ℝ (Space.deriv k fun y => (electricField 𝓕.c A t y).ofLp j)\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+        ],
+        "goals_before": [
+          "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nhEs : ∀ (j : Fin d), ContDiff ℝ 2 fun y => (electricField 𝓕.c A t y).ofLp j\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+        ],
+        "kind": "tactic",
+        "start": 21860
+      },
+      "start_offset": 14075,
+      "end_offset": 14208,
+      "position": {
+        "line": 388,
+        "column": 2
+      },
+      "end_position": {
+        "line": 389,
+        "column": 51
+      },
+      "source_text": "have hEd : ∀ j k, Differentiable ℝ (∂[k] (fun y => A.electricField 𝓕.c t y j)) :=\n    fun j k => Space.deriv_differentiable (hEs j) k"
+    },
+    {
+      "depth": 16,
+      "end": 14871,
+      "goals_after": [
+        "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nhEs : ∀ (j : Fin d), ContDiff ℝ 2 fun y => (electricField 𝓕.c A t y).ofLp j\nhEd : ∀ (j k : Fin d), Differentiable ℝ (Space.deriv k fun y => (electricField 𝓕.c A t y).ofLp j)\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+      ],
+      "goals_before": [
+        "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nhEs : ∀ (j : Fin d), ContDiff ℝ 2 fun y => (electricField 𝓕.c A t y).ofLp j\nhEd : ∀ (j k : Fin d), Differentiable ℝ (Space.deriv k fun y => (electricField 𝓕.c A t y).ofLp j)\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+      ],
+      "kind": "tactic",
+      "start": 14729,
+      "raw": {
+        "depth": 16,
+        "end": 22002,
+        "goals_after": [
+          "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nhEs : ∀ (j : Fin d), ContDiff ℝ 2 fun y => (electricField 𝓕.c A t y).ofLp j\nhEd : ∀ (j k : Fin d), Differentiable ℝ (Space.deriv k fun y => (electricField 𝓕.c A t y).ofLp j)\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+        ],
+        "goals_before": [
+          "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nhEs : ∀ (j : Fin d), ContDiff ℝ 2 fun y => (electricField 𝓕.c A t y).ofLp j\nhEd : ∀ (j k : Fin d), Differentiable ℝ (Space.deriv k fun y => (electricField 𝓕.c A t y).ofLp j)\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+        ],
+        "kind": "tactic",
+        "start": 21860
+      },
+      "start_offset": 14075,
+      "end_offset": 14208,
+      "position": {
+        "line": 388,
+        "column": 2
+      },
+      "end_position": {
+        "line": 389,
+        "column": 51
+      },
+      "source_text": "have hEd : ∀ j k, Differentiable ℝ (∂[k] (fun y => A.electricField 𝓕.c t y j)) :=\n    fun j k => Space.deriv_differentiable (hEs j) k"
+    },
+    {
+      "depth": 16,
+      "end": 14871,
+      "goals_after": [
+        "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nhEs : ∀ (j : Fin d), ContDiff ℝ 2 fun y => (electricField 𝓕.c A t y).ofLp j\nhEd : ∀ (j k : Fin d), Differentiable ℝ (Space.deriv k fun y => (electricField 𝓕.c A t y).ofLp j)\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+      ],
+      "goals_before": [
+        "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nhEs : ∀ (j : Fin d), ContDiff ℝ 2 fun y => (electricField 𝓕.c A t y).ofLp j\nhEd : ∀ (j k : Fin d), Differentiable ℝ (Space.deriv k fun y => (electricField 𝓕.c A t y).ofLp j)\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+      ],
+      "kind": "tactic",
+      "start": 14729,
+      "raw": {
+        "depth": 16,
+        "end": 22002,
+        "goals_after": [
+          "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nhEs : ∀ (j : Fin d), ContDiff ℝ 2 fun y => (electricField 𝓕.c A t y).ofLp j\nhEd : ∀ (j k : Fin d), Differentiable ℝ (Space.deriv k fun y => (electricField 𝓕.c A t y).ofLp j)\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+        ],
+        "goals_before": [
+          "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nhEs : ∀ (j : Fin d), ContDiff ℝ 2 fun y => (electricField 𝓕.c A t y).ofLp j\nhEd : ∀ (j k : Fin d), Differentiable ℝ (Space.deriv k fun y => (electricField 𝓕.c A t y).ofLp j)\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+        ],
+        "kind": "tactic",
+        "start": 21860
+      },
+      "start_offset": 14075,
+      "end_offset": 14208,
+      "position": {
+        "line": 388,
+        "column": 2
+      },
+      "end_position": {
+        "line": 389,
+        "column": 51
+      },
+      "source_text": "have hEd : ∀ j k, Differentiable ℝ (∂[k] (fun y => A.electricField 𝓕.c t y j)) :=\n    fun j k => Space.deriv_differentiable (hEs j) k"
+    },
+    {
+      "depth": 8,
+      "end": 15102,
+      "goals_after": [
+        "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nhEs : ∀ (j : Fin d), ContDiff ℝ 2 fun y => (electricField 𝓕.c A t y).ofLp j\nhEd : ∀ (j k : Fin d), Differentiable ℝ (Space.deriv k fun y => (electricField 𝓕.c A t y).ofLp j)\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+      ],
+      "goals_before": [
+        "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nhEs : ∀ (j : Fin d), ContDiff ℝ 2 fun y => (electricField 𝓕.c A t y).ofLp j\nhEd : ∀ (j k : Fin d), Differentiable ℝ (Space.deriv k fun y => (electricField 𝓕.c A t y).ofLp j)\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+      ],
+      "kind": "tactic",
+      "start": 14874,
+      "raw": {
+        "depth": 8,
+        "end": 22233,
+        "goals_after": [
+          "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nhEs : ∀ (j : Fin d), ContDiff ℝ 2 fun y => (electricField 𝓕.c A t y).ofLp j\nhEd : ∀ (j k : Fin d), Differentiable ℝ (Space.deriv k fun y => (electricField 𝓕.c A t y).ofLp j)\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+        ],
+        "goals_before": [
+          "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nhEs : ∀ (j : Fin d), ContDiff ℝ 2 fun y => (electricField 𝓕.c A t y).ofLp j\nhEd : ∀ (j k : Fin d), Differentiable ℝ (Space.deriv k fun y => (electricField 𝓕.c A t y).ofLp j)\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+        ],
+        "kind": "tactic",
+        "start": 22005
+      },
+      "start_offset": 14211,
+      "end_offset": 14430,
+      "position": {
+        "line": 390,
+        "column": 2
+      },
+      "end_position": {
+        "line": 393,
+        "column": 51
+      },
+      "source_text": "have hBt : ∀ j, Differentiable ℝ\n      (fun s => ∂[j] (fun y => A.magneticFieldMatrix 𝓕.c s y (j, i)) x) :=\n    fun j => Space.space_deriv_differentiable_time (i := j)\n      (magneticFieldMatrix_contDiff _ hA2 (j, i)) x"
+    },
+    {
+      "depth": 9,
+      "end": 15102,
+      "goals_after": [
+        "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nhEs : ∀ (j : Fin d), ContDiff ℝ 2 fun y => (electricField 𝓕.c A t y).ofLp j\nhEd : ∀ (j k : Fin d), Differentiable ℝ (Space.deriv k fun y => (electricField 𝓕.c A t y).ofLp j)\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+      ],
+      "goals_before": [
+        "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nhEs : ∀ (j : Fin d), ContDiff ℝ 2 fun y => (electricField 𝓕.c A t y).ofLp j\nhEd : ∀ (j k : Fin d), Differentiable ℝ (Space.deriv k fun y => (electricField 𝓕.c A t y).ofLp j)\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+      ],
+      "kind": "tactic",
+      "start": 14874,
+      "raw": {
+        "depth": 9,
+        "end": 22233,
+        "goals_after": [
+          "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nhEs : ∀ (j : Fin d), ContDiff ℝ 2 fun y => (electricField 𝓕.c A t y).ofLp j\nhEd : ∀ (j k : Fin d), Differentiable ℝ (Space.deriv k fun y => (electricField 𝓕.c A t y).ofLp j)\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+        ],
+        "goals_before": [
+          "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nhEs : ∀ (j : Fin d), ContDiff ℝ 2 fun y => (electricField 𝓕.c A t y).ofLp j\nhEd : ∀ (j k : Fin d), Differentiable ℝ (Space.deriv k fun y => (electricField 𝓕.c A t y).ofLp j)\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+        ],
+        "kind": "tactic",
+        "start": 22005
+      },
+      "start_offset": 14211,
+      "end_offset": 14430,
+      "position": {
+        "line": 390,
+        "column": 2
+      },
+      "end_position": {
+        "line": 393,
+        "column": 51
+      },
+      "source_text": "have hBt : ∀ j, Differentiable ℝ\n      (fun s => ∂[j] (fun y => A.magneticFieldMatrix 𝓕.c s y (j, i)) x) :=\n    fun j => Space.space_deriv_differentiable_time (i := j)\n      (magneticFieldMatrix_contDiff _ hA2 (j, i)) x"
+    },
+    {
+      "depth": 10,
+      "end": 15102,
+      "goals_after": [
+        "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nhEs : ∀ (j : Fin d), ContDiff ℝ 2 fun y => (electricField 𝓕.c A t y).ofLp j\nhEd : ∀ (j k : Fin d), Differentiable ℝ (Space.deriv k fun y => (electricField 𝓕.c A t y).ofLp j)\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+      ],
+      "goals_before": [
+        "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nhEs : ∀ (j : Fin d), ContDiff ℝ 2 fun y => (electricField 𝓕.c A t y).ofLp j\nhEd : ∀ (j k : Fin d), Differentiable ℝ (Space.deriv k fun y => (electricField 𝓕.c A t y).ofLp j)\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+      ],
+      "kind": "tactic",
+      "start": 14874,
+      "raw": {
+        "depth": 10,
+        "end": 22233,
+        "goals_after": [
+          "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nhEs : ∀ (j : Fin d), ContDiff ℝ 2 fun y => (electricField 𝓕.c A t y).ofLp j\nhEd : ∀ (j k : Fin d), Differentiable ℝ (Space.deriv k fun y => (electricField 𝓕.c A t y).ofLp j)\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+        ],
+        "goals_before": [
+          "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nhEs : ∀ (j : Fin d), ContDiff ℝ 2 fun y => (electricField 𝓕.c A t y).ofLp j\nhEd : ∀ (j k : Fin d), Differentiable ℝ (Space.deriv k fun y => (electricField 𝓕.c A t y).ofLp j)\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+        ],
+        "kind": "tactic",
+        "start": 22005
+      },
+      "start_offset": 14211,
+      "end_offset": 14430,
+      "position": {
+        "line": 390,
+        "column": 2
+      },
+      "end_position": {
+        "line": 393,
+        "column": 51
+      },
+      "source_text": "have hBt : ∀ j, Differentiable ℝ\n      (fun s => ∂[j] (fun y => A.magneticFieldMatrix 𝓕.c s y (j, i)) x) :=\n    fun j => Space.space_deriv_differentiable_time (i := j)\n      (magneticFieldMatrix_contDiff _ hA2 (j, i)) x"
+    },
+    {
+      "depth": 11,
+      "end": 15102,
+      "goals_after": [
+        "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nhEs : ∀ (j : Fin d), ContDiff ℝ 2 fun y => (electricField 𝓕.c A t y).ofLp j\nhEd : ∀ (j k : Fin d), Differentiable ℝ (Space.deriv k fun y => (electricField 𝓕.c A t y).ofLp j)\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+      ],
+      "goals_before": [
+        "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nhEs : ∀ (j : Fin d), ContDiff ℝ 2 fun y => (electricField 𝓕.c A t y).ofLp j\nhEd : ∀ (j k : Fin d), Differentiable ℝ (Space.deriv k fun y => (electricField 𝓕.c A t y).ofLp j)\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+      ],
+      "kind": "tactic",
+      "start": 14874,
+      "raw": {
+        "depth": 11,
+        "end": 22233,
+        "goals_after": [
+          "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nhEs : ∀ (j : Fin d), ContDiff ℝ 2 fun y => (electricField 𝓕.c A t y).ofLp j\nhEd : ∀ (j k : Fin d), Differentiable ℝ (Space.deriv k fun y => (electricField 𝓕.c A t y).ofLp j)\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+        ],
+        "goals_before": [
+          "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nhEs : ∀ (j : Fin d), ContDiff ℝ 2 fun y => (electricField 𝓕.c A t y).ofLp j\nhEd : ∀ (j k : Fin d), Differentiable ℝ (Space.deriv k fun y => (electricField 𝓕.c A t y).ofLp j)\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+        ],
+        "kind": "tactic",
+        "start": 22005
+      },
+      "start_offset": 14211,
+      "end_offset": 14430,
+      "position": {
+        "line": 390,
+        "column": 2
+      },
+      "end_position": {
+        "line": 393,
+        "column": 51
+      },
+      "source_text": "have hBt : ∀ j, Differentiable ℝ\n      (fun s => ∂[j] (fun y => A.magneticFieldMatrix 𝓕.c s y (j, i)) x) :=\n    fun j => Space.space_deriv_differentiable_time (i := j)\n      (magneticFieldMatrix_contDiff _ hA2 (j, i)) x"
+    },
+    {
+      "depth": 11,
+      "end": 15102,
+      "goals_after": [
+        "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nhEs : ∀ (j : Fin d), ContDiff ℝ 2 fun y => (electricField 𝓕.c A t y).ofLp j\nhEd : ∀ (j k : Fin d), Differentiable ℝ (Space.deriv k fun y => (electricField 𝓕.c A t y).ofLp j)\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+      ],
+      "goals_before": [
+        "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nhEs : ∀ (j : Fin d), ContDiff ℝ 2 fun y => (electricField 𝓕.c A t y).ofLp j\nhEd : ∀ (j k : Fin d), Differentiable ℝ (Space.deriv k fun y => (electricField 𝓕.c A t y).ofLp j)\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+      ],
+      "kind": "tactic",
+      "start": 14874,
+      "raw": {
+        "depth": 11,
+        "end": 22233,
+        "goals_after": [
+          "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nhEs : ∀ (j : Fin d), ContDiff ℝ 2 fun y => (electricField 𝓕.c A t y).ofLp j\nhEd : ∀ (j k : Fin d), Differentiable ℝ (Space.deriv k fun y => (electricField 𝓕.c A t y).ofLp j)\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+        ],
+        "goals_before": [
+          "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nhEs : ∀ (j : Fin d), ContDiff ℝ 2 fun y => (electricField 𝓕.c A t y).ofLp j\nhEd : ∀ (j k : Fin d), Differentiable ℝ (Space.deriv k fun y => (electricField 𝓕.c A t y).ofLp j)\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+        ],
+        "kind": "tactic",
+        "start": 22005
+      },
+      "start_offset": 14211,
+      "end_offset": 14430,
+      "position": {
+        "line": 390,
+        "column": 2
+      },
+      "end_position": {
+        "line": 393,
+        "column": 51
+      },
+      "source_text": "have hBt : ∀ j, Differentiable ℝ\n      (fun s => ∂[j] (fun y => A.magneticFieldMatrix 𝓕.c s y (j, i)) x) :=\n    fun j => Space.space_deriv_differentiable_time (i := j)\n      (magneticFieldMatrix_contDiff _ hA2 (j, i)) x"
+    },
+    {
+      "depth": 12,
+      "end": 15102,
+      "goals_after": [
+        "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nhEs : ∀ (j : Fin d), ContDiff ℝ 2 fun y => (electricField 𝓕.c A t y).ofLp j\nhEd : ∀ (j k : Fin d), Differentiable ℝ (Space.deriv k fun y => (electricField 𝓕.c A t y).ofLp j)\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+      ],
+      "goals_before": [
+        "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nhEs : ∀ (j : Fin d), ContDiff ℝ 2 fun y => (electricField 𝓕.c A t y).ofLp j\nhEd : ∀ (j k : Fin d), Differentiable ℝ (Space.deriv k fun y => (electricField 𝓕.c A t y).ofLp j)\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+      ],
+      "kind": "tactic",
+      "start": 14874,
+      "raw": {
+        "depth": 12,
+        "end": 22233,
+        "goals_after": [
+          "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nhEs : ∀ (j : Fin d), ContDiff ℝ 2 fun y => (electricField 𝓕.c A t y).ofLp j\nhEd : ∀ (j k : Fin d), Differentiable ℝ (Space.deriv k fun y => (electricField 𝓕.c A t y).ofLp j)\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+        ],
+        "goals_before": [
+          "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nhEs : ∀ (j : Fin d), ContDiff ℝ 2 fun y => (electricField 𝓕.c A t y).ofLp j\nhEd : ∀ (j k : Fin d), Differentiable ℝ (Space.deriv k fun y => (electricField 𝓕.c A t y).ofLp j)\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+        ],
+        "kind": "tactic",
+        "start": 22005
+      },
+      "start_offset": 14211,
+      "end_offset": 14430,
+      "position": {
+        "line": 390,
+        "column": 2
+      },
+      "end_position": {
+        "line": 393,
+        "column": 51
+      },
+      "source_text": "have hBt : ∀ j, Differentiable ℝ\n      (fun s => ∂[j] (fun y => A.magneticFieldMatrix 𝓕.c s y (j, i)) x) :=\n    fun j => Space.space_deriv_differentiable_time (i := j)\n      (magneticFieldMatrix_contDiff _ hA2 (j, i)) x"
+    },
+    {
+      "depth": 13,
+      "end": 15102,
+      "goals_after": [
+        "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nhEs : ∀ (j : Fin d), ContDiff ℝ 2 fun y => (electricField 𝓕.c A t y).ofLp j\nhEd : ∀ (j k : Fin d), Differentiable ℝ (Space.deriv k fun y => (electricField 𝓕.c A t y).ofLp j)\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+      ],
+      "goals_before": [
+        "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nhEs : ∀ (j : Fin d), ContDiff ℝ 2 fun y => (electricField 𝓕.c A t y).ofLp j\nhEd : ∀ (j k : Fin d), Differentiable ℝ (Space.deriv k fun y => (electricField 𝓕.c A t y).ofLp j)\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+      ],
+      "kind": "tactic",
+      "start": 14874,
+      "raw": {
+        "depth": 13,
+        "end": 22233,
+        "goals_after": [
+          "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nhEs : ∀ (j : Fin d), ContDiff ℝ 2 fun y => (electricField 𝓕.c A t y).ofLp j\nhEd : ∀ (j k : Fin d), Differentiable ℝ (Space.deriv k fun y => (electricField 𝓕.c A t y).ofLp j)\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+        ],
+        "goals_before": [
+          "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nhEs : ∀ (j : Fin d), ContDiff ℝ 2 fun y => (electricField 𝓕.c A t y).ofLp j\nhEd : ∀ (j k : Fin d), Differentiable ℝ (Space.deriv k fun y => (electricField 𝓕.c A t y).ofLp j)\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+        ],
+        "kind": "tactic",
+        "start": 22005
+      },
+      "start_offset": 14211,
+      "end_offset": 14430,
+      "position": {
+        "line": 390,
+        "column": 2
+      },
+      "end_position": {
+        "line": 393,
+        "column": 51
+      },
+      "source_text": "have hBt : ∀ j, Differentiable ℝ\n      (fun s => ∂[j] (fun y => A.magneticFieldMatrix 𝓕.c s y (j, i)) x) :=\n    fun j => Space.space_deriv_differentiable_time (i := j)\n      (magneticFieldMatrix_contDiff _ hA2 (j, i)) x"
+    },
+    {
+      "depth": 14,
+      "end": 15102,
+      "goals_after": [
+        "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nhEs : ∀ (j : Fin d), ContDiff ℝ 2 fun y => (electricField 𝓕.c A t y).ofLp j\nhEd : ∀ (j k : Fin d), Differentiable ℝ (Space.deriv k fun y => (electricField 𝓕.c A t y).ofLp j)\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+      ],
+      "goals_before": [
+        "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nhEs : ∀ (j : Fin d), ContDiff ℝ 2 fun y => (electricField 𝓕.c A t y).ofLp j\nhEd : ∀ (j k : Fin d), Differentiable ℝ (Space.deriv k fun y => (electricField 𝓕.c A t y).ofLp j)\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+      ],
+      "kind": "tactic",
+      "start": 14874,
+      "raw": {
+        "depth": 14,
+        "end": 22233,
+        "goals_after": [
+          "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nhEs : ∀ (j : Fin d), ContDiff ℝ 2 fun y => (electricField 𝓕.c A t y).ofLp j\nhEd : ∀ (j k : Fin d), Differentiable ℝ (Space.deriv k fun y => (electricField 𝓕.c A t y).ofLp j)\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+        ],
+        "goals_before": [
+          "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nhEs : ∀ (j : Fin d), ContDiff ℝ 2 fun y => (electricField 𝓕.c A t y).ofLp j\nhEd : ∀ (j k : Fin d), Differentiable ℝ (Space.deriv k fun y => (electricField 𝓕.c A t y).ofLp j)\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+        ],
+        "kind": "tactic",
+        "start": 22005
+      },
+      "start_offset": 14211,
+      "end_offset": 14430,
+      "position": {
+        "line": 390,
+        "column": 2
+      },
+      "end_position": {
+        "line": 393,
+        "column": 51
+      },
+      "source_text": "have hBt : ∀ j, Differentiable ℝ\n      (fun s => ∂[j] (fun y => A.magneticFieldMatrix 𝓕.c s y (j, i)) x) :=\n    fun j => Space.space_deriv_differentiable_time (i := j)\n      (magneticFieldMatrix_contDiff _ hA2 (j, i)) x"
+    },
+    {
+      "depth": 15,
+      "end": 15102,
+      "goals_after": [
+        "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nhEs : ∀ (j : Fin d), ContDiff ℝ 2 fun y => (electricField 𝓕.c A t y).ofLp j\nhEd : ∀ (j k : Fin d), Differentiable ℝ (Space.deriv k fun y => (electricField 𝓕.c A t y).ofLp j)\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+      ],
+      "goals_before": [
+        "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nhEs : ∀ (j : Fin d), ContDiff ℝ 2 fun y => (electricField 𝓕.c A t y).ofLp j\nhEd : ∀ (j k : Fin d), Differentiable ℝ (Space.deriv k fun y => (electricField 𝓕.c A t y).ofLp j)\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+      ],
+      "kind": "tactic",
+      "start": 14874,
+      "raw": {
+        "depth": 15,
+        "end": 22233,
+        "goals_after": [
+          "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nhEs : ∀ (j : Fin d), ContDiff ℝ 2 fun y => (electricField 𝓕.c A t y).ofLp j\nhEd : ∀ (j k : Fin d), Differentiable ℝ (Space.deriv k fun y => (electricField 𝓕.c A t y).ofLp j)\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+        ],
+        "goals_before": [
+          "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nhEs : ∀ (j : Fin d), ContDiff ℝ 2 fun y => (electricField 𝓕.c A t y).ofLp j\nhEd : ∀ (j k : Fin d), Differentiable ℝ (Space.deriv k fun y => (electricField 𝓕.c A t y).ofLp j)\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+        ],
+        "kind": "tactic",
+        "start": 22005
+      },
+      "start_offset": 14211,
+      "end_offset": 14430,
+      "position": {
+        "line": 390,
+        "column": 2
+      },
+      "end_position": {
+        "line": 393,
+        "column": 51
+      },
+      "source_text": "have hBt : ∀ j, Differentiable ℝ\n      (fun s => ∂[j] (fun y => A.magneticFieldMatrix 𝓕.c s y (j, i)) x) :=\n    fun j => Space.space_deriv_differentiable_time (i := j)\n      (magneticFieldMatrix_contDiff _ hA2 (j, i)) x"
+    },
+    {
+      "depth": 16,
+      "end": 15102,
+      "goals_after": [
+        "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nhEs : ∀ (j : Fin d), ContDiff ℝ 2 fun y => (electricField 𝓕.c A t y).ofLp j\nhEd : ∀ (j k : Fin d), Differentiable ℝ (Space.deriv k fun y => (electricField 𝓕.c A t y).ofLp j)\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+      ],
+      "goals_before": [
+        "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nhEs : ∀ (j : Fin d), ContDiff ℝ 2 fun y => (electricField 𝓕.c A t y).ofLp j\nhEd : ∀ (j k : Fin d), Differentiable ℝ (Space.deriv k fun y => (electricField 𝓕.c A t y).ofLp j)\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+      ],
+      "kind": "tactic",
+      "start": 14874,
+      "raw": {
+        "depth": 16,
+        "end": 22233,
+        "goals_after": [
+          "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nhEs : ∀ (j : Fin d), ContDiff ℝ 2 fun y => (electricField 𝓕.c A t y).ofLp j\nhEd : ∀ (j k : Fin d), Differentiable ℝ (Space.deriv k fun y => (electricField 𝓕.c A t y).ofLp j)\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+        ],
+        "goals_before": [
+          "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\nhEs : ∀ (j : Fin d), ContDiff ℝ 2 fun y => (electricField 𝓕.c A t y).ofLp j\nhEd : ∀ (j k : Fin d), Differentiable ℝ (Space.deriv k fun y => (electricField 𝓕.c A t y).ofLp j)\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+        ],
+        "kind": "tactic",
+        "start": 22005
+      },
+      "start_offset": 14211,
+      "end_offset": 14430,
+      "position": {
+        "line": 390,
+        "column": 2
+      },
+      "end_position": {
+        "line": 393,
+        "column": 51
+      },
+      "source_text": "have hBt : ∀ j, Differentiable ℝ\n      (fun s => ∂[j] (fun y => A.magneticFieldMatrix 𝓕.c s y (j, i)) x) :=\n    fun j => Space.space_deriv_differentiable_time (i := j)\n      (magneticFieldMatrix_contDiff _ hA2 (j, i)) x"
+    }
+  ],
+  "unavailable_reason": null
+}

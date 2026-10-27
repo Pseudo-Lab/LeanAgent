@@ -1,0 +1,74 @@
+/Users/sungwoo/lean_project/LeanAgent/docs/research/verifier-guided-agent/experiments/local-minimizer-2026-10-21/runs/06/v4.32.0/a010.lean:223:10: error: Tactic `rfl` failed: The left-hand side
+  crAnTimeOrderSign (φs' ++ φ :: ψ :: φs) •
+    (ι (ofCrAnListF (crAnTimeOrderList (φs' ++ φ :: ψ :: φs))) -
+      (exchangeSign (𝓕.crAnStatistics φ)) (𝓕.crAnStatistics ψ) •
+        ι (ofCrAnListF (crAnTimeOrderList (φs' ++ ψ :: φ :: φs))))
+is not definitionally equal to the right-hand side
+  crAnTimeOrderSign (φs' ++ [φ, ψ] ++ φs) •
+    (ι
+                (ofCrAnListF
+                  (List.takeWhile (fun c => decide ¬crAnTimeOrderRel φ c)
+                    (List.insertionSort crAnTimeOrderRel (φs' ++ φs)))) *
+              ι (ofCrAnListF (List.filter (fun c => decide (crAnTimeOrderRel φ c ∧ crAnTimeOrderRel c φ)) φs')) *
+            ι (ofCrAnListF [φ, ψ]) *
+          ι (ofCrAnListF (List.filter (fun c => decide (crAnTimeOrderRel φ c ∧ crAnTimeOrderRel c φ)) φs)) *
+        ι
+          (ofCrAnListF
+            (List.filter (fun c => decide (crAnTimeOrderRel φ c ∧ ¬crAnTimeOrderRel c φ))
+              (List.insertionSort crAnTimeOrderRel (φs' ++ φs)))) -
+      (exchangeSign (𝓕.crAnStatistics φ)) (𝓕.crAnStatistics ψ) •
+                ι
+                  (ofCrAnListF
+                    (List.takeWhile (fun c => decide ¬crAnTimeOrderRel φ c)
+                      (List.insertionSort crAnTimeOrderRel (φs' ++ φs)))) *
+              ι (ofCrAnListF (List.filter (fun c => decide (crAnTimeOrderRel φ c ∧ crAnTimeOrderRel c φ)) φs')) *
+            ι (ofCrAnListF [ψ, φ]) *
+          ι (ofCrAnListF (List.filter (fun c => decide (crAnTimeOrderRel φ c ∧ crAnTimeOrderRel c φ)) φs)) *
+        ι
+          (ofCrAnListF
+            (List.filter (fun c => decide (crAnTimeOrderRel φ c ∧ ¬crAnTimeOrderRel c φ))
+              (List.insertionSort crAnTimeOrderRel (φs' ++ φs)))))
+
+𝓕 : FieldSpecification
+φ ψ : 𝓕.CrAnFieldOp
+hφψ : crAnTimeOrderRel φ ψ
+hψφ : crAnTimeOrderRel ψ φ
+a b : 𝓕.FieldOpFreeAlgebra
+pb : (b : 𝓕.FieldOpFreeAlgebra) → b ∈ Submodule.span ℂ (Set.range ⇑ofCrAnListFBasis) → Prop :=
+  fun b hc =>
+    ι (timeOrderF (a * (superCommuteF (ofCrAnOpF φ)) (ofCrAnOpF ψ) * b)) =
+      ι ((superCommuteF (ofCrAnOpF φ)) (ofCrAnOpF ψ) * timeOrderF (a * b))
+φs : List 𝓕.CrAnFieldOp
+pa : (a : 𝓕.FieldOpFreeAlgebra) → a ∈ Submodule.span ℂ (Set.range ⇑ofCrAnListFBasis) → Prop :=
+  fun a hc =>
+    ι (timeOrderF (a * (superCommuteF (ofCrAnOpF φ)) (ofCrAnOpF ψ) * ofCrAnListF φs)) =
+      ι ((superCommuteF (ofCrAnOpF φ)) (ofCrAnOpF ψ) * timeOrderF (a * ofCrAnListF φs))
+φs' : List 𝓕.CrAnFieldOp
+⊢ crAnTimeOrderSign (φs' ++ φ :: ψ :: φs) •
+      (ι (ofCrAnListF (crAnTimeOrderList (φs' ++ φ :: ψ :: φs))) -
+        (exchangeSign (𝓕.crAnStatistics φ)) (𝓕.crAnStatistics ψ) •
+          ι (ofCrAnListF (crAnTimeOrderList (φs' ++ ψ :: φ :: φs)))) =
+    crAnTimeOrderSign (φs' ++ [φ, ψ] ++ φs) •
+      (ι
+                  (ofCrAnListF
+                    (List.takeWhile (fun c => decide ¬crAnTimeOrderRel φ c)
+                      (List.insertionSort crAnTimeOrderRel (φs' ++ φs)))) *
+                ι (ofCrAnListF (List.filter (fun c => decide (crAnTimeOrderRel φ c ∧ crAnTimeOrderRel c φ)) φs')) *
+              ι (ofCrAnListF [φ, ψ]) *
+            ι (ofCrAnListF (List.filter (fun c => decide (crAnTimeOrderRel φ c ∧ crAnTimeOrderRel c φ)) φs)) *
+          ι
+            (ofCrAnListF
+              (List.filter (fun c => decide (crAnTimeOrderRel φ c ∧ ¬crAnTimeOrderRel c φ))
+                (List.insertionSort crAnTimeOrderRel (φs' ++ φs)))) -
+        (exchangeSign (𝓕.crAnStatistics φ)) (𝓕.crAnStatistics ψ) •
+                  ι
+                    (ofCrAnListF
+                      (List.takeWhile (fun c => decide ¬crAnTimeOrderRel φ c)
+                        (List.insertionSort crAnTimeOrderRel (φs' ++ φs)))) *
+                ι (ofCrAnListF (List.filter (fun c => decide (crAnTimeOrderRel φ c ∧ crAnTimeOrderRel c φ)) φs')) *
+              ι (ofCrAnListF [ψ, φ]) *
+            ι (ofCrAnListF (List.filter (fun c => decide (crAnTimeOrderRel φ c ∧ crAnTimeOrderRel c φ)) φs)) *
+          ι
+            (ofCrAnListF
+              (List.filter (fun c => decide (crAnTimeOrderRel φ c ∧ ¬crAnTimeOrderRel c φ))
+                (List.insertionSort crAnTimeOrderRel (φs' ++ φs)))))

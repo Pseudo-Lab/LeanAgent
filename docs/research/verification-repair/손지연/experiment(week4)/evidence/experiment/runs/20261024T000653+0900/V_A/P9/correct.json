@@ -1,0 +1,160 @@
+{
+  "problem": 9,
+  "variant": "correct",
+  "expected_valid": true,
+  "expected_status": "verified",
+  "actual_status": "verified",
+  "expected_status_match": true,
+  "candidate_path": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/fixtures/P9/correct.lean",
+  "candidate_hash": "ab051b1bb5547a874efe3491ed0c9acc785de2234344046c0d95d4dee178f73e",
+  "proof_sha256": "e0e5357ba18cf440a8d13ce7a92d2e527b58088d170d6f66f9991e6ed9c18464",
+  "A1": "accept",
+  "A2": "accept",
+  "A3": "accept",
+  "process": {
+    "argv": [
+      "elan",
+      "run",
+      "leanprover/lean4:v4.33.0-rc2",
+      "lake",
+      "env",
+      "lean",
+      "--json",
+      "--root=/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/V_A/P9/ordinary",
+      "-DmaxHeartbeats=200000",
+      "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/V_A/P9/ordinary/lean/001_correct_exitcode/candidate.lean"
+    ],
+    "cwd": "/Users/hellokitsch/_feynlang/leanProject/week2/P7/cslib-progress",
+    "returncode": 0,
+    "timeout": false,
+    "process_error": null,
+    "wall_time_limit": false,
+    "stdout": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/V_A/P9/ordinary/lean/001_correct_exitcode/stdout.log",
+    "stderr": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/V_A/P9/ordinary/lean/001_correct_exitcode/stderr.log",
+    "timeout_seconds": 300,
+    "elapsed_ms": 4699
+  },
+  "A2_goals": [],
+  "A2_selected_info": {
+    "depth": 2,
+    "end": 10744,
+    "goals_after": [],
+    "goals_before": [
+      "Name : Type u\nConstant : Type v\ndefs : Constant → Process Name Constant → Prop\np q r : Process Name Constant\n⊢ p ~[lts] q → (p.choice r) ~[lts] (q.choice r)"
+    ],
+    "kind": "tactic",
+    "start": 9093,
+    "raw": {
+      "depth": 2,
+      "end": 17875,
+      "goals_after": [],
+      "goals_before": [
+        "Name : Type u\nConstant : Type v\ndefs : Constant → Process Name Constant → Prop\np q r : Process Name Constant\n⊢ p ~[lts] q → (p.choice r) ~[lts] (q.choice r)"
+      ],
+      "kind": "tactic",
+      "start": 16224
+    },
+    "start_offset": 8957,
+    "end_offset": 10563,
+    "position": {
+      "line": 312,
+      "column": 85
+    },
+    "end_position": {
+      "line": 372,
+      "column": 40
+    },
+    "source_text": "by\n  intro h\n  exists @ChoiceBisim _ _ defs\n  constructor\n  · constructor; assumption\n  intro s1 s2 r μ\n  constructor\n  case left =>\n    intro s1' htr\n    cases r\n    case choice p q r hbisim =>\n      obtain ⟨rel, hr, hb⟩ := hbisim\n      cases htr\n      case choiceL a b c htr =>\n        obtain ⟨s2', htr2, hr2⟩ := hb.follow_fst hr htr\n        exists s2'\n        constructor\n        · apply Tr.choiceL htr2\n        · constructor\n          apply hb.le_bisimilarity _ _ hr2\n      case choiceR a b c htr =>\n        exists s1'\n        constructor\n        · apply Tr.choiceR htr\n        · constructor\n          apply HomBisimilarity.refl\n    case bisim hbisim =>\n      obtain ⟨rel, hr, hb⟩ := hbisim\n      obtain ⟨s2', htr2, hr2⟩ := hb.follow_fst hr htr\n      exists s2'\n      constructor\n      · assumption\n      constructor\n      apply hb.le_bisimilarity _ _ hr2\n  case right =>\n    intro s2' htr\n    cases r\n    case choice p q r hbisim =>\n      obtain ⟨rel, hr, hb⟩ := hbisim\n      cases htr\n      case choiceL a b c htr =>\n        obtain ⟨s1', htr1, hr1⟩ := hb.follow_snd hr htr\n        exists s1'\n        constructor\n        · apply Tr.choiceL htr1\n        · constructor\n          apply hb.le_bisimilarity _ _ hr1\n      case choiceR a b c htr =>\n        exists s2'\n        constructor\n        · apply Tr.choiceR htr\n        · constructor\n          apply HomBisimilarity.refl\n    case bisim hbisim =>\n      obtain ⟨rel, hr, hb⟩ := hbisim\n      obtain ⟨s1', htr1, hr1⟩ := hb.follow_snd hr htr\n      exists s1'\n      constructor\n      · assumption\n      · constructor\n        apply hb.le_bisimilarity _ _ hr1"
+  },
+  "A2_evidence": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/V_A/P9/ordinary/lean/002_correct_native_goals_context/proof_info.json",
+  "A3_result": {
+    "task_id": "P9",
+    "attempt": "correct_final",
+    "candidate_hash": "ab051b1bb5547a874efe3491ed0c9acc785de2234344046c0d95d4dee178f73e",
+    "environment_id": "539810be844b4918624a39f96635209e5268d60962b8f167956106aaa6dbee0f",
+    "check_kind": "final",
+    "status": "verified",
+    "process_exit_code": 0,
+    "diagnostics": [
+      {
+        "severity": "information",
+        "position": {
+          "column": 0,
+          "line": 459
+        },
+        "end_position": {
+          "column": 6,
+          "line": 459
+        },
+        "message": "Cslib.CCS.bisimilarity_congr_choice.{u, v} {Name : Type u} {Constant : Type v}\n  {defs : Constant → Cslib.CCS.Process Name Constant → Prop} {p q r : Cslib.CCS.Process Name Constant} :\n  Cslib.CCS.lts.HomBisimilarity p q → Cslib.CCS.lts.HomBisimilarity (p.choice r) (q.choice r)",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "Cslib.CCS.bisimilarity_congr_choice.{u, v} {Name : Type u} {Constant : Type v}\n  {defs : Constant → Cslib.CCS.Process Name Constant → Prop} {p q r : Cslib.CCS.Process Name Constant} :\n  Cslib.CCS.lts.HomBisimilarity p q → Cslib.CCS.lts.HomBisimilarity (p.choice r) (q.choice r)",
+          "endPos": {
+            "column": 6,
+            "line": 459
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/V_A/P9/ordinary/lean/007_correct_final/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 0,
+            "line": 459
+          },
+          "severity": "information"
+        }
+      },
+      {
+        "severity": "information",
+        "position": {
+          "column": 0,
+          "line": 460
+        },
+        "end_position": {
+          "column": 6,
+          "line": 460
+        },
+        "message": "'Cslib.CCS.bisimilarity_congr_choice' depends on axioms: [propext, Classical.choice, Quot.sound]",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "'Cslib.CCS.bisimilarity_congr_choice' depends on axioms: [propext, Classical.choice, Quot.sound]",
+          "endPos": {
+            "column": 6,
+            "line": 460
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/V_A/P9/ordinary/lean/007_correct_final/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 0,
+            "line": 460
+          },
+          "severity": "information"
+        }
+      }
+    ],
+    "goals": null,
+    "local_context": null,
+    "sorries": [],
+    "backend_proof_status": null,
+    "statement_check": "fixed_context_preserved",
+    "axioms": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext"
+    ],
+    "metrics": {
+      "proof_tokens": 251,
+      "raw_heartbeats": 3871332,
+      "heartbeats": 3871
+    },
+    "elapsed_ms": 4317,
+    "raw_log_path": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/V_A/P9/ordinary/lean/007_correct_final/stdout.log",
+    "detail": null,
+    "failure_kind": null
+  }
+}

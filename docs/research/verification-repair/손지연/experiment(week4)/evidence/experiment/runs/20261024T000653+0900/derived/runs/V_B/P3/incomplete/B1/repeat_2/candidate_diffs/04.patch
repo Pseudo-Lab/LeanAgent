@@ -1,0 +1,38 @@
+--- candidate_03.proof.lean
++++ candidate_04.proof.lean
+@@ -20,18 +20,25 @@
+       UpdateStates (updatedStates σ ks' vs') ks vs
+         (updatedStates (updatedStates σ ks' vs') ks vs) :=
+     updatedStatesUpdate Hlen Hdef₁
++  have Hunzip_fst :
++      ∀ (as : List P.Ident) (bs : List P.Expr),
++        as.length = bs.length → (as.zip bs).unzip.1 = as := by
++    intro as
++    induction as with
++    | nil =>
++      intro bs Hlen
++      cases bs <;> simp_all
++    | cons a as ih =>
++      intro bs Hlen
++      cases bs with
++      | nil => simp_all
++      | cons b bs =>
++        simp at Hlen
++        simp [ih bs Hlen]
+   have Hzipdisj :
+       List.Disjoint ((ks'.zip vs').unzip.1) ((ks.zip vs).unzip.1) := by
+-    intro k Hk' Hk
+-    have Hmem' : k ∈ ks' := by
+-      simp only [List.mem_map] at Hk'
+-      obtain ⟨p, Hp, rfl⟩ := Hk'
+-      exact (List.of_mem_zip Hp).1
+-    have Hmem : k ∈ ks := by
+-      simp only [List.mem_map] at Hk
+-      obtain ⟨p, Hp, rfl⟩ := Hk
+-      exact (List.of_mem_zip Hp).1
+-    exact Hdisj Hmem Hmem'
++    rw [Hunzip_fst ks' vs' Hlen', Hunzip_fst ks vs Hlen]
++    exact List.Disjoint.symm Hdisj
+   have Hcomm :
+       updatedStates (updatedStates σ ks' vs') ks vs =
+         updatedStates (updatedStates σ ks vs) ks' vs' := by

@@ -1,0 +1,513 @@
+{
+  "records": [
+    {
+      "depth": 4,
+      "end": 69599,
+      "goals_after": [],
+      "goals_before": [
+        "ι : Type l\ninst✝⁷ : Fintype ι\ninst✝⁶ : Nonempty ι\ninst✝⁵ : DecidableEq ι\nF : Type\ninst✝⁴ : CommRing F\ninst✝³ : Fintype F\nA : Type\ninst✝² : DecidableEq A\ninst✝¹ : AddCommGroup A\ninst✝ : Module F A\nMC : ModuleCode ι F A\ne ε : ℕ\nhC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε\nh_interleaved_gaps : ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε\n⊢ ∀ ϑ > 0, δ_ε_multilinearCorrelatedAgreement_Nat (↑MC) ϑ e ε"
+      ],
+      "kind": "tactic",
+      "start": 67369,
+      "raw": {
+        "depth": 4,
+        "end": 76730,
+        "goals_after": [],
+        "goals_before": [
+          "ι : Type l\ninst✝⁷ : Fintype ι\ninst✝⁶ : Nonempty ι\ninst✝⁵ : DecidableEq ι\nF : Type\ninst✝⁴ : CommRing F\ninst✝³ : Fintype F\nA : Type\ninst✝² : DecidableEq A\ninst✝¹ : AddCommGroup A\ninst✝ : Module F A\nMC : ModuleCode ι F A\ne ε : ℕ\nhC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε\nh_interleaved_gaps : ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε\n⊢ ∀ ϑ > 0, δ_ε_multilinearCorrelatedAgreement_Nat (↑MC) ϑ e ε"
+        ],
+        "kind": "tactic",
+        "start": 74500
+      },
+      "start_offset": 63324,
+      "end_offset": 65443,
+      "position": {
+        "line": 1214,
+        "column": 55
+      },
+      "end_position": {
+        "line": 1261,
+        "column": 69
+      },
+      "source_text": "by\n  classical\n  intro ϑ hϑ_gt_0\n  obtain ⟨t, rfl⟩ := Nat.exists_eq_succ_of_ne_zero (by omega)\n  induction t with\n  | zero =>\n      simpa [δ_ε_multilinearCorrelatedAgreement_Nat, multilinearCombine,\n        jointProximityNat₂, jointProximityNat, finMapTwoWords] using\n        hC_proximityGapAffineLines\n  | succ t ih =>\n      intro u hu\n      let U₀ := (splitHalfRowWiseInterleavedWords (ϑ := Nat.succ t) u).1\n      let U₁ := (splitHalfRowWiseInterleavedWords (ϑ := Nat.succ t) u).2\n      have hu_split :\n          Pr_{ let r_last ← $ᵖ F;\n               let r_init ← $ᵖ (Fin (Nat.succ t) → F) }[\n            multilinearCombine_affineComb_split_last_close\n              (MC := MC) (u := u) (e := e) r_last r_init]\n            > (((Nat.cast (R := ℝ≥0) (Nat.succ t + 1)) * ε : ℝ≥0) /\n                (Fintype.card F : ℝ≥0)) := by\n        simpa [multilinearCombine_affineComb_split_last_close, U₀, U₁,\n          Nat.succ_eq_add_one] using hu\n      have hR_prob :\n          Pr_{ let r ← $ᵖ F }[\n            r ∈ R_star_tensor MC (m := Nat.succ t) (e := e) (ε := ε) U₀ U₁]\n            > (↑ε : ENNReal) / (Fintype.card F : ENNReal) := by\n        simpa [U₀, U₁] using\n          (prob_R_star_gt_threshold (MC := MC) (ε := ε) (u := u) (e := e)\n            hu_split)\n      have h_close :\n          Pr_{ let r ← $ᵖ F }[\n            Δ₀(affineLineEvaluation (F := F) (⋈| U₀) (⋈| U₁) r,\n              MC ^⋈ (Fin (2 ^ Nat.succ t))) ≤ e]\n            > (↑ε : ENNReal) / (Fintype.card F : ENNReal) := by\n        refine lt_of_lt_of_le hR_prob ?_\n        apply Pr_le_Pr_of_implies\n        intro r hr\n        have hr_close := correlatedAgreement_of_mem_R_star_tensor\n          (MC := MC) (e := e) (ε := ε) (ϑ_pred := Nat.succ t)\n          (ih := ih) (u := u)\n          (r := ⟨r, hr⟩)\n        simpa [jointProximityNat, affineLineEvaluation,\n          Interleavable.interleave, U₀, U₁] using hr_close\n      have h_interleaved :=\n        h_interleaved_gaps (2 ^ Nat.succ t) (by positivity)\n          (⋈| U₀) (⋈| U₁) h_close\n      simpa [jointProximityNat₂, jointProximityNat,\n        splitHalfRowWiseInterleavedWords, U₀, U₁] using h_interleaved"
+    },
+    {
+      "depth": 5,
+      "end": 67371,
+      "goals_after": [],
+      "goals_before": [
+        "ι : Type l\ninst✝⁷ : Fintype ι\ninst✝⁶ : Nonempty ι\ninst✝⁵ : DecidableEq ι\nF : Type\ninst✝⁴ : CommRing F\ninst✝³ : Fintype F\nA : Type\ninst✝² : DecidableEq A\ninst✝¹ : AddCommGroup A\ninst✝ : Module F A\nMC : ModuleCode ι F A\ne ε : ℕ\nhC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε\nh_interleaved_gaps : ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε\n⊢ ∀ ϑ > 0, δ_ε_multilinearCorrelatedAgreement_Nat (↑MC) ϑ e ε"
+      ],
+      "kind": "tactic",
+      "start": 67369,
+      "raw": {
+        "depth": 5,
+        "end": 74502,
+        "goals_after": [],
+        "goals_before": [
+          "ι : Type l\ninst✝⁷ : Fintype ι\ninst✝⁶ : Nonempty ι\ninst✝⁵ : DecidableEq ι\nF : Type\ninst✝⁴ : CommRing F\ninst✝³ : Fintype F\nA : Type\ninst✝² : DecidableEq A\ninst✝¹ : AddCommGroup A\ninst✝ : Module F A\nMC : ModuleCode ι F A\ne ε : ℕ\nhC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε\nh_interleaved_gaps : ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε\n⊢ ∀ ϑ > 0, δ_ε_multilinearCorrelatedAgreement_Nat (↑MC) ϑ e ε"
+        ],
+        "kind": "tactic",
+        "start": 74500
+      },
+      "start_offset": 63324,
+      "end_offset": 63326,
+      "position": {
+        "line": 1214,
+        "column": 55
+      },
+      "end_position": {
+        "line": 1214,
+        "column": 57
+      },
+      "source_text": "by"
+    },
+    {
+      "depth": 6,
+      "end": 69599,
+      "goals_after": [],
+      "goals_before": [
+        "ι : Type l\ninst✝⁷ : Fintype ι\ninst✝⁶ : Nonempty ι\ninst✝⁵ : DecidableEq ι\nF : Type\ninst✝⁴ : CommRing F\ninst✝³ : Fintype F\nA : Type\ninst✝² : DecidableEq A\ninst✝¹ : AddCommGroup A\ninst✝ : Module F A\nMC : ModuleCode ι F A\ne ε : ℕ\nhC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε\nh_interleaved_gaps : ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε\n⊢ ∀ ϑ > 0, δ_ε_multilinearCorrelatedAgreement_Nat (↑MC) ϑ e ε"
+      ],
+      "kind": "tactic",
+      "start": 67374,
+      "raw": {
+        "depth": 6,
+        "end": 76730,
+        "goals_after": [],
+        "goals_before": [
+          "ι : Type l\ninst✝⁷ : Fintype ι\ninst✝⁶ : Nonempty ι\ninst✝⁵ : DecidableEq ι\nF : Type\ninst✝⁴ : CommRing F\ninst✝³ : Fintype F\nA : Type\ninst✝² : DecidableEq A\ninst✝¹ : AddCommGroup A\ninst✝ : Module F A\nMC : ModuleCode ι F A\ne ε : ℕ\nhC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε\nh_interleaved_gaps : ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε\n⊢ ∀ ϑ > 0, δ_ε_multilinearCorrelatedAgreement_Nat (↑MC) ϑ e ε"
+        ],
+        "kind": "tactic",
+        "start": 74505
+      },
+      "start_offset": 63329,
+      "end_offset": 65443,
+      "position": {
+        "line": 1215,
+        "column": 2
+      },
+      "end_position": {
+        "line": 1261,
+        "column": 69
+      },
+      "source_text": "classical\n  intro ϑ hϑ_gt_0\n  obtain ⟨t, rfl⟩ := Nat.exists_eq_succ_of_ne_zero (by omega)\n  induction t with\n  | zero =>\n      simpa [δ_ε_multilinearCorrelatedAgreement_Nat, multilinearCombine,\n        jointProximityNat₂, jointProximityNat, finMapTwoWords] using\n        hC_proximityGapAffineLines\n  | succ t ih =>\n      intro u hu\n      let U₀ := (splitHalfRowWiseInterleavedWords (ϑ := Nat.succ t) u).1\n      let U₁ := (splitHalfRowWiseInterleavedWords (ϑ := Nat.succ t) u).2\n      have hu_split :\n          Pr_{ let r_last ← $ᵖ F;\n               let r_init ← $ᵖ (Fin (Nat.succ t) → F) }[\n            multilinearCombine_affineComb_split_last_close\n              (MC := MC) (u := u) (e := e) r_last r_init]\n            > (((Nat.cast (R := ℝ≥0) (Nat.succ t + 1)) * ε : ℝ≥0) /\n                (Fintype.card F : ℝ≥0)) := by\n        simpa [multilinearCombine_affineComb_split_last_close, U₀, U₁,\n          Nat.succ_eq_add_one] using hu\n      have hR_prob :\n          Pr_{ let r ← $ᵖ F }[\n            r ∈ R_star_tensor MC (m := Nat.succ t) (e := e) (ε := ε) U₀ U₁]\n            > (↑ε : ENNReal) / (Fintype.card F : ENNReal) := by\n        simpa [U₀, U₁] using\n          (prob_R_star_gt_threshold (MC := MC) (ε := ε) (u := u) (e := e)\n            hu_split)\n      have h_close :\n          Pr_{ let r ← $ᵖ F }[\n            Δ₀(affineLineEvaluation (F := F) (⋈| U₀) (⋈| U₁) r,\n              MC ^⋈ (Fin (2 ^ Nat.succ t))) ≤ e]\n            > (↑ε : ENNReal) / (Fintype.card F : ENNReal) := by\n        refine lt_of_lt_of_le hR_prob ?_\n        apply Pr_le_Pr_of_implies\n        intro r hr\n        have hr_close := correlatedAgreement_of_mem_R_star_tensor\n          (MC := MC) (e := e) (ε := ε) (ϑ_pred := Nat.succ t)\n          (ih := ih) (u := u)\n          (r := ⟨r, hr⟩)\n        simpa [jointProximityNat, affineLineEvaluation,\n          Interleavable.interleave, U₀, U₁] using hr_close\n      have h_interleaved :=\n        h_interleaved_gaps (2 ^ Nat.succ t) (by positivity)\n          (⋈| U₀) (⋈| U₁) h_close\n      simpa [jointProximityNat₂, jointProximityNat,\n        splitHalfRowWiseInterleavedWords, U₀, U₁] using h_interleaved"
+    },
+    {
+      "depth": 7,
+      "end": 69599,
+      "goals_after": [],
+      "goals_before": [
+        "ι : Type l\ninst✝⁷ : Fintype ι\ninst✝⁶ : Nonempty ι\ninst✝⁵ : DecidableEq ι\nF : Type\ninst✝⁴ : CommRing F\ninst✝³ : Fintype F\nA : Type\ninst✝² : DecidableEq A\ninst✝¹ : AddCommGroup A\ninst✝ : Module F A\nMC : ModuleCode ι F A\ne ε : ℕ\nhC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε\nh_interleaved_gaps : ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε\n⊢ ∀ ϑ > 0, δ_ε_multilinearCorrelatedAgreement_Nat (↑MC) ϑ e ε"
+      ],
+      "kind": "tactic",
+      "start": 67374,
+      "raw": {
+        "depth": 7,
+        "end": 76730,
+        "goals_after": [],
+        "goals_before": [
+          "ι : Type l\ninst✝⁷ : Fintype ι\ninst✝⁶ : Nonempty ι\ninst✝⁵ : DecidableEq ι\nF : Type\ninst✝⁴ : CommRing F\ninst✝³ : Fintype F\nA : Type\ninst✝² : DecidableEq A\ninst✝¹ : AddCommGroup A\ninst✝ : Module F A\nMC : ModuleCode ι F A\ne ε : ℕ\nhC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε\nh_interleaved_gaps : ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε\n⊢ ∀ ϑ > 0, δ_ε_multilinearCorrelatedAgreement_Nat (↑MC) ϑ e ε"
+        ],
+        "kind": "tactic",
+        "start": 74505
+      },
+      "start_offset": 63329,
+      "end_offset": 65443,
+      "position": {
+        "line": 1215,
+        "column": 2
+      },
+      "end_position": {
+        "line": 1261,
+        "column": 69
+      },
+      "source_text": "classical\n  intro ϑ hϑ_gt_0\n  obtain ⟨t, rfl⟩ := Nat.exists_eq_succ_of_ne_zero (by omega)\n  induction t with\n  | zero =>\n      simpa [δ_ε_multilinearCorrelatedAgreement_Nat, multilinearCombine,\n        jointProximityNat₂, jointProximityNat, finMapTwoWords] using\n        hC_proximityGapAffineLines\n  | succ t ih =>\n      intro u hu\n      let U₀ := (splitHalfRowWiseInterleavedWords (ϑ := Nat.succ t) u).1\n      let U₁ := (splitHalfRowWiseInterleavedWords (ϑ := Nat.succ t) u).2\n      have hu_split :\n          Pr_{ let r_last ← $ᵖ F;\n               let r_init ← $ᵖ (Fin (Nat.succ t) → F) }[\n            multilinearCombine_affineComb_split_last_close\n              (MC := MC) (u := u) (e := e) r_last r_init]\n            > (((Nat.cast (R := ℝ≥0) (Nat.succ t + 1)) * ε : ℝ≥0) /\n                (Fintype.card F : ℝ≥0)) := by\n        simpa [multilinearCombine_affineComb_split_last_close, U₀, U₁,\n          Nat.succ_eq_add_one] using hu\n      have hR_prob :\n          Pr_{ let r ← $ᵖ F }[\n            r ∈ R_star_tensor MC (m := Nat.succ t) (e := e) (ε := ε) U₀ U₁]\n            > (↑ε : ENNReal) / (Fintype.card F : ENNReal) := by\n        simpa [U₀, U₁] using\n          (prob_R_star_gt_threshold (MC := MC) (ε := ε) (u := u) (e := e)\n            hu_split)\n      have h_close :\n          Pr_{ let r ← $ᵖ F }[\n            Δ₀(affineLineEvaluation (F := F) (⋈| U₀) (⋈| U₁) r,\n              MC ^⋈ (Fin (2 ^ Nat.succ t))) ≤ e]\n            > (↑ε : ENNReal) / (Fintype.card F : ENNReal) := by\n        refine lt_of_lt_of_le hR_prob ?_\n        apply Pr_le_Pr_of_implies\n        intro r hr\n        have hr_close := correlatedAgreement_of_mem_R_star_tensor\n          (MC := MC) (e := e) (ε := ε) (ϑ_pred := Nat.succ t)\n          (ih := ih) (u := u)\n          (r := ⟨r, hr⟩)\n        simpa [jointProximityNat, affineLineEvaluation,\n          Interleavable.interleave, U₀, U₁] using hr_close\n      have h_interleaved :=\n        h_interleaved_gaps (2 ^ Nat.succ t) (by positivity)\n          (⋈| U₀) (⋈| U₁) h_close\n      simpa [jointProximityNat₂, jointProximityNat,\n        splitHalfRowWiseInterleavedWords, U₀, U₁] using h_interleaved"
+    },
+    {
+      "depth": 8,
+      "end": 69599,
+      "goals_after": [],
+      "goals_before": [
+        "ι : Type l\ninst✝⁷ : Fintype ι\ninst✝⁶ : Nonempty ι\ninst✝⁵ : DecidableEq ι\nF : Type\ninst✝⁴ : CommRing F\ninst✝³ : Fintype F\nA : Type\ninst✝² : DecidableEq A\ninst✝¹ : AddCommGroup A\ninst✝ : Module F A\nMC : ModuleCode ι F A\ne ε : ℕ\nhC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε\nh_interleaved_gaps : ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε\n⊢ ∀ ϑ > 0, δ_ε_multilinearCorrelatedAgreement_Nat (↑MC) ϑ e ε"
+      ],
+      "kind": "tactic",
+      "start": 67374,
+      "raw": {
+        "depth": 8,
+        "end": 76730,
+        "goals_after": [],
+        "goals_before": [
+          "ι : Type l\ninst✝⁷ : Fintype ι\ninst✝⁶ : Nonempty ι\ninst✝⁵ : DecidableEq ι\nF : Type\ninst✝⁴ : CommRing F\ninst✝³ : Fintype F\nA : Type\ninst✝² : DecidableEq A\ninst✝¹ : AddCommGroup A\ninst✝ : Module F A\nMC : ModuleCode ι F A\ne ε : ℕ\nhC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε\nh_interleaved_gaps : ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε\n⊢ ∀ ϑ > 0, δ_ε_multilinearCorrelatedAgreement_Nat (↑MC) ϑ e ε"
+        ],
+        "kind": "tactic",
+        "start": 74505
+      },
+      "start_offset": 63329,
+      "end_offset": 65443,
+      "position": {
+        "line": 1215,
+        "column": 2
+      },
+      "end_position": {
+        "line": 1261,
+        "column": 69
+      },
+      "source_text": "classical\n  intro ϑ hϑ_gt_0\n  obtain ⟨t, rfl⟩ := Nat.exists_eq_succ_of_ne_zero (by omega)\n  induction t with\n  | zero =>\n      simpa [δ_ε_multilinearCorrelatedAgreement_Nat, multilinearCombine,\n        jointProximityNat₂, jointProximityNat, finMapTwoWords] using\n        hC_proximityGapAffineLines\n  | succ t ih =>\n      intro u hu\n      let U₀ := (splitHalfRowWiseInterleavedWords (ϑ := Nat.succ t) u).1\n      let U₁ := (splitHalfRowWiseInterleavedWords (ϑ := Nat.succ t) u).2\n      have hu_split :\n          Pr_{ let r_last ← $ᵖ F;\n               let r_init ← $ᵖ (Fin (Nat.succ t) → F) }[\n            multilinearCombine_affineComb_split_last_close\n              (MC := MC) (u := u) (e := e) r_last r_init]\n            > (((Nat.cast (R := ℝ≥0) (Nat.succ t + 1)) * ε : ℝ≥0) /\n                (Fintype.card F : ℝ≥0)) := by\n        simpa [multilinearCombine_affineComb_split_last_close, U₀, U₁,\n          Nat.succ_eq_add_one] using hu\n      have hR_prob :\n          Pr_{ let r ← $ᵖ F }[\n            r ∈ R_star_tensor MC (m := Nat.succ t) (e := e) (ε := ε) U₀ U₁]\n            > (↑ε : ENNReal) / (Fintype.card F : ENNReal) := by\n        simpa [U₀, U₁] using\n          (prob_R_star_gt_threshold (MC := MC) (ε := ε) (u := u) (e := e)\n            hu_split)\n      have h_close :\n          Pr_{ let r ← $ᵖ F }[\n            Δ₀(affineLineEvaluation (F := F) (⋈| U₀) (⋈| U₁) r,\n              MC ^⋈ (Fin (2 ^ Nat.succ t))) ≤ e]\n            > (↑ε : ENNReal) / (Fintype.card F : ENNReal) := by\n        refine lt_of_lt_of_le hR_prob ?_\n        apply Pr_le_Pr_of_implies\n        intro r hr\n        have hr_close := correlatedAgreement_of_mem_R_star_tensor\n          (MC := MC) (e := e) (ε := ε) (ϑ_pred := Nat.succ t)\n          (ih := ih) (u := u)\n          (r := ⟨r, hr⟩)\n        simpa [jointProximityNat, affineLineEvaluation,\n          Interleavable.interleave, U₀, U₁] using hr_close\n      have h_interleaved :=\n        h_interleaved_gaps (2 ^ Nat.succ t) (by positivity)\n          (⋈| U₀) (⋈| U₁) h_close\n      simpa [jointProximityNat₂, jointProximityNat,\n        splitHalfRowWiseInterleavedWords, U₀, U₁] using h_interleaved"
+    },
+    {
+      "depth": 9,
+      "end": 69599,
+      "goals_after": [],
+      "goals_before": [
+        "ι : Type l\ninst✝⁷ : Fintype ι\ninst✝⁶ : Nonempty ι\ninst✝⁵ : DecidableEq ι\nF : Type\ninst✝⁴ : CommRing F\ninst✝³ : Fintype F\nA : Type\ninst✝² : DecidableEq A\ninst✝¹ : AddCommGroup A\ninst✝ : Module F A\nMC : ModuleCode ι F A\ne ε : ℕ\nhC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε\nh_interleaved_gaps : ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε\n⊢ ∀ ϑ > 0, δ_ε_multilinearCorrelatedAgreement_Nat (↑MC) ϑ e ε"
+      ],
+      "kind": "tactic",
+      "start": 67386,
+      "raw": {
+        "depth": 9,
+        "end": 76730,
+        "goals_after": [],
+        "goals_before": [
+          "ι : Type l\ninst✝⁷ : Fintype ι\ninst✝⁶ : Nonempty ι\ninst✝⁵ : DecidableEq ι\nF : Type\ninst✝⁴ : CommRing F\ninst✝³ : Fintype F\nA : Type\ninst✝² : DecidableEq A\ninst✝¹ : AddCommGroup A\ninst✝ : Module F A\nMC : ModuleCode ι F A\ne ε : ℕ\nhC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε\nh_interleaved_gaps : ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε\n⊢ ∀ ϑ > 0, δ_ε_multilinearCorrelatedAgreement_Nat (↑MC) ϑ e ε"
+        ],
+        "kind": "tactic",
+        "start": 74517
+      },
+      "start_offset": 63341,
+      "end_offset": 65443,
+      "position": {
+        "line": 1216,
+        "column": 2
+      },
+      "end_position": {
+        "line": 1261,
+        "column": 69
+      },
+      "source_text": "intro ϑ hϑ_gt_0\n  obtain ⟨t, rfl⟩ := Nat.exists_eq_succ_of_ne_zero (by omega)\n  induction t with\n  | zero =>\n      simpa [δ_ε_multilinearCorrelatedAgreement_Nat, multilinearCombine,\n        jointProximityNat₂, jointProximityNat, finMapTwoWords] using\n        hC_proximityGapAffineLines\n  | succ t ih =>\n      intro u hu\n      let U₀ := (splitHalfRowWiseInterleavedWords (ϑ := Nat.succ t) u).1\n      let U₁ := (splitHalfRowWiseInterleavedWords (ϑ := Nat.succ t) u).2\n      have hu_split :\n          Pr_{ let r_last ← $ᵖ F;\n               let r_init ← $ᵖ (Fin (Nat.succ t) → F) }[\n            multilinearCombine_affineComb_split_last_close\n              (MC := MC) (u := u) (e := e) r_last r_init]\n            > (((Nat.cast (R := ℝ≥0) (Nat.succ t + 1)) * ε : ℝ≥0) /\n                (Fintype.card F : ℝ≥0)) := by\n        simpa [multilinearCombine_affineComb_split_last_close, U₀, U₁,\n          Nat.succ_eq_add_one] using hu\n      have hR_prob :\n          Pr_{ let r ← $ᵖ F }[\n            r ∈ R_star_tensor MC (m := Nat.succ t) (e := e) (ε := ε) U₀ U₁]\n            > (↑ε : ENNReal) / (Fintype.card F : ENNReal) := by\n        simpa [U₀, U₁] using\n          (prob_R_star_gt_threshold (MC := MC) (ε := ε) (u := u) (e := e)\n            hu_split)\n      have h_close :\n          Pr_{ let r ← $ᵖ F }[\n            Δ₀(affineLineEvaluation (F := F) (⋈| U₀) (⋈| U₁) r,\n              MC ^⋈ (Fin (2 ^ Nat.succ t))) ≤ e]\n            > (↑ε : ENNReal) / (Fintype.card F : ENNReal) := by\n        refine lt_of_lt_of_le hR_prob ?_\n        apply Pr_le_Pr_of_implies\n        intro r hr\n        have hr_close := correlatedAgreement_of_mem_R_star_tensor\n          (MC := MC) (e := e) (ε := ε) (ϑ_pred := Nat.succ t)\n          (ih := ih) (u := u)\n          (r := ⟨r, hr⟩)\n        simpa [jointProximityNat, affineLineEvaluation,\n          Interleavable.interleave, U₀, U₁] using hr_close\n      have h_interleaved :=\n        h_interleaved_gaps (2 ^ Nat.succ t) (by positivity)\n          (⋈| U₀) (⋈| U₁) h_close\n      simpa [jointProximityNat₂, jointProximityNat,\n        splitHalfRowWiseInterleavedWords, U₀, U₁] using h_interleaved"
+    },
+    {
+      "depth": 10,
+      "end": 69599,
+      "goals_after": [],
+      "goals_before": [
+        "ι : Type l\ninst✝⁷ : Fintype ι\ninst✝⁶ : Nonempty ι\ninst✝⁵ : DecidableEq ι\nF : Type\ninst✝⁴ : CommRing F\ninst✝³ : Fintype F\nA : Type\ninst✝² : DecidableEq A\ninst✝¹ : AddCommGroup A\ninst✝ : Module F A\nMC : ModuleCode ι F A\ne ε : ℕ\nhC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε\nh_interleaved_gaps : ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε\n⊢ ∀ ϑ > 0, δ_ε_multilinearCorrelatedAgreement_Nat (↑MC) ϑ e ε"
+      ],
+      "kind": "tactic",
+      "start": 67386,
+      "raw": {
+        "depth": 10,
+        "end": 76730,
+        "goals_after": [],
+        "goals_before": [
+          "ι : Type l\ninst✝⁷ : Fintype ι\ninst✝⁶ : Nonempty ι\ninst✝⁵ : DecidableEq ι\nF : Type\ninst✝⁴ : CommRing F\ninst✝³ : Fintype F\nA : Type\ninst✝² : DecidableEq A\ninst✝¹ : AddCommGroup A\ninst✝ : Module F A\nMC : ModuleCode ι F A\ne ε : ℕ\nhC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε\nh_interleaved_gaps : ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε\n⊢ ∀ ϑ > 0, δ_ε_multilinearCorrelatedAgreement_Nat (↑MC) ϑ e ε"
+        ],
+        "kind": "tactic",
+        "start": 74517
+      },
+      "start_offset": 63341,
+      "end_offset": 65443,
+      "position": {
+        "line": 1216,
+        "column": 2
+      },
+      "end_position": {
+        "line": 1261,
+        "column": 69
+      },
+      "source_text": "intro ϑ hϑ_gt_0\n  obtain ⟨t, rfl⟩ := Nat.exists_eq_succ_of_ne_zero (by omega)\n  induction t with\n  | zero =>\n      simpa [δ_ε_multilinearCorrelatedAgreement_Nat, multilinearCombine,\n        jointProximityNat₂, jointProximityNat, finMapTwoWords] using\n        hC_proximityGapAffineLines\n  | succ t ih =>\n      intro u hu\n      let U₀ := (splitHalfRowWiseInterleavedWords (ϑ := Nat.succ t) u).1\n      let U₁ := (splitHalfRowWiseInterleavedWords (ϑ := Nat.succ t) u).2\n      have hu_split :\n          Pr_{ let r_last ← $ᵖ F;\n               let r_init ← $ᵖ (Fin (Nat.succ t) → F) }[\n            multilinearCombine_affineComb_split_last_close\n              (MC := MC) (u := u) (e := e) r_last r_init]\n            > (((Nat.cast (R := ℝ≥0) (Nat.succ t + 1)) * ε : ℝ≥0) /\n                (Fintype.card F : ℝ≥0)) := by\n        simpa [multilinearCombine_affineComb_split_last_close, U₀, U₁,\n          Nat.succ_eq_add_one] using hu\n      have hR_prob :\n          Pr_{ let r ← $ᵖ F }[\n            r ∈ R_star_tensor MC (m := Nat.succ t) (e := e) (ε := ε) U₀ U₁]\n            > (↑ε : ENNReal) / (Fintype.card F : ENNReal) := by\n        simpa [U₀, U₁] using\n          (prob_R_star_gt_threshold (MC := MC) (ε := ε) (u := u) (e := e)\n            hu_split)\n      have h_close :\n          Pr_{ let r ← $ᵖ F }[\n            Δ₀(affineLineEvaluation (F := F) (⋈| U₀) (⋈| U₁) r,\n              MC ^⋈ (Fin (2 ^ Nat.succ t))) ≤ e]\n            > (↑ε : ENNReal) / (Fintype.card F : ENNReal) := by\n        refine lt_of_lt_of_le hR_prob ?_\n        apply Pr_le_Pr_of_implies\n        intro r hr\n        have hr_close := correlatedAgreement_of_mem_R_star_tensor\n          (MC := MC) (e := e) (ε := ε) (ϑ_pred := Nat.succ t)\n          (ih := ih) (u := u)\n          (r := ⟨r, hr⟩)\n        simpa [jointProximityNat, affineLineEvaluation,\n          Interleavable.interleave, U₀, U₁] using hr_close\n      have h_interleaved :=\n        h_interleaved_gaps (2 ^ Nat.succ t) (by positivity)\n          (⋈| U₀) (⋈| U₁) h_close\n      simpa [jointProximityNat₂, jointProximityNat,\n        splitHalfRowWiseInterleavedWords, U₀, U₁] using h_interleaved"
+    },
+    {
+      "depth": 11,
+      "end": 67403,
+      "goals_after": [
+        "ι : Type l\ninst✝⁷ : Fintype ι\ninst✝⁶ : Nonempty ι\ninst✝⁵ : DecidableEq ι\nF : Type\ninst✝⁴ : CommRing F\ninst✝³ : Fintype F\nA : Type\ninst✝² : DecidableEq A\ninst✝¹ : AddCommGroup A\ninst✝ : Module F A\nMC : ModuleCode ι F A\ne ε : ℕ\nhC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε\nh_interleaved_gaps : ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε\nϑ : ℕ\nhϑ_gt_0 : ϑ > 0\n⊢ δ_ε_multilinearCorrelatedAgreement_Nat (↑MC) ϑ e ε"
+      ],
+      "goals_before": [
+        "ι : Type l\ninst✝⁷ : Fintype ι\ninst✝⁶ : Nonempty ι\ninst✝⁵ : DecidableEq ι\nF : Type\ninst✝⁴ : CommRing F\ninst✝³ : Fintype F\nA : Type\ninst✝² : DecidableEq A\ninst✝¹ : AddCommGroup A\ninst✝ : Module F A\nMC : ModuleCode ι F A\ne ε : ℕ\nhC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε\nh_interleaved_gaps : ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε\n⊢ ∀ ϑ > 0, δ_ε_multilinearCorrelatedAgreement_Nat (↑MC) ϑ e ε"
+      ],
+      "kind": "tactic",
+      "start": 67386,
+      "raw": {
+        "depth": 11,
+        "end": 74534,
+        "goals_after": [
+          "ι : Type l\ninst✝⁷ : Fintype ι\ninst✝⁶ : Nonempty ι\ninst✝⁵ : DecidableEq ι\nF : Type\ninst✝⁴ : CommRing F\ninst✝³ : Fintype F\nA : Type\ninst✝² : DecidableEq A\ninst✝¹ : AddCommGroup A\ninst✝ : Module F A\nMC : ModuleCode ι F A\ne ε : ℕ\nhC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε\nh_interleaved_gaps : ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε\nϑ : ℕ\nhϑ_gt_0 : ϑ > 0\n⊢ δ_ε_multilinearCorrelatedAgreement_Nat (↑MC) ϑ e ε"
+        ],
+        "goals_before": [
+          "ι : Type l\ninst✝⁷ : Fintype ι\ninst✝⁶ : Nonempty ι\ninst✝⁵ : DecidableEq ι\nF : Type\ninst✝⁴ : CommRing F\ninst✝³ : Fintype F\nA : Type\ninst✝² : DecidableEq A\ninst✝¹ : AddCommGroup A\ninst✝ : Module F A\nMC : ModuleCode ι F A\ne ε : ℕ\nhC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε\nh_interleaved_gaps : ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε\n⊢ ∀ ϑ > 0, δ_ε_multilinearCorrelatedAgreement_Nat (↑MC) ϑ e ε"
+        ],
+        "kind": "tactic",
+        "start": 74517
+      },
+      "start_offset": 63341,
+      "end_offset": 63356,
+      "position": {
+        "line": 1216,
+        "column": 2
+      },
+      "end_position": {
+        "line": 1216,
+        "column": 17
+      },
+      "source_text": "intro ϑ hϑ_gt_0"
+    },
+    {
+      "depth": 12,
+      "end": 67394,
+      "goals_after": [
+        "ι : Type l\ninst✝⁷ : Fintype ι\ninst✝⁶ : Nonempty ι\ninst✝⁵ : DecidableEq ι\nF : Type\ninst✝⁴ : CommRing F\ninst✝³ : Fintype F\nA : Type\ninst✝² : DecidableEq A\ninst✝¹ : AddCommGroup A\ninst✝ : Module F A\nMC : ModuleCode ι F A\ne ε : ℕ\nhC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε\nh_interleaved_gaps : ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε\nϑ : ℕ\n⊢ ϑ > 0 → δ_ε_multilinearCorrelatedAgreement_Nat (↑MC) ϑ e ε"
+      ],
+      "goals_before": [
+        "ι : Type l\ninst✝⁷ : Fintype ι\ninst✝⁶ : Nonempty ι\ninst✝⁵ : DecidableEq ι\nF : Type\ninst✝⁴ : CommRing F\ninst✝³ : Fintype F\nA : Type\ninst✝² : DecidableEq A\ninst✝¹ : AddCommGroup A\ninst✝ : Module F A\nMC : ModuleCode ι F A\ne ε : ℕ\nhC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε\nh_interleaved_gaps : ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε\n⊢ ∀ ϑ > 0, δ_ε_multilinearCorrelatedAgreement_Nat (↑MC) ϑ e ε"
+      ],
+      "kind": "tactic",
+      "start": 67386,
+      "raw": {
+        "depth": 12,
+        "end": 74525,
+        "goals_after": [
+          "ι : Type l\ninst✝⁷ : Fintype ι\ninst✝⁶ : Nonempty ι\ninst✝⁵ : DecidableEq ι\nF : Type\ninst✝⁴ : CommRing F\ninst✝³ : Fintype F\nA : Type\ninst✝² : DecidableEq A\ninst✝¹ : AddCommGroup A\ninst✝ : Module F A\nMC : ModuleCode ι F A\ne ε : ℕ\nhC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε\nh_interleaved_gaps : ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε\nϑ : ℕ\n⊢ ϑ > 0 → δ_ε_multilinearCorrelatedAgreement_Nat (↑MC) ϑ e ε"
+        ],
+        "goals_before": [
+          "ι : Type l\ninst✝⁷ : Fintype ι\ninst✝⁶ : Nonempty ι\ninst✝⁵ : DecidableEq ι\nF : Type\ninst✝⁴ : CommRing F\ninst✝³ : Fintype F\nA : Type\ninst✝² : DecidableEq A\ninst✝¹ : AddCommGroup A\ninst✝ : Module F A\nMC : ModuleCode ι F A\ne ε : ℕ\nhC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε\nh_interleaved_gaps : ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε\n⊢ ∀ ϑ > 0, δ_ε_multilinearCorrelatedAgreement_Nat (↑MC) ϑ e ε"
+        ],
+        "kind": "tactic",
+        "start": 74517
+      },
+      "start_offset": 63341,
+      "end_offset": 63348,
+      "position": {
+        "line": 1216,
+        "column": 2
+      },
+      "end_position": {
+        "line": 1216,
+        "column": 9
+      },
+      "source_text": "intro ϑ"
+    },
+    {
+      "depth": 12,
+      "end": 67403,
+      "goals_after": [
+        "ι : Type l\ninst✝⁷ : Fintype ι\ninst✝⁶ : Nonempty ι\ninst✝⁵ : DecidableEq ι\nF : Type\ninst✝⁴ : CommRing F\ninst✝³ : Fintype F\nA : Type\ninst✝² : DecidableEq A\ninst✝¹ : AddCommGroup A\ninst✝ : Module F A\nMC : ModuleCode ι F A\ne ε : ℕ\nhC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε\nh_interleaved_gaps : ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε\nϑ : ℕ\nhϑ_gt_0 : ϑ > 0\n⊢ δ_ε_multilinearCorrelatedAgreement_Nat (↑MC) ϑ e ε"
+      ],
+      "goals_before": [
+        "ι : Type l\ninst✝⁷ : Fintype ι\ninst✝⁶ : Nonempty ι\ninst✝⁵ : DecidableEq ι\nF : Type\ninst✝⁴ : CommRing F\ninst✝³ : Fintype F\nA : Type\ninst✝² : DecidableEq A\ninst✝¹ : AddCommGroup A\ninst✝ : Module F A\nMC : ModuleCode ι F A\ne ε : ℕ\nhC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε\nh_interleaved_gaps : ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε\nϑ : ℕ\n⊢ ϑ > 0 → δ_ε_multilinearCorrelatedAgreement_Nat (↑MC) ϑ e ε"
+      ],
+      "kind": "tactic",
+      "start": 67395,
+      "raw": {
+        "depth": 12,
+        "end": 74534,
+        "goals_after": [
+          "ι : Type l\ninst✝⁷ : Fintype ι\ninst✝⁶ : Nonempty ι\ninst✝⁵ : DecidableEq ι\nF : Type\ninst✝⁴ : CommRing F\ninst✝³ : Fintype F\nA : Type\ninst✝² : DecidableEq A\ninst✝¹ : AddCommGroup A\ninst✝ : Module F A\nMC : ModuleCode ι F A\ne ε : ℕ\nhC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε\nh_interleaved_gaps : ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε\nϑ : ℕ\nhϑ_gt_0 : ϑ > 0\n⊢ δ_ε_multilinearCorrelatedAgreement_Nat (↑MC) ϑ e ε"
+        ],
+        "goals_before": [
+          "ι : Type l\ninst✝⁷ : Fintype ι\ninst✝⁶ : Nonempty ι\ninst✝⁵ : DecidableEq ι\nF : Type\ninst✝⁴ : CommRing F\ninst✝³ : Fintype F\nA : Type\ninst✝² : DecidableEq A\ninst✝¹ : AddCommGroup A\ninst✝ : Module F A\nMC : ModuleCode ι F A\ne ε : ℕ\nhC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε\nh_interleaved_gaps : ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε\nϑ : ℕ\n⊢ ϑ > 0 → δ_ε_multilinearCorrelatedAgreement_Nat (↑MC) ϑ e ε"
+        ],
+        "kind": "tactic",
+        "start": 74526
+      },
+      "start_offset": 63349,
+      "end_offset": 63356,
+      "position": {
+        "line": 1216,
+        "column": 10
+      },
+      "end_position": {
+        "line": 1216,
+        "column": 17
+      },
+      "source_text": "hϑ_gt_0"
+    },
+    {
+      "depth": 11,
+      "end": 67469,
+      "goals_after": [],
+      "goals_before": [
+        "ι : Type l\ninst✝⁷ : Fintype ι\ninst✝⁶ : Nonempty ι\ninst✝⁵ : DecidableEq ι\nF : Type\ninst✝⁴ : CommRing F\ninst✝³ : Fintype F\nA : Type\ninst✝² : DecidableEq A\ninst✝¹ : AddCommGroup A\ninst✝ : Module F A\nMC : ModuleCode ι F A\ne ε : ℕ\nhC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε\nh_interleaved_gaps : ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε\nϑ : ℕ\nhϑ_gt_0 : ϑ > 0\n⊢ δ_ε_multilinearCorrelatedAgreement_Nat (↑MC) ϑ e ε"
+      ],
+      "kind": "tactic",
+      "start": 67406,
+      "raw": {
+        "depth": 11,
+        "end": 74600,
+        "goals_after": [],
+        "goals_before": [
+          "ι : Type l\ninst✝⁷ : Fintype ι\ninst✝⁶ : Nonempty ι\ninst✝⁵ : DecidableEq ι\nF : Type\ninst✝⁴ : CommRing F\ninst✝³ : Fintype F\nA : Type\ninst✝² : DecidableEq A\ninst✝¹ : AddCommGroup A\ninst✝ : Module F A\nMC : ModuleCode ι F A\ne ε : ℕ\nhC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε\nh_interleaved_gaps : ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε\nϑ : ℕ\nhϑ_gt_0 : ϑ > 0\n⊢ δ_ε_multilinearCorrelatedAgreement_Nat (↑MC) ϑ e ε"
+        ],
+        "kind": "tactic",
+        "start": 74537
+      },
+      "start_offset": 63359,
+      "end_offset": 63418,
+      "position": {
+        "line": 1217,
+        "column": 2
+      },
+      "end_position": {
+        "line": 1217,
+        "column": 61
+      },
+      "source_text": "obtain ⟨t, rfl⟩ := Nat.exists_eq_succ_of_ne_zero (by omega)"
+    },
+    {
+      "depth": 13,
+      "end": 67468,
+      "goals_after": [],
+      "goals_before": [
+        "ι : Type l\ninst✝⁷ : Fintype ι\ninst✝⁶ : Nonempty ι\ninst✝⁵ : DecidableEq ι\nF : Type\ninst✝⁴ : CommRing F\ninst✝³ : Fintype F\nA : Type\ninst✝² : DecidableEq A\ninst✝¹ : AddCommGroup A\ninst✝ : Module F A\nMC : ModuleCode ι F A\ne ε : ℕ\nhC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε\nh_interleaved_gaps : ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε\nϑ : ℕ\nhϑ_gt_0 : ϑ > 0\n⊢ ?m.54 ≠ 0"
+      ],
+      "kind": "tactic",
+      "start": 67460,
+      "raw": {
+        "depth": 13,
+        "end": 74599,
+        "goals_after": [],
+        "goals_before": [
+          "ι : Type l\ninst✝⁷ : Fintype ι\ninst✝⁶ : Nonempty ι\ninst✝⁵ : DecidableEq ι\nF : Type\ninst✝⁴ : CommRing F\ninst✝³ : Fintype F\nA : Type\ninst✝² : DecidableEq A\ninst✝¹ : AddCommGroup A\ninst✝ : Module F A\nMC : ModuleCode ι F A\ne ε : ℕ\nhC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε\nh_interleaved_gaps : ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε\nϑ : ℕ\nhϑ_gt_0 : ϑ > 0\n⊢ ?m.54 ≠ 0"
+        ],
+        "kind": "tactic",
+        "start": 74591
+      },
+      "start_offset": 63409,
+      "end_offset": 63417,
+      "position": {
+        "line": 1217,
+        "column": 52
+      },
+      "end_position": {
+        "line": 1217,
+        "column": 60
+      },
+      "source_text": "by omega"
+    },
+    {
+      "depth": 14,
+      "end": 67462,
+      "goals_after": [],
+      "goals_before": [
+        "ι : Type l\ninst✝⁷ : Fintype ι\ninst✝⁶ : Nonempty ι\ninst✝⁵ : DecidableEq ι\nF : Type\ninst✝⁴ : CommRing F\ninst✝³ : Fintype F\nA : Type\ninst✝² : DecidableEq A\ninst✝¹ : AddCommGroup A\ninst✝ : Module F A\nMC : ModuleCode ι F A\ne ε : ℕ\nhC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε\nh_interleaved_gaps : ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε\nϑ : ℕ\nhϑ_gt_0 : ϑ > 0\n⊢ ?m.54 ≠ 0"
+      ],
+      "kind": "tactic",
+      "start": 67460,
+      "raw": {
+        "depth": 14,
+        "end": 74593,
+        "goals_after": [],
+        "goals_before": [
+          "ι : Type l\ninst✝⁷ : Fintype ι\ninst✝⁶ : Nonempty ι\ninst✝⁵ : DecidableEq ι\nF : Type\ninst✝⁴ : CommRing F\ninst✝³ : Fintype F\nA : Type\ninst✝² : DecidableEq A\ninst✝¹ : AddCommGroup A\ninst✝ : Module F A\nMC : ModuleCode ι F A\ne ε : ℕ\nhC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε\nh_interleaved_gaps : ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε\nϑ : ℕ\nhϑ_gt_0 : ϑ > 0\n⊢ ?m.54 ≠ 0"
+        ],
+        "kind": "tactic",
+        "start": 74591
+      },
+      "start_offset": 63409,
+      "end_offset": 63411,
+      "position": {
+        "line": 1217,
+        "column": 52
+      },
+      "end_position": {
+        "line": 1217,
+        "column": 54
+      },
+      "source_text": "by"
+    },
+    {
+      "depth": 15,
+      "end": 67468,
+      "goals_after": [],
+      "goals_before": [
+        "ι : Type l\ninst✝⁷ : Fintype ι\ninst✝⁶ : Nonempty ι\ninst✝⁵ : DecidableEq ι\nF : Type\ninst✝⁴ : CommRing F\ninst✝³ : Fintype F\nA : Type\ninst✝² : DecidableEq A\ninst✝¹ : AddCommGroup A\ninst✝ : Module F A\nMC : ModuleCode ι F A\ne ε : ℕ\nhC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε\nh_interleaved_gaps : ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε\nϑ : ℕ\nhϑ_gt_0 : ϑ > 0\n⊢ ?m.54 ≠ 0"
+      ],
+      "kind": "tactic",
+      "start": 67463,
+      "raw": {
+        "depth": 15,
+        "end": 74599,
+        "goals_after": [],
+        "goals_before": [
+          "ι : Type l\ninst✝⁷ : Fintype ι\ninst✝⁶ : Nonempty ι\ninst✝⁵ : DecidableEq ι\nF : Type\ninst✝⁴ : CommRing F\ninst✝³ : Fintype F\nA : Type\ninst✝² : DecidableEq A\ninst✝¹ : AddCommGroup A\ninst✝ : Module F A\nMC : ModuleCode ι F A\ne ε : ℕ\nhC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε\nh_interleaved_gaps : ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε\nϑ : ℕ\nhϑ_gt_0 : ϑ > 0\n⊢ ?m.54 ≠ 0"
+        ],
+        "kind": "tactic",
+        "start": 74594
+      },
+      "start_offset": 63412,
+      "end_offset": 63417,
+      "position": {
+        "line": 1217,
+        "column": 55
+      },
+      "end_position": {
+        "line": 1217,
+        "column": 60
+      },
+      "source_text": "omega"
+    },
+    {
+      "depth": 16,
+      "end": 67468,
+      "goals_after": [],
+      "goals_before": [
+        "ι : Type l\ninst✝⁷ : Fintype ι\ninst✝⁶ : Nonempty ι\ninst✝⁵ : DecidableEq ι\nF : Type\ninst✝⁴ : CommRing F\ninst✝³ : Fintype F\nA : Type\ninst✝² : DecidableEq A\ninst✝¹ : AddCommGroup A\ninst✝ : Module F A\nMC : ModuleCode ι F A\ne ε : ℕ\nhC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε\nh_interleaved_gaps : ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε\nϑ : ℕ\nhϑ_gt_0 : ϑ > 0\n⊢ ?m.54 ≠ 0"
+      ],
+      "kind": "tactic",
+      "start": 67463,
+      "raw": {
+        "depth": 16,
+        "end": 74599,
+        "goals_after": [],
+        "goals_before": [
+          "ι : Type l\ninst✝⁷ : Fintype ι\ninst✝⁶ : Nonempty ι\ninst✝⁵ : DecidableEq ι\nF : Type\ninst✝⁴ : CommRing F\ninst✝³ : Fintype F\nA : Type\ninst✝² : DecidableEq A\ninst✝¹ : AddCommGroup A\ninst✝ : Module F A\nMC : ModuleCode ι F A\ne ε : ℕ\nhC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε\nh_interleaved_gaps : ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε\nϑ : ℕ\nhϑ_gt_0 : ϑ > 0\n⊢ ?m.54 ≠ 0"
+        ],
+        "kind": "tactic",
+        "start": 74594
+      },
+      "start_offset": 63412,
+      "end_offset": 63417,
+      "position": {
+        "line": 1217,
+        "column": 55
+      },
+      "end_position": {
+        "line": 1217,
+        "column": 60
+      },
+      "source_text": "omega"
+    },
+    {
+      "depth": 17,
+      "end": 67468,
+      "goals_after": [],
+      "goals_before": [
+        "ι : Type l\ninst✝⁷ : Fintype ι\ninst✝⁶ : Nonempty ι\ninst✝⁵ : DecidableEq ι\nF : Type\ninst✝⁴ : CommRing F\ninst✝³ : Fintype F\nA : Type\ninst✝² : DecidableEq A\ninst✝¹ : AddCommGroup A\ninst✝ : Module F A\nMC : ModuleCode ι F A\ne ε : ℕ\nhC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε\nh_interleaved_gaps : ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε\nϑ : ℕ\nhϑ_gt_0 : ϑ > 0\n⊢ ?m.54 ≠ 0"
+      ],
+      "kind": "tactic",
+      "start": 67463,
+      "raw": {
+        "depth": 17,
+        "end": 74599,
+        "goals_after": [],
+        "goals_before": [
+          "ι : Type l\ninst✝⁷ : Fintype ι\ninst✝⁶ : Nonempty ι\ninst✝⁵ : DecidableEq ι\nF : Type\ninst✝⁴ : CommRing F\ninst✝³ : Fintype F\nA : Type\ninst✝² : DecidableEq A\ninst✝¹ : AddCommGroup A\ninst✝ : Module F A\nMC : ModuleCode ι F A\ne ε : ℕ\nhC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε\nh_interleaved_gaps : ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε\nϑ : ℕ\nhϑ_gt_0 : ϑ > 0\n⊢ ?m.54 ≠ 0"
+        ],
+        "kind": "tactic",
+        "start": 74594
+      },
+      "start_offset": 63412,
+      "end_offset": 63417,
+      "position": {
+        "line": 1217,
+        "column": 55
+      },
+      "end_position": {
+        "line": 1217,
+        "column": 60
+      },
+      "source_text": "omega"
+    }
+  ],
+  "unavailable_reason": null
+}

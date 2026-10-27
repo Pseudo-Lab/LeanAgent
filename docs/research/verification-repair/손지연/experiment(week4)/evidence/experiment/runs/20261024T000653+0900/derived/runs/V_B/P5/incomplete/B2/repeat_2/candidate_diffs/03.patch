@@ -1,0 +1,44 @@
+--- candidate_02.proof.lean
++++ candidate_03.proof.lean
+@@ -1,19 +1,34 @@
+ by
+   have he := (isExtrema_iff_gauss_ampere_magneticFieldMatrix hA J hJ).mp h
+-  have hcd : ∀ j, ContDiff ℝ 2 (fun y => A.electricField 𝓕.c t y j) := by
+-    intro j
+-    fun_prop
++  have hcd : ∀ j, ContDiff ℝ 2 (fun y => A.electricField 𝓕.c t y j) :=
++    fun j => electricField_space_contDiff _ (hA.of_le (right_eq_inf.mp rfl)) t j
+   have hsd : ∀ j k, Differentiable ℝ (∂[k] (fun y => A.electricField 𝓕.c t y j)) :=
+     fun j k => Space.deriv_differentiable (hcd j) k
+-  have hρd : Differentiable ℝ (fun y => J.chargeDensity 𝓕.c t y) := by
++  have hEtd : Differentiable ℝ (fun s => A.electricField 𝓕.c s x) := by
++    clear he h hJ J
+     fun_prop
++  have hBtd : ∀ j, Differentiable ℝ (fun s =>
++      ∂[j] (A.magneticFieldMatrix 𝓕.c s · (j, i)) x) := by
++    intro j
++    clear he h hJ J
++    fun_prop
++  have hJtd : Differentiable ℝ (fun s => J.currentDensity 𝓕.c s x i) :=
++    LorentzCurrentDensity.currentDensity_apply_differentiable_time
++      (hJ.differentiable (by simp)) x i
++  have hρd : Differentiable ℝ (fun y => J.chargeDensity 𝓕.c t y) :=
++    LorentzCurrentDensity.chargeDensity_apply_differentiable_space
++      (hJ.differentiable (by simp)) t
+   conv_lhs =>
+     enter [1, s]
++    rw [Time.deriv_apply (f := fun u => A.electricField 𝓕.c u x) hEtd]
+     rw [time_deriv_electricField_of_isExtrema hA J hJ h]
+   rw [Time.deriv_eq_fderiv_basis]
+-  rw [fderiv_fun_sub (by fun_prop) (by fun_prop),
+-    fderiv_const_mul (by fun_prop), fderiv_const_mul (by fun_prop),
+-    fderiv_fun_sum fun j _ => by fun_prop]
++  rw [fderiv_fun_sub
++      ((Differentiable.fun_sum fun j _ => hBtd j).const_mul _).differentiableAt
++      (hJtd.const_mul _).differentiableAt,
++    fderiv_const_mul (Differentiable.fun_sum fun j _ => hBtd j).differentiableAt,
++    fderiv_const_mul hJtd.differentiableAt,
++    fderiv_fun_sum fun j _ => (hBtd j).differentiableAt]
+   simp [← Time.deriv_eq_fderiv_basis]
+   simp_rw [time_deriv_space_deriv_magneticFieldMatrix A
+     (hA.of_le (ENat.LEInfty.out))]

@@ -1,0 +1,25 @@
+--- candidate_01.proof.lean
++++ candidate_02.proof.lean
+@@ -46,11 +46,11 @@
+                 ι (ofCrAnListF u) * ι (ofCrAnListF v) * ι (ofCrAnListF [ψ, φ]) *
+                 ι (ofCrAnListF w) * ι (ofCrAnListF z)) := by
+           have h1 := insertionSort_of_eq_list 𝓕.crAnTimeOrderRel φ φs' [φ, ψ] φs
+-            (by simp_all)
++            (by simp [hφψ, hψφ])
+           rw [crAnTimeOrderList,
+             show φs' ++ φ :: ψ :: φs = φs' ++ [φ, ψ] ++ φs by simp, h1]
+           have h2 := insertionSort_of_eq_list 𝓕.crAnTimeOrderRel φ φs' [ψ, φ] φs
+-            (by simp_all)
++            (by simp [hφψ, hψφ])
+           rw [crAnTimeOrderList,
+             show φs' ++ ψ :: φ :: φs = φs' ++ [ψ, φ] ++ φs by simp, h2]
+           repeat rw [ofCrAnListF_append]
+@@ -82,7 +82,7 @@
+       by_cases hq : (𝓕 |>ₛ φ) ≠ (𝓕 |>ₛ ψ)
+       · simp [ι_superCommuteF_of_diff_statistic hq]
+       · rw [crAnTimeOrderSign,
+-          Wick.koszulSign_eq_rel_eq_stat _ _ hφψ hψφ (by simp_all),
++          Wick.koszulSign_eq_rel_eq_stat _ _ hφψ hψφ (by simpa using hq),
+           ← crAnTimeOrderSign, ← ofCrAnListF_append, timeOrderF_ofCrAnListF]
+         simp only [map_smul, Algebra.mul_smul_comm]
+     · simp only [map_mul, zero_mul, map_zero, mul_zero, pa]

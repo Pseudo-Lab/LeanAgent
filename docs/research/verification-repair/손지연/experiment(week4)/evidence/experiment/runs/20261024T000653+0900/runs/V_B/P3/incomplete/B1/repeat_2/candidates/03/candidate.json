@@ -1,0 +1,767 @@
+{
+  "call": 3,
+  "origin": "generated",
+  "body": "by\n  intros Hup Hinit\n  have Hlen : ks.length = vs.length := UpdateStatesLength Hup\n  have Hlen' : ks'.length = vs'.length := InitStatesLength Hinit\n  have Hdef : isDefined σ ks := UpdateStatesDefined' Hup\n  have Hndef : isNotDefined σ ks' :=\n    UpdateStatesNotDefMonotone' (InitStatesNotDefined Hinit) Hup\n  have Hnd : ks'.Nodup := InitStatesNodup Hinit\n  have Hdisj : ks.Disjoint ks' := by\n    intro k Hk Hk'\n    have Hsome := Hdef k Hk\n    have Hnone := Hndef k Hk'\n    simp [Hnone] at Hsome\n  have Hinit₁ :\n      InitStates σ ks' vs' (updatedStates σ ks' vs') :=\n    updatedStatesInit Hlen' Hndef Hnd\n  have Hdef₁ : isDefined (updatedStates σ ks' vs') ks := by\n    exact updatedStatesDefMonotone Hdef\n  have Hup₁ :\n      UpdateStates (updatedStates σ ks' vs') ks vs\n        (updatedStates (updatedStates σ ks' vs') ks vs) :=\n    updatedStatesUpdate Hlen Hdef₁\n  have Hzipdisj :\n      List.Disjoint ((ks'.zip vs').unzip.1) ((ks.zip vs).unzip.1) := by\n    intro k Hk' Hk\n    have Hmem' : k ∈ ks' := by\n      simp only [List.mem_map] at Hk'\n      obtain ⟨p, Hp, rfl⟩ := Hk'\n      exact (List.of_mem_zip Hp).1\n    have Hmem : k ∈ ks := by\n      simp only [List.mem_map] at Hk\n      obtain ⟨p, Hp, rfl⟩ := Hk\n      exact (List.of_mem_zip Hp).1\n    exact Hdisj Hmem Hmem'\n  have Hcomm :\n      updatedStates (updatedStates σ ks' vs') ks vs =\n        updatedStates (updatedStates σ ks vs) ks' vs' := by\n    unfold updatedStates\n    exact updatedStatesComm Hzipdisj\n  have Hfinal :\n      updatedStates (updatedStates σ ks' vs') ks vs = σ'' := by\n    calc\n      updatedStates (updatedStates σ ks' vs') ks vs =\n          updatedStates (updatedStates σ ks vs) ks' vs' := Hcomm\n      _ = updatedStates σ' ks' vs' := by\n        rw [UpdateStatesUpdated Hup]\n      _ = σ'' := (InitStatesUpdated Hinit).symm\n  rw [Hfinal] at Hup₁\n  exact ⟨updatedStates σ ks' vs', rfl, Hinit₁, Hup₁⟩",
+  "proof_sha256": "ba144cf4f6b3021dbae7dac96ced89993a2241dbcc6d3292807e7cbbcd1ffbc7",
+  "full_source_sha256": "ca5830a2d413fc94a0332fbc9807ea04010fca514a969789b0368c5ff4bb453f",
+  "eligible": false,
+  "verification": {
+    "task_id": "P3",
+    "attempt": "candidate_03",
+    "candidate_hash": "ca5830a2d413fc94a0332fbc9807ea04010fca514a969789b0368c5ff4bb453f",
+    "environment_id": "78838691b7ea5b4fe226207f8c51008d414262a54febefbcea237fd4aa2d6cfa",
+    "check_kind": "candidate",
+    "status": "proof_error",
+    "process_exit_code": 1,
+    "diagnostics": [
+      {
+        "severity": "error",
+        "position": {
+          "column": 6,
+          "line": 965
+        },
+        "end_position": {
+          "column": 37,
+          "line": 965
+        },
+        "message": "`simp` made no progress",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "`simp` made no progress",
+          "endPos": {
+            "column": 37,
+            "line": 965
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P3/incomplete/B1/repeat_2/validation/lean/006_candidate_03/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 6,
+            "line": 965
+          },
+          "severity": "error"
+        },
+        "source_line": "      simp only [List.mem_map] at Hk'",
+        "start_offset": 25939,
+        "start_byte_offset": 26614,
+        "end_offset": 25970,
+        "end_byte_offset": 26645,
+        "source_text": "simp only [List.mem_map] at Hk'",
+        "failed_tactic": "simp only [List.mem_map] at Hk'",
+        "tactic_range": {
+          "position": {
+            "line": 965,
+            "column": 6
+          },
+          "end_position": {
+            "line": 965,
+            "column": 37
+          },
+          "start_offset": 25939,
+          "end_offset": 25970
+        },
+        "goals": [
+          "k ∈ ks'"
+        ],
+        "local_context": [
+          "P : PureExpr\nσ σ' σ'' : SemanticStore P\nks ks' : List P.Ident\nvs vs' : List P.Expr\nHup : UpdateStates σ ks vs σ'\nHinit : InitStates σ' ks' vs' σ''\nHlen : ks.length = vs.length\nHlen' : ks'.length = vs'.length\nHdef : isDefined σ ks\nHndef : isNotDefined σ ks'\nHnd : ks'.Nodup\nHdisj : ks.Disjoint ks'\nHinit₁ : InitStates σ ks' vs' (updatedStates σ ks' vs')\nHdef₁ : isDefined (updatedStates σ ks' vs') ks\nHup₁ : UpdateStates (updatedStates σ ks' vs') ks vs (updatedStates (updatedStates σ ks' vs') ks vs)\nk : P.Ident\nHk' : k ∈ (ks'.zip vs').unzip.fst\nHk : k ∈ (ks.zip vs).unzip.fst"
+        ],
+        "proof_state_source": "lean_infotree_before_tactic",
+        "proof_state_raw": {
+          "depth": 32,
+          "end": 33776,
+          "goals_after": [
+            "P : PureExpr\nσ σ' σ'' : SemanticStore P\nks ks' : List P.Ident\nvs vs' : List P.Expr\nHup : UpdateStates σ ks vs σ'\nHinit : InitStates σ' ks' vs' σ''\nHlen : ks.length = vs.length\nHlen' : ks'.length = vs'.length\nHdef : isDefined σ ks\nHndef : isNotDefined σ ks'\nHnd : ks'.Nodup\nHdisj : ks.Disjoint ks'\nHinit₁ : InitStates σ ks' vs' (updatedStates σ ks' vs')\nHdef₁ : isDefined (updatedStates σ ks' vs') ks\nHup₁ : UpdateStates (updatedStates σ ks' vs') ks vs (updatedStates (updatedStates σ ks' vs') ks vs)\nk : P.Ident\nHk' : k ∈ (ks'.zip vs').unzip.fst\nHk : k ∈ (ks.zip vs).unzip.fst\n⊢ k ∈ ks'"
+          ],
+          "goals_before": [
+            "P : PureExpr\nσ σ' σ'' : SemanticStore P\nks ks' : List P.Ident\nvs vs' : List P.Expr\nHup : UpdateStates σ ks vs σ'\nHinit : InitStates σ' ks' vs' σ''\nHlen : ks.length = vs.length\nHlen' : ks'.length = vs'.length\nHdef : isDefined σ ks\nHndef : isNotDefined σ ks'\nHnd : ks'.Nodup\nHdisj : ks.Disjoint ks'\nHinit₁ : InitStates σ ks' vs' (updatedStates σ ks' vs')\nHdef₁ : isDefined (updatedStates σ ks' vs') ks\nHup₁ : UpdateStates (updatedStates σ ks' vs') ks vs (updatedStates (updatedStates σ ks' vs') ks vs)\nk : P.Ident\nHk' : k ∈ (ks'.zip vs').unzip.fst\nHk : k ∈ (ks.zip vs).unzip.fst\n⊢ k ∈ ks'"
+          ],
+          "kind": "tactic",
+          "start": 33745
+        }
+      },
+      {
+        "severity": "error",
+        "position": {
+          "column": 6,
+          "line": 969
+        },
+        "end_position": {
+          "column": 36,
+          "line": 969
+        },
+        "message": "`simp` made no progress",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "`simp` made no progress",
+          "endPos": {
+            "column": 36,
+            "line": 969
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P3/incomplete/B1/repeat_2/validation/lean/006_candidate_03/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 6,
+            "line": 969
+          },
+          "severity": "error"
+        },
+        "source_line": "      simp only [List.mem_map] at Hk",
+        "start_offset": 26074,
+        "start_byte_offset": 26755,
+        "end_offset": 26104,
+        "end_byte_offset": 26785,
+        "source_text": "simp only [List.mem_map] at Hk",
+        "failed_tactic": "simp only [List.mem_map] at Hk",
+        "tactic_range": {
+          "position": {
+            "line": 969,
+            "column": 6
+          },
+          "end_position": {
+            "line": 969,
+            "column": 36
+          },
+          "start_offset": 26074,
+          "end_offset": 26104
+        },
+        "goals": [
+          "k ∈ ks"
+        ],
+        "local_context": [
+          "P : PureExpr\nσ σ' σ'' : SemanticStore P\nks ks' : List P.Ident\nvs vs' : List P.Expr\nHup : UpdateStates σ ks vs σ'\nHinit : InitStates σ' ks' vs' σ''\nHlen : ks.length = vs.length\nHlen' : ks'.length = vs'.length\nHdef : isDefined σ ks\nHndef : isNotDefined σ ks'\nHnd : ks'.Nodup\nHdisj : ks.Disjoint ks'\nHinit₁ : InitStates σ ks' vs' (updatedStates σ ks' vs')\nHdef₁ : isDefined (updatedStates σ ks' vs') ks\nHup₁ : UpdateStates (updatedStates σ ks' vs') ks vs (updatedStates (updatedStates σ ks' vs') ks vs)\nk : P.Ident\nHk' : k ∈ (ks'.zip vs').unzip.fst\nHk : k ∈ (ks.zip vs).unzip.fst\nHmem' : k ∈ ks'"
+        ],
+        "proof_state_source": "lean_infotree_before_tactic",
+        "proof_state_raw": {
+          "depth": 32,
+          "end": 33916,
+          "goals_after": [
+            "P : PureExpr\nσ σ' σ'' : SemanticStore P\nks ks' : List P.Ident\nvs vs' : List P.Expr\nHup : UpdateStates σ ks vs σ'\nHinit : InitStates σ' ks' vs' σ''\nHlen : ks.length = vs.length\nHlen' : ks'.length = vs'.length\nHdef : isDefined σ ks\nHndef : isNotDefined σ ks'\nHnd : ks'.Nodup\nHdisj : ks.Disjoint ks'\nHinit₁ : InitStates σ ks' vs' (updatedStates σ ks' vs')\nHdef₁ : isDefined (updatedStates σ ks' vs') ks\nHup₁ : UpdateStates (updatedStates σ ks' vs') ks vs (updatedStates (updatedStates σ ks' vs') ks vs)\nk : P.Ident\nHk' : k ∈ (ks'.zip vs').unzip.fst\nHk : k ∈ (ks.zip vs).unzip.fst\nHmem' : k ∈ ks'\n⊢ k ∈ ks"
+          ],
+          "goals_before": [
+            "P : PureExpr\nσ σ' σ'' : SemanticStore P\nks ks' : List P.Ident\nvs vs' : List P.Expr\nHup : UpdateStates σ ks vs σ'\nHinit : InitStates σ' ks' vs' σ''\nHlen : ks.length = vs.length\nHlen' : ks'.length = vs'.length\nHdef : isDefined σ ks\nHndef : isNotDefined σ ks'\nHnd : ks'.Nodup\nHdisj : ks.Disjoint ks'\nHinit₁ : InitStates σ ks' vs' (updatedStates σ ks' vs')\nHdef₁ : isDefined (updatedStates σ ks' vs') ks\nHup₁ : UpdateStates (updatedStates σ ks' vs') ks vs (updatedStates (updatedStates σ ks' vs') ks vs)\nk : P.Ident\nHk' : k ∈ (ks'.zip vs').unzip.fst\nHk : k ∈ (ks.zip vs).unzip.fst\nHmem' : k ∈ ks'\n⊢ k ∈ ks"
+          ],
+          "kind": "tactic",
+          "start": 33886
+        }
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 8,
+          "line": 2022
+        },
+        "end_position": {
+          "column": 35,
+          "line": 2022
+        },
+        "message": "declaration uses 'sorry'",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "declaration uses 'sorry'",
+          "endPos": {
+            "column": 35,
+            "line": 2022
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P3/incomplete/B1/repeat_2/validation/lean/006_candidate_03/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "hasSorry",
+          "pos": {
+            "column": 8,
+            "line": 2022
+          },
+          "severity": "warning"
+        },
+        "source_line": "theorem EvalCallBodyRefinesContract :",
+        "start_offset": 53866,
+        "start_byte_offset": 55504,
+        "end_offset": 53893,
+        "end_byte_offset": 55531,
+        "source_text": "EvalCallBodyRefinesContract"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 8,
+          "line": 2033
+        },
+        "end_position": {
+          "column": 34,
+          "line": 2033
+        },
+        "message": "declaration uses 'sorry'",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "declaration uses 'sorry'",
+          "endPos": {
+            "column": 34,
+            "line": 2033
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P3/incomplete/B1/repeat_2/validation/lean/006_candidate_03/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "hasSorry",
+          "pos": {
+            "column": 8,
+            "line": 2033
+          },
+          "severity": "warning"
+        },
+        "source_line": "theorem EvalCommandRefinesContract :",
+        "start_offset": 54303,
+        "start_byte_offset": 55967,
+        "end_offset": 54329,
+        "end_byte_offset": 55993,
+        "source_text": "EvalCommandRefinesContract"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 8,
+          "line": 2047
+        },
+        "end_position": {
+          "column": 32,
+          "line": 2047
+        },
+        "message": "declaration uses 'sorry'",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "declaration uses 'sorry'",
+          "endPos": {
+            "column": 32,
+            "line": 2047
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P3/incomplete/B1/repeat_2/validation/lean/006_candidate_03/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "hasSorry",
+          "pos": {
+            "column": 8,
+            "line": 2047
+          },
+          "severity": "warning"
+        },
+        "source_line": "theorem EvalBlockRefinesContract :",
+        "start_offset": 54794,
+        "start_byte_offset": 56468,
+        "end_offset": 54818,
+        "end_byte_offset": 56492,
+        "source_text": "EvalBlockRefinesContract"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 8,
+          "line": 2092
+        },
+        "end_position": {
+          "column": 31,
+          "line": 2092
+        },
+        "message": "declaration uses 'sorry'",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "declaration uses 'sorry'",
+          "endPos": {
+            "column": 31,
+            "line": 2092
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P3/incomplete/B1/repeat_2/validation/lean/006_candidate_03/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "hasSorry",
+          "pos": {
+            "column": 8,
+            "line": 2092
+          },
+          "severity": "warning"
+        },
+        "source_line": "theorem EvalExpressionIsDefined :",
+        "start_offset": 56303,
+        "start_byte_offset": 57997,
+        "end_offset": 56326,
+        "end_byte_offset": 58020,
+        "source_text": "EvalExpressionIsDefined"
+      },
+      {
+        "severity": "information",
+        "position": {
+          "column": 0,
+          "line": 2112
+        },
+        "end_position": {
+          "column": 6,
+          "line": 2112
+        },
+        "message": "Core.InitsUpdatesComm {P : PureExpr} {σ σ' σ'' : SemanticStore P} {ks ks' : List P.Ident} {vs vs' : List P.Expr} :\n  UpdateStates σ ks vs σ' →\n    InitStates σ' ks' vs' σ'' → ∃ σ₁, σ₁ = updatedStates σ ks' vs' ∧ InitStates σ ks' vs' σ₁ ∧ UpdateStates σ₁ ks vs σ''",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "Core.InitsUpdatesComm {P : PureExpr} {σ σ' σ'' : SemanticStore P} {ks ks' : List P.Ident} {vs vs' : List P.Expr} :\n  UpdateStates σ ks vs σ' →\n    InitStates σ' ks' vs' σ'' → ∃ σ₁, σ₁ = updatedStates σ ks' vs' ∧ InitStates σ ks' vs' σ₁ ∧ UpdateStates σ₁ ks vs σ''",
+          "endPos": {
+            "column": 6,
+            "line": 2112
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P3/incomplete/B1/repeat_2/validation/lean/006_candidate_03/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 0,
+            "line": 2112
+          },
+          "severity": "information"
+        }
+      },
+      {
+        "severity": "information",
+        "position": {
+          "column": 0,
+          "line": 2113
+        },
+        "end_position": {
+          "column": 6,
+          "line": 2113
+        },
+        "message": "'Core.InitsUpdatesComm' depends on axioms: [propext, sorryAx, Classical.choice, Quot.sound]",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "'Core.InitsUpdatesComm' depends on axioms: [propext, sorryAx, Classical.choice, Quot.sound]",
+          "endPos": {
+            "column": 6,
+            "line": 2113
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P3/incomplete/B1/repeat_2/validation/lean/006_candidate_03/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 0,
+            "line": 2113
+          },
+          "severity": "information"
+        }
+      }
+    ],
+    "goals": [
+      "k ∈ ks'"
+    ],
+    "local_context": [
+      "P : PureExpr\nσ σ' σ'' : SemanticStore P\nks ks' : List P.Ident\nvs vs' : List P.Expr\nHup : UpdateStates σ ks vs σ'\nHinit : InitStates σ' ks' vs' σ''\nHlen : ks.length = vs.length\nHlen' : ks'.length = vs'.length\nHdef : isDefined σ ks\nHndef : isNotDefined σ ks'\nHnd : ks'.Nodup\nHdisj : ks.Disjoint ks'\nHinit₁ : InitStates σ ks' vs' (updatedStates σ ks' vs')\nHdef₁ : isDefined (updatedStates σ ks' vs') ks\nHup₁ : UpdateStates (updatedStates σ ks' vs') ks vs (updatedStates (updatedStates σ ks' vs') ks vs)\nk : P.Ident\nHk' : k ∈ (ks'.zip vs').unzip.fst\nHk : k ∈ (ks.zip vs).unzip.fst"
+    ],
+    "sorries": [
+      {
+        "kind": "transitive_dependency",
+        "axiom": "sorryAx",
+        "position": null,
+        "end_position": null
+      }
+    ],
+    "backend_proof_status": null,
+    "statement_check": "fixed_context_preserved",
+    "axioms": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext",
+      "sorryAx"
+    ],
+    "metrics": {
+      "proof_tokens": 348
+    },
+    "elapsed_ms": 4657,
+    "raw_log_path": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P3/incomplete/B1/repeat_2/validation/lean/006_candidate_03/stdout.log",
+    "detail": null,
+    "failure_kind": "proof_error"
+  },
+  "measurement": {
+    "proof_tokens": 348,
+    "raw_heartbeats": null,
+    "token_reduction_pct": -48.085106382978715,
+    "heartbeat_reduction_pct": null,
+    "search_score": null
+  },
+  "facts": {
+    "diagnostics": [
+      {
+        "severity": "error",
+        "position": {
+          "column": 6,
+          "line": 965
+        },
+        "end_position": {
+          "column": 37,
+          "line": 965
+        },
+        "message": "`simp` made no progress",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "`simp` made no progress",
+          "endPos": {
+            "column": 37,
+            "line": 965
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 6,
+            "line": 965
+          },
+          "severity": "error"
+        },
+        "source_line": "      simp only [List.mem_map] at Hk'",
+        "start_offset": 25939,
+        "start_byte_offset": 26614,
+        "end_offset": 25970,
+        "end_byte_offset": 26645,
+        "source_text": "simp only [List.mem_map] at Hk'",
+        "failed_tactic": "simp only [List.mem_map] at Hk'",
+        "tactic_range": {
+          "position": {
+            "line": 965,
+            "column": 6
+          },
+          "end_position": {
+            "line": 965,
+            "column": 37
+          },
+          "start_offset": 25939,
+          "end_offset": 25970
+        },
+        "goals": [
+          "k ∈ ks'"
+        ],
+        "local_context": [
+          "P : PureExpr\nσ σ' σ'' : SemanticStore P\nks ks' : List P.Ident\nvs vs' : List P.Expr\nHup : UpdateStates σ ks vs σ'\nHinit : InitStates σ' ks' vs' σ''\nHlen : ks.length = vs.length\nHlen' : ks'.length = vs'.length\nHdef : isDefined σ ks\nHndef : isNotDefined σ ks'\nHnd : ks'.Nodup\nHdisj : ks.Disjoint ks'\nHinit₁ : InitStates σ ks' vs' (updatedStates σ ks' vs')\nHdef₁ : isDefined (updatedStates σ ks' vs') ks\nHup₁ : UpdateStates (updatedStates σ ks' vs') ks vs (updatedStates (updatedStates σ ks' vs') ks vs)\nk : P.Ident\nHk' : k ∈ (ks'.zip vs').unzip.fst\nHk : k ∈ (ks.zip vs).unzip.fst"
+        ],
+        "proof_state_source": "lean_infotree_before_tactic",
+        "proof_state_raw": {
+          "depth": 32,
+          "end": 33776,
+          "goals_after": [
+            "P : PureExpr\nσ σ' σ'' : SemanticStore P\nks ks' : List P.Ident\nvs vs' : List P.Expr\nHup : UpdateStates σ ks vs σ'\nHinit : InitStates σ' ks' vs' σ''\nHlen : ks.length = vs.length\nHlen' : ks'.length = vs'.length\nHdef : isDefined σ ks\nHndef : isNotDefined σ ks'\nHnd : ks'.Nodup\nHdisj : ks.Disjoint ks'\nHinit₁ : InitStates σ ks' vs' (updatedStates σ ks' vs')\nHdef₁ : isDefined (updatedStates σ ks' vs') ks\nHup₁ : UpdateStates (updatedStates σ ks' vs') ks vs (updatedStates (updatedStates σ ks' vs') ks vs)\nk : P.Ident\nHk' : k ∈ (ks'.zip vs').unzip.fst\nHk : k ∈ (ks.zip vs).unzip.fst\n⊢ k ∈ ks'"
+          ],
+          "goals_before": [
+            "P : PureExpr\nσ σ' σ'' : SemanticStore P\nks ks' : List P.Ident\nvs vs' : List P.Expr\nHup : UpdateStates σ ks vs σ'\nHinit : InitStates σ' ks' vs' σ''\nHlen : ks.length = vs.length\nHlen' : ks'.length = vs'.length\nHdef : isDefined σ ks\nHndef : isNotDefined σ ks'\nHnd : ks'.Nodup\nHdisj : ks.Disjoint ks'\nHinit₁ : InitStates σ ks' vs' (updatedStates σ ks' vs')\nHdef₁ : isDefined (updatedStates σ ks' vs') ks\nHup₁ : UpdateStates (updatedStates σ ks' vs') ks vs (updatedStates (updatedStates σ ks' vs') ks vs)\nk : P.Ident\nHk' : k ∈ (ks'.zip vs').unzip.fst\nHk : k ∈ (ks.zip vs).unzip.fst\n⊢ k ∈ ks'"
+          ],
+          "kind": "tactic",
+          "start": 33745
+        }
+      },
+      {
+        "severity": "error",
+        "position": {
+          "column": 6,
+          "line": 969
+        },
+        "end_position": {
+          "column": 36,
+          "line": 969
+        },
+        "message": "`simp` made no progress",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "`simp` made no progress",
+          "endPos": {
+            "column": 36,
+            "line": 969
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 6,
+            "line": 969
+          },
+          "severity": "error"
+        },
+        "source_line": "      simp only [List.mem_map] at Hk",
+        "start_offset": 26074,
+        "start_byte_offset": 26755,
+        "end_offset": 26104,
+        "end_byte_offset": 26785,
+        "source_text": "simp only [List.mem_map] at Hk",
+        "failed_tactic": "simp only [List.mem_map] at Hk",
+        "tactic_range": {
+          "position": {
+            "line": 969,
+            "column": 6
+          },
+          "end_position": {
+            "line": 969,
+            "column": 36
+          },
+          "start_offset": 26074,
+          "end_offset": 26104
+        },
+        "goals": [
+          "k ∈ ks"
+        ],
+        "local_context": [
+          "P : PureExpr\nσ σ' σ'' : SemanticStore P\nks ks' : List P.Ident\nvs vs' : List P.Expr\nHup : UpdateStates σ ks vs σ'\nHinit : InitStates σ' ks' vs' σ''\nHlen : ks.length = vs.length\nHlen' : ks'.length = vs'.length\nHdef : isDefined σ ks\nHndef : isNotDefined σ ks'\nHnd : ks'.Nodup\nHdisj : ks.Disjoint ks'\nHinit₁ : InitStates σ ks' vs' (updatedStates σ ks' vs')\nHdef₁ : isDefined (updatedStates σ ks' vs') ks\nHup₁ : UpdateStates (updatedStates σ ks' vs') ks vs (updatedStates (updatedStates σ ks' vs') ks vs)\nk : P.Ident\nHk' : k ∈ (ks'.zip vs').unzip.fst\nHk : k ∈ (ks.zip vs).unzip.fst\nHmem' : k ∈ ks'"
+        ],
+        "proof_state_source": "lean_infotree_before_tactic",
+        "proof_state_raw": {
+          "depth": 32,
+          "end": 33916,
+          "goals_after": [
+            "P : PureExpr\nσ σ' σ'' : SemanticStore P\nks ks' : List P.Ident\nvs vs' : List P.Expr\nHup : UpdateStates σ ks vs σ'\nHinit : InitStates σ' ks' vs' σ''\nHlen : ks.length = vs.length\nHlen' : ks'.length = vs'.length\nHdef : isDefined σ ks\nHndef : isNotDefined σ ks'\nHnd : ks'.Nodup\nHdisj : ks.Disjoint ks'\nHinit₁ : InitStates σ ks' vs' (updatedStates σ ks' vs')\nHdef₁ : isDefined (updatedStates σ ks' vs') ks\nHup₁ : UpdateStates (updatedStates σ ks' vs') ks vs (updatedStates (updatedStates σ ks' vs') ks vs)\nk : P.Ident\nHk' : k ∈ (ks'.zip vs').unzip.fst\nHk : k ∈ (ks.zip vs).unzip.fst\nHmem' : k ∈ ks'\n⊢ k ∈ ks"
+          ],
+          "goals_before": [
+            "P : PureExpr\nσ σ' σ'' : SemanticStore P\nks ks' : List P.Ident\nvs vs' : List P.Expr\nHup : UpdateStates σ ks vs σ'\nHinit : InitStates σ' ks' vs' σ''\nHlen : ks.length = vs.length\nHlen' : ks'.length = vs'.length\nHdef : isDefined σ ks\nHndef : isNotDefined σ ks'\nHnd : ks'.Nodup\nHdisj : ks.Disjoint ks'\nHinit₁ : InitStates σ ks' vs' (updatedStates σ ks' vs')\nHdef₁ : isDefined (updatedStates σ ks' vs') ks\nHup₁ : UpdateStates (updatedStates σ ks' vs') ks vs (updatedStates (updatedStates σ ks' vs') ks vs)\nk : P.Ident\nHk' : k ∈ (ks'.zip vs').unzip.fst\nHk : k ∈ (ks.zip vs).unzip.fst\nHmem' : k ∈ ks'\n⊢ k ∈ ks"
+          ],
+          "kind": "tactic",
+          "start": 33886
+        }
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 8,
+          "line": 2022
+        },
+        "end_position": {
+          "column": 35,
+          "line": 2022
+        },
+        "message": "declaration uses 'sorry'",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "declaration uses 'sorry'",
+          "endPos": {
+            "column": 35,
+            "line": 2022
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "hasSorry",
+          "pos": {
+            "column": 8,
+            "line": 2022
+          },
+          "severity": "warning"
+        },
+        "source_line": "theorem EvalCallBodyRefinesContract :",
+        "start_offset": 53866,
+        "start_byte_offset": 55504,
+        "end_offset": 53893,
+        "end_byte_offset": 55531,
+        "source_text": "EvalCallBodyRefinesContract"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 8,
+          "line": 2033
+        },
+        "end_position": {
+          "column": 34,
+          "line": 2033
+        },
+        "message": "declaration uses 'sorry'",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "declaration uses 'sorry'",
+          "endPos": {
+            "column": 34,
+            "line": 2033
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "hasSorry",
+          "pos": {
+            "column": 8,
+            "line": 2033
+          },
+          "severity": "warning"
+        },
+        "source_line": "theorem EvalCommandRefinesContract :",
+        "start_offset": 54303,
+        "start_byte_offset": 55967,
+        "end_offset": 54329,
+        "end_byte_offset": 55993,
+        "source_text": "EvalCommandRefinesContract"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 8,
+          "line": 2047
+        },
+        "end_position": {
+          "column": 32,
+          "line": 2047
+        },
+        "message": "declaration uses 'sorry'",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "declaration uses 'sorry'",
+          "endPos": {
+            "column": 32,
+            "line": 2047
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "hasSorry",
+          "pos": {
+            "column": 8,
+            "line": 2047
+          },
+          "severity": "warning"
+        },
+        "source_line": "theorem EvalBlockRefinesContract :",
+        "start_offset": 54794,
+        "start_byte_offset": 56468,
+        "end_offset": 54818,
+        "end_byte_offset": 56492,
+        "source_text": "EvalBlockRefinesContract"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 8,
+          "line": 2092
+        },
+        "end_position": {
+          "column": 31,
+          "line": 2092
+        },
+        "message": "declaration uses 'sorry'",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "declaration uses 'sorry'",
+          "endPos": {
+            "column": 31,
+            "line": 2092
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "hasSorry",
+          "pos": {
+            "column": 8,
+            "line": 2092
+          },
+          "severity": "warning"
+        },
+        "source_line": "theorem EvalExpressionIsDefined :",
+        "start_offset": 56303,
+        "start_byte_offset": 57997,
+        "end_offset": 56326,
+        "end_byte_offset": 58020,
+        "source_text": "EvalExpressionIsDefined"
+      },
+      {
+        "severity": "information",
+        "position": {
+          "column": 0,
+          "line": 2112
+        },
+        "end_position": {
+          "column": 6,
+          "line": 2112
+        },
+        "message": "Core.InitsUpdatesComm {P : PureExpr} {σ σ' σ'' : SemanticStore P} {ks ks' : List P.Ident} {vs vs' : List P.Expr} :\n  UpdateStates σ ks vs σ' →\n    InitStates σ' ks' vs' σ'' → ∃ σ₁, σ₁ = updatedStates σ ks' vs' ∧ InitStates σ ks' vs' σ₁ ∧ UpdateStates σ₁ ks vs σ''",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "Core.InitsUpdatesComm {P : PureExpr} {σ σ' σ'' : SemanticStore P} {ks ks' : List P.Ident} {vs vs' : List P.Expr} :\n  UpdateStates σ ks vs σ' →\n    InitStates σ' ks' vs' σ'' → ∃ σ₁, σ₁ = updatedStates σ ks' vs' ∧ InitStates σ ks' vs' σ₁ ∧ UpdateStates σ₁ ks vs σ''",
+          "endPos": {
+            "column": 6,
+            "line": 2112
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 0,
+            "line": 2112
+          },
+          "severity": "information"
+        }
+      },
+      {
+        "severity": "information",
+        "position": {
+          "column": 0,
+          "line": 2113
+        },
+        "end_position": {
+          "column": 6,
+          "line": 2113
+        },
+        "message": "'Core.InitsUpdatesComm' depends on axioms: [propext, sorryAx, Classical.choice, Quot.sound]",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "'Core.InitsUpdatesComm' depends on axioms: [propext, sorryAx, Classical.choice, Quot.sound]",
+          "endPos": {
+            "column": 6,
+            "line": 2113
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 0,
+            "line": 2113
+          },
+          "severity": "information"
+        }
+      }
+    ],
+    "goals": [
+      "k ∈ ks'"
+    ],
+    "local_context": [
+      "P : PureExpr\nσ σ' σ'' : SemanticStore P\nks ks' : List P.Ident\nvs vs' : List P.Expr\nHup : UpdateStates σ ks vs σ'\nHinit : InitStates σ' ks' vs' σ''\nHlen : ks.length = vs.length\nHlen' : ks'.length = vs'.length\nHdef : isDefined σ ks\nHndef : isNotDefined σ ks'\nHnd : ks'.Nodup\nHdisj : ks.Disjoint ks'\nHinit₁ : InitStates σ ks' vs' (updatedStates σ ks' vs')\nHdef₁ : isDefined (updatedStates σ ks' vs') ks\nHup₁ : UpdateStates (updatedStates σ ks' vs') ks vs (updatedStates (updatedStates σ ks' vs') ks vs)\nk : P.Ident\nHk' : k ∈ (ks'.zip vs').unzip.fst\nHk : k ∈ (ks.zip vs).unzip.fst"
+    ],
+    "sorries": [
+      {
+        "kind": "transitive_dependency",
+        "axiom": "sorryAx",
+        "position": null,
+        "end_position": null
+      }
+    ],
+    "axioms": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext",
+      "sorryAx"
+    ],
+    "detail": null,
+    "raw_lean_output": "{\"caption\":\"\",\"data\":\"`simp` made no progress\",\"endPos\":{\"column\":37,\"line\":965},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"[anonymous]\",\"pos\":{\"column\":6,\"line\":965},\"severity\":\"error\"}\n{\"caption\":\"\",\"data\":\"`simp` made no progress\",\"endPos\":{\"column\":36,\"line\":969},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"[anonymous]\",\"pos\":{\"column\":6,\"line\":969},\"severity\":\"error\"}\n{\"caption\":\"\",\"data\":\"declaration uses 'sorry'\",\"endPos\":{\"column\":35,\"line\":2022},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"hasSorry\",\"pos\":{\"column\":8,\"line\":2022},\"severity\":\"warning\"}\n{\"caption\":\"\",\"data\":\"declaration uses 'sorry'\",\"endPos\":{\"column\":34,\"line\":2033},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"hasSorry\",\"pos\":{\"column\":8,\"line\":2033},\"severity\":\"warning\"}\n{\"caption\":\"\",\"data\":\"declaration uses 'sorry'\",\"endPos\":{\"column\":32,\"line\":2047},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"hasSorry\",\"pos\":{\"column\":8,\"line\":2047},\"severity\":\"warning\"}\n{\"caption\":\"\",\"data\":\"declaration uses 'sorry'\",\"endPos\":{\"column\":31,\"line\":2092},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"hasSorry\",\"pos\":{\"column\":8,\"line\":2092},\"severity\":\"warning\"}\n{\"caption\":\"\",\"data\":\"Core.InitsUpdatesComm {P : PureExpr} {σ σ' σ'' : SemanticStore P} {ks ks' : List P.Ident} {vs vs' : List P.Expr} :\\n  UpdateStates σ ks vs σ' →\\n    InitStates σ' ks' vs' σ'' → ∃ σ₁, σ₁ = updatedStates σ ks' vs' ∧ InitStates σ ks' vs' σ₁ ∧ UpdateStates σ₁ ks vs σ''\",\"endPos\":{\"column\":6,\"line\":2112},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"[anonymous]\",\"pos\":{\"column\":0,\"line\":2112},\"severity\":\"information\"}\n{\"caption\":\"\",\"data\":\"'Core.InitsUpdatesComm' depends on axioms: [propext, sorryAx, Classical.choice, Quot.sound]\",\"endPos\":{\"column\":6,\"line\":2113},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"[anonymous]\",\"pos\":{\"column\":0,\"line\":2113},\"severity\":\"information\"}\n"
+  },
+  "diagnosis": "The commutation argument is sound. The failure is localized to deriving disjointness of the key projections of the zipped lists: the length equalities do not make `simp` rewrite `map Prod.fst (zip ...)`. Prove the projected disjointness directly by converting each mapped membership through `List.mem_map` and `List.of_mem_zip`.",
+  "duplicate_cache": false,
+  "available_at": 1792773000.697869,
+  "cumulative_calls": 3,
+  "cumulative_tokens": 104295,
+  "api_spend_usd": null
+}

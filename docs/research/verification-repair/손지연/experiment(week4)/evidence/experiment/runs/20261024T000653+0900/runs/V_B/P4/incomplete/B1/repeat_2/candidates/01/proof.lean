@@ -1,0 +1,43 @@
+by
+  funext x
+  by_contra hx
+  have hpos : 0 < ⟪f x, f x⟫_ℝ := real_inner_self_pos'.2 hx
+  have hopen : IsOpen {y | 0 < ⟪f y, f x⟫_ℝ} := by
+    fun_prop
+  obtain ⟨ε, hε, hε_sub⟩ := Metric.isOpen_iff.mp hopen x hpos
+  let b₀ : ContDiffBump x := ContDiffBump.ofInnerProductSpace x
+  have hs : 0 < ε / (2 * b₀.rOut) :=
+    div_pos hε (mul_pos (by norm_num) b₀.rOut_pos)
+  let b : ContDiffBump x := b₀.rescale (ε / (2 * b₀.rOut)) hs
+  let g : Y → V := fun y => (b y) ^ 2 • f x
+  have hg_test : IsTestFunction g := by
+    constructor
+    · fun_prop
+    · simpa [g, pow_two, mul_smul] using
+        b.hasCompactSupport.smul_left
+  have hz := hg g hg_test
+  rw [MeasureTheory.integral_eq_zero_iff_of_nonneg] at hz
+  · rw [Continuous.ae_eq_iff_eq] at hz
+    · have hz_x := congrFun hz x
+      simpa [g, b, b₀] using hz_x
+    · fun_prop
+    · fun_prop
+  · intro y
+    by_cases hby : b y = 0
+    · simp [g, hby]
+    · have hy_support : y ∈ tsupport b :=
+        subset_closure (Function.mem_support.mpr hby)
+      have hyr : dist y x ≤ b.rOut := b.support hy_support
+      have hb_rOut : b.rOut < ε := by
+        simp [b]
+        field_simp
+        nlinarith [b₀.rOut_pos]
+      have hy : y ∈ Metric.ball x ε := by
+        exact lt_of_le_of_lt hyr hb_rOut
+      have hinner : 0 ≤ ⟪f y, f x⟫_ℝ := le_of_lt (hε_sub hy)
+      simp only [g, real_inner_smul_right]
+      positivity
+  · apply Continuous.integrable_of_hasCompactSupport
+    · fun_prop
+    · simpa [g, pow_two, real_inner_smul_right, mul_assoc] using
+        b.hasCompactSupport.mul_left

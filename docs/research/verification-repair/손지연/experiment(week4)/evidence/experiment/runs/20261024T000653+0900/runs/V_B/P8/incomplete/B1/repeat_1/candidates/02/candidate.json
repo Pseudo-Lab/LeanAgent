@@ -1,0 +1,177 @@
+{
+  "call": 2,
+  "origin": "generated",
+  "body": "by\n  intro x y z hxy hxz\n  induction hxy generalizing z\n  case refl =>\n    exact ⟨z, hxz, ParallelReduction.refl z⟩\n  case red_I a =>\n    cases hxz\n    case refl =>\n      exact ⟨a, ParallelReduction.refl a, ParallelReduction.red_I a⟩\n    case red_I =>\n      exact ⟨a, ParallelReduction.refl a, ParallelReduction.refl a⟩\n    case par u v hu hv =>\n      rw [I_irreducible _ hu]\n      exact ⟨v, hv, ParallelReduction.red_I v⟩\n  case red_K a b =>\n    cases hxz\n    case refl =>\n      exact ⟨a, ParallelReduction.refl a, ParallelReduction.red_K a b⟩\n    case red_K =>\n      exact ⟨a, ParallelReduction.refl a, ParallelReduction.refl a⟩\n    case par u v hu hv =>\n      obtain ⟨d, hd, hdu⟩ := Ka_irreducible a u hu\n      rw [hdu]\n      exact ⟨d, hd, ParallelReduction.red_K d v⟩\n  case red_S a b c =>\n    cases hxz\n    case refl =>\n      exact ⟨a ⬝ c ⬝ (b ⬝ c), ParallelReduction.refl _,\n        ParallelReduction.red_S a b c⟩\n    case red_S =>\n      exact ⟨a ⬝ c ⬝ (b ⬝ c), ParallelReduction.refl _, ParallelReduction.refl _⟩\n    case par u v hu hv =>\n      obtain ⟨d, e, hd, he, hdu⟩ := Sab_irreducible a b u hu\n      rw [hdu]\n      refine ⟨_, ?_, ParallelReduction.red_S d e v⟩\n      exact ParallelReduction.par\n        (ParallelReduction.par hd hv)\n        (ParallelReduction.par he hv)\n  case par a a' b b' ha hb iha ihb =>\n    cases hxz\n    case refl =>\n      exact ⟨a' ⬝ b', ParallelReduction.refl _, ParallelReduction.par ha hb⟩\n    case red_I =>\n      rw [I_irreducible _ ha]\n      exact ⟨b', ParallelReduction.red_I b', hb⟩\n    case red_K =>\n      obtain ⟨d, hd, hda⟩ := Ka_irreducible z a' ha\n      rw [hda]\n      exact ⟨d, ParallelReduction.red_K d b', hd⟩\n    case red_S c d =>\n      obtain ⟨e, f, he, hf, hea⟩ := Sab_irreducible c d a' ha\n      rw [hea]\n      refine ⟨_, ParallelReduction.red_S e f b', ?_⟩\n      exact ParallelReduction.par\n        (ParallelReduction.par he hb)\n        (ParallelReduction.par hf hb)\n    case par c c' hc hd =>\n      obtain ⟨e, hae, hce⟩ := iha hc\n      obtain ⟨f, hbf, hdf⟩ := ihb hd\n      exact ⟨e ⬝ f, ParallelReduction.par hae hbf, ParallelReduction.par hce hdf⟩",
+  "proof_sha256": "4858b6664bbd203e1745cf049c0384fae8bd4fd4527d5a308ea82805e5d7993a",
+  "full_source_sha256": "cf3f8da390818b62446f2047e95b791afa47eb15b32c252e5a7aae0ee398d5e2",
+  "eligible": true,
+  "verification": {
+    "task_id": "P8",
+    "attempt": "candidate_02",
+    "candidate_hash": "cf3f8da390818b62446f2047e95b791afa47eb15b32c252e5a7aae0ee398d5e2",
+    "environment_id": "539810be844b4918624a39f96635209e5268d60962b8f167956106aaa6dbee0f",
+    "check_kind": "candidate",
+    "status": "candidate_pass",
+    "process_exit_code": 0,
+    "diagnostics": [
+      {
+        "severity": "information",
+        "position": {
+          "column": 0,
+          "line": 223
+        },
+        "end_position": {
+          "column": 6,
+          "line": 223
+        },
+        "message": "Cslib.SKI.parallelReduction_diamond : Relation.Diamond Cslib.SKI.ParallelReduction",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "Cslib.SKI.parallelReduction_diamond : Relation.Diamond Cslib.SKI.ParallelReduction",
+          "endPos": {
+            "column": 6,
+            "line": 223
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P8/incomplete/B1/repeat_1/validation/lean/005_candidate_02/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 0,
+            "line": 223
+          },
+          "severity": "information"
+        }
+      },
+      {
+        "severity": "information",
+        "position": {
+          "column": 0,
+          "line": 224
+        },
+        "end_position": {
+          "column": 6,
+          "line": 224
+        },
+        "message": "'Cslib.SKI.parallelReduction_diamond' does not depend on any axioms",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "'Cslib.SKI.parallelReduction_diamond' does not depend on any axioms",
+          "endPos": {
+            "column": 6,
+            "line": 224
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P8/incomplete/B1/repeat_1/validation/lean/005_candidate_02/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 0,
+            "line": 224
+          },
+          "severity": "information"
+        }
+      }
+    ],
+    "goals": null,
+    "local_context": null,
+    "sorries": [],
+    "backend_proof_status": null,
+    "statement_check": "fixed_context_preserved",
+    "axioms": [],
+    "metrics": {
+      "proof_tokens": 421,
+      "raw_heartbeats": 425375,
+      "heartbeats": 425
+    },
+    "elapsed_ms": 5468,
+    "raw_log_path": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P8/incomplete/B1/repeat_1/validation/lean/005_candidate_02/stdout.log",
+    "detail": null,
+    "failure_kind": null
+  },
+  "measurement": {
+    "proof_tokens": 421,
+    "raw_heartbeats": 425375,
+    "token_reduction_pct": 7.268722466960353,
+    "heartbeat_reduction_pct": 70.84539612565044,
+    "search_score": 39.0570592963054
+  },
+  "facts": {
+    "diagnostics": [
+      {
+        "severity": "information",
+        "position": {
+          "column": 0,
+          "line": 223
+        },
+        "end_position": {
+          "column": 6,
+          "line": 223
+        },
+        "message": "Cslib.SKI.parallelReduction_diamond : Relation.Diamond Cslib.SKI.ParallelReduction",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "Cslib.SKI.parallelReduction_diamond : Relation.Diamond Cslib.SKI.ParallelReduction",
+          "endPos": {
+            "column": 6,
+            "line": 223
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 0,
+            "line": 223
+          },
+          "severity": "information"
+        }
+      },
+      {
+        "severity": "information",
+        "position": {
+          "column": 0,
+          "line": 224
+        },
+        "end_position": {
+          "column": 6,
+          "line": 224
+        },
+        "message": "'Cslib.SKI.parallelReduction_diamond' does not depend on any axioms",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "'Cslib.SKI.parallelReduction_diamond' does not depend on any axioms",
+          "endPos": {
+            "column": 6,
+            "line": 224
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 0,
+            "line": 224
+          },
+          "severity": "information"
+        }
+      }
+    ],
+    "goals": null,
+    "local_context": null,
+    "sorries": [],
+    "axioms": [],
+    "detail": null,
+    "raw_lean_output": "{\"caption\":\"\",\"data\":\"Cslib.SKI.parallelReduction_diamond : Relation.Diamond Cslib.SKI.ParallelReduction\",\"endPos\":{\"column\":6,\"line\":223},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"[anonymous]\",\"pos\":{\"column\":0,\"line\":223},\"severity\":\"information\"}\n{\"caption\":\"\",\"data\":\"'Cslib.SKI.parallelReduction_diamond' does not depend on any axioms\",\"endPos\":{\"column\":6,\"line\":224},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"[anonymous]\",\"pos\":{\"column\":0,\"line\":224},\"severity\":\"information\"}\n"
+  },
+  "diagnosis": "The induction cases for `red_I` and `red_K` failed to name all constructor arguments, so the proof accidentally used the theorem’s stale `y` variable instead of the reduct carried by the constructor. In the nested `red_K` overlap under `par`, the constructor argument is already determined and named `z`, so supplying another case variable caused the “too many variable names” error.",
+  "duplicate_cache": false,
+  "available_at": 1792771054.7902322,
+  "cumulative_calls": 2,
+  "cumulative_tokens": 43046,
+  "api_spend_usd": null
+}

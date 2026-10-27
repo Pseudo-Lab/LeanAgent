@@ -1,0 +1,391 @@
+{
+  "id": "R01",
+  "seed_id": "toy:ValidationMini.r01_and_swap",
+  "source_kind": "toy",
+  "source_path": "validation-mini/sources/toy/R01_and_swap.lean (educational example written for this dataset)",
+  "decl_full_name": "ValidationMini.r01_and_swap",
+  "environment": {
+    "dir": "/Users/sungwoo/lean_project/autoformalization_lab",
+    "lean_version": "Lean (version 4.35.0-rc4, arm64-apple-darwin24.6.0, commit c29b6dda4f7c20e3eeaa717c4e565663c5cfa364, Release)",
+    "lake_version": "Lake version 5.0.0-src+c29b6dd (Lean version 4.35.0-rc4)",
+    "lean_toolchain": "leanprover/lean4:v4.35.0-rc4",
+    "repo_commit": "454cc4cd2f28c71eaa3f37df40ef5616a96b947e",
+    "lake_manifest_sha256": "e9e2f6717972d3fc7266e2e8e02236c289f24a6b8ca824e0799d7ef01ab79a7a",
+    "lakefile_sha256": {
+      "lakefile.toml": "c75d913834f1403f56639d57320b39a355d2a3ad76ea86336d13b061a08b05f5"
+    },
+    "uncommitted_status": [
+      "M AGENTS.md",
+      " M AutoformalizationLab.lean",
+      " M README.md",
+      " M docs/hilbert-scheme/outline.md",
+      " M docs/hilbert-scheme/verification.md"
+    ],
+    "uncommitted_diff_sha256": "93487ca4becf62c7ede7d950ca76304f58bba3b9ca77445c999f02975f3310d6",
+    "packages": {
+      "mathlib": "e6bbacd0e1b7307ff6e17da09cd2455f60804fa6",
+      "plausible": "aef59637faa9e85fa2486acaaf906ce3f572af7c",
+      "LeanSearchClient": "234d9e074fbd6e911b920baf32db5291c3125be0",
+      "importGraph": "579f558774c4ac6840e715ba60dabf3030619349",
+      "proofwidgets": "d5ad4a0b79fa7f9818fe1380d05a3f6143823c09",
+      "aesop": "04879b1e1de744d5c9777c8cf63fa55a8f652e5e",
+      "Qq": "e7c4cdd2f1bf9df361ef7f621b4d6867012ab65e",
+      "batteries": "b71aaf60877e673fdb921f06f20987d12ee8a290",
+      "Cli": "82c11b9717083154aefc5fe8d4cba4bbf046298f"
+    },
+    "has_aesop": true,
+    "environment_hash": "eaa66a54671323fdb00c2ab25c3e52d1a8dd93a4c37fef763b259574ff3920a3",
+    "project": "mathlib_toy"
+  },
+  "immutable_context_hash": "df6f236f8a87a788d0e41b905647edf2931a7fc9ab17f61041ef55fa3e436186",
+  "statement": "theorem r01_and_swap (P Q R : Prop) (h : (P ∧ Q) ∧ R) : R ∧ P",
+  "original_body": "by\n  constructor\n  · exact h.2\n  · exact h.1.1",
+  "original_body_sha256": "5446d3e74358bf1443c03e09483409c1cf25cf366cbb2db48337c80207a69c4d",
+  "body_range": {
+    "body_start_char": 158,
+    "body_end_char": 204,
+    "body_first_line": 6,
+    "decl_first_line": 6
+  },
+  "candidate_body": "by\n  exact ⟨h.1.1, h.2⟩",
+  "candidate_hash": "6aaf638ee5fc60f84737fb54a875a593ac7b848952a7254c656dfb5504627ff8",
+  "expected_intent": "Collapse the two constructor branches into one anonymous-constructor term; the refactorer listed the projections in hypothesis order (P first) instead of goal order (R first).",
+  "baseline_check": {
+    "kind": "valid",
+    "exit_code": 0,
+    "axioms": [],
+    "n_errors_in_target": 0,
+    "first_error": null,
+    "errors_outside_target": 0,
+    "run": "cases/R01/logs/00_baseline.result.json",
+    "wall_s_local": 14.43
+  },
+  "observed_result": "invalid",
+  "candidate_check": {
+    "kind": "invalid",
+    "exit_code": 1,
+    "axioms": [
+      "sorryAx"
+    ],
+    "n_errors_in_target": 1,
+    "first_error": {
+      "line": 7,
+      "col": 9,
+      "message": "Application type mismatch: The argument\n  h.left.left\nhas type\n  P\nbut is expected to have type\n  R\nin the application\n  And.intro h.left.left"
+    },
+    "errors_outside_target": 0,
+    "run": "cases/R01/logs/01_candidate.result.json",
+    "wall_s_local": 4.29
+  },
+  "diagnostics": [
+    {
+      "severity": "error",
+      "file_line": 7,
+      "col": 9,
+      "body_line": 1,
+      "message": "Application type mismatch: The argument\n  h.left.left\nhas type\n  P\nbut is expected to have type\n  R\nin the application\n  And.intro h.left.left"
+    }
+  ],
+  "pre_error_state": {
+    "source": "instrumented_trace_state_run",
+    "trusted": false,
+    "untrusted_reason": "no clean-prefix replay certificate / state digest (Lean adapter not implemented)",
+    "file_line": 7,
+    "body_line": 1,
+    "goals_text": "P Q R : Prop\nh : (P ∧ Q) ∧ R\n⊢ R ∧ P",
+    "run": "cases/R01/logs/02_trace_state.result.json"
+  },
+  "pre_error_state_null_reason": null,
+  "inferred_state": null,
+  "localization": {
+    "scope": "tactic",
+    "file_line": 7,
+    "col": 9,
+    "body_line": 1,
+    "line_text": "  exact ⟨h.1.1, h.2⟩",
+    "method": "text heuristic on first error position (not a parser)",
+    "trusted_pre_state": false
+  },
+  "local_attempts": [
+    {
+      "n": 1,
+      "op": "delete_span",
+      "tactic": null,
+      "span_body_lines": [
+        1,
+        1
+      ],
+      "span_text": "  exact ⟨h.1.1, h.2⟩",
+      "check": {
+        "kind": "invalid",
+        "exit_code": 1,
+        "axioms": [
+          "sorryAx"
+        ],
+        "n_errors_in_target": 1,
+        "first_error": {
+          "line": 6,
+          "col": 65,
+          "message": "unsolved goals\nP Q R : Prop\nh : (P ∧ Q) ∧ R\n⊢ R ∧ P"
+        },
+        "errors_outside_target": 0,
+        "run": "cases/R01/attempts/01_delete_span_none.result.json",
+        "wall_s_local": 2.02
+      },
+      "local_error_cleared": true,
+      "full_replay": "invalid",
+      "result": "original_error_cleared_full_replay_failed"
+    },
+    {
+      "n": 2,
+      "op": "replace_span",
+      "tactic": "assumption",
+      "span_body_lines": [
+        1,
+        1
+      ],
+      "span_text": "  exact ⟨h.1.1, h.2⟩",
+      "check": {
+        "kind": "invalid",
+        "exit_code": 1,
+        "axioms": [
+          "sorryAx"
+        ],
+        "n_errors_in_target": 1,
+        "first_error": {
+          "line": 7,
+          "col": 2,
+          "message": "Tactic `assumption` failed\n\nP Q R : Prop\nh : (P ∧ Q) ∧ R\n⊢ R ∧ P"
+        },
+        "errors_outside_target": 0,
+        "run": "cases/R01/attempts/02_replace_span_assumption.result.json",
+        "wall_s_local": 1.92
+      },
+      "local_error_cleared": false,
+      "full_replay": "invalid",
+      "result": "failed"
+    },
+    {
+      "n": 3,
+      "op": "replace_span",
+      "tactic": "rfl",
+      "span_body_lines": [
+        1,
+        1
+      ],
+      "span_text": "  exact ⟨h.1.1, h.2⟩",
+      "check": {
+        "kind": "invalid",
+        "exit_code": 1,
+        "axioms": [
+          "sorryAx"
+        ],
+        "n_errors_in_target": 1,
+        "first_error": {
+          "line": 7,
+          "col": 2,
+          "message": "Tactic `rfl` failed: The left-hand side\n  R\nis not definitionally equal to the right-hand side\n  P\n\nP Q R : Prop\nh : (P ∧ Q) ∧ R\n⊢ R ∧ P"
+        },
+        "errors_outside_target": 0,
+        "run": "cases/R01/attempts/03_replace_span_rfl.result.json",
+        "wall_s_local": 4.18
+      },
+      "local_error_cleared": false,
+      "full_replay": "invalid",
+      "result": "failed"
+    },
+    {
+      "n": 4,
+      "op": "replace_span",
+      "tactic": "omega",
+      "span_body_lines": [
+        1,
+        1
+      ],
+      "span_text": "  exact ⟨h.1.1, h.2⟩",
+      "check": {
+        "kind": "invalid",
+        "exit_code": 1,
+        "axioms": [
+          "propext",
+          "sorryAx",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "n_errors_in_target": 1,
+        "first_error": {
+          "line": 7,
+          "col": 2,
+          "message": "omega could not prove the goal:\nNo usable constraints found. You may need to unfold definitions so `omega` can see linear arithmetic facts about `Nat` and `Int`, which may also involve multiplication, division, and modular remainder by constants."
+        },
+        "errors_outside_target": 0,
+        "run": "cases/R01/attempts/04_replace_span_omega.result.json",
+        "wall_s_local": 1.88
+      },
+      "local_error_cleared": false,
+      "full_replay": "invalid",
+      "result": "failed"
+    },
+    {
+      "n": 5,
+      "op": "replace_span",
+      "tactic": "simp_all",
+      "span_body_lines": [
+        1,
+        1
+      ],
+      "span_text": "  exact ⟨h.1.1, h.2⟩",
+      "check": {
+        "kind": "valid",
+        "exit_code": 0,
+        "axioms": [
+          "propext"
+        ],
+        "n_errors_in_target": 0,
+        "first_error": null,
+        "errors_outside_target": 0,
+        "run": "cases/R01/attempts/05_replace_span_simp_all.result.json",
+        "wall_s_local": 1.92
+      },
+      "local_error_cleared": true,
+      "full_replay": "valid",
+      "result": "full_replay_valid"
+    }
+  ],
+  "local_result": {
+    "op": "replace_span",
+    "tactic": "simp_all",
+    "body": "by\n  simp_all",
+    "check": {
+      "kind": "valid",
+      "exit_code": 0,
+      "axioms": [
+        "propext"
+      ],
+      "n_errors_in_target": 0,
+      "first_error": null,
+      "errors_outside_target": 0,
+      "run": "cases/R01/attempts/05_replace_span_simp_all.result.json",
+      "wall_s_local": 1.92
+    }
+  },
+  "valid_path_extraction": [],
+  "gold_repair_path": "gold_repair.lean",
+  "gold_strategy": "intent preserved: single anonymous-constructor term with projections in goal order",
+  "gold_check": {
+    "kind": "valid",
+    "exit_code": 0,
+    "axioms": [],
+    "n_errors_in_target": 0,
+    "first_error": null,
+    "errors_outside_target": 0,
+    "run": "cases/R01/logs/03_gold_alt0.result.json",
+    "wall_s_local": 2.04
+  },
+  "gold_attempts": [
+    {
+      "alternative": 0,
+      "edits": [
+        [
+          "exact ⟨h.1.1, h.2⟩",
+          "exact ⟨h.2, h.1.1⟩"
+        ]
+      ],
+      "check": {
+        "kind": "valid",
+        "exit_code": 0,
+        "axioms": [],
+        "n_errors_in_target": 0,
+        "first_error": null,
+        "errors_outside_target": 0,
+        "run": "cases/R01/logs/03_gold_alt0.result.json",
+        "wall_s_local": 2.04
+      }
+    }
+  ],
+  "full_replay_result": {
+    "kind": "valid",
+    "exit_code": 0,
+    "axioms": [
+      "propext"
+    ],
+    "n_errors_in_target": 0,
+    "first_error": null,
+    "errors_outside_target": 0,
+    "run": "cases/R01/attempts/05_replace_span_simp_all.result.json",
+    "wall_s_local": 1.92
+  },
+  "full_replay_result_source": "local_repair",
+  "measurements": {
+    "baseline": {
+      "body_nonwhitespace_chars": {
+        "value": 33,
+        "kind": "local_estimate",
+        "note": "character count, NOT the official token count"
+      },
+      "official_tokens": {
+        "value": null,
+        "kind": "not_measured",
+        "reason": "official tokenizer not available"
+      },
+      "heartbeats": {
+        "value": 13,
+        "kind": "local_estimate",
+        "method": "instrumented run: IO.getNumHeartbeats delta /1000 around the declaration with Elab.async=false (same mechanism as Mathlib #count_heartbeats); single run; not the official Arena measurement",
+        "run": "cases/R01/logs/04_measure_baseline.result.json"
+      }
+    },
+    "local_repair": {
+      "body_nonwhitespace_chars": {
+        "value": 10,
+        "kind": "local_estimate",
+        "note": "character count, NOT the official token count"
+      },
+      "official_tokens": {
+        "value": null,
+        "kind": "not_measured",
+        "reason": "official tokenizer not available"
+      },
+      "heartbeats": {
+        "value": 14,
+        "kind": "local_estimate",
+        "method": "instrumented run: IO.getNumHeartbeats delta /1000 around the declaration with Elab.async=false (same mechanism as Mathlib #count_heartbeats); single run; not the official Arena measurement",
+        "run": "cases/R01/logs/04_measure_local_repair.result.json"
+      }
+    },
+    "gold": {
+      "body_nonwhitespace_chars": {
+        "value": 18,
+        "kind": "local_estimate",
+        "note": "character count, NOT the official token count"
+      },
+      "official_tokens": {
+        "value": null,
+        "kind": "not_measured",
+        "reason": "official tokenizer not available"
+      },
+      "heartbeats": {
+        "value": 12,
+        "kind": "local_estimate",
+        "method": "instrumented run: IO.getNumHeartbeats delta /1000 around the declaration with Elab.async=false (same mechanism as Mathlib #count_heartbeats); single run; not the official Arena measurement",
+        "run": "cases/R01/logs/04_measure_gold.result.json"
+      }
+    },
+    "robustness": {
+      "listed_versions": [],
+      "checked_versions": [
+        "mathlib_toy pinned env only"
+      ],
+      "complete": false,
+      "note": "toy example: no Arena version list; robustness not applicable/not complete"
+    }
+  },
+  "expected_route": "local_success",
+  "expected_route_reason": "fixed local op replace_span(simp_all) made the whole file valid on full replay; no LLM prompt expected",
+  "author_prediction_before_run": "type mismatch at the exact line; local simp_all or exact? likely closes it (no LLM)",
+  "policy_decision": {
+    "decision.json": "MEASURE",
+    "decision.configured_budget.json": null
+  },
+  "validation_status": "lean_observed+gold_verified+string_contract_only_no_lean_adapter_term_check+robustness_incomplete"
+}

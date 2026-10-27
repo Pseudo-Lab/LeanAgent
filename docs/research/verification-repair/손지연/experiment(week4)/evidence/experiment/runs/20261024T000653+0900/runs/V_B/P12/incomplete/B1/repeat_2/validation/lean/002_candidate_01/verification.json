@@ -1,0 +1,370 @@
+{
+  "task_id": "P12",
+  "attempt": "candidate_01",
+  "candidate_hash": "5fef1401f4111b6d707668a73b37ac024a6d48e5f522d1580e42058dafb373aa",
+  "environment_id": "0c6971d601fccc37e69d84ddfa1ac63a41527ba5fa2d7e4f87c63547c308939a",
+  "check_kind": "candidate",
+  "status": "proof_error",
+  "process_exit_code": 1,
+  "diagnostics": [
+    {
+      "severity": "error",
+      "position": {
+        "column": 2,
+        "line": 1217
+      },
+      "end_position": {
+        "column": 17,
+        "line": 1217
+      },
+      "message": "Invalid alternative name `zero`: Expected `hz` or `hi`",
+      "source": "lean_cli",
+      "raw": {
+        "caption": "",
+        "data": "Invalid alternative name `zero`: Expected `hz` or `hi`",
+        "endPos": {
+          "column": 17,
+          "line": 1217
+        },
+        "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P12/incomplete/B1/repeat_2/validation/lean/002_candidate_01/candidate.lean",
+        "isSilent": false,
+        "keepFullRange": false,
+        "kind": "[anonymous]",
+        "pos": {
+          "column": 2,
+          "line": 1217
+        },
+        "severity": "error"
+      },
+      "source_line": "  | zero => omega",
+      "start_offset": 63401,
+      "start_byte_offset": 67449,
+      "end_offset": 63416,
+      "end_byte_offset": 67464,
+      "source_text": "| zero => omega",
+      "failed_tactic": "induction ϑ using Nat.case_strong_induction_on with\n  | zero => omega\n  | succ ϑ ih =>\n      by_cases hϑ_zero : ϑ = 0\n      · subst ϑ\n        simpa [δ_ε_multilinearCorrelatedAgreement_Nat, multilinearCombine,\n          jointProximityNat₂, finMapTwoWords] using hC_proximityGapAffineLines\n      · have hϑ_pos : 0 < ϑ := Nat.pos_of_ne_zero hϑ_zero\n        have ihϑ : δ_ε_multilinearCorrelatedAgreement_Nat\n            (F := F) (A := A) (ι := ι) (C := MC) (ϑ := ϑ) (e := e) (ε := ε) :=\n          ih ϑ (Nat.lt_succ_self ϑ) hϑ_pos\n        intro u hu\n        let U₀ := (splitHalfRowWiseInterleavedWords (ϑ := ϑ) u).1\n        let U₁ := (splitHalfRowWiseInterleavedWords (ϑ := ϑ) u).2\n        let R := R_star_tensor MC (m := ϑ) (e := e) (ε := ε) U₀ U₁\n        have hu_split :\n            Pr_{ let r_last ← $ᵖ F;\n                 let r_init ← $ᵖ (Fin ϑ → F)}[\n              multilinearCombine_affineComb_split_last_close\n                (MC := MC) (u := u) (e := e) r_last r_init]\n              > (((Nat.cast (R := ℝ≥0) (ϑ + 1)) * ε : ℝ≥0) /\n                (Fintype.card F : ℝ≥0)) := by\n          simpa [multilinearCombine_affineComb_split_last_close] using hu\n        have hR :\n            Pr_{let r ← $ᵖ F}[r ∈ R] >\n              (↑ε : ENNReal) / (Fintype.card F : ENNReal) := by\n          simpa [U₀, U₁, R] using\n            (prob_R_star_gt_threshold (MC := MC) (ε := ε)\n              (u := u) (e := e) hu_split)\n        have hclose : ∀ r : R,\n            jointProximityNat\n              (u := affineLineEvaluation U₀ U₁ r.val)\n              (e := e) (C := MC) := by\n          simpa [U₀, U₁, R] using\n            (correlatedAgreement_of_mem_R_star_tensor\n              (MC := MC) (e := e) (ε := ε) (ih := ihϑ) u)\n        have h_affine_probability :\n            Pr_{let r ← $ᵖ F}[\n              Δ₀(affineLineEvaluation (F := F) (⋈| U₀) (⋈| U₁) r,\n                MC ^⋈ (Fin (2 ^ ϑ))) ≤ e]\n              > (↑ε : ENNReal) / (Fintype.card F : ENNReal) := by\n          apply lt_of_lt_of_le hR\n          apply Pr_le_Pr_of_implies\n          intro r hr\n          simpa [jointProximityNat, affineLineEvaluation] using\n            (hclose ⟨r, hr⟩)\n        have h_interleaved :=\n          (h_interleaved_gaps (2 ^ ϑ) (by positivity))\n            (⋈| U₀) (⋈| U₁) h_affine_probability\n        simpa [U₀, U₁, jointProximityNat₂, jointProximityNat,\n          finMapTwoWords] using h_interleaved",
+      "tactic_range": {
+        "position": {
+          "line": 1216,
+          "column": 2
+        },
+        "end_position": {
+          "line": 1266,
+          "column": 45
+        },
+        "start_offset": 63347,
+        "end_offset": 65721
+      },
+      "goals": [
+        "δ_ε_multilinearCorrelatedAgreement_Nat (↑MC) ϑ e ε"
+      ],
+      "local_context": [
+        "ι : Type l\ninst✝⁷ : Fintype ι\ninst✝⁶ : Nonempty ι\ninst✝⁵ : DecidableEq ι\nF : Type\ninst✝⁴ : CommRing F\ninst✝³ : Fintype F\nA : Type\ninst✝² : DecidableEq A\ninst✝¹ : AddCommGroup A\ninst✝ : Module F A\nMC : ModuleCode ι F A\ne ε : ℕ\nhC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε\nh_interleaved_gaps : ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε\nϑ : ℕ\nhϑ_gt_0 : ϑ > 0"
+      ],
+      "proof_state_source": "lean_infotree_before_tactic",
+      "proof_state_raw": {
+        "depth": 8,
+        "end": 77035,
+        "goals_after": [],
+        "goals_before": [
+          "ι : Type l\ninst✝⁷ : Fintype ι\ninst✝⁶ : Nonempty ι\ninst✝⁵ : DecidableEq ι\nF : Type\ninst✝⁴ : CommRing F\ninst✝³ : Fintype F\nA : Type\ninst✝² : DecidableEq A\ninst✝¹ : AddCommGroup A\ninst✝ : Module F A\nMC : ModuleCode ι F A\ne ε : ℕ\nhC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε\nh_interleaved_gaps : ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε\nϑ : ℕ\nhϑ_gt_0 : ϑ > 0\n⊢ δ_ε_multilinearCorrelatedAgreement_Nat (↑MC) ϑ e ε"
+        ],
+        "kind": "tactic",
+        "start": 74525
+      }
+    },
+    {
+      "severity": "error",
+      "position": {
+        "column": 2,
+        "line": 1218
+      },
+      "end_position": {
+        "column": 45,
+        "line": 1266
+      },
+      "message": "Invalid alternative name `succ`: Expected `hz` or `hi`",
+      "source": "lean_cli",
+      "raw": {
+        "caption": "",
+        "data": "Invalid alternative name `succ`: Expected `hz` or `hi`",
+        "endPos": {
+          "column": 45,
+          "line": 1266
+        },
+        "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P12/incomplete/B1/repeat_2/validation/lean/002_candidate_01/candidate.lean",
+        "isSilent": false,
+        "keepFullRange": false,
+        "kind": "[anonymous]",
+        "pos": {
+          "column": 2,
+          "line": 1218
+        },
+        "severity": "error"
+      },
+      "source_line": "  | succ ϑ ih =>",
+      "start_offset": 63419,
+      "start_byte_offset": 67467,
+      "end_offset": 65721,
+      "end_byte_offset": 69904,
+      "source_text": "| succ ϑ ih =>\n      by_cases hϑ_zero : ϑ = 0\n      · subst ϑ\n        simpa [δ_ε_multilinearCorrelatedAgreement_Nat, multilinearCombine,\n          jointProximityNat₂, finMapTwoWords] using hC_proximityGapAffineLines\n      · have hϑ_pos : 0 < ϑ := Nat.pos_of_ne_zero hϑ_zero\n        have ihϑ : δ_ε_multilinearCorrelatedAgreement_Nat\n            (F := F) (A := A) (ι := ι) (C := MC) (ϑ := ϑ) (e := e) (ε := ε) :=\n          ih ϑ (Nat.lt_succ_self ϑ) hϑ_pos\n        intro u hu\n        let U₀ := (splitHalfRowWiseInterleavedWords (ϑ := ϑ) u).1\n        let U₁ := (splitHalfRowWiseInterleavedWords (ϑ := ϑ) u).2\n        let R := R_star_tensor MC (m := ϑ) (e := e) (ε := ε) U₀ U₁\n        have hu_split :\n            Pr_{ let r_last ← $ᵖ F;\n                 let r_init ← $ᵖ (Fin ϑ → F)}[\n              multilinearCombine_affineComb_split_last_close\n                (MC := MC) (u := u) (e := e) r_last r_init]\n              > (((Nat.cast (R := ℝ≥0) (ϑ + 1)) * ε : ℝ≥0) /\n                (Fintype.card F : ℝ≥0)) := by\n          simpa [multilinearCombine_affineComb_split_last_close] using hu\n        have hR :\n            Pr_{let r ← $ᵖ F}[r ∈ R] >\n              (↑ε : ENNReal) / (Fintype.card F : ENNReal) := by\n          simpa [U₀, U₁, R] using\n            (prob_R_star_gt_threshold (MC := MC) (ε := ε)\n              (u := u) (e := e) hu_split)\n        have hclose : ∀ r : R,\n            jointProximityNat\n              (u := affineLineEvaluation U₀ U₁ r.val)\n              (e := e) (C := MC) := by\n          simpa [U₀, U₁, R] using\n            (correlatedAgreement_of_mem_R_star_tensor\n              (MC := MC) (e := e) (ε := ε) (ih := ihϑ) u)\n        have h_affine_probability :\n            Pr_{let r ← $ᵖ F}[\n              Δ₀(affineLineEvaluation (F := F) (⋈| U₀) (⋈| U₁) r,\n                MC ^⋈ (Fin (2 ^ ϑ))) ≤ e]\n              > (↑ε : ENNReal) / (Fintype.card F : ENNReal) := by\n          apply lt_of_lt_of_le hR\n          apply Pr_le_Pr_of_implies\n          intro r hr\n          simpa [jointProximityNat, affineLineEvaluation] using\n            (hclose ⟨r, hr⟩)\n        have h_interleaved :=\n          (h_interleaved_gaps (2 ^ ϑ) (by positivity))\n            (⋈| U₀) (⋈| U₁) h_affine_probability\n        simpa [U₀, U₁, jointProximityNat₂, jointProximityNat,\n          finMapTwoWords] using h_interleaved",
+      "failed_tactic": "induction ϑ using Nat.case_strong_induction_on with\n  | zero => omega\n  | succ ϑ ih =>\n      by_cases hϑ_zero : ϑ = 0\n      · subst ϑ\n        simpa [δ_ε_multilinearCorrelatedAgreement_Nat, multilinearCombine,\n          jointProximityNat₂, finMapTwoWords] using hC_proximityGapAffineLines\n      · have hϑ_pos : 0 < ϑ := Nat.pos_of_ne_zero hϑ_zero\n        have ihϑ : δ_ε_multilinearCorrelatedAgreement_Nat\n            (F := F) (A := A) (ι := ι) (C := MC) (ϑ := ϑ) (e := e) (ε := ε) :=\n          ih ϑ (Nat.lt_succ_self ϑ) hϑ_pos\n        intro u hu\n        let U₀ := (splitHalfRowWiseInterleavedWords (ϑ := ϑ) u).1\n        let U₁ := (splitHalfRowWiseInterleavedWords (ϑ := ϑ) u).2\n        let R := R_star_tensor MC (m := ϑ) (e := e) (ε := ε) U₀ U₁\n        have hu_split :\n            Pr_{ let r_last ← $ᵖ F;\n                 let r_init ← $ᵖ (Fin ϑ → F)}[\n              multilinearCombine_affineComb_split_last_close\n                (MC := MC) (u := u) (e := e) r_last r_init]\n              > (((Nat.cast (R := ℝ≥0) (ϑ + 1)) * ε : ℝ≥0) /\n                (Fintype.card F : ℝ≥0)) := by\n          simpa [multilinearCombine_affineComb_split_last_close] using hu\n        have hR :\n            Pr_{let r ← $ᵖ F}[r ∈ R] >\n              (↑ε : ENNReal) / (Fintype.card F : ENNReal) := by\n          simpa [U₀, U₁, R] using\n            (prob_R_star_gt_threshold (MC := MC) (ε := ε)\n              (u := u) (e := e) hu_split)\n        have hclose : ∀ r : R,\n            jointProximityNat\n              (u := affineLineEvaluation U₀ U₁ r.val)\n              (e := e) (C := MC) := by\n          simpa [U₀, U₁, R] using\n            (correlatedAgreement_of_mem_R_star_tensor\n              (MC := MC) (e := e) (ε := ε) (ih := ihϑ) u)\n        have h_affine_probability :\n            Pr_{let r ← $ᵖ F}[\n              Δ₀(affineLineEvaluation (F := F) (⋈| U₀) (⋈| U₁) r,\n                MC ^⋈ (Fin (2 ^ ϑ))) ≤ e]\n              > (↑ε : ENNReal) / (Fintype.card F : ENNReal) := by\n          apply lt_of_lt_of_le hR\n          apply Pr_le_Pr_of_implies\n          intro r hr\n          simpa [jointProximityNat, affineLineEvaluation] using\n            (hclose ⟨r, hr⟩)\n        have h_interleaved :=\n          (h_interleaved_gaps (2 ^ ϑ) (by positivity))\n            (⋈| U₀) (⋈| U₁) h_affine_probability\n        simpa [U₀, U₁, jointProximityNat₂, jointProximityNat,\n          finMapTwoWords] using h_interleaved",
+      "tactic_range": {
+        "position": {
+          "line": 1216,
+          "column": 2
+        },
+        "end_position": {
+          "line": 1266,
+          "column": 45
+        },
+        "start_offset": 63347,
+        "end_offset": 65721
+      },
+      "goals": [
+        "δ_ε_multilinearCorrelatedAgreement_Nat (↑MC) ϑ e ε"
+      ],
+      "local_context": [
+        "ι : Type l\ninst✝⁷ : Fintype ι\ninst✝⁶ : Nonempty ι\ninst✝⁵ : DecidableEq ι\nF : Type\ninst✝⁴ : CommRing F\ninst✝³ : Fintype F\nA : Type\ninst✝² : DecidableEq A\ninst✝¹ : AddCommGroup A\ninst✝ : Module F A\nMC : ModuleCode ι F A\ne ε : ℕ\nhC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε\nh_interleaved_gaps : ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε\nϑ : ℕ\nhϑ_gt_0 : ϑ > 0"
+      ],
+      "proof_state_source": "lean_infotree_before_tactic",
+      "proof_state_raw": {
+        "depth": 8,
+        "end": 77035,
+        "goals_after": [],
+        "goals_before": [
+          "ι : Type l\ninst✝⁷ : Fintype ι\ninst✝⁶ : Nonempty ι\ninst✝⁵ : DecidableEq ι\nF : Type\ninst✝⁴ : CommRing F\ninst✝³ : Fintype F\nA : Type\ninst✝² : DecidableEq A\ninst✝¹ : AddCommGroup A\ninst✝ : Module F A\nMC : ModuleCode ι F A\ne ε : ℕ\nhC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε\nh_interleaved_gaps : ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε\nϑ : ℕ\nhϑ_gt_0 : ϑ > 0\n⊢ δ_ε_multilinearCorrelatedAgreement_Nat (↑MC) ϑ e ε"
+        ],
+        "kind": "tactic",
+        "start": 74525
+      }
+    },
+    {
+      "severity": "error",
+      "position": {
+        "column": 2,
+        "line": 1216
+      },
+      "end_position": {
+        "column": 11,
+        "line": 1216
+      },
+      "message": "Alternative `hz` has not been provided",
+      "source": "lean_cli",
+      "raw": {
+        "caption": "",
+        "data": "Alternative `hz` has not been provided",
+        "endPos": {
+          "column": 11,
+          "line": 1216
+        },
+        "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P12/incomplete/B1/repeat_2/validation/lean/002_candidate_01/candidate.lean",
+        "isSilent": false,
+        "keepFullRange": false,
+        "kind": "[anonymous]",
+        "pos": {
+          "column": 2,
+          "line": 1216
+        },
+        "severity": "error"
+      },
+      "source_line": "  induction ϑ using Nat.case_strong_induction_on with",
+      "start_offset": 63347,
+      "start_byte_offset": 67394,
+      "end_offset": 63356,
+      "end_byte_offset": 67403,
+      "source_text": "induction",
+      "failed_tactic": "induction ϑ using Nat.case_strong_induction_on with",
+      "tactic_range": {
+        "position": {
+          "line": 1216,
+          "column": 2
+        },
+        "end_position": {
+          "line": 1216,
+          "column": 53
+        },
+        "start_offset": 63347,
+        "end_offset": 63398
+      },
+      "goals": [
+        "δ_ε_multilinearCorrelatedAgreement_Nat (↑MC) ϑ e ε"
+      ],
+      "local_context": [
+        "ι : Type l\ninst✝⁷ : Fintype ι\ninst✝⁶ : Nonempty ι\ninst✝⁵ : DecidableEq ι\nF : Type\ninst✝⁴ : CommRing F\ninst✝³ : Fintype F\nA : Type\ninst✝² : DecidableEq A\ninst✝¹ : AddCommGroup A\ninst✝ : Module F A\nMC : ModuleCode ι F A\ne ε : ℕ\nhC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε\nh_interleaved_gaps : ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε\nϑ : ℕ\nhϑ_gt_0 : ϑ > 0"
+      ],
+      "proof_state_source": "lean_infotree_before_tactic",
+      "proof_state_raw": {
+        "depth": 9,
+        "end": 74577,
+        "goals_after": [
+          "case hz\nι : Type l\ninst✝⁷ : Fintype ι\ninst✝⁶ : Nonempty ι\ninst✝⁵ : DecidableEq ι\nF : Type\ninst✝⁴ : CommRing F\ninst✝³ : Fintype F\nA : Type\ninst✝² : DecidableEq A\ninst✝¹ : AddCommGroup A\ninst✝ : Module F A\nMC : ModuleCode ι F A\ne ε : ℕ\nhC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε\nh_interleaved_gaps : ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε\nhϑ_gt_0 : 0 > 0\n⊢ δ_ε_multilinearCorrelatedAgreement_Nat (↑MC) 0 e ε",
+          "case hi\nι : Type l\ninst✝⁷ : Fintype ι\ninst✝⁶ : Nonempty ι\ninst✝⁵ : DecidableEq ι\nF : Type\ninst✝⁴ : CommRing F\ninst✝³ : Fintype F\nA : Type\ninst✝² : DecidableEq A\ninst✝¹ : AddCommGroup A\ninst✝ : Module F A\nMC : ModuleCode ι F A\ne ε : ℕ\nhC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε\nh_interleaved_gaps : ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε\nn✝ : ℕ\na✝ : ∀ m ≤ n✝, m > 0 → δ_ε_multilinearCorrelatedAgreement_Nat (↑MC) m e ε\nhϑ_gt_0 : n✝ + 1 > 0\n⊢ δ_ε_multilinearCorrelatedAgreement_Nat (↑MC) (n✝ + 1) e ε"
+        ],
+        "goals_before": [
+          "ι : Type l\ninst✝⁷ : Fintype ι\ninst✝⁶ : Nonempty ι\ninst✝⁵ : DecidableEq ι\nF : Type\ninst✝⁴ : CommRing F\ninst✝³ : Fintype F\nA : Type\ninst✝² : DecidableEq A\ninst✝¹ : AddCommGroup A\ninst✝ : Module F A\nMC : ModuleCode ι F A\ne ε : ℕ\nhC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε\nh_interleaved_gaps : ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε\nϑ : ℕ\nhϑ_gt_0 : ϑ > 0\n⊢ δ_ε_multilinearCorrelatedAgreement_Nat (↑MC) ϑ e ε"
+        ],
+        "kind": "tactic",
+        "start": 74525
+      }
+    },
+    {
+      "severity": "error",
+      "position": {
+        "column": 2,
+        "line": 1216
+      },
+      "end_position": {
+        "column": 11,
+        "line": 1216
+      },
+      "message": "Alternative `hi` has not been provided",
+      "source": "lean_cli",
+      "raw": {
+        "caption": "",
+        "data": "Alternative `hi` has not been provided",
+        "endPos": {
+          "column": 11,
+          "line": 1216
+        },
+        "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P12/incomplete/B1/repeat_2/validation/lean/002_candidate_01/candidate.lean",
+        "isSilent": false,
+        "keepFullRange": false,
+        "kind": "[anonymous]",
+        "pos": {
+          "column": 2,
+          "line": 1216
+        },
+        "severity": "error"
+      },
+      "source_line": "  induction ϑ using Nat.case_strong_induction_on with",
+      "start_offset": 63347,
+      "start_byte_offset": 67394,
+      "end_offset": 63356,
+      "end_byte_offset": 67403,
+      "source_text": "induction",
+      "failed_tactic": "induction ϑ using Nat.case_strong_induction_on with",
+      "tactic_range": {
+        "position": {
+          "line": 1216,
+          "column": 2
+        },
+        "end_position": {
+          "line": 1216,
+          "column": 53
+        },
+        "start_offset": 63347,
+        "end_offset": 63398
+      },
+      "goals": [
+        "δ_ε_multilinearCorrelatedAgreement_Nat (↑MC) ϑ e ε"
+      ],
+      "local_context": [
+        "ι : Type l\ninst✝⁷ : Fintype ι\ninst✝⁶ : Nonempty ι\ninst✝⁵ : DecidableEq ι\nF : Type\ninst✝⁴ : CommRing F\ninst✝³ : Fintype F\nA : Type\ninst✝² : DecidableEq A\ninst✝¹ : AddCommGroup A\ninst✝ : Module F A\nMC : ModuleCode ι F A\ne ε : ℕ\nhC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε\nh_interleaved_gaps : ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε\nϑ : ℕ\nhϑ_gt_0 : ϑ > 0"
+      ],
+      "proof_state_source": "lean_infotree_before_tactic",
+      "proof_state_raw": {
+        "depth": 9,
+        "end": 74577,
+        "goals_after": [
+          "case hz\nι : Type l\ninst✝⁷ : Fintype ι\ninst✝⁶ : Nonempty ι\ninst✝⁵ : DecidableEq ι\nF : Type\ninst✝⁴ : CommRing F\ninst✝³ : Fintype F\nA : Type\ninst✝² : DecidableEq A\ninst✝¹ : AddCommGroup A\ninst✝ : Module F A\nMC : ModuleCode ι F A\ne ε : ℕ\nhC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε\nh_interleaved_gaps : ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε\nhϑ_gt_0 : 0 > 0\n⊢ δ_ε_multilinearCorrelatedAgreement_Nat (↑MC) 0 e ε",
+          "case hi\nι : Type l\ninst✝⁷ : Fintype ι\ninst✝⁶ : Nonempty ι\ninst✝⁵ : DecidableEq ι\nF : Type\ninst✝⁴ : CommRing F\ninst✝³ : Fintype F\nA : Type\ninst✝² : DecidableEq A\ninst✝¹ : AddCommGroup A\ninst✝ : Module F A\nMC : ModuleCode ι F A\ne ε : ℕ\nhC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε\nh_interleaved_gaps : ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε\nn✝ : ℕ\na✝ : ∀ m ≤ n✝, m > 0 → δ_ε_multilinearCorrelatedAgreement_Nat (↑MC) m e ε\nhϑ_gt_0 : n✝ + 1 > 0\n⊢ δ_ε_multilinearCorrelatedAgreement_Nat (↑MC) (n✝ + 1) e ε"
+        ],
+        "goals_before": [
+          "ι : Type l\ninst✝⁷ : Fintype ι\ninst✝⁶ : Nonempty ι\ninst✝⁵ : DecidableEq ι\nF : Type\ninst✝⁴ : CommRing F\ninst✝³ : Fintype F\nA : Type\ninst✝² : DecidableEq A\ninst✝¹ : AddCommGroup A\ninst✝ : Module F A\nMC : ModuleCode ι F A\ne ε : ℕ\nhC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε\nh_interleaved_gaps : ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε\nϑ : ℕ\nhϑ_gt_0 : ϑ > 0\n⊢ δ_ε_multilinearCorrelatedAgreement_Nat (↑MC) ϑ e ε"
+        ],
+        "kind": "tactic",
+        "start": 74525
+      }
+    },
+    {
+      "severity": "information",
+      "position": {
+        "column": 0,
+        "line": 1331
+      },
+      "end_position": {
+        "column": 6,
+        "line": 1331
+      },
+      "message": "interleaved_affine_gaps_imply_tensor_gaps.{l} {ι : Type l} [Fintype ι] [Nonempty ι] [DecidableEq ι] {F : Type}\n  [CommRing F] [Fintype F] {A : Type} [DecidableEq A] [AddCommGroup A] [Module F A] (MC : ModuleCode ι F A) {e ε : ℕ}\n  (hC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε)\n  (h_interleaved_gaps :\n    ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(Code.CodeInterleavable.interleaveCode MC (Fin m))) e ε)\n  (ϑ : ℕ) (hϑ_gt_0 : ϑ > 0) : δ_ε_multilinearCorrelatedAgreement_Nat (↑MC) ϑ e ε",
+      "source": "lean_cli",
+      "raw": {
+        "caption": "",
+        "data": "interleaved_affine_gaps_imply_tensor_gaps.{l} {ι : Type l} [Fintype ι] [Nonempty ι] [DecidableEq ι] {F : Type}\n  [CommRing F] [Fintype F] {A : Type} [DecidableEq A] [AddCommGroup A] [Module F A] (MC : ModuleCode ι F A) {e ε : ℕ}\n  (hC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε)\n  (h_interleaved_gaps :\n    ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(Code.CodeInterleavable.interleaveCode MC (Fin m))) e ε)\n  (ϑ : ℕ) (hϑ_gt_0 : ϑ > 0) : δ_ε_multilinearCorrelatedAgreement_Nat (↑MC) ϑ e ε",
+        "endPos": {
+          "column": 6,
+          "line": 1331
+        },
+        "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P12/incomplete/B1/repeat_2/validation/lean/002_candidate_01/candidate.lean",
+        "isSilent": false,
+        "keepFullRange": false,
+        "kind": "[anonymous]",
+        "pos": {
+          "column": 0,
+          "line": 1331
+        },
+        "severity": "information"
+      }
+    },
+    {
+      "severity": "information",
+      "position": {
+        "column": 0,
+        "line": 1332
+      },
+      "end_position": {
+        "column": 6,
+        "line": 1332
+      },
+      "message": "'interleaved_affine_gaps_imply_tensor_gaps' depends on axioms: [propext, sorryAx, Classical.choice, Quot.sound]",
+      "source": "lean_cli",
+      "raw": {
+        "caption": "",
+        "data": "'interleaved_affine_gaps_imply_tensor_gaps' depends on axioms: [propext, sorryAx, Classical.choice, Quot.sound]",
+        "endPos": {
+          "column": 6,
+          "line": 1332
+        },
+        "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P12/incomplete/B1/repeat_2/validation/lean/002_candidate_01/candidate.lean",
+        "isSilent": false,
+        "keepFullRange": false,
+        "kind": "[anonymous]",
+        "pos": {
+          "column": 0,
+          "line": 1332
+        },
+        "severity": "information"
+      }
+    }
+  ],
+  "goals": [
+    "δ_ε_multilinearCorrelatedAgreement_Nat (↑MC) ϑ e ε"
+  ],
+  "local_context": [
+    "ι : Type l\ninst✝⁷ : Fintype ι\ninst✝⁶ : Nonempty ι\ninst✝⁵ : DecidableEq ι\nF : Type\ninst✝⁴ : CommRing F\ninst✝³ : Fintype F\nA : Type\ninst✝² : DecidableEq A\ninst✝¹ : AddCommGroup A\ninst✝ : Module F A\nMC : ModuleCode ι F A\ne ε : ℕ\nhC_proximityGapAffineLines : e_ε_correlatedAgreementAffineLinesNat (↑MC) e ε\nh_interleaved_gaps : ∀ m ≥ 1, e_ε_correlatedAgreementAffineLinesNat (↑(CodeInterleavable.interleaveCode MC (Fin m))) e ε\nϑ : ℕ\nhϑ_gt_0 : ϑ > 0"
+  ],
+  "sorries": [
+    {
+      "kind": "transitive_dependency",
+      "axiom": "sorryAx",
+      "position": null,
+      "end_position": null
+    }
+  ],
+  "backend_proof_status": null,
+  "statement_check": "fixed_context_preserved",
+  "axioms": [
+    "Classical.choice",
+    "Quot.sound",
+    "propext",
+    "sorryAx"
+  ],
+  "metrics": {
+    "proof_tokens": 469
+  },
+  "elapsed_ms": 33011,
+  "raw_log_path": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P12/incomplete/B1/repeat_2/validation/lean/002_candidate_01/stdout.log",
+  "detail": null,
+  "failure_kind": "proof_error"
+}

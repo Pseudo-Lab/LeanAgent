@@ -1,0 +1,16 @@
+by
+  have hMaxwell :=
+    (isExtrema_iff_gauss_ampere_magneticFieldMatrix hA J hJ).mp h
+  have hGauss : ∀ t x,
+      (∇ ⬝ (A.electricField 𝓕.c t)) x =
+        J.chargeDensity 𝓕.c t x / 𝓕.ε₀ :=
+    fun t x => (hMaxwell t x).1
+  rw [time_deriv_time_deriv_electricField A
+    (hA.of_le (ENat.LEInfty.out))]
+  simp_rw [time_deriv_electricField_of_isExtrema hA J hJ h]
+  simp_rw [hGauss]
+  simp only [Time.deriv, Space.deriv]
+  fun_trans
+  simp only [FreeSpace.c_sq]
+  field_simp
+  ring

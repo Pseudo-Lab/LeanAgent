@@ -1,0 +1,173 @@
+{
+  "call": 1,
+  "origin": "generated",
+  "body": "by\n  classical\n  intro ϑ\n  induction ϑ with\n  | zero =>\n      intro hϑ\n      omega\n  | succ ϑ ih =>\n      intro _\n      by_cases hϑ_zero : ϑ = 0\n      · subst ϑ\n        intro u hu\n        have hprob :\n            Pr_{let r ← $ᵖ F}[\n              Δ₀(affineLineEvaluation (F := F) (u 0) (u 1) r, MC) ≤ e]\n              > (ε : ℝ≥0) / (Fintype.card F : ℝ≥0) := by\n          simpa [multilinearCombine] using hu\n        have hbase := hC_proximityGapAffineLines (u 0) (u 1) hprob\n        have hu_pair : finMapTwoWords (u 0) (u 1) = u := by\n          funext i\n          fin_cases i <;> rfl\n        simpa [jointProximityNat₂, hu_pair] using hbase\n      · have hϑ_pos : ϑ > 0 := by omega\n        have ihϑ : δ_ε_multilinearCorrelatedAgreement_Nat\n            (F := F) (A := A) (ι := ι) (C := MC)\n            (ϑ := ϑ) (e := e) (ε := ε) := ih hϑ_pos\n        intro u hu\n        let U₀ := (splitHalfRowWiseInterleavedWords (ϑ := ϑ) u).1\n        let U₁ := (splitHalfRowWiseInterleavedWords (ϑ := ϑ) u).2\n        let R := R_star_tensor MC (m := ϑ) (e := e) (ε := ε) U₀ U₁\n        have hsplit :\n            Pr_{let r_last ← $ᵖ F;\n               let r_init ← $ᵖ (Fin ϑ → F)}[\n                multilinearCombine_affineComb_split_last_close\n                  (MC := MC) (u := u) (e := e) r_last r_init]\n              > (((Nat.cast (R := ℝ≥0) (ϑ + 1)) * ε : ℝ≥0) /\n                  (Fintype.card F : ℝ≥0)) := by\n          simpa [multilinearCombine_affineComb_split_last_close,\n            Nat.succ_eq_add_one] using hu\n        have hR :\n            Pr_{let r ← $ᵖ F}[r ∈ R]\n              > (ε : ENNReal) / (Fintype.card F : ENNReal) := by\n          simpa [U₀, U₁, R] using\n            (prob_R_star_gt_threshold (MC := MC) (ε := ε)\n              (ϑ := ϑ) u e hsplit)\n        have hline :\n            Pr_{let r ← $ᵖ F}[\n              Δ₀(affineLineEvaluation (F := F) (⋈| U₀) (⋈| U₁) r,\n                MC ^⋈ (Fin (2 ^ ϑ))) ≤ e]\n              > (ε : ℝ≥0) / (Fintype.card F : ℝ≥0) := by\n          refine lt_of_lt_of_le hR ?_\n          apply Pr_le_Pr_of_implies\n          intro r hr\n          have hr_close := correlatedAgreement_of_mem_R_star_tensor\n            (MC := MC) (e := e) (ε := ε) (ϑ_pred := ϑ) ihϑ u\n            (⟨r, by simpa [R, U₀, U₁] using hr⟩)\n          simpa [jointProximityNat, U₀, U₁] using hr_close\n        have hpair :=\n          (h_interleaved_gaps (2 ^ ϑ) (by positivity))\n            (⋈| U₀) (⋈| U₁) hline\n        simpa [U₀, U₁, jointProximityNat₂, Nat.succ_eq_add_one] using hpair",
+  "proof_sha256": "2b80aa3b4263f33544f76ff3ad52a77c7e8c2d46fabe656cfaa68a9e36ba8470",
+  "full_source_sha256": "6b231e8d85a49e5d0b33e656aad5728565eefde98ca9fb68a2dad655d6313a4d",
+  "eligible": false,
+  "verification": {
+    "task_id": "P12",
+    "attempt": "candidate_01",
+    "candidate_hash": "6b231e8d85a49e5d0b33e656aad5728565eefde98ca9fb68a2dad655d6313a4d",
+    "environment_id": "0c6971d601fccc37e69d84ddfa1ac63a41527ba5fa2d7e4f87c63547c308939a",
+    "check_kind": "candidate",
+    "status": "invalid_candidate",
+    "process_exit_code": null,
+    "diagnostics": [
+      {
+        "severity": "error",
+        "position": {
+          "column": 0,
+          "line": 1361
+        },
+        "end_position": {
+          "column": 2556,
+          "line": 1361
+        },
+        "message": "repair guard: <repair_body>:33:15: expected '}['",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "repair guard: <repair_body>:33:15: expected '}['",
+          "endPos": {
+            "column": 2556,
+            "line": 1361
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P12/incomplete/B2/repeat_2/validation/lean/001_candidate_01_guard/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 0,
+            "line": 1361
+          },
+          "severity": "error"
+        }
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 8,
+          "line": 1369
+        },
+        "end_position": {
+          "column": 49,
+          "line": 1369
+        },
+        "message": "declaration uses `sorry`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "declaration uses `sorry`",
+          "endPos": {
+            "column": 49,
+            "line": 1369
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P12/incomplete/B2/repeat_2/validation/lean/001_candidate_01_guard/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "hasSorry",
+          "pos": {
+            "column": 8,
+            "line": 1369
+          },
+          "severity": "warning"
+        }
+      }
+    ],
+    "goals": null,
+    "local_context": null,
+    "sorries": null,
+    "backend_proof_status": null,
+    "statement_check": "not_run",
+    "axioms": null,
+    "metrics": {},
+    "elapsed_ms": 0,
+    "raw_log_path": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/V_B/P12/incomplete/B2/repeat_2/validation/lean/001_candidate_01_guard/stdout.log",
+    "detail": "parse-only proof boundary/policy check failed",
+    "failure_kind": "syntax"
+  },
+  "measurement": {
+    "proof_tokens": null,
+    "raw_heartbeats": null,
+    "token_reduction_pct": null,
+    "heartbeat_reduction_pct": null,
+    "search_score": null
+  },
+  "facts": {
+    "diagnostics": [
+      {
+        "severity": "error",
+        "position": {
+          "column": 0,
+          "line": 1361
+        },
+        "end_position": {
+          "column": 2556,
+          "line": 1361
+        },
+        "message": "repair guard: <repair_body>:33:15: expected '}['",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "repair guard: <repair_body>:33:15: expected '}['",
+          "endPos": {
+            "column": 2556,
+            "line": 1361
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 0,
+            "line": 1361
+          },
+          "severity": "error"
+        }
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 8,
+          "line": 1369
+        },
+        "end_position": {
+          "column": 49,
+          "line": 1369
+        },
+        "message": "declaration uses `sorry`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "declaration uses `sorry`",
+          "endPos": {
+            "column": 49,
+            "line": 1369
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "hasSorry",
+          "pos": {
+            "column": 8,
+            "line": 1369
+          },
+          "severity": "warning"
+        }
+      }
+    ],
+    "goals": null,
+    "local_context": null,
+    "sorries": null,
+    "axioms": null,
+    "detail": "parse-only proof boundary/policy check failed",
+    "raw_lean_output": "{\"caption\":\"\",\"data\":\"repair guard: <repair_body>:33:15: expected '}['\",\"endPos\":{\"column\":2556,\"line\":1361},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"[anonymous]\",\"pos\":{\"column\":0,\"line\":1361},\"severity\":\"error\"}\n{\"caption\":\"\",\"data\":\"declaration uses `sorry`\",\"endPos\":{\"column\":49,\"line\":1369},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"hasSorry\",\"pos\":{\"column\":8,\"line\":1369},\"severity\":\"warning\"}\n"
+  },
+  "diagnosis": "The proof is missing the intended induction on the tensor dimension. The base case reduces one-variable multilinear combination to the affine-line hypothesis; the successor case splits the word stack, applies the induction hypothesis on parameters in `R_star_tensor`, uses `prob_R_star_gt_threshold`, and then invokes the affine-gap property of the corresponding interleaved code.",
+  "duplicate_cache": false,
+  "available_at": 1792774340.770606,
+  "cumulative_calls": 1,
+  "cumulative_tokens": 49194,
+  "api_spend_usd": null
+}

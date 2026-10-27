@@ -35,7 +35,10 @@ def main():
     check("Python regression suite", tests.returncode == 0)
     documents = [ROOT / "docs/STRUCTURE.md", ROOT / "docs/research/refactoring/warmup/README.md",
                  OUTPUT / "README.md", PERSONAL / "README.md", PERSONAL / "report.md",
-                 ROOT / "docs/meetings/2026-10-11-week2/README.md"]
+                 ROOT / "docs/meetings/2026-10-11-week2/README.md",
+                 PERSONAL / "week4-speaker-notes.md",
+                 PERSONAL / "evidence/performance-search-2026-10-25/report.md",
+                 PERSONAL / "evidence/performance-search-2026-10-25/protocol.md"]
     for document in documents:
         text = re.sub(r"```.*?```", "", document.read_text(), flags=re.DOTALL)
         for href in re.findall(r"\[[^\]]+\]\(([^)]+)\)", text):
@@ -76,7 +79,7 @@ def main():
     runner = importlib.util.module_from_spec(loader)
     loader.loader.exec_module(runner)
     begin, end = runner.MARKERS
-    page = (PERSONAL / "presentation.html").read_text()
+    page = (PERSONAL / "presentation-history-2026-10-25.html").read_text()
     actual = page.split(begin, 1)[1].split(end, 1)[0].strip()
     check("HTML table matches metrics", actual == runner.render_table(metrics))
     diff = subprocess.run(["git", "diff", "--check"], cwd=ROOT, capture_output=True, text=True)

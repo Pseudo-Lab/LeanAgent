@@ -1,0 +1,231 @@
+/-
+Copyright (c) 2025 Thomas Waring. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Thomas Waring
+-/
+
+module
+
+public import Cslib.Languages.CombinatoryLogic.Defs
+public import Cslib.Foundations.Relation.Confluence
+
+/-!
+# SKI reduction is confluent
+
+This file proves the **Church-Rosser** theorem for the SKI calculus, that is, if `a ↠ b` and
+`a ↠ c`, `b ↠ d` and `c ↠ d` for some term `d`. More strongly (though equivalently), we show
+that the relation of having a common reduct is transitive — in the above situation, `a` and `b`,
+and `a` and `c` have common reducts, so the result implies the same of `b` and `c`. Note that
+`MJoin Red` is symmetric (trivially) and reflexive (since `↠` is), so we in fact show that
+`MJoin Red` is an equivalence.
+
+Our proof
+follows the method of Tait and Martin-Löf for the lambda calculus, as presented for instance in
+Chapter 4 of Peter Selinger's notes:
+<https://www.mscs.dal.ca/~selinger/papers/papers/lambdanotes.pdf>.
+
+## Main definitions
+
+- `ParallelReduction` : a relation `⭢ₚ` on terms such that `⭢ ⊆ ⭢ₚ ⊆ ↠`, allowing simultaneous
+reduction on the head and tail of a term.
+
+## Main results
+
+- `parallelReduction_diamond` : parallel reduction satisfies the diamond property, that is, it is
+confluent in a single step.
+- `mJoin_red_equivalence` : by a general result, the diamond property for `⭢ₚ` implies the same
+for its reflexive-transitive closure. This closure is exactly `↠`, which implies the
+**Church-Rosser** theorem as sketched above.
+-/
+
+@[expose] public section
+
+namespace Cslib
+
+namespace SKI
+
+open Red MRed Relation
+
+/-- A reduction step allowing simultaneous reduction of disjoint redexes -/
+@[reduction_sys "ₚ"]
+inductive ParallelReduction : SKI → SKI → Prop
+  /-- Parallel reduction is reflexive, -/
+  | refl (a : SKI) : ParallelReduction a a
+  /-- Contains `Red`, -/
+  | red_I (a : SKI) : ParallelReduction (I ⬝ a) a
+  | red_K (a b : SKI) : ParallelReduction (K ⬝ a ⬝ b) a
+  | red_S (a b c : SKI) : ParallelReduction (S ⬝ a ⬝ b ⬝ c) (a ⬝ c ⬝ (b ⬝ c))
+  /-- and allows simultaneous reduction of disjoint redexes. -/
+  | par ⦃a a' b b' : SKI⦄ :
+      ParallelReduction a a' → ParallelReduction b b' → ParallelReduction (a ⬝ b) (a' ⬝ b')
+
+/-- The inclusion `(· ⭢ₚ ·) ≤ (· ↠ ·)`. -/
+theorem ParallelReduction.le_reflTransGen_red :
+    (· ⭢ₚ ·) ≤ (· ↠ ·) := by
+  intro a a' h
+  cases h
+  case refl => exact Relation.ReflTransGen.refl
+  case par a a' b b' ha hb =>
+    apply parallel_mRed
+    · exact ha.le_reflTransGen_red
+    · exact hb.le_reflTransGen_red
+  case red_I => exact Relation.ReflTransGen.single (Red.red_I a')
+  case red_K b => exact Relation.ReflTransGen.single (Red.red_K a' b)
+  case red_S a b c => exact Relation.ReflTransGen.single (Red.red_S a b c)
+
+/-- The inclusion `(· ⭢ ·) ≤ (· ⭢ₚ ·)`. -/
+theorem Red.le_parallelReduction :
+    (· ⭢ ·) ≤ (· ⭢ₚ ·) := by
+  intro a a' h
+  cases h
+  case red_S => apply ParallelReduction.red_S
+  case red_K => apply ParallelReduction.red_K
+  case red_I => apply ParallelReduction.red_I
+  case red_head a a' b h =>
+    apply ParallelReduction.par
+    · exact h.le_parallelReduction
+    · exact ParallelReduction.refl b
+  case red_tail a b b' h =>
+    apply ParallelReduction.par
+    · exact ParallelReduction.refl a
+    · exact h.le_parallelReduction
+
+/-- The relations `⭢` and `⭢ₚ` have the same reflexive-transitive closure. -/
+theorem reflTransGen_parallelReduction_mRed :
+    ReflTransGen ParallelReduction = ReflTransGen Red := by
+  apply le_antisymm
+  · exact reflTransGen_le_of_le ParallelReduction.le_reflTransGen_red
+  · exact ReflTransGen.mono Red.le_parallelReduction
+
+/-!
+Irreducibility for the (partially applied) primitive combinators.
+
+TODO: possibly these should be proven more generally (in another file) for `↠`.
+-/
+
+lemma I_irreducible (a : SKI) (h : I ⭢ₚ a) : a = I := by
+  cases h
+  rfl
+
+lemma K_irreducible (a : SKI) (h : K ⭢ₚ a) : a = K := by
+  cases h
+  rfl
+
+lemma Ka_irreducible (a c : SKI) (h : (K ⬝ a) ⭢ₚ c) : ∃ a', a ⭢ₚ a' ∧ c = K ⬝ a' := by
+  cases h
+  case refl => use a, .refl a
+  case par b a' h h' => rw [K_irreducible b h]; use a'
+
+lemma S_irreducible (a : SKI) (h : S ⭢ₚ a) : a = S := by
+  cases h
+  rfl
+
+lemma Sa_irreducible (a c : SKI) (h : (S ⬝ a) ⭢ₚ c) : ∃ a', a ⭢ₚ a' ∧ c = S ⬝ a' := by
+  cases h
+  case refl =>
+    exact ⟨a, ParallelReduction.refl a, rfl⟩
+  case par b a' h h' => rw [S_irreducible b h]; use a'
+
+lemma Sab_irreducible (a b c : SKI) (h : (S ⬝ a ⬝ b) ⭢ₚ c) :
+    ∃ a' b', a ⭢ₚ a' ∧ b ⭢ₚ b' ∧ c = S ⬝ a' ⬝ b' := by
+  cases h
+  case refl => use a, b, .refl a, .refl b
+  case par c b' hc hb =>
+    let ⟨d, hd⟩ := Sa_irreducible a c hc
+    rw [hd.2]
+    use d, b', hd.1
+
+/--
+The key result: the Church-Rosser property holds for `⭢ₚ`. The proof is a lengthy case analysis
+on the reductions `a ⭢ₚ a₁` and `a ⭢ₚ a₂`, but is entirely mechanical.
+-/
+theorem parallelReduction_diamond : Diamond ParallelReduction := by
+  intro a a₁ a₂ h₁ h₂
+  revert a₂
+  induction h₁ with
+  | @refl x =>
+      intro a₂ h₂
+      exact ⟨a₂, h₂, .refl a₂⟩
+  | @red_I x =>
+      intro a₂ h₂
+      cases h₂ with
+      | refl =>
+          exact ⟨x, .refl x, .red_I x⟩
+      | red_I =>
+          exact ⟨x, .refl x, .refl x⟩
+      | @par l l' r r' hl hr =>
+          have hl' : l' = I := I_irreducible l' hl
+          subst l'
+          exact ⟨r', hr, .red_I r'⟩
+  | @red_K x y =>
+      intro a₂ h₂
+      cases h₂ with
+      | refl =>
+          exact ⟨x, .refl x, .red_K x y⟩
+      | red_K =>
+          exact ⟨x, .refl x, .refl x⟩
+      | @par l l' r r' hl hr =>
+          obtain ⟨x', hx, hl'⟩ := Ka_irreducible x l' hl
+          subst l'
+          exact ⟨x', hx, .red_K x' r'⟩
+  | @red_S x y z =>
+      intro a₂ h₂
+      cases h₂ with
+      | refl =>
+          exact ⟨x ⬝ z ⬝ (y ⬝ z), .refl _, .red_S x y z⟩
+      | red_S =>
+          exact ⟨x ⬝ z ⬝ (y ⬝ z), .refl _, .refl _⟩
+      | @par l l' r r' hl hr =>
+          obtain ⟨x', y', hx, hy, hl'⟩ := Sab_irreducible x y l' hl
+          subst l'
+          exact
+            ⟨x' ⬝ r' ⬝ (y' ⬝ r'),
+              .par (.par hx hr) (.par hy hr),
+              .red_S x' y' r'⟩
+  | @par x x' y y' hx hy ihx ihy =>
+      intro a₂ h₂
+      cases h₂ with
+      | refl =>
+          exact ⟨x' ⬝ y', .refl _, .par hx hy⟩
+      | @red_I z =>
+          have hx' : x' = I := I_irreducible x' hx
+          subst x'
+          exact ⟨y', .red_I y', hy⟩
+      | @red_K u v =>
+          obtain ⟨u', hu, hx'⟩ := Ka_irreducible u x' hx
+          subst x'
+          exact ⟨u', .red_K u' y', hu⟩
+      | @red_S u v w =>
+          obtain ⟨u', v', hu, hv, hx'⟩ := Sab_irreducible u v x' hx
+          subst x'
+          exact
+            ⟨u' ⬝ y' ⬝ (v' ⬝ y'),
+              .red_S u' v' y',
+              .par (.par hu hy) (.par hv hy)⟩
+      | @par u u' v v' hu hv =>
+          obtain ⟨p, hxp, hup⟩ := ihx u' hu
+          obtain ⟨q, hyq, hvq⟩ := ihy v' hv
+          exact ⟨p ⬝ q, .par hxp hyq, .par hup hvq⟩
+
+theorem join_parallelReduction_equivalence :
+    Equivalence (MJoin ParallelReduction) :=
+  Confluent.equivalence_join_reflTransGen <| Diamond.toConfluent parallelReduction_diamond
+
+/-- The **Church-Rosser** theorem in its general form. -/
+theorem mJoin_red_equivalence : Equivalence (MJoin Red) := by
+  rw [MJoin, ←reflTransGen_parallelReduction_mRed]
+  exact join_parallelReduction_equivalence
+
+/-- The **Church-Rosser** theorem in the form it is usually stated. -/
+theorem MRed.diamond : Confluent Red := by
+  intro a b c hab hac
+  apply mJoin_red_equivalence.trans (y := a)
+  · exact mJoin_red_equivalence.symm (MJoin.single hab)
+  · exact MJoin.single hac
+
+end SKI
+
+end Cslib
+
+#check _root_.Cslib.SKI.parallelReduction_diamond
+#print axioms _root_.Cslib.SKI.parallelReduction_diamond

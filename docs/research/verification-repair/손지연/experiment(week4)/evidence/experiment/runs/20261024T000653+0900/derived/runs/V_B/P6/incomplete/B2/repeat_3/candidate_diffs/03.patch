@@ -1,0 +1,26 @@
+--- candidate_02.proof.lean
++++ candidate_03.proof.lean
+@@ -13,7 +13,9 @@
+     | nil =>
+         intro b
+         simp only [ofCrAnListF_nil, one_mul]
++        rw [← mul_one ([ofCrAnOpF φ, ofCrAnOpF ψ]ₛF * b)]
+         rw [timeOrderF_timeOrderF_mid]
++        simp only [mul_one]
+         rw [timeOrderF_superCommuteF_ofCrAnOpF_ofCrAnOpF_eq_time hφψ hψφ]
+     | append_singleton φs χ ih =>
+         intro b
+@@ -21,9 +23,10 @@
+           (φ1 := χ) (φ2 := φ) (φ3 := ψ) (ofCrAnListF φs) b
+         have hi := ih (ofCrAnOpF χ * b)
+         by_cases hs : 𝓕.crAnStatistics φ = 𝓕.crAnStatistics ψ
+-        · simp_all [ofCrAnListF_append, superCommuteF, mul_assoc, mul_add, add_mul]
+-        · simp_all [ofCrAnListF_append, superCommuteF, mul_assoc, mul_add, add_mul,
+-            map_mul, ι_superCommuteF_of_diff_statistic hs]
++        · simp_all [ofCrAnListF_append, ofCrAnListF_singleton, superCommuteF,
++            mul_assoc, mul_add, add_mul]
++        · simp_all [ofCrAnListF_append, ofCrAnListF_singleton, superCommuteF,
++            mul_assoc, mul_add, add_mul, map_mul, ι_superCommuteF_of_diff_statistic hs]
+   · simp [p]
+   · intro x y hx hy hpx hpy
+     simp_all [p, add_mul, mul_add]

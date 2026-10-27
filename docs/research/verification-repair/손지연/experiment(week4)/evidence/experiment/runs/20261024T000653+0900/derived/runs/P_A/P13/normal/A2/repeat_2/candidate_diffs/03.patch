@@ -1,0 +1,37 @@
+--- candidate_02.proof.lean
++++ candidate_03.proof.lean
+@@ -4,25 +4,15 @@
+   let f : ℕ → (ℤ × ℤ × ℤ × ℤ) :=
+     fun n => (u n, u (n + 1), u (n + 2), u (n + 3))
+   have hfin : Set.Finite (Set.range f) := by
+-    have hsub : Set.range f ⊆ Set.Icc (B, B, B, B) (T, T, T, T) := by
+-      intro x hx
+-      rcases hx with ⟨n, rfl⟩
+-      have h₀ := hB n
+-      have h₁ := hB (n + 1)
+-      have h₂ := hB (n + 2)
+-      have h₃ := hB (n + 3)
+-      simp only [Set.mem_Icc, Prod.le_def] at h₀ h₁ h₂ h₃ ⊢
+-      constructor <;>
+-        (try constructor) <;>
+-        (try constructor) <;>
+-        (try constructor) <;>
+-        (try simp_all [f])
+-    have hIcc : Set.Finite (Set.Icc (B, B, B, B) (T, T, T, T)) := by
+-      apply Set.Finite.subset
+-        (Set.finite_mem_finset (Finset.Icc (B, B, B, B) (T, T, T, T)))
+-      intro x hx
+-      simp_all [Set.mem_Icc]
+-    exact hIcc.subset hsub
++    apply Set.Finite.subset
++      (Set.finite_mem_finset (Finset.Icc (B, B, B, B) (T, T, T, T)))
++    rintro _ ⟨n, rfl⟩
++    have h₀ := hB n
++    have h₁ := hB (n + 1)
++    have h₂ := hB (n + 2)
++    have h₃ := hB (n + 3)
++    simp only [Finset.mem_Icc, Prod.le_def] at *
++    simp_all [f]
+   have hpigeon : ∃ i j : ℕ, i < j ∧ f i = f j := by
+     by_contra! h
+     have hinj : Function.Injective f := by

@@ -1,0 +1,13 @@
+--- candidate_02.proof.lean
++++ candidate_03.proof.lean
+@@ -24,7 +24,9 @@
+     pointToIterateQuotientIndex
+       (i := ⟨i, by omega⟩) (steps := steps)
+       (h_i_add_steps := h_i_add_steps) (x := x)
+-  let fiber := fun y k =>
++  let fiber := fun
++      (y : (sDomain 𝔽q β h_ℓ_add_R_rate) ⟨i.val + steps, by omega⟩)
++      (k : Fin (2 ^ steps)) =>
+     qMap_total_fiber 𝔽q β (i := ⟨i, by omega⟩) (steps := steps)
+       (h_i_add_steps := fin_ℓ_steps_lt_ℓ_add_R i steps h_i_add_steps)
+       (y := y) k

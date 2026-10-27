@@ -1,0 +1,17 @@
+--- candidate_02.proof.lean
++++ candidate_03.proof.lean
+@@ -32,7 +32,13 @@
+     induction as generalizing bs with
+     | nil => simp_all
+     | cons a as ih =>
+-      cases bs <;> simp_all
++      cases bs with
++      | nil => simp_all
++      | cons b bs =>
++        simp at Hmem ⊢
++        rcases Hmem with h | ⟨y, hy⟩
++        · exact Or.inl h
++        · exact Or.inr (List.of_mem_zip hy).1
+   have HpairDisj :
+       List.Disjoint ((ks'.zip vs').unzip.1) ((ks.zip vs).unzip.1) := by
+     intro k Hk' Hk

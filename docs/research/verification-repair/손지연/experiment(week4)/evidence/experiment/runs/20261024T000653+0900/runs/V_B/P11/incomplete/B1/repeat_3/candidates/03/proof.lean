@@ -1,0 +1,28 @@
+by
+  classical
+  dsimp only
+  intro y
+  have hsub : ℓ - (i : ℕ) = (ℓ - ((i : ℕ) + 1)) + 1 := by
+    omega
+  have sum_fin_mul_two : ∀ (n : ℕ) (f : Fin (n * 2) → L),
+      ∑ x, f x = ∑ j : Fin n,
+        (f ⟨j.val * 2, by omega⟩ + f ⟨j.val * 2 + 1, by omega⟩) := by
+    intro n
+    induction n with
+    | zero =>
+        intro f
+        simp
+    | succ n ih =>
+        intro f
+        rw [Fin.sum_univ_eq_sum_range, Fin.sum_univ_eq_sum_range]
+        rw [show (n + 1) * 2 = n * 2 + 2 by omega]
+        rw [Finset.sum_range_add, Finset.sum_range_succ]
+        have h := ih (fun k : Fin (n * 2) => f ⟨k.val, by omega⟩)
+        simp only [Fin.sum_univ_eq_sum_range] at h
+        rw [h]
+        simp [Finset.sum_range_succ]
+  simp [fold, qMap_total_fiber_one_level_eq, Fin2ToF2,
+    intermediateEvaluationPoly, intermediateNovelBasisX, hsub, pow_succ,
+    sum_fin_mul_two, Fin.prod_univ_succ, h_β₀_eq_1.out] <;>
+    try omega <;>
+    ring

@@ -1,0 +1,21 @@
+--- candidate_03.proof.lean
++++ candidate_04.proof.lean
+@@ -48,7 +48,17 @@
+         ∑ j, ∂[j] (A.magneticFieldMatrix 𝓕.c s · (j, i)) x -
+         (1 / 𝓕.ε₀) * J.currentDensity 𝓕.c s x i) by
+       funext s
+-      convert time_deriv_electricField_of_isExtrema hA J hJ h s x i using 1 <;> fun_trans]
++      calc
++        ∂ₜ (A.electricField 𝓕.c · x i) s =
++            ∂ₜ (A.electricField 𝓕.c · x) s i := by
++              change (fderiv ℝ (fun s => A.electricField 𝓕.c s x i) s) 1 =
++                (fderiv ℝ (fun s => A.electricField 𝓕.c s x) s) 1 i
++              simpa using congrArg (fun q : ℝ →L[ℝ] ℝ => q 1)
++                (hEt.differentiableAt.hasFDerivAt.apply i).fderiv
++        _ = 1 / (𝓕.μ₀ * 𝓕.ε₀) *
++            ∑ j, ∂[j] (A.magneticFieldMatrix 𝓕.c s · (j, i)) x -
++            (1 / 𝓕.ε₀) * J.currentDensity 𝓕.c s x i :=
++              time_deriv_electricField_of_isExtrema hA J hJ h s x i]
+   change (fderiv ℝ
+       (fun s => 1 / (𝓕.μ₀ * 𝓕.ε₀) *
+         ∑ j, ∂[j] (A.magneticFieldMatrix 𝓕.c s · (j, i)) x -

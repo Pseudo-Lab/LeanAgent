@@ -1,0 +1,22 @@
+--- reference
++++ candidate-01
+@@ -112,14 +112,17 @@
+   set P_i_plus_1 :=
+     intermediateEvaluationPoly 𝔽q β h_ℓ_add_R_rate (i := ⟨i+1, by omega⟩) new_coeffs
+   -- Set up the even and odd refinement polynomials
++  have h_shared_pow : 2^(ℓ - (i + 1) + 1) = 2^(ℓ - i) := by
++    congr 1
++    omega
+   set P₀_coeffs := fun j : Fin (2^(ℓ - (i + 1))) => coeffs ⟨j.val * 2, by
+     have h1 : ℓ - (i + 1) + 1 = ℓ - i := by omega
+-    have h2 : 2^(ℓ - (i + 1) + 1) = 2^(ℓ - i) := by rw [h1]
++    have h2 := h_shared_pow
+     have h3 : 2^(ℓ - (i + 1)) * 2 = 2^(ℓ - (i + 1) + 1) := by rw [pow_succ]
+     rw [← h2, ← h3]; omega⟩
+   set P₁_coeffs := fun j : Fin (2^(ℓ - (i + 1))) => coeffs ⟨j.val * 2 + 1, by
+     have h1 : ℓ - (i + 1) + 1 = ℓ - i := by omega
+-    have h2 : 2^(ℓ - (i + 1) + 1) = 2^(ℓ - i) := by rw [h1]
++    have h2 := h_shared_pow
+     have h3 : 2^(ℓ - (i + 1)) * 2 = 2^(ℓ - (i + 1) + 1) := by rw [pow_succ]
+     rw [← h2, ← h3]; omega⟩
+   set P₀ := evenRefinement 𝔽q β h_ℓ_add_R_rate i coeffs

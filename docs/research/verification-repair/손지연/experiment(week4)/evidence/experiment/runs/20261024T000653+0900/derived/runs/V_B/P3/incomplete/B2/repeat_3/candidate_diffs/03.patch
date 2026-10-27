@@ -1,0 +1,35 @@
+--- candidate_02.proof.lean
++++ candidate_03.proof.lean
+@@ -23,10 +23,28 @@
+     specialize Hd k Hk
+     specialize Hn k Hk'
+     simp [Option.isSome, Hn] at Hd
+-  have Hzip : (ks.zip vs).unzip.1 = ks := by
+-    induction Hup <;> simp_all
+-  have Hzip' : (ks'.zip vs').unzip.1 = ks' := by
+-    induction Hinit <;> simp_all
++  have zip_fst_eq :
++      ∀ (as : List P.Ident) (bs : List P.Expr),
++        as.length = bs.length →
++        (as.zip bs).unzip.1 = as := by
++    intro as
++    induction as with
++    | nil =>
++      intro bs Hlen
++      cases bs with
++      | nil => rfl
++      | cons b bs => simp at Hlen
++    | cons a as ih =>
++      intro bs Hlen
++      cases bs with
++      | nil => simp at Hlen
++      | cons b bs =>
++        simp at Hlen
++        simp [ih bs Hlen]
++  have Hzip : (ks.zip vs).unzip.1 = ks :=
++    zip_fst_eq ks vs Hlen
++  have Hzip' : (ks'.zip vs').unzip.1 = ks' :=
++    zip_fst_eq ks' vs' Hlen'
+   have Hdisjzip :
+       ((ks.zip vs).unzip.1).Disjoint ((ks'.zip vs').unzip.1) := by
+     rw [Hzip, Hzip']

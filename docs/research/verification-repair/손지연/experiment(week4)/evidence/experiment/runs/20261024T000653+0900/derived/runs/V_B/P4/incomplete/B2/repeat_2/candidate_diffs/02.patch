@@ -1,0 +1,74 @@
+--- candidate_01.proof.lean
++++ candidate_02.proof.lean
+@@ -1,56 +1,15 @@
+ by
+-  funext x
+-  by_contra hx
+-  have hxx : 0 < ⟪f x, f x⟫_ℝ := by
+-    have hne : ⟪f x, f x⟫_ℝ ≠ 0 := by
+-      intro h
+-      apply hx
+-      simpa using h
+-    exact lt_of_le_of_ne (real_inner_self_nonneg' _) (Ne.symm hne)
+-  have hinner_cont : Continuous (fun y => ⟪f y, f x⟫_ℝ) := by
+-    fun_prop
+-  have hopen : IsOpen ((fun y => ⟪f y, f x⟫_ℝ) ⁻¹' Set.Ioi 0) :=
+-    isOpen_Ioi.preimage hinner_cont
+-  obtain ⟨ε, hε, hball⟩ := Metric.isOpen_iff.mp hopen x hxx
+-  let φ : ContDiffBump x := ContDiffBump.ofInnerProductSpace x ε hε
+-  have hφ_cont : Continuous (φ : Y → ℝ) := φ.contDiff.continuous
+-  have hg_cont : Continuous (fun y => φ y • f x) := by
+-    fun_prop
+-  have hg_compact : HasCompactSupport (fun y => φ y • f x) := by
+-    apply φ.hasCompactSupport.mono
+-    intro y hy hφy
+-    apply hy
+-    simp [hφy]
+-  have htest : IsTestFunction (fun y => φ y • f x) := by
+-    constructor
+-    · exact φ.contDiff.smul contDiff_const
+-    · exact hg_compact
+-  have hnonneg : ∀ y, 0 ≤ ⟪f y, φ y • f x⟫_ℝ := by
+-    intro y
+-    by_cases hy : φ y = 0
+-    · simp [hy]
+-    · have hyball : y ∈ Metric.ball x ε := by
+-        have hy' : y ∈ Function.support (φ : Y → ℝ) := hy
+-        rw [φ.support_eq] at hy'
+-        simpa [φ] using hy'
+-      rw [real_inner_smul_right]
+-      exact mul_nonneg (φ.nonneg y) (le_of_lt (hball hyball))
+-  have hintegrand_cont : Continuous (fun y => ⟪f y, φ y • f x⟫_ℝ) := by
+-    fun_prop
+-  have hintegrand_compact : HasCompactSupport (fun y => ⟪f y, φ y • f x⟫_ℝ) := by
+-    apply hg_compact.mono
+-    intro y hy hgy
+-    apply hy
+-    simp [hgy]
+-  have hi := hg (fun y => φ y • f x) htest
+-  rw [MeasureTheory.integral_eq_zero_iff_of_nonneg] at hi
+-  · rw [Continuous.ae_eq_iff_eq] at hi
+-    · have hφx : φ x = 1 := by
+-        apply φ.one_of_mem_closedBall
+-        simp [φ]
+-      apply hx
+-      simpa [hφx] using congrFun hi x
+-    · exact hintegrand_cont
++  have hf' := hg f hf
++  rw [MeasureTheory.integral_eq_zero_iff_of_nonneg] at hf'
++  · rw [Continuous.ae_eq_iff_eq] at hf'
++    · funext x
++      have hf'' := congrFun hf' x
++      simpa using hf''
++    · have hf : Continuous f := hf.smooth.continuous
++      fun_prop
+     · fun_prop
+-  · exact hnonneg
+-  · exact hintegrand_cont.integrable_of_hasCompactSupport hintegrand_compact
+\ No newline at end of file
++  · intro x
++    simp only [Pi.zero_apply]
++    apply real_inner_self_nonneg'
++  · apply IsTestFunction.integrable
++    exact IsTestFunction.inner hf hf
+\ No newline at end of file

@@ -1,0 +1,57 @@
+--- candidate_01.proof.lean
++++ candidate_02.proof.lean
+@@ -13,8 +13,9 @@
+     simpa using hg_min.symm
+ 
+   let D := Finset.filter (fun x => f x ≠ g_closest x) Finset.univ
+-  let E := (fiberwiseDisagreementSet 𝔽q β i steps h_i_add_steps
+-    f g_closest).toFinset
++  let FW := fiberwiseDisagreementSet 𝔽q β i steps h_i_add_steps f g_closest
++  letI : Fintype FW := Fintype.ofFinite FW
++  let E := FW.toFinset
+   let q := fun x : sDomain 𝔽q β h_ℓ_add_R_rate ⟨i, by omega⟩ =>
+     iteratedQuotientMap 𝔽q β h_ℓ_add_R_rate (i := i) (k := steps)
+       (h_bound := h_i_add_steps) x
+@@ -26,10 +27,12 @@
+   have h_card : D.card ≤ (E.product (Finset.univ : Finset (Fin (2 ^ steps)))).card := by
+     apply Finset.card_le_card_of_injOn (f := enc)
+     · intro x hx
+-      simp only [Finset.mem_product, Finset.mem_univ, and_true]
+-      simp only [E, Set.mem_toFinset]
+-      change ∃ z, q z = q x ∧ f z ≠ g_closest z
+-      exact ⟨x, rfl, (Finset.mem_filter.mp hx).2⟩
++      change q x ∈ E ∧ k x ∈ (Finset.univ : Finset (Fin (2 ^ steps)))
++      constructor
++      · simp only [E, Set.mem_toFinset]
++        change ∃ z, q z = q x ∧ f z ≠ g_closest z
++        exact ⟨x, rfl, (Finset.mem_filter.mp hx).2⟩
++      · exact Finset.mem_univ _
+     · intro x hx y hy hxy
+       change (q x, k x) = (q y, k y) at hxy
+       have hq : q x = q y := congrArg Prod.fst hxy
+@@ -41,10 +44,14 @@
+         (is_fiber_iff_generates_quotient_point 𝔽q β i steps h_i_add_steps
+           (x := y) (y := q y)).mp (by rfl)
+       calc
+-        x = qMap_total_fiber 𝔽q β (i := ⟨i, by omega⟩) (steps := steps)
++        x = qMap_total_fiber 𝔽q β
++            (i := ⟨i.val, fin_ℓ_lt_r (h_ℓ_add_R_rate := h_ℓ_add_R_rate) i⟩)
++            (steps := steps)
+             (h_i_add_steps := fin_ℓ_steps_lt_ℓ_add_R i steps h_i_add_steps)
+             (y := q x) (k x) := hx_rec.symm
+-        _ = qMap_total_fiber 𝔽q β (i := ⟨i, by omega⟩) (steps := steps)
++        _ = qMap_total_fiber 𝔽q β
++            (i := ⟨i.val, fin_ℓ_lt_r (h_ℓ_add_R_rate := h_ℓ_add_R_rate) i⟩)
++            (steps := steps)
+             (h_i_add_steps := fin_ℓ_steps_lt_ℓ_add_R i steps h_i_add_steps)
+             (y := q y) (k y) := by rw [hq, hk]
+         _ = y := hy_rec
+@@ -54,7 +61,7 @@
+         2 ^ steps *
+           (fiberwiseDisagreementSet 𝔽q β i steps h_i_add_steps
+             f g_closest).ncard := by
+-    simpa [D, E, hammingDist, Nat.mul_comm] using h_card
++    simpa [D, E, FW, hammingDist, Nat.mul_comm] using h_card
+ 
+   have h_dist_le_hamming :
+       Code.distFromCode f

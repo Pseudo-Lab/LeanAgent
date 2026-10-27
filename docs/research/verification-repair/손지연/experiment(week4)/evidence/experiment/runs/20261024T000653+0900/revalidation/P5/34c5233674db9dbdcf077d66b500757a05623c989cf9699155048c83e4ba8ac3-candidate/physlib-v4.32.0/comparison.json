@@ -1,0 +1,363 @@
+{
+  "problem": 5,
+  "environment": "physlib-v4.32.0",
+  "proof_sha256": "34c5233674db9dbdcf077d66b500757a05623c989cf9699155048c83e4ba8ac3",
+  "original_check_kind": "candidate",
+  "fields": {
+    "status": true,
+    "proof_sha256": true,
+    "axioms": true,
+    "diagnostics_exact": false,
+    "diagnostic_messages": true,
+    "proof_tokens": true,
+    "raw_heartbeats": null,
+    "environment_id": true
+  },
+  "semantic_match": true,
+  "all_available_fields_match": false,
+  "old": {
+    "task_id": "P5",
+    "attempt": "candidate_03",
+    "candidate_hash": "338b67ff97a45fb42c8edbe4e118ade0084b785763688cfe800f9005fbc3b051",
+    "environment_id": "a8ea488063a518912258eeebed8ac874bee2baabe51aabe25a8cdf4ef5d1e6eb",
+    "check_kind": "candidate",
+    "status": "proof_error",
+    "process_exit_code": 1,
+    "diagnostics": [
+      {
+        "severity": "error",
+        "position": {
+          "column": 57,
+          "line": 387
+        },
+        "end_position": {
+          "column": 60,
+          "line": 387
+        },
+        "message": "Application type mismatch: The argument\n  hA2\nhas type\n  ContDiff ℝ 2 A.val\nbut is expected to have type\n  ContDiff ℝ (2 + 1) A.val\nin the application\n  electricField_apply_contDiff_space hA2",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "Application type mismatch: The argument\n  hA2\nhas type\n  ContDiff ℝ 2 A.val\nbut is expected to have type\n  ContDiff ℝ (2 + 1) A.val\nin the application\n  electricField_apply_contDiff_space hA2",
+          "endPos": {
+            "column": 60,
+            "line": 387
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/P_A/P5/normal/A1/repeat_2/validation/lean/008_candidate_03/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 57,
+            "line": 387
+          },
+          "severity": "error"
+        },
+        "source_line": "    fun j => electricField_apply_contDiff_space (i := j) hA2 t",
+        "start_offset": 14050,
+        "start_byte_offset": 14704,
+        "end_offset": 14053,
+        "end_byte_offset": 14707,
+        "source_text": "hA2",
+        "expected_actual_types": {
+          "actual": "ContDiff ℝ 2 A.val",
+          "expected": "ContDiff ℝ (2 + 1) A.val"
+        },
+        "failed_tactic": "have hEs : ∀ j, ContDiff ℝ 2 (fun y => A.electricField 𝓕.c t y j) :=\n    fun j => electricField_apply_contDiff_space (i := j) hA2 t",
+        "tactic_range": {
+          "position": {
+            "line": 386,
+            "column": 2
+          },
+          "end_position": {
+            "line": 387,
+            "column": 62
+          },
+          "start_offset": 13924,
+          "end_offset": 14055
+        },
+        "goals": [
+          "∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+        ],
+        "local_context": [
+          "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val"
+        ],
+        "proof_state_source": "lean_infotree_before_tactic",
+        "proof_state_raw": {
+          "depth": 16,
+          "end": 21840,
+          "goals_after": [
+            "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+          ],
+          "goals_before": [
+            "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+          ],
+          "kind": "tactic",
+          "start": 21702
+        }
+      },
+      {
+        "severity": "information",
+        "position": {
+          "column": 0,
+          "line": 517
+        },
+        "end_position": {
+          "column": 6,
+          "line": 517
+        },
+        "message": "Electromagnetism.ElectromagneticPotential.time_deriv_time_deriv_electricField_of_isExtrema {d : ℕ}\n  {A : Electromagnetism.ElectromagneticPotential d} {𝓕 : Electromagnetism.FreeSpace} (hA : ContDiff ℝ (↑⊤) A.val)\n  (J : Electromagnetism.LorentzCurrentDensity d) (hJ : ContDiff ℝ (↑⊤) J)\n  (h : Electromagnetism.ElectromagneticPotential.IsExtrema 𝓕 A J) (t : Time) (x : Space d) (i : Fin d) :\n  Time.deriv (Time.deriv fun x_1 => (Electromagnetism.ElectromagneticPotential.electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 *\n          ∑ j,\n            Space.deriv j\n              (Space.deriv j fun x => (Electromagnetism.ElectromagneticPotential.electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => Electromagnetism.LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ *\n        Time.deriv (fun x_1 => (Electromagnetism.LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "Electromagnetism.ElectromagneticPotential.time_deriv_time_deriv_electricField_of_isExtrema {d : ℕ}\n  {A : Electromagnetism.ElectromagneticPotential d} {𝓕 : Electromagnetism.FreeSpace} (hA : ContDiff ℝ (↑⊤) A.val)\n  (J : Electromagnetism.LorentzCurrentDensity d) (hJ : ContDiff ℝ (↑⊤) J)\n  (h : Electromagnetism.ElectromagneticPotential.IsExtrema 𝓕 A J) (t : Time) (x : Space d) (i : Fin d) :\n  Time.deriv (Time.deriv fun x_1 => (Electromagnetism.ElectromagneticPotential.electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 *\n          ∑ j,\n            Space.deriv j\n              (Space.deriv j fun x => (Electromagnetism.ElectromagneticPotential.electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => Electromagnetism.LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ *\n        Time.deriv (fun x_1 => (Electromagnetism.LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t",
+          "endPos": {
+            "column": 6,
+            "line": 517
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/P_A/P5/normal/A1/repeat_2/validation/lean/008_candidate_03/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 0,
+            "line": 517
+          },
+          "severity": "information"
+        }
+      },
+      {
+        "severity": "information",
+        "position": {
+          "column": 0,
+          "line": 518
+        },
+        "end_position": {
+          "column": 6,
+          "line": 518
+        },
+        "message": "'Electromagnetism.ElectromagneticPotential.time_deriv_time_deriv_electricField_of_isExtrema' depends on axioms: [propext,\n sorryAx,\n Classical.choice,\n Quot.sound]",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "'Electromagnetism.ElectromagneticPotential.time_deriv_time_deriv_electricField_of_isExtrema' depends on axioms: [propext,\n sorryAx,\n Classical.choice,\n Quot.sound]",
+          "endPos": {
+            "column": 6,
+            "line": 518
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/P_A/P5/normal/A1/repeat_2/validation/lean/008_candidate_03/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 0,
+            "line": 518
+          },
+          "severity": "information"
+        }
+      }
+    ],
+    "goals": [
+      "∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+    ],
+    "local_context": [
+      "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val"
+    ],
+    "sorries": [
+      {
+        "kind": "transitive_dependency",
+        "axiom": "sorryAx",
+        "position": null,
+        "end_position": null
+      }
+    ],
+    "backend_proof_status": null,
+    "statement_check": "fixed_context_preserved",
+    "axioms": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext",
+      "sorryAx"
+    ],
+    "metrics": {
+      "proof_tokens": 1196
+    },
+    "elapsed_ms": 16110,
+    "raw_log_path": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/P_A/P5/normal/A1/repeat_2/validation/lean/008_candidate_03/stdout.log",
+    "detail": null,
+    "failure_kind": "proof_error"
+  },
+  "actual": {
+    "task_id": "P5",
+    "attempt": "saved_candidate",
+    "candidate_hash": "338b67ff97a45fb42c8edbe4e118ade0084b785763688cfe800f9005fbc3b051",
+    "environment_id": "a8ea488063a518912258eeebed8ac874bee2baabe51aabe25a8cdf4ef5d1e6eb",
+    "check_kind": "candidate",
+    "status": "proof_error",
+    "process_exit_code": 1,
+    "diagnostics": [
+      {
+        "severity": "error",
+        "position": {
+          "column": 57,
+          "line": 387
+        },
+        "end_position": {
+          "column": 60,
+          "line": 387
+        },
+        "message": "Application type mismatch: The argument\n  hA2\nhas type\n  ContDiff ℝ 2 A.val\nbut is expected to have type\n  ContDiff ℝ (2 + 1) A.val\nin the application\n  electricField_apply_contDiff_space hA2",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "Application type mismatch: The argument\n  hA2\nhas type\n  ContDiff ℝ 2 A.val\nbut is expected to have type\n  ContDiff ℝ (2 + 1) A.val\nin the application\n  electricField_apply_contDiff_space hA2",
+          "endPos": {
+            "column": 60,
+            "line": 387
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/revalidation/P5/34c5233674db9dbdcf077d66b500757a05623c989cf9699155048c83e4ba8ac3-candidate/physlib-v4.32.0/fresh/lean/002_saved_candidate/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 57,
+            "line": 387
+          },
+          "severity": "error"
+        },
+        "source_line": "    fun j => electricField_apply_contDiff_space (i := j) hA2 t",
+        "start_offset": 14050,
+        "start_byte_offset": 14704,
+        "end_offset": 14053,
+        "end_byte_offset": 14707,
+        "source_text": "hA2",
+        "expected_actual_types": {
+          "actual": "ContDiff ℝ 2 A.val",
+          "expected": "ContDiff ℝ (2 + 1) A.val"
+        },
+        "failed_tactic": "have hEs : ∀ j, ContDiff ℝ 2 (fun y => A.electricField 𝓕.c t y j) :=\n    fun j => electricField_apply_contDiff_space (i := j) hA2 t",
+        "tactic_range": {
+          "position": {
+            "line": 386,
+            "column": 2
+          },
+          "end_position": {
+            "line": 387,
+            "column": 62
+          },
+          "start_offset": 13924,
+          "end_offset": 14055
+        },
+        "goals": [
+          "∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+        ],
+        "local_context": [
+          "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val"
+        ],
+        "proof_state_source": "lean_infotree_before_tactic",
+        "proof_state_raw": {
+          "depth": 16,
+          "end": 21840,
+          "goals_after": [
+            "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+          ],
+          "goals_before": [
+            "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val\n⊢ ∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+          ],
+          "kind": "tactic",
+          "start": 21702
+        }
+      },
+      {
+        "severity": "information",
+        "position": {
+          "column": 0,
+          "line": 517
+        },
+        "end_position": {
+          "column": 6,
+          "line": 517
+        },
+        "message": "Electromagnetism.ElectromagneticPotential.time_deriv_time_deriv_electricField_of_isExtrema {d : ℕ}\n  {A : Electromagnetism.ElectromagneticPotential d} {𝓕 : Electromagnetism.FreeSpace} (hA : ContDiff ℝ (↑⊤) A.val)\n  (J : Electromagnetism.LorentzCurrentDensity d) (hJ : ContDiff ℝ (↑⊤) J)\n  (h : Electromagnetism.ElectromagneticPotential.IsExtrema 𝓕 A J) (t : Time) (x : Space d) (i : Fin d) :\n  Time.deriv (Time.deriv fun x_1 => (Electromagnetism.ElectromagneticPotential.electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 *\n          ∑ j,\n            Space.deriv j\n              (Space.deriv j fun x => (Electromagnetism.ElectromagneticPotential.electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => Electromagnetism.LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ *\n        Time.deriv (fun x_1 => (Electromagnetism.LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "Electromagnetism.ElectromagneticPotential.time_deriv_time_deriv_electricField_of_isExtrema {d : ℕ}\n  {A : Electromagnetism.ElectromagneticPotential d} {𝓕 : Electromagnetism.FreeSpace} (hA : ContDiff ℝ (↑⊤) A.val)\n  (J : Electromagnetism.LorentzCurrentDensity d) (hJ : ContDiff ℝ (↑⊤) J)\n  (h : Electromagnetism.ElectromagneticPotential.IsExtrema 𝓕 A J) (t : Time) (x : Space d) (i : Fin d) :\n  Time.deriv (Time.deriv fun x_1 => (Electromagnetism.ElectromagneticPotential.electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 *\n          ∑ j,\n            Space.deriv j\n              (Space.deriv j fun x => (Electromagnetism.ElectromagneticPotential.electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => Electromagnetism.LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ *\n        Time.deriv (fun x_1 => (Electromagnetism.LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t",
+          "endPos": {
+            "column": 6,
+            "line": 517
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/revalidation/P5/34c5233674db9dbdcf077d66b500757a05623c989cf9699155048c83e4ba8ac3-candidate/physlib-v4.32.0/fresh/lean/002_saved_candidate/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 0,
+            "line": 517
+          },
+          "severity": "information"
+        }
+      },
+      {
+        "severity": "information",
+        "position": {
+          "column": 0,
+          "line": 518
+        },
+        "end_position": {
+          "column": 6,
+          "line": 518
+        },
+        "message": "'Electromagnetism.ElectromagneticPotential.time_deriv_time_deriv_electricField_of_isExtrema' depends on axioms: [propext,\n sorryAx,\n Classical.choice,\n Quot.sound]",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "'Electromagnetism.ElectromagneticPotential.time_deriv_time_deriv_electricField_of_isExtrema' depends on axioms: [propext,\n sorryAx,\n Classical.choice,\n Quot.sound]",
+          "endPos": {
+            "column": 6,
+            "line": 518
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/revalidation/P5/34c5233674db9dbdcf077d66b500757a05623c989cf9699155048c83e4ba8ac3-candidate/physlib-v4.32.0/fresh/lean/002_saved_candidate/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 0,
+            "line": 518
+          },
+          "severity": "information"
+        }
+      }
+    ],
+    "goals": [
+      "∂ₜ (∂ₜ fun x_1 => (electricField 𝓕.c A x_1 x).ofLp i) t =\n    𝓕.c.val ^ 2 * ∑ j, Space.deriv j (Space.deriv j fun x => (electricField 𝓕.c A t x).ofLp i) x -\n        𝓕.c.val ^ 2 / 𝓕.ε₀ * Space.deriv i (fun x => LorentzCurrentDensity.chargeDensity 𝓕.c J t x) x -\n      𝓕.c.val ^ 2 * 𝓕.μ₀ * ∂ₜ (fun x_1 => (LorentzCurrentDensity.currentDensity 𝓕.c J x_1 x).ofLp i) t"
+    ],
+    "local_context": [
+      "d : ℕ\nA : ElectromagneticPotential d\n𝓕 : FreeSpace\nhA : ContDiff ℝ ∞ A.val\nJ : LorentzCurrentDensity d\nhJ : ContDiff ℝ ∞ J\nh : IsExtrema 𝓕 A J\nt : Time\nx : Space d\ni : Fin d\nhA2 : ContDiff ℝ 2 A.val"
+    ],
+    "sorries": [
+      {
+        "kind": "transitive_dependency",
+        "axiom": "sorryAx",
+        "position": null,
+        "end_position": null
+      }
+    ],
+    "backend_proof_status": null,
+    "statement_check": "fixed_context_preserved",
+    "axioms": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext",
+      "sorryAx"
+    ],
+    "metrics": {
+      "proof_tokens": 1196
+    },
+    "elapsed_ms": 19823,
+    "raw_log_path": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/revalidation/P5/34c5233674db9dbdcf077d66b500757a05623c989cf9699155048c83e4ba8ac3-candidate/physlib-v4.32.0/fresh/lean/002_saved_candidate/stdout.log",
+    "detail": null,
+    "failure_kind": "proof_error"
+  },
+  "new_model_calls": 0
+}

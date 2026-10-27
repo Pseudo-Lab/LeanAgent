@@ -1,0 +1,76 @@
+--- candidate_03.proof.lean
++++ candidate_04.proof.lean
+@@ -1,7 +1,7 @@
+ by
+   let C_i := BBF_Code 𝔽q β (h_ℓ_add_R_rate := h_ℓ_add_R_rate) ⟨i.val, by omega⟩
+   let fwSet (g : C_i) :=
+-    fiberwiseDisagreementSet 𝔽q β i steps h_i_add_steps f (g : _)
++    fiberwiseDisagreementSet 𝔽q β i steps h_i_add_steps f g.val
+   let S := (fun g : C_i => (fwSet g).ncard) '' Set.univ
+   have hS_nonempty : S.Nonempty := Set.image_nonempty.mpr Set.univ_nonempty
+   rcases Nat.sInf_mem hS_nonempty with ⟨g, _, hg_min⟩
+@@ -30,12 +30,14 @@
+     qMap_total_fiber 𝔽q β (i := ⟨i, by omega⟩) (steps := steps)
+       (h_i_add_steps := fin_ℓ_steps_lt_ℓ_add_R i steps h_i_add_steps)
+       (y := y) k
+-  let D := Finset.filter (fun x => f x ≠ (g : _) x) Finset.univ
++  let D := Finset.filter (fun x => f x ≠ g.val x) Finset.univ
++  letI : Fintype ↥(fwSet g) := Fintype.ofFinite _
+   let FW := (fwSet g).toFinset
+   let encode : ↥D → ↥FW × Fin (2 ^ steps) := fun x =>
+     (⟨quotient x, by
++      change quotient (x : _) ∈ (fwSet g).toFinset
+       rw [Set.mem_toFinset]
+-      change ∃ z, quotient z = quotient x ∧ f z ≠ (g : _) z
++      change ∃ z, quotient z = quotient x ∧ f z ≠ g.val z
+       exact ⟨x, rfl, by simpa [D] using x.property⟩⟩,
+       index x)
+   have h_reconstruct (x : ↥D) :
+@@ -61,18 +63,19 @@
+   have h_card' : D.card ≤ FW.card * 2 ^ steps := by
+     simpa only [Fintype.card_coe, Fintype.card_prod, Fintype.card_fin] using h_card
+   have h_hamming_le :
+-      hammingDist f (g : _) ≤ 2 ^ steps * (fwSet g).ncard := by
+-    change D.card ≤ 2 ^ steps * (fwSet g).ncard
++      hammingDist f g.val ≤ 2 ^ steps * (fwSet g).ncard := by
++    change (Finset.filter (fun x => f x ≠ g.val x) Finset.univ).card ≤
++      2 ^ steps * (fwSet g).ncard
+     rw [Set.ncard_eq_toFinset_card]
+-    simpa [FW, Nat.mul_comm] using h_card'
++    simpa [D, FW, Nat.mul_comm] using h_card'
+ 
+   have h_dist_le :
+       Code.distFromCode (u := f) (C := C_i) ≤
+-        (hammingDist f (g : _) : ℕ∞) := by
++        (hammingDist f g.val : ℕ∞) := by
+     simp only [Code.distFromCode]
+     apply sInf_le
+     use g
+-    simp only [Fin.eta, Subtype.coe_prop, le_refl, and_self]
++    simp only [Subtype.coe_prop, le_refl, and_self]
+ 
+   have h_fw_nat :
+       2 * fiberwiseDistance 𝔽q β (h_ℓ_add_R_rate := h_ℓ_add_R_rate)
+@@ -103,10 +106,10 @@
+     rw [Nat.mul_sub_left_distrib]
+ 
+   have h_hamming_nat :
+-      2 * hammingDist f (g : _) <
++      2 * hammingDist f g.val <
+         BBF_CodeDistance ℓ 𝓡 ⟨i, by omega⟩ := by
+     calc
+-      2 * hammingDist f (g : _)
++      2 * hammingDist f g.val
+           ≤ 2 * (2 ^ steps * (fwSet g).ncard) :=
+         Nat.mul_le_mul_left 2 h_hamming_le
+       _ = 2 ^ steps * (2 * (fwSet g).ncard) := by ac_rfl
+@@ -122,7 +125,7 @@
+     (BBF_CodeDistance ℓ 𝓡 ⟨i, by omega⟩ : ℕ∞)
+   calc
+     2 * Code.distFromCode (u := f) (C := C_i)
+-        ≤ 2 * (hammingDist f (g : _) : ℕ∞) :=
++        ≤ 2 * (hammingDist f g.val : ℕ∞) :=
+       mul_le_mul_left' h_dist_le 2
+     _ < (BBF_CodeDistance ℓ 𝓡 ⟨i, by omega⟩ : ℕ∞) := by
+       exact_mod_cast h_hamming_nat
+\ No newline at end of file

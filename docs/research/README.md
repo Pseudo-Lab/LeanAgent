@@ -12,7 +12,7 @@
 | `Autoformalization` | 박선영 · 남성우 | [autoformalization](autoformalization/README.md) |
 | `Automated Theorem Proving` (ATP) | 권주원 · 손지연 | [automated-theorem-proving](automated-theorem-proving/README.md) |
 | `Verifier-guided Agent` | 정소미 · 박성호 | [verifier-guided-agent](verifier-guided-agent/README.md) |
-| 검증·수리 설계 | 손지연 | [verification-repair](verification-repair/README.md) |
+| 검증·수리 설계·구현·실험 | 손지연 | [verification-repair](verification-repair/README.md): Week 3 초기 검증 / Week 4 구현·15문제 실험 |
 
 ## 문제 연구
 
@@ -23,3 +23,6 @@
 ## 공통 경로와 파일명
 
 [폴더·파일명 지침](../STRUCTURE.md)에 경로, 대표 파일명, 모임 목차, 혼합 자료와 원본 보존 기준을 모았습니다. 규칙을 변경할 때는 해당 지침을 갱신합니다.
+
+- [Agent Repair](agent_repair/README.md): 남성우 검증·수리 연구.
+- [새 연습문제](refactoring/new_exercises/README.md): 문제 세트·실행 기록·minimizer 발표.

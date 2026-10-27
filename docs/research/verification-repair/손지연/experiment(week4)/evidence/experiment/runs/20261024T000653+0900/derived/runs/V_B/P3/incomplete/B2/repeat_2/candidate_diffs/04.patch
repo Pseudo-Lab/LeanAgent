@@ -1,0 +1,27 @@
+--- candidate_03.proof.lean
++++ candidate_04.proof.lean
+@@ -26,12 +26,12 @@
+   have zip_fst :
+       ∀ (as : List P.Ident) (bs : List P.Expr),
+         as.length = bs.length →
+-        (as.zip bs).unzip.1 = as := by
++        List.map Prod.fst (as.zip bs) = as := by
+     intro as
+     induction as with
+     | nil =>
+-      intro bs H
+-      cases bs <;> simp_all
++      intro bs _
++      simp
+     | cons a as ih =>
+       intro bs H
+       cases bs with
+@@ -41,6 +41,8 @@
+         simp [ih bs H]
+   have Hzipdisj :
+       List.Disjoint (ks.zip vs).unzip.1 (ks'.zip vs').unzip.1 := by
++    change List.Disjoint (List.map Prod.fst (ks.zip vs))
++      (List.map Prod.fst (ks'.zip vs'))
+     rw [zip_fst ks vs Hlen, zip_fst ks' vs' Hlen']
+     exact Hdisj
+   have Hcomm :=

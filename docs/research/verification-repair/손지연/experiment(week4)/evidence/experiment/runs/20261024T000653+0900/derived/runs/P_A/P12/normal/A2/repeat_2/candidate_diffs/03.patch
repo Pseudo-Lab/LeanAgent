@@ -1,0 +1,12 @@
+--- candidate_02.proof.lean
++++ candidate_03.proof.lean
+@@ -38,7 +38,8 @@
+               Fin.snoc (fun i : Fin (ϑ_sub_2 + 1) => r i.castSucc)
+                 (r (Fin.last (ϑ_sub_2 + 1))) = r := fun r => by
+             funext i
+-            refine Fin.lastCases ?_ (fun j => ?_) i <;> simp [Fin.snoc]
++            refine Fin.lastCases (by simp only [Fin.snoc_last])
++              (fun j => by simp only [Fin.snoc_castSucc]) i
+           let P : F → (Fin (ϑ_sub_2 + 1) → F) → Prop := fun r_last r_init =>
+             Δ₀(multilinearCombine (u := u) (r := Fin.snoc r_init r_last), MC) ≤ e
+           let hP_split_r_last := prob_split_last_uniform_sampling_of_finFun

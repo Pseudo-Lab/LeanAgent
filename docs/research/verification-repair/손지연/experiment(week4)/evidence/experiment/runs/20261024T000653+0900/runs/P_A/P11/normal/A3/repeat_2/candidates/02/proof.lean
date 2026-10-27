@@ -1,0 +1,105 @@
+by
+  simp only
+  intro y
+  set fiberMap := qMap_total_fiber 𝔽q β (i := ⟨i, by omega⟩) (steps := 1)
+    (h_i_add_steps := h_i_succ_lt) (y := y)
+  set x₀ := fiberMap 0
+  set x₁ := fiberMap 1
+  set P_i := intermediateEvaluationPoly 𝔽q β h_ℓ_add_R_rate (i := ⟨i, by omega⟩) coeffs
+  set new_coeffs := fun j : Fin (2 ^ (ℓ - (i + 1))) =>
+    (1 - r_chal) * coeffs ⟨j.val * 2, by
+      rw [← Nat.add_zero (j.val * 2)]
+      exact mul_two_add_bit_lt_two_pow (c := ℓ - i) (a := j)
+        (b := ℓ - (↑i + 1)) (i := 0) (by omega) (by omega)⟩ +
+    r_chal * coeffs ⟨j.val * 2 + 1, by
+      exact mul_two_add_bit_lt_two_pow (c := ℓ - i) (a := j)
+        (b := ℓ - (↑i + 1)) (i := 1) (by omega) (by omega)⟩
+  have h_eval_qMap (k : Fin 2) :
+      (AdditiveNTT.qMap 𝔽q β ⟨i, by omega⟩).eval (fiberMap k).val = y.val := by
+    have h := iteratedQuotientMap_k_eq_1_is_qMap 𝔽q β h_ℓ_add_R_rate i
+      (by omega) (fiberMap k)
+    simp only [Subtype.ext_iff] at h
+    rw [h.symm]
+    have h_res := is_fiber_iff_generates_quotient_point 𝔽q β i (steps := 1)
+      (by omega) (x := fiberMap k) (y := y).mpr (by
+        rw [pointToIterateQuotientIndex_qMap_total_fiber_eq_self])
+    rw [h_res]
+  have h_fiber_diff : x₁.val - x₀.val = 1 := by
+    have hx₀ := qMap_total_fiber_one_level_eq 𝔽q β i (by omega) y 0
+    have hx₁ := qMap_total_fiber_one_level_eq 𝔽q β i (by omega) y 1
+    simp only [Fin2ToF2, Fin.isValue, ↓reduceIte, zero_smul, zero_add] at hx₀
+    simp only [Fin2ToF2, Fin.isValue, one_ne_zero, ↓reduceIte, one_smul] at hx₁
+    change x₀ = _ at hx₀
+    change x₁ = _ at hx₁
+    rw [hx₁, hx₀]
+    simp only [Submodule.coe_add, add_sub_cancel_right, get_sDomain_basis,
+      Fin.coe_ofNat_eq_mod, zero_mod, add_zero, cast_eq]
+    rw [normalizedWᵢ_eval_βᵢ_eq_1 𝔽q β]
+  set P_i_plus_1 := intermediateEvaluationPoly 𝔽q β h_ℓ_add_R_rate
+    (i := ⟨i + 1, by omega⟩) new_coeffs
+  set P₀ := evenRefinement 𝔽q β h_ℓ_add_R_rate i coeffs
+  set P₁ := oddRefinement 𝔽q β h_ℓ_add_R_rate i coeffs
+  have h_P_i_eval := evaluation_poly_split_identity 𝔽q β h_ℓ_add_R_rate
+    ⟨i, by omega⟩ coeffs
+  have h_equation_39_x₀ :
+      P_i.eval x₀.val = P₀.eval y.val + x₀.val * P₁.eval y.val := by
+    simp only [h_P_i_eval, Fin.eta, Polynomial.eval_add, eval_comp,
+      Polynomial.eval_mul, Polynomial.eval_X, P_i, P₀, P₁, x₀]
+    rw [h_eval_qMap 0]
+  have h_equation_39_x₁ :
+      P_i.eval x₁.val = P₀.eval y.val + x₁.val * P₁.eval y.val := by
+    simp only [h_P_i_eval, Fin.eta, Polynomial.eval_add, eval_comp,
+      Polynomial.eval_mul, Polynomial.eval_X, P_i, P₀, P₁, x₁]
+    rw [h_eval_qMap 1]
+  set f_i := fun x : (sDomain 𝔽q β h_ℓ_add_R_rate) ⟨i, by omega⟩ =>
+    P_i.eval (x.val : L)
+  set f_i_plus_1 := fold (i := ⟨i, by omega⟩) (h_i := h_i_succ_lt)
+    (f := f_i) (r_chal := r_chal)
+  calc
+    f_i_plus_1 y =
+        f_i x₀ * ((1 - r_chal) * x₁.val - r_chal) +
+          f_i x₁ * (r_chal - (1 - r_chal) * x₀.val) := rfl
+    _ = P_i.eval x₀.val * ((1 - r_chal) * x₁.val - r_chal) +
+          P_i.eval x₁.val * (r_chal - (1 - r_chal) * x₀.val) := by
+      simp only [f_i]
+    _ = (P₀.eval y.val + x₀.val * P₁.eval y.val) *
+          ((1 - r_chal) * x₁.val - r_chal) +
+        (P₀.eval y.val + x₁.val * P₁.eval y.val) *
+          (r_chal - (1 - r_chal) * x₀.val) := by
+      rw [h_equation_39_x₀, h_equation_39_x₁]
+    _ = P₀.eval y.val *
+          ((1 - r_chal) * x₁.val - r_chal + r_chal -
+            (1 - r_chal) * x₀.val) +
+        P₁.eval y.val *
+          (x₀.val * ((1 - r_chal) * x₁.val - r_chal) +
+            x₁.val * (r_chal - (1 - r_chal) * x₀.val)) := by ring
+    _ = P₀.eval y.val * ((1 - r_chal) * (x₁.val - x₀.val)) +
+        P₁.eval y.val * ((x₁.val - x₀.val) * r_chal) := by ring
+    _ = P₀.eval y.val * (1 - r_chal) + P₁.eval y.val * r_chal := by
+      rw [h_fiber_diff]
+      ring
+    _ = P_i_plus_1.eval y.val := by
+      simp only [P_i_plus_1, P₀, P₁, new_coeffs, evenRefinement, oddRefinement,
+        intermediateEvaluationPoly]
+      conv_lhs => enter [1]; rw [mul_comm, ← Polynomial.eval_C_mul]
+      conv_lhs => enter [2]; rw [mul_comm, ← Polynomial.eval_C_mul]
+      rw [← Polynomial.eval_add]
+      congr
+      simp_rw [mul_sum, ← Finset.sum_add_distrib]
+      apply Finset.sum_congr rfl
+      intro j _
+      conv_lhs => enter [1]; rw [mul_comm (a := Polynomial.C (coeffs ⟨j.val * 2, by
+        rw [← Nat.add_zero (j.val * 2)]
+        exact mul_two_add_bit_lt_two_pow (c := ℓ - i) (a := j)
+          (b := ℓ - (↑i + 1)) (i := 0) (by omega)
+          (by simpa [Nat.sub_sub] using j.isLt)⟩)), ← mul_assoc,
+        mul_comm (a := Polynomial.C (1 - r_chal))]; rw [mul_assoc]
+      conv_lhs => enter [2]; rw [mul_comm (a := Polynomial.C (coeffs ⟨j.val * 2 + 1, by
+        exact mul_two_add_bit_lt_two_pow (c := ℓ - i) (a := j)
+          (b := ℓ - (↑i + 1)) (i := 1) (by omega)
+          (by simpa [Nat.sub_sub] using j.isLt)⟩)), ← mul_assoc,
+        mul_comm (a := Polynomial.C r_chal)]; rw [mul_assoc]
+      conv_rhs => rw [mul_comm]
+      rw [← mul_add]
+      congr
+      simp only [← Polynomial.C_mul, ← Polynomial.C_add]

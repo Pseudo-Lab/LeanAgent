@@ -1,0 +1,21 @@
+--- candidate_01.proof.lean
++++ candidate_02.proof.lean
+@@ -10,7 +10,7 @@
+             if j = k then (y j - x j) * (10 : ℤ) ^ (j : ℕ) else 0) := by
+         apply Finset.sum_congr rfl
+         intro j _
+-        by_cases hj : j = k <;> simp [hj] <;> ring
++        by_cases hj : j = k <;> (simp [hj]; ring)
+       _ = (∑ j : Fin 9, x j * (10 : ℤ) ^ (j : ℕ)) +
+           (y k - x k) * (10 : ℤ) ^ (k : ℕ) := by
+         rw [Finset.sum_add_distrib]
+@@ -41,8 +41,7 @@
+     have hz : 7 ∣ 7 * digits_to_num d := ⟨digits_to_num d, rfl⟩
+     have hd := dvd_sub hs hz
+     rw [total d e]
+-    convert hd using 1 <;>
+-      simp [Finset.sum_add_distrib, Finset.sum_const] <;> ring
++    convert hd using 1 <;> (simp [Finset.sum_add_distrib, Finset.sum_const]; ring)
+   have hp : 7 ∣ (f i - d i) * (10 : ℤ) ^ (i : ℕ) := by
+     have hc := dvd_add (dvd_sub (hef' i) hN) (hde' i)
+     convert hc using 1 <;> ring

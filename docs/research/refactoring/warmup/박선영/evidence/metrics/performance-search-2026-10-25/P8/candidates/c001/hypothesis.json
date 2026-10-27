@@ -1,0 +1,22 @@
+{
+  "problem": "P8",
+  "strategy": "T3: explicit induction on the first parallel reduction; direct witness constructors",
+  "parent": {
+    "path": "/Users/parksunyoung/Desktop/study/LeanAgent/docs/research/refactoring/warmup/박선영/evidence/P8/selected.lean",
+    "sha256": "56b6f27c11c9f36d561362f3a2abb4265c407bd0f44603959d6781a5215e4ec6",
+    "hash_convention": "SHA-256 of exact file bytes, including trailing newlines"
+  },
+  "target_block": "Entire proof body of theorem parallelReduction_diamond : Diamond ParallelReduction; pinned source lines 143-206",
+  "rationale": "The selected proof uses recursive references to its own declaration for the par/par case. Explicit induction exposes the two smaller derivations as induction hypotheses and removes every target-name occurrence from the proof body. Direct existential/conjunction constructors replace use/constructor/apply chains without changing the case partition or existing irreducibility lemmas.",
+  "expected_effect": "May reduce elaboration and recursive-declaration processing, and some tactic overhead; no improvement is measured or guaranteed.",
+  "changes": [
+    "Induct on the first ParallelReduction proof while generalizing the second endpoint.",
+    "Apply induction hypotheses only to the head and tail subderivations in par/par.",
+    "Construct join witnesses directly, retaining I_irreducible, Ka_irreducible and Sab_irreducible."
+  ],
+  "uncertainty": [
+    "Uncompiled: induction case binder ordering and induction-hypothesis inference require full-file validation.",
+    "Explicit induction can increase recursor motive elaboration or proof term size.",
+    "No Lean execution, kernel axiom check, heartbeats or runtime measurement has been performed."
+  ]
+}

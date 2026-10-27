@@ -1,0 +1,329 @@
+{
+  "call": 1,
+  "origin": "generated",
+  "body": "by\n  classical\n  intro d e f h\n  have hde : ∀ i : Fin 9,\n      7 ∣ digits_to_num (fun j : Fin 9 => if j = i then e j else d j) :=\n    ((hrelation d e).mp h.1).2\n  have hef : ∀ i : Fin 9,\n      7 ∣ digits_to_num (fun j : Fin 9 => if j = i then f j else e j) :=\n    ((hrelation e f).mp h.2).2\n  have hnum (a b : Fin 9 → ℤ) (i : Fin 9) :\n      digits_to_num (fun j : Fin 9 => if j = i then b j else a j) =\n        digits_to_num a + (b i - a i) * (10 : ℤ) ^ (i : ℕ) := by\n    rw [hdigits_to_num]\n    calc\n      ∑ j : Fin 9, (if j = i then b j else a j) * (10 : ℤ) ^ (j : ℕ) =\n          ∑ j : Fin 9, (a j * (10 : ℤ) ^ (j : ℕ) +\n            (if j = i then (b j - a j) * (10 : ℤ) ^ (j : ℕ) else 0)) := by\n        apply Finset.sum_congr rfl\n        intro j _\n        by_cases hji : j = i\n        · subst j\n          simp\n          ring\n        · simp [hji]\n      _ = (∑ j : Fin 9, a j * (10 : ℤ) ^ (j : ℕ)) +\n          ∑ j : Fin 9, (if j = i then\n            (b j - a j) * (10 : ℤ) ^ (j : ℕ) else 0) := by\n        rw [Finset.sum_add_distrib]\n      _ = (∑ j : Fin 9, a j * (10 : ℤ) ^ (j : ℕ)) +\n          (b i - a i) * (10 : ℤ) ^ (i : ℕ) := by simp\n  have hdiff (a b : Fin 9 → ℤ) :\n      digits_to_num b = digits_to_num a +\n        ∑ i : Fin 9, (b i - a i) * (10 : ℤ) ^ (i : ℕ) := by\n    rw [hdigits_to_num, ← Finset.sum_add_distrib]\n    apply Finset.sum_congr rfl\n    intro i _\n    ring\n  have hd : ∀ i : Fin 9,\n      7 ∣ digits_to_num d + (e i - d i) * (10 : ℤ) ^ (i : ℕ) := by\n    intro i\n    rw [← hnum d e i]\n    exact hde i\n  have hf : ∀ i : Fin 9,\n      7 ∣ digits_to_num e + (f i - e i) * (10 : ℤ) ^ (i : ℕ) := by\n    intro i\n    rw [← hnum e f i]\n    exact hef i\n  have hs₀ : 7 ∣ ∑ i : Fin 9,\n      (digits_to_num d + (e i - d i) * (10 : ℤ) ^ (i : ℕ)) := by\n    apply Finset.dvd_sum\n    intro i _\n    exact hd i\n  have hseven : (7 : ℤ) ∣ 7 * digits_to_num d :=\n    ⟨digits_to_num d, rfl⟩\n  have hs : 7 ∣ digits_to_num e + digits_to_num d := by\n    have ht := dvd_sub hs₀ hseven\n    have hde_num := hdiff d e\n    convert ht using 1\n    rw [Finset.sum_add_distrib]\n    norm_num [Finset.sum_const, Finset.card_fin]\n    linarith [hde_num]\n  have hp : ∀ i : Fin 9,\n      7 ∣ (f i - d i) * (10 : ℤ) ^ (i : ℕ) := by\n    intro i\n    have ht := dvd_add (dvd_sub (hf i) hs) (hd i)\n    convert ht using 1 <;> ring\n  have hcancel : ∀ n : ℕ, ∀ x : ℤ,\n      7 ∣ x * (10 : ℤ) ^ n → 7 ∣ x := by\n    intro n\n    induction n with\n    | zero =>\n        intro x hx\n        simpa using hx\n    | succ n ihn =>\n        intro x hx\n        have hy : 7 ∣ (x * (10 : ℤ) ^ n) * 10 := by\n          simpa [pow_succ, mul_assoc] using hx\n        rcases hy with ⟨k, hk⟩\n        apply ihn x\n        refine ⟨5 * k - 7 * (x * (10 : ℤ) ^ n), ?_⟩\n        calc\n          x * (10 : ℤ) ^ n =\n              5 * ((x * (10 : ℤ) ^ n) * 10) -\n                7 * (7 * (x * (10 : ℤ) ^ n)) := by ring\n          _ = 7 * (5 * k - 7 * (x * (10 : ℤ) ^ n)) := by\n            rw [hk]\n            ring\n  intro i\n  have hi : 7 ∣ f i - d i := hcancel (i : ℕ) (f i - d i) (hp i)\n  have hneg : 7 ∣ -(f i - d i) := dvd_neg.mpr hi\n  convert hneg using 1 <;> ring",
+  "proof_sha256": "7f04406b11c51790fe04c37c73d54715a7651e166924a768bacb83720895140f",
+  "full_source_sha256": "fc8d17879b9b37ee9651cdfa58bc9b42e89389e747bf660330f5da61921e6496",
+  "eligible": true,
+  "verification": {
+    "task_id": "P15",
+    "attempt": "candidate_01",
+    "candidate_hash": "fc8d17879b9b37ee9651cdfa58bc9b42e89389e747bf660330f5da61921e6496",
+    "environment_id": "c218c5dbbcf99921ca86ad4bf735357e5c523193eb17a84ce9e613754310a6b5",
+    "check_kind": "candidate",
+    "status": "candidate_pass",
+    "process_exit_code": 0,
+    "diagnostics": [
+      {
+        "severity": "warning",
+        "position": {
+          "column": 23,
+          "line": 79
+        },
+        "end_position": {
+          "column": 26,
+          "line": 79
+        },
+        "message": "Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice\n\nNote: This linter can be disabled with `set_option linter.unnecessarySeqFocus false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice\n\nNote: This linter can be disabled with `set_option linter.unnecessarySeqFocus false`",
+          "endPos": {
+            "column": 26,
+            "line": 79
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/P_A/P15/normal/A1/repeat_1/validation/lean/002_candidate_01/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unnecessarySeqFocus",
+          "pos": {
+            "column": 23,
+            "line": 79
+          },
+          "severity": "warning"
+        },
+        "source_line": "    convert ht using 1 <;> ring",
+        "start_offset": 2839,
+        "start_byte_offset": 3019,
+        "end_offset": 2842,
+        "end_byte_offset": 3022,
+        "source_text": "<;>"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 23,
+          "line": 104
+        },
+        "end_position": {
+          "column": 26,
+          "line": 104
+        },
+        "message": "Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice\n\nNote: This linter can be disabled with `set_option linter.unnecessarySeqFocus false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice\n\nNote: This linter can be disabled with `set_option linter.unnecessarySeqFocus false`",
+          "endPos": {
+            "column": 26,
+            "line": 104
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/P_A/P15/normal/A1/repeat_1/validation/lean/002_candidate_01/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unnecessarySeqFocus",
+          "pos": {
+            "column": 23,
+            "line": 104
+          },
+          "severity": "warning"
+        },
+        "source_line": "  convert hneg using 1 <;> ring",
+        "start_offset": 3638,
+        "start_byte_offset": 3862,
+        "end_offset": 3641,
+        "end_byte_offset": 3865,
+        "source_text": "<;>"
+      },
+      {
+        "severity": "information",
+        "position": {
+          "column": 0,
+          "line": 106
+        },
+        "end_position": {
+          "column": 6,
+          "line": 106
+        },
+        "message": "putnam_1995_a3 (relation : (Fin 9 → ℤ) → (Fin 9 → ℤ) → Prop) (digits_to_num : (Fin 9 → ℤ) → ℤ)\n  (hdigits_to_num : digits_to_num = fun dig => ∑ i, dig i * 10 ^ ↑i)\n  (hrelation :\n    ∀ (d e : Fin 9 → ℤ),\n      relation d e ↔\n        (∀ (i : Fin 9), d i < 10 ∧ d i ≥ 0 ∧ e i < 10 ∧ e i ≥ 0) ∧\n          ∀ (i : Fin 9), 7 ∣ digits_to_num fun j => if j = i then e j else d j)\n  (d e f : Fin 9 → ℤ) : relation d e ∧ relation e f → ∀ (i : Fin 9), 7 ∣ d i - f i",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "putnam_1995_a3 (relation : (Fin 9 → ℤ) → (Fin 9 → ℤ) → Prop) (digits_to_num : (Fin 9 → ℤ) → ℤ)\n  (hdigits_to_num : digits_to_num = fun dig => ∑ i, dig i * 10 ^ ↑i)\n  (hrelation :\n    ∀ (d e : Fin 9 → ℤ),\n      relation d e ↔\n        (∀ (i : Fin 9), d i < 10 ∧ d i ≥ 0 ∧ e i < 10 ∧ e i ≥ 0) ∧\n          ∀ (i : Fin 9), 7 ∣ digits_to_num fun j => if j = i then e j else d j)\n  (d e f : Fin 9 → ℤ) : relation d e ∧ relation e f → ∀ (i : Fin 9), 7 ∣ d i - f i",
+          "endPos": {
+            "column": 6,
+            "line": 106
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/P_A/P15/normal/A1/repeat_1/validation/lean/002_candidate_01/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 0,
+            "line": 106
+          },
+          "severity": "information"
+        }
+      },
+      {
+        "severity": "information",
+        "position": {
+          "column": 0,
+          "line": 107
+        },
+        "end_position": {
+          "column": 6,
+          "line": 107
+        },
+        "message": "'putnam_1995_a3' depends on axioms: [propext, Classical.choice, Quot.sound]",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "'putnam_1995_a3' depends on axioms: [propext, Classical.choice, Quot.sound]",
+          "endPos": {
+            "column": 6,
+            "line": 107
+          },
+          "fileName": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/P_A/P15/normal/A1/repeat_1/validation/lean/002_candidate_01/candidate.lean",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 0,
+            "line": 107
+          },
+          "severity": "information"
+        }
+      }
+    ],
+    "goals": null,
+    "local_context": null,
+    "sorries": [],
+    "backend_proof_status": null,
+    "statement_check": "fixed_context_preserved",
+    "axioms": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext"
+    ],
+    "metrics": {
+      "proof_tokens": 945,
+      "raw_heartbeats": 6723057,
+      "heartbeats": 6723
+    },
+    "elapsed_ms": 14192,
+    "raw_log_path": "/Users/hellokitsch/_feynlang/leanProject/week4/experiment/runs/20261024T000653+0900/runs/P_A/P15/normal/A1/repeat_1/validation/lean/002_candidate_01/stdout.log",
+    "detail": null,
+    "failure_kind": null
+  },
+  "measurement": {
+    "proof_tokens": 945,
+    "raw_heartbeats": 6723057,
+    "token_reduction_pct": 76.90615835777126,
+    "heartbeat_reduction_pct": 53.785885491840006,
+    "search_score": 65.34602192480563
+  },
+  "facts": {
+    "diagnostics": [
+      {
+        "severity": "warning",
+        "position": {
+          "column": 23,
+          "line": 79
+        },
+        "end_position": {
+          "column": 26,
+          "line": 79
+        },
+        "message": "Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice\n\nNote: This linter can be disabled with `set_option linter.unnecessarySeqFocus false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice\n\nNote: This linter can be disabled with `set_option linter.unnecessarySeqFocus false`",
+          "endPos": {
+            "column": 26,
+            "line": 79
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unnecessarySeqFocus",
+          "pos": {
+            "column": 23,
+            "line": 79
+          },
+          "severity": "warning"
+        },
+        "source_line": "    convert ht using 1 <;> ring",
+        "start_offset": 2839,
+        "start_byte_offset": 3019,
+        "end_offset": 2842,
+        "end_byte_offset": 3022,
+        "source_text": "<;>"
+      },
+      {
+        "severity": "warning",
+        "position": {
+          "column": 23,
+          "line": 104
+        },
+        "end_position": {
+          "column": 26,
+          "line": 104
+        },
+        "message": "Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice\n\nNote: This linter can be disabled with `set_option linter.unnecessarySeqFocus false`",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice\n\nNote: This linter can be disabled with `set_option linter.unnecessarySeqFocus false`",
+          "endPos": {
+            "column": 26,
+            "line": 104
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "linter.unnecessarySeqFocus",
+          "pos": {
+            "column": 23,
+            "line": 104
+          },
+          "severity": "warning"
+        },
+        "source_line": "  convert hneg using 1 <;> ring",
+        "start_offset": 3638,
+        "start_byte_offset": 3862,
+        "end_offset": 3641,
+        "end_byte_offset": 3865,
+        "source_text": "<;>"
+      },
+      {
+        "severity": "information",
+        "position": {
+          "column": 0,
+          "line": 106
+        },
+        "end_position": {
+          "column": 6,
+          "line": 106
+        },
+        "message": "putnam_1995_a3 (relation : (Fin 9 → ℤ) → (Fin 9 → ℤ) → Prop) (digits_to_num : (Fin 9 → ℤ) → ℤ)\n  (hdigits_to_num : digits_to_num = fun dig => ∑ i, dig i * 10 ^ ↑i)\n  (hrelation :\n    ∀ (d e : Fin 9 → ℤ),\n      relation d e ↔\n        (∀ (i : Fin 9), d i < 10 ∧ d i ≥ 0 ∧ e i < 10 ∧ e i ≥ 0) ∧\n          ∀ (i : Fin 9), 7 ∣ digits_to_num fun j => if j = i then e j else d j)\n  (d e f : Fin 9 → ℤ) : relation d e ∧ relation e f → ∀ (i : Fin 9), 7 ∣ d i - f i",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "putnam_1995_a3 (relation : (Fin 9 → ℤ) → (Fin 9 → ℤ) → Prop) (digits_to_num : (Fin 9 → ℤ) → ℤ)\n  (hdigits_to_num : digits_to_num = fun dig => ∑ i, dig i * 10 ^ ↑i)\n  (hrelation :\n    ∀ (d e : Fin 9 → ℤ),\n      relation d e ↔\n        (∀ (i : Fin 9), d i < 10 ∧ d i ≥ 0 ∧ e i < 10 ∧ e i ≥ 0) ∧\n          ∀ (i : Fin 9), 7 ∣ digits_to_num fun j => if j = i then e j else d j)\n  (d e f : Fin 9 → ℤ) : relation d e ∧ relation e f → ∀ (i : Fin 9), 7 ∣ d i - f i",
+          "endPos": {
+            "column": 6,
+            "line": 106
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 0,
+            "line": 106
+          },
+          "severity": "information"
+        }
+      },
+      {
+        "severity": "information",
+        "position": {
+          "column": 0,
+          "line": 107
+        },
+        "end_position": {
+          "column": 6,
+          "line": 107
+        },
+        "message": "'putnam_1995_a3' depends on axioms: [propext, Classical.choice, Quot.sound]",
+        "source": "lean_cli",
+        "raw": {
+          "caption": "",
+          "data": "'putnam_1995_a3' depends on axioms: [propext, Classical.choice, Quot.sound]",
+          "endPos": {
+            "column": 6,
+            "line": 107
+          },
+          "fileName": "<local-path>",
+          "isSilent": false,
+          "keepFullRange": false,
+          "kind": "[anonymous]",
+          "pos": {
+            "column": 0,
+            "line": 107
+          },
+          "severity": "information"
+        }
+      }
+    ],
+    "goals": null,
+    "local_context": null,
+    "sorries": [],
+    "axioms": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext"
+    ],
+    "detail": null,
+    "raw_lean_output": "{\"caption\":\"\",\"data\":\"Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice\\n\\nNote: This linter can be disabled with `set_option linter.unnecessarySeqFocus false`\",\"endPos\":{\"column\":26,\"line\":79},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"linter.unnecessarySeqFocus\",\"pos\":{\"column\":23,\"line\":79},\"severity\":\"warning\"}\n{\"caption\":\"\",\"data\":\"Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice\\n\\nNote: This linter can be disabled with `set_option linter.unnecessarySeqFocus false`\",\"endPos\":{\"column\":26,\"line\":104},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"linter.unnecessarySeqFocus\",\"pos\":{\"column\":23,\"line\":104},\"severity\":\"warning\"}\n{\"caption\":\"\",\"data\":\"putnam_1995_a3 (relation : (Fin 9 → ℤ) → (Fin 9 → ℤ) → Prop) (digits_to_num : (Fin 9 → ℤ) → ℤ)\\n  (hdigits_to_num : digits_to_num = fun dig => ∑ i, dig i * 10 ^ ↑i)\\n  (hrelation :\\n    ∀ (d e : Fin 9 → ℤ),\\n      relation d e ↔\\n        (∀ (i : Fin 9), d i < 10 ∧ d i ≥ 0 ∧ e i < 10 ∧ e i ≥ 0) ∧\\n          ∀ (i : Fin 9), 7 ∣ digits_to_num fun j => if j = i then e j else d j)\\n  (d e f : Fin 9 → ℤ) : relation d e ∧ relation e f → ∀ (i : Fin 9), 7 ∣ d i - f i\",\"endPos\":{\"column\":6,\"line\":106},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"[anonymous]\",\"pos\":{\"column\":0,\"line\":106},\"severity\":\"information\"}\n{\"caption\":\"\",\"data\":\"'putnam_1995_a3' depends on axioms: [propext, Classical.choice, Quot.sound]\",\"endPos\":{\"column\":6,\"line\":107},\"fileName\":\"<local-path>\",\"isSilent\":false,\"keepFullRange\":false,\"kind\":\"[anonymous]\",\"pos\":{\"column\":0,\"line\":107},\"severity\":\"information\"}\n"
+  },
+  "diagnosis": "The proof is correct in strategy but duplicates the digit-replacement expansion, carries many redundant intermediate facts, and uses a long prime/cast argument to cancel a power of 10. A reusable replacement identity, one sum identity, and an elementary induction using 5·10 − 7·7 = 1 substantially reduce syntax and elaboration work.",
+  "duplicate_cache": false,
+  "available_at": 1792771550.373045,
+  "cumulative_calls": 1,
+  "cumulative_tokens": 23364,
+  "api_spend_usd": null
+}

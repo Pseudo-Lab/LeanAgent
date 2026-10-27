@@ -1,0 +1,22 @@
+--- initial.proof.lean
++++ candidate_01.proof.lean
+@@ -1,2 +1,16 @@
+ by
+-  skip
+\ No newline at end of file
++  intro x Hin
++  induction post <;>
++    simp [OldExpressions.substOld,
++      Imperative.HasVarsPure.getVars,
++      Lambda.LExpr.LExpr.getVars] at Hin ⊢ <;>
++    try simp_all
++  case app =>
++    split at Hin
++    · split at Hin <;>
++        simp [Imperative.HasVarsPure.getVars,
++          Lambda.LExpr.LExpr.getVars] at Hin ⊢ <;>
++        simp_all
++    · simp [Imperative.HasVarsPure.getVars,
++        Lambda.LExpr.LExpr.getVars] at Hin ⊢
++      simp_all
+\ No newline at end of file

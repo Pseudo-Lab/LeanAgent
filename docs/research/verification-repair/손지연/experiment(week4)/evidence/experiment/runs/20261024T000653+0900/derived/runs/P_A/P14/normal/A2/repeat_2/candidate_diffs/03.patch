@@ -1,0 +1,37 @@
+--- candidate_02.proof.lean
++++ candidate_03.proof.lean
+@@ -1,14 +1,10 @@
+ by
+   classical
+-  have hmiss : ∀ A : Set S, A ∉ P → ∃ U ∈ P, A ∩ U = ∅ := by
+-    intro A hA
++  have hmiss (A : Set S) (hA : A ∉ P) : ∃ U ∈ P, A ∩ U = ∅ := by
+     by_contra h
+     apply hPS
+-    refine ⟨A, hA, ?_⟩
+-    intro U hU hAU
+-    exact h ⟨U, hU, hAU⟩
+-  have h_choice : ∀ A : Set S, A ∈ P ∨ Aᶜ ∈ P := by
+-    intro A
++    exact ⟨A, hA, fun U hU hAU => h ⟨U, hU, hAU⟩⟩
++  have h_choice (A : Set S) : A ∈ P ∨ Aᶜ ∈ P := by
+     by_contra h
+     have hA : A ∉ P := fun ha => h (Or.inl ha)
+     have hAc : Aᶜ ∉ P := fun ha => h (Or.inr ha)
+@@ -19,14 +15,10 @@
+       intro x hx
+       have hxU : x ∈ U := Set.mem_of_mem_inter_left hx
+       have hxV : x ∈ V := Set.mem_of_mem_inter_right hx
+-      have hnA : x ∉ A := by
+-        intro hxA
+-        have hx' : x ∈ A ∩ U := ⟨hxA, hxU⟩
+-        simpa [hAU] using hx'
++      have hnA : x ∉ A := fun hxA => hAU ▸ ⟨hxA, hxU⟩
+       have hxA : x ∈ A := by
+         by_contra hxA
+-        have hx' : x ∈ Aᶜ ∩ V := ⟨by simpa, hxV⟩
+-        simpa [hAcV] using hx'
++        exact hAcV ▸ ⟨by simpa, hxV⟩
+       exact hnA hxA
+     exact (hPP U hU V hV) huv
+   have h_not_both : ∀ A : Set S, A ∈ P → Aᶜ ∉ P := by

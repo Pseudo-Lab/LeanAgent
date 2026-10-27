@@ -1,0 +1,21 @@
+--- candidate_01.proof.lean
++++ candidate_02.proof.lean
+@@ -93,9 +93,7 @@
+         rw [Finset.sum_add_distrib]
+       _ = (∑ i : Fin 9, (e i - d i) * (10 : ℤ) ^ (i : ℕ)) +
+           9 * digits_to_num d := by
+-        simp [Finset.sum_const, Finset.card_fin]
+-        <;> ring
+-        <;> norm_num
++        simp [Finset.sum_const]
+   have hraw_eq' :
+       (∑ i : Fin 9,
+         ((e i - d i) * (10 : ℤ) ^ (i : ℕ) + digits_to_num d)) =
+@@ -137,7 +135,6 @@
+     intro hp
+     have hnat : (7 : ℕ) ∣ (10 : ℕ) ^ (i : ℕ) := by
+       norm_cast at hp ⊢
+-      simpa [Int.coe_nat_dvd_left] using hp
+     have hten : (7 : ℕ) ∣ 10 := by
+       exact Nat.Prime.dvd_of_dvd_pow (by decide) hnat
+     norm_num at hten

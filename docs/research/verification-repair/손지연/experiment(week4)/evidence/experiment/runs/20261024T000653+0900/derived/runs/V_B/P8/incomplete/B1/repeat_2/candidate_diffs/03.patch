@@ -1,0 +1,55 @@
+--- candidate_02.proof.lean
++++ candidate_03.proof.lean
+@@ -9,19 +9,19 @@
+         exact ⟨a, ParallelReduction.refl a, ParallelReduction.red_I a⟩
+     | red_I =>
+         exact ⟨a, ParallelReduction.refl a, ParallelReduction.refl a⟩
+-    | par a' b' hI ha =>
+-        rw [I_irreducible a' hI]
+-        exact ⟨b', ha, ParallelReduction.red_I b'⟩
++    | par hI ha =>
++        rw [I_irreducible _ hI]
++        exact ⟨_, ha, ParallelReduction.red_I _⟩
+   case red_K a b =>
+     cases hac with
+     | refl =>
+         exact ⟨a, ParallelReduction.refl a, ParallelReduction.red_K a b⟩
+     | red_K =>
+         exact ⟨a, ParallelReduction.refl a, ParallelReduction.refl a⟩
+-    | par c' b' hKa hb =>
+-        obtain ⟨a', ha, hKa'⟩ := Ka_irreducible a c' hKa
++    | par hKa hb =>
++        obtain ⟨a', ha, hKa'⟩ := Ka_irreducible a _ hKa
+         rw [hKa']
+-        exact ⟨a', ha, ParallelReduction.red_K a' b'⟩
++        exact ⟨a', ha, ParallelReduction.red_K a' _⟩
+   case red_S a b c =>
+     cases hac with
+     | refl =>
+@@ -30,13 +30,13 @@
+     | red_S =>
+         exact ⟨a ⬝ c ⬝ (b ⬝ c), ParallelReduction.refl _,
+           ParallelReduction.refl _⟩
+-    | par ab' c' hSab hc =>
+-        obtain ⟨a', b', ha, hb, hSab'⟩ := Sab_irreducible a b ab' hSab
++    | par hSab hc =>
++        obtain ⟨a', b', ha, hb, hSab'⟩ := Sab_irreducible a b _ hSab
+         rw [hSab']
+-        exact ⟨a' ⬝ c' ⬝ (b' ⬝ c'),
++        exact ⟨a' ⬝ _ ⬝ (b' ⬝ _),
+           ParallelReduction.par (ParallelReduction.par ha hc)
+             (ParallelReduction.par hb hc),
+-          ParallelReduction.red_S a' b' c'⟩
++          ParallelReduction.red_S a' b' _⟩
+   case par a a' b b' ha hb iha ihb =>
+     cases hac with
+     | refl =>
+@@ -54,7 +54,7 @@
+         exact ⟨x ⬝ b' ⬝ (y ⬝ b'), ParallelReduction.red_S x y b',
+           ParallelReduction.par (ParallelReduction.par hx hb)
+             (ParallelReduction.par hy hb)⟩
+-    | par c c' hc hc' =>
++    | par hc hc' =>
+         obtain ⟨d, had, hcd⟩ := iha hc
+         obtain ⟨d', hbd, hc'd⟩ := ihb hc'
+         exact ⟨d ⬝ d', ParallelReduction.par had hbd,

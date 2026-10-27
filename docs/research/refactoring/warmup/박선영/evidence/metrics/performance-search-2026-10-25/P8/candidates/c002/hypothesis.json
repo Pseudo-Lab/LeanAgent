@@ -1,0 +1,24 @@
+{
+  "problem": "P8",
+  "strategy": "T2: share primitive-redex join evidence across symmetric overlaps; T3 explicit induction",
+  "parent": {
+    "path": "/Users/parksunyoung/Desktop/study/LeanAgent/docs/research/refactoring/warmup/박선영/evidence/P8/selected.lean",
+    "sha256": "56b6f27c11c9f36d561362f3a2abb4265c407bd0f44603959d6781a5215e4ec6",
+    "hash_convention": "SHA-256 of exact file bytes, including trailing newlines"
+  },
+  "target_block": "Entire proof body of theorem parallelReduction_diamond : Diamond ParallelReduction; pinned source lines 143-206",
+  "rationale": "The selected proof repeats I/K/S irreducibility inversion and join construction in both orientations of primitive-redex/par overlaps. Three local have proofs each handle every competitor to one primitive contraction, allowing the par/redex orientation to reuse the same join evidence by symmetry. Induction handles only genuine par/par recursion, without referring to the theorem being proved.",
+  "expected_effect": "May reduce duplicated inversion/witness elaboration and share proof terms across mirrored branches. Local helper elaboration and symmetry instance search can offset the savings; no performance result is claimed.",
+  "changes": [
+    "Introduce local have joinI, joinK and joinS before induction; all helper bodies remain inside the target proof and count toward costs.",
+    "Reuse prior I_irreducible, Ka_irreducible and Sab_irreducible once each inside those helpers.",
+    "Reuse imported Join symmetry through symm for par/redex cases.",
+    "Use explicit induction hypotheses only for the two par/par subproblems."
+  ],
+  "uncertainty": [
+    "Uncompiled: local helper elaboration, induction binders and generic symm inference need full-file verification.",
+    "Reconstructing a par derivation to pass to a helper introduces proof-term overhead.",
+    "Helpers add source tokens and may increase total elaboration cost despite removing mirrored inversions.",
+    "No Lean execution, axiom check, heartbeat or wall-clock measurement has been performed."
+  ]
+}

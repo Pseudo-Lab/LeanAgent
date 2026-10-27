@@ -1,0 +1,150 @@
+--- candidate_02.proof.lean
++++ candidate_03.proof.lean
+@@ -2,15 +2,74 @@
+   classical
+   intro ϑ hϑ_gt_0
+   obtain ⟨t, rfl⟩ := Nat.exists_eq_succ_of_ne_zero (n := ϑ) (Nat.ne_of_gt hϑ_gt_0)
++  clear hϑ_gt_0
+   induction t with
+   | zero =>
+-      simpa [δ_ε_multilinearCorrelatedAgreement_Nat, multilinearCombine,
+-        jointProximityNat₂, jointProximityNat, finMapTwoWords] using
+-        hC_proximityGapAffineLines
++      intro u hu
++      have hu' :
++          Pr_{let r ← $ᵖ F}[
++            Δ₀(affineLineEvaluation (F := F) (u 0) (u 1) r, MC) ≤ e]
++            > (↑ε : ENNReal) / (Fintype.card F : ENNReal) := by
++        rw [prob_uniform_eq_card_filter_div_card]
++        rw [prob_uniform_eq_card_filter_div_card] at hu
++        have hcard :
++            (Finset.filter (fun r : Fin 1 → F =>
++              Δ₀(multilinearCombine (F := F) u r, MC) ≤ e) Finset.univ).card =
++            (Finset.filter (fun r : F =>
++              Δ₀(affineLineEvaluation (F := F) (u 0) (u 1) r, MC) ≤ e)
++              Finset.univ).card := by
++          apply Finset.card_bij (fun r _ => r 0)
++          · intro r hr
++            simp only [Finset.mem_filter, Finset.mem_univ, true_and] at hr ⊢
++            simpa [multilinearCombine, affineLineEvaluation] using hr
++          · intro r₁ hr₁ r₂ hr₂ h
++            funext i
++            fin_cases i
++            exact h
++          · intro r hr
++            refine ⟨fun _ => r, ?_, rfl⟩
++            simp only [Finset.mem_filter, Finset.mem_univ, true_and] at hr ⊢
++            simpa [multilinearCombine, affineLineEvaluation] using hr
++        rw [← hcard]
++        have hcardF : Fintype.card (Fin 1 → F) = Fintype.card F := by
++          let E : (Fin 1 → F) ≃ F :=
++            { toFun := fun r => r 0
++              invFun := fun r _ => r
++              left_inv := by
++                intro r
++                funext i
++                fin_cases i
++                rfl
++              right_inv := by intro r; rfl }
++          exact Fintype.card_congr E
++        rw [← hcardF]
++        exact hu
++      have h := hC_proximityGapAffineLines (u 0) (u 1) hu'
++      unfold jointProximityNat₂ jointProximityNat at h ⊢
++      convert h using 1
++      congr 1
++      funext j i
++      fin_cases i <;> rfl
+   | succ t ih =>
+       intro u hu
+       let U₀ := (splitHalfRowWiseInterleavedWords (ϑ := Nat.succ t) u).1
+       let U₁ := (splitHalfRowWiseInterleavedWords (ϑ := Nat.succ t) u).2
++      let E : (Fin (Nat.succ t + 1) → F) ≃ F × (Fin (Nat.succ t) → F) :=
++        { toFun := fun r => (r (Fin.last _), fun i => r i.castSucc)
++          invFun := fun p => Fin.lastCases p.1 p.2
++          left_inv := by
++            intro r
++            funext i
++            refine Fin.lastCases ?_ (fun j => ?_) i
++            · rfl
++            · rfl
++          right_inv := by
++            intro p
++            rcases p with ⟨r, rs⟩
++            apply Prod.ext
++            · rfl
++            · funext i
++              rfl }
+       have hu_split :
+           Pr_{ let r_last ← $ᵖ F;
+                let r_init ← $ᵖ (Fin (Nat.succ t) → F) }[
+@@ -18,17 +77,39 @@
+               (MC := MC) (u := u) (e := e) r_last r_init]
+             > (((Nat.cast (R := ℝ≥0) (Nat.succ t + 1)) * ε : ℝ≥0) /
+                 (Fintype.card F : ℝ≥0)) := by
+-        simpa [multilinearCombine_affineComb_split_last_close, U₀, U₁,
+-          Nat.succ_eq_add_one] using hu
++        rw [do_two_uniform_sampling_eq_uniform_prod]
++        rw [prob_uniform_eq_card_filter_div_card]
++        rw [prob_uniform_eq_card_filter_div_card] at hu
++        have hcard :
++            (Finset.filter (fun r : Fin (Nat.succ t + 1) → F =>
++              Δ₀(multilinearCombine (F := F) u r, MC) ≤ e) Finset.univ).card =
++            (Finset.filter (fun p : F × (Fin (Nat.succ t) → F) =>
++              multilinearCombine_affineComb_split_last_close
++                (MC := MC) (u := u) (e := e) p.1 p.2) Finset.univ).card := by
++          apply Finset.card_bij (fun r _ => E r)
++          · intro r hr
++            simp only [Finset.mem_filter, Finset.mem_univ, true_and] at hr ⊢
++            simpa [E, multilinearCombine_affineComb_split_last_close,
++              U₀, U₁, multilinearCombine, affineLineEvaluation] using hr
++          · intro r₁ hr₁ r₂ hr₂ h
++            exact E.injective h
++          · intro p hp
++            refine ⟨E.symm p, ?_, E.apply_symm_apply p⟩
++            simp only [Finset.mem_filter, Finset.mem_univ, true_and] at hp ⊢
++            simpa [E, multilinearCombine_affineComb_split_last_close,
++              U₀, U₁, multilinearCombine, affineLineEvaluation] using hp
++        rw [← hcard]
++        rw [← Fintype.card_congr E]
++        simpa [Nat.succ_eq_add_one] using hu
+       have hR_prob :
+-          Pr_{ let r ← $ᵖ F }[
++          Pr_{let r ← $ᵖ F}[
+             r ∈ R_star_tensor MC (m := Nat.succ t) (e := e) (ε := ε) U₀ U₁]
+             > (↑ε : ENNReal) / (Fintype.card F : ENNReal) := by
+         simpa [U₀, U₁] using
+           (prob_R_star_gt_threshold (MC := MC) (ε := ε) (u := u) (e := e)
+             hu_split)
+       have h_close :
+-          Pr_{ let r ← $ᵖ F }[
++          Pr_{let r ← $ᵖ F}[
+             Δ₀(affineLineEvaluation (F := F) (⋈| U₀) (⋈| U₁) r,
+               MC ^⋈ (Fin (2 ^ Nat.succ t))) ≤ e]
+             > (↑ε : ENNReal) / (Fintype.card F : ENNReal) := by
+@@ -37,12 +118,17 @@
+         intro r hr
+         have hr_close := correlatedAgreement_of_mem_R_star_tensor
+           (MC := MC) (e := e) (ε := ε) (ϑ_pred := Nat.succ t)
+-          (ih := ih) (u := u)
+-          (r := ⟨r, hr⟩)
+-        simpa [jointProximityNat, affineLineEvaluation,
+-          Interleavable.interleave, U₀, U₁] using hr_close
++          (ih := ih) (u := u) (r := ⟨r, hr⟩)
++        unfold jointProximityNat at hr_close
++        convert hr_close using 1
++        congr 1
++        funext j i
++        simp [affineLineEvaluation, Interleavable.interleave, U₀, U₁]
++      have hpow : 2 ^ Nat.succ t ≥ 1 :=
++        Nat.one_le_iff_ne_zero.mpr (pow_ne_zero _ (by decide))
+       have h_interleaved :=
+-        h_interleaved_gaps (2 ^ Nat.succ t) (by positivity)
++        h_interleaved_gaps (2 ^ Nat.succ t) hpow
+           (⋈| U₀) (⋈| U₁) h_close
+       simpa [jointProximityNat₂, jointProximityNat,
+-        splitHalfRowWiseInterleavedWords, U₀, U₁] using h_interleaved
+\ No newline at end of file
++        splitHalfRowWiseInterleavedWords, U₀, U₁, hammingDist,
++        Code.distFromCode, Finset.ext_iff] using h_interleaved
+\ No newline at end of file
