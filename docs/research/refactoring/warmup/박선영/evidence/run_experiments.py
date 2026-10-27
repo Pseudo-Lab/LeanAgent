@@ -60,8 +60,8 @@ def rows() -> list[dict]:
 
 
 def problem(number: int) -> dict:
-    if number not in (8, 11):
-        raise ValueError("Only warm-up 8 and 11 are supported")
+    if number not in (3, 6, 8, 11, 12):
+        raise ValueError("Only warm-up 3, 6, 8, 11 and 12 are supported")
     return rows()[number - 1]
 
 
@@ -197,6 +197,8 @@ def measured_heartbeat(run: dict) -> int | None:
 def evaluate(args, output_dir: Path | None = None) -> dict:
     """Evaluate once; callers may isolate output from the legacy presentation runs."""
     row = problem(args.problem)
+    if args.problem not in (8, 11) and output_dir is None:
+        raise ValueError("Structural pilot problems require an isolated output directory")
     repo = args.repo.resolve()
     candidate_path = args.candidate.resolve()
     candidate = candidate_path.read_text(encoding="utf-8").rstrip("\n")

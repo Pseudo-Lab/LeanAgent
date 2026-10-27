@@ -1,0 +1,33 @@
+--- /Users/parksunyoung/Desktop/study/LeanAgent/docs/research/refactoring/warmup/박선영/evidence/performance-search-2026-10-25/P8/c005/candidate.lean
++++ docs/research/refactoring/warmup/박선영/evidence/performance-search-2026-10-25/P8/c006/candidate.lean
+@@ -22,22 +22,20 @@
+       exact ⟨a'' ⬝ b' ⬝ (c' ⬝ b'), .red_S a'' c' b',
+         .par (.par ha hb') (.par hc hb')⟩
+   case red_I =>
+-    rename_i a
+     cases h₂
+-    case refl => exact ⟨a, .refl a, .red_I a⟩
+-    case par c a' hc ha =>
++    case refl => exact ⟨a₁, .refl a₁, .red_I a₁⟩
++    case par c a₁' hc ha =>
+       rw [I_irreducible c hc]
+-      exact ⟨a', ha, .red_I a'⟩
+-    case red_I => exact ⟨a, .refl a, .refl a⟩
++      exact ⟨a₁', ha, .red_I a₁'⟩
++    case red_I => exact ⟨a₁, .refl a₁, .refl a₁⟩
+   case red_K c =>
+-    rename_i a
+     cases h₂
+-    case refl => exact ⟨a, .refl a, .red_K a c⟩
+-    case par a' c' ha hc =>
+-      obtain ⟨d, hd, he⟩ := Ka_irreducible a a' ha
++    case refl => exact ⟨a₁, .refl a₁, .red_K a₁ c⟩
++    case par a₁' c' ha hc =>
++      obtain ⟨d, hd, he⟩ := Ka_irreducible a₁ a₁' ha
+       rw [he]
+       exact ⟨d, hd, .red_K d c'⟩
+-    case red_K => exact ⟨a, .refl a, .refl a⟩
++    case red_K => exact ⟨a₁, .refl a₁, .refl a₁⟩
+   case red_S a b c =>
+     cases h₂
+     case refl => exact ⟨a ⬝ c ⬝ (b ⬝ c), .refl _, .red_S a b c⟩

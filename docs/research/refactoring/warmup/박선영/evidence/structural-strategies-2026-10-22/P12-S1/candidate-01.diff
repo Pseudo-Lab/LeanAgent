@@ -1,0 +1,22 @@
+--- reference
++++ candidate-01
+@@ -117,19 +117,6 @@
+             (e := e) (hP_multilinearCombine_close_gt)
+           exact res
+         -- Convert Pr_{}[] to cardinality
+-        have h_R_star_card_gt_eps : R_star_set.card > ε := by
+-          rw [prob_uniform_eq_card_filter_div_card] at h_prob_Rstar_gt_eps_div_q -- Needs NNReal
+-          simp only [ENNReal.coe_natCast] at h_prob_Rstar_gt_eps_div_q
+-          rw [gt_iff_lt] at h_prob_Rstar_gt_eps_div_q
+-          have h_cancel_q_denom := ENNReal.div_lt_div_iff_left
+-            (a := (ε : ENNReal))
+-            (b := (#(filter (fun r => r ∈ R_star_set) Finset.univ)))
+-            (c := (Fintype.card F : ENNReal)) (hc₀ := by simp only [ne_eq,
+-            Nat.cast_eq_zero, Fintype.card_ne_zero, not_false_eq_true]) (hc := by simp only [ne_eq,
+-              ENNReal.natCast_ne_top, not_false_eq_true])
+-          rw [h_cancel_q_denom] at h_prob_Rstar_gt_eps_div_q
+-          simp only [filter_univ_mem, Nat.cast_lt] at h_prob_Rstar_gt_eps_div_q
+-          exact h_prob_Rstar_gt_eps_div_q
+         -- Step 6: Apply Inductive Hypothesis for r_last ∈ R*
+         have h_line_close_to_C_m : ∀ (r : R_star_set),
+           jointProximityNat (u := affineLineEvaluation U₀ U₁ r.val) (e := e) (C := MC) := by

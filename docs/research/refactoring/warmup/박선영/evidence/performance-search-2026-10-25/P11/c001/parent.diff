@@ -1,0 +1,64 @@
+--- /Users/parksunyoung/Desktop/study/LeanAgent/docs/research/refactoring/warmup/박선영/evidence/agent/p11-20261017-ac-check4/attempts/a004/candidate.lean
++++ docs/research/refactoring/warmup/박선영/evidence/performance-search-2026-10-25/P11/c001/candidate.lean
+@@ -60,55 +60,13 @@
+     have h_res := is_fiber_iff_generates_quotient_point 𝔽q β i (steps := 1) (by omega)
+       (x := x₁) (y := y).mpr (by rw [pointToIterateQuotientIndex_qMap_total_fiber_eq_self])
+     rw [h_res]
+-  have hx₀ := qMap_total_fiber_basis_sum_repr 𝔽q β i (steps := 1)
+-    (h_i_add_steps := by omega) y 0
+-  have hx₁ := qMap_total_fiber_basis_sum_repr 𝔽q β i (steps := 1)
+-    (h_i_add_steps := by omega) y 1
+-  simp only [Fin.isValue] at hx₀ hx₁
+-
+   have h_fiber_diff : x₁.val - x₀.val = 1 := by
+-    simp only [Fin.isValue, x₁, x₀, fiberMap]
+-    rw [hx₁, hx₀]
+-    simp only [Fin.isValue, AddSubmonoidClass.coe_finset_sum, SetLike.val_smul]
+-    have h_index : ℓ + 𝓡 - i = (ℓ + 𝓡 - (i.val + 1)) + 1 := by omega
+-    rw! (castMode := .all) [h_index]
+-    rw [Fin.sum_univ_succ, Fin.sum_univ_succ] -- (free_term + y_repr) - (free_term + y_repr) = 1
+-    -- First, simplify the free terms
+-    simp only [fiber_coeff, eqRec_eq_cast, lt_one_iff, reducePow, Fin.isValue,
+-      Fin.coe_ofNat_eq_mod, mod_succ, dite_smul, ite_smul, zero_smul, one_smul, zero_mod]
+-    have h_cast_0 :
+-        (cast (Eq.symm h_index ▸ rfl : Fin (ℓ + 𝓡 - (↑i + 1) + 1) = Fin (ℓ + 𝓡 - ↑i)) 0).val =
+-        0 := by
+-      rw [←Fin.cast_eq_cast (h := by omega)]
+-      rw [Fin.cast_val_eq_val (h_eq := by omega)]
+-      simp only [Fin.coe_ofNat_eq_mod, mod_succ_eq_iff_lt, succ_eq_add_one, lt_add_iff_pos_left]
+-      omega
+-    have h_cast_1 :
+-        (cast (Eq.symm h_index ▸ rfl : Fin (ℓ + 𝓡 - (↑i + 1) + 1) = Fin (ℓ + 𝓡 - ↑i)) 1).val =
+-        1 := by
+-      rw [←Fin.cast_eq_cast (h := by omega)]
+-      rw [Fin.cast_val_eq_val (h_eq := by omega)]
+-      simp only [Fin.coe_ofNat_eq_mod, mod_succ_eq_iff_lt, succ_eq_add_one,
+-        lt_add_iff_pos_left, tsub_pos_iff_lt]
+-      omega
+-    simp only [h_cast_0, ↓reduceDIte]
+-    have h_getBit_0_of_0 : Nat.getBit (k := 0) (n := 0) = 0 := by
+-      simp only [getBit, shiftRight_zero, and_one_is_mod, zero_mod]
+-    have h_getBit_0_of_1 : Nat.getBit (k := 0) (n := 1) = 1 := by
+-      simp only [getBit, shiftRight_zero, Nat.and_self]
+-    simp only [h_getBit_0_of_1, one_ne_zero, ↓reduceIte, h_getBit_0_of_0, zero_add]
+-    rw! (castMode := .all) [←h_index]
+-    rw [cast_eq]
+-    simp only [get_sDomain_basis, Fin.coe_ofNat_eq_mod, zero_mod, add_zero, cast_eq]
+-    rw [normalizedWᵢ_eval_βᵢ_eq_1 𝔽q β]
+-    ring_nf
+-    conv_rhs => rw [←add_zero (a := 1)]
+-    rw [add_sub_assoc]
+-    congr 1
+-    rw [sub_eq_zero]
+-    apply Finset.sum_congr (h := by rfl)
+-    simp only [mem_univ, congr_eqRec, Fin.val_succ, Nat.add_eq_zero, one_ne_zero, and_false,
+-      ↓reduceDIte, add_tsub_cancel_right, Fin.eta, imp_self, implies_true]
++    have h0 := qMap_total_fiber_one_level_eq 𝔽q β i (by omega) y 0
++    have h1 := qMap_total_fiber_one_level_eq 𝔽q β i (by omega) y 1
++    simp only [Fin2ToF2, Fin.isValue, ↓reduceIte, zero_smul, one_smul, zero_add] at h0 h1
++    dsimp only [x₀, x₁, fiberMap]
++    rw [h1, h0]
++    simp only [AddSubmonoidClass.coe_add, add_sub_cancel_right, get_sDomain_first_basis_eq_1]
+   set P_i_plus_1 :=
+     intermediateEvaluationPoly 𝔽q β h_ℓ_add_R_rate (i := ⟨i+1, by omega⟩) new_coeffs
+   set P₀ := evenRefinement 𝔽q β h_ℓ_add_R_rate i coeffs

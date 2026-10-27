@@ -16,6 +16,7 @@
 
 ## 모임 자료
 
+- [2026-10-25 · Week 4 / Evaluation Harness](meetings/2026-10-25-week4/README.md)
 - [2026-10-18 · Week 3 / 검증·수리 파이프라인 주간 공유](meetings/2026-10-18-week3/README.md)
 
 - [2026-10-04 · 13기 1차 미팅 / OT](meetings/2026-10-04-ot/README.md)

@@ -1,0 +1,49 @@
+theorem parallelReduction_diamond : Diamond ParallelReduction := by
+  intro a a₁ a₂ h₁ h₂
+  cases h₁
+  case refl => exact ⟨a₂, h₂, .refl a₂⟩
+  case par a a' b b' ha' hb' =>
+    cases h₂
+    case refl => exact ⟨a' ⬝ b', .refl _, .par ha' hb'⟩
+    case par a'' b'' ha'' hb'' =>
+      obtain ⟨a₃, ha₁, ha₂⟩ := parallelReduction_diamond ha' ha''
+      obtain ⟨b₃, hb₁, hb₂⟩ := parallelReduction_diamond hb' hb''
+      exact ⟨a₃ ⬝ b₃, .par ha₁ hb₁, .par ha₂ hb₂⟩
+    case red_I =>
+      rw [I_irreducible a' ha']
+      exact ⟨b', .red_I b', hb'⟩
+    case red_K =>
+      obtain ⟨d, hd, he⟩ := Ka_irreducible _ a' ha'
+      rw [he]
+      exact ⟨d, .red_K d b', hd⟩
+    case red_S a c =>
+      obtain ⟨a'', c', ha, hc, he⟩ := Sab_irreducible a c a' ha'
+      rw [he]
+      exact ⟨a'' ⬝ b' ⬝ (c' ⬝ b'), .red_S a'' c' b',
+        .par (.par ha hb') (.par hc hb')⟩
+  case red_I =>
+    rename_i a
+    cases h₂
+    case refl => exact ⟨a, .refl a, .red_I a⟩
+    case par c a' hc ha =>
+      rw [I_irreducible c hc]
+      exact ⟨a', ha, .red_I a'⟩
+    case red_I => exact ⟨a, .refl a, .refl a⟩
+  case red_K c =>
+    rename_i a
+    cases h₂
+    case refl => exact ⟨a, .refl a, .red_K a c⟩
+    case par a' c' ha hc =>
+      obtain ⟨d, hd, he⟩ := Ka_irreducible a a' ha
+      rw [he]
+      exact ⟨d, hd, .red_K d c'⟩
+    case red_K => exact ⟨a, .refl a, .refl a⟩
+  case red_S a b c =>
+    cases h₂
+    case refl => exact ⟨a ⬝ c ⬝ (b ⬝ c), .refl _, .red_S a b c⟩
+    case par d c' hd hc =>
+      obtain ⟨a', b', ha, hb, he⟩ := Sab_irreducible a b d hd
+      rw [he]
+      exact ⟨a' ⬝ c' ⬝ (b' ⬝ c'),
+        .par (.par ha hc) (.par hb hc), .red_S a' b' c'⟩
+    case red_S => exact ⟨a ⬝ c ⬝ (b ⬝ c), .refl _, .refl _⟩

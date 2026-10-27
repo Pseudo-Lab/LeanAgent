@@ -1,0 +1,106 @@
+--- /Users/parksunyoung/Desktop/study/LeanAgent/docs/research/refactoring/warmup/박선영/evidence/P8/selected.lean
++++ docs/research/refactoring/warmup/박선영/evidence/performance-search-2026-10-25/P8/c002/candidate.lean
+@@ -1,62 +1,44 @@
+ theorem parallelReduction_diamond : Diamond ParallelReduction := by
+-  intro a a₁ a₂ h₁ h₂
+-  cases h₁
+-  case refl => exact ⟨a₂, h₂, .refl a₂⟩
+-  case par a a' b b' ha' hb' =>
++  have joinI (a d : SKI) (h : ParallelReduction (I ⬝ a) d) :
++      Join ParallelReduction a d := by
++    cases h
++    case refl => exact ⟨a, .refl a, .red_I a⟩
++    case red_I => exact ⟨a, .refl a, .refl a⟩
++    case par c a' hc ha =>
++      rw [I_irreducible c hc]
++      exact ⟨a', ha, .red_I a'⟩
++  have joinK (a b d : SKI) (h : ParallelReduction (K ⬝ a ⬝ b) d) :
++      Join ParallelReduction a d := by
++    cases h
++    case refl => exact ⟨a, .refl a, .red_K a b⟩
++    case red_K => exact ⟨a, .refl a, .refl a⟩
++    case par c b' hc hb =>
++      obtain ⟨a', ha, he⟩ := Ka_irreducible a c hc
++      rw [he]
++      exact ⟨a', ha, .red_K a' b'⟩
++  have joinS (a b c d : SKI) (h : ParallelReduction (S ⬝ a ⬝ b ⬝ c) d) :
++      Join ParallelReduction (a ⬝ c ⬝ (b ⬝ c)) d := by
++    cases h
++    case refl => exact ⟨a ⬝ c ⬝ (b ⬝ c), .refl _, .red_S a b c⟩
++    case red_S => exact ⟨a ⬝ c ⬝ (b ⬝ c), .refl _, .refl _⟩
++    case par e c' he hc =>
++      obtain ⟨a', b', ha, hb, heq⟩ := Sab_irreducible a b e he
++      rw [heq]
++      exact ⟨a' ⬝ c' ⬝ (b' ⬝ c'),
++        .par (.par ha hc) (.par hb hc), .red_S a' b' c'⟩
++  intro a a₁ a₂ h₁
++  induction h₁ generalizing a₂ <;> intro h₂
++  case refl a => exact ⟨a₂, h₂, .refl a₂⟩
++  case red_I a => exact joinI a a₂ h₂
++  case red_K a b => exact joinK a b a₂ h₂
++  case red_S a b c => exact joinS a b c a₂ h₂
++  case par a a' b b' ha' hb' iha ihb =>
+     cases h₂
+-    case refl =>
+-      use a' ⬝ b'
+-      exact ⟨.refl (a' ⬝ b'), .par ha' hb'⟩
++    case refl => exact ⟨a' ⬝ b', .refl _, .par ha' hb'⟩
+     case par a'' b'' ha'' hb'' =>
+-      let ⟨a₃, ha⟩ := parallelReduction_diamond ha' ha''
+-      let ⟨b₃, hb⟩ := parallelReduction_diamond hb' hb''
+-      use a₃ ⬝ b₃
+-      constructor
+-      · exact .par ha.1 hb.1
+-      · exact .par ha.2 hb.2
+-    case red_I =>
+-      rw [I_irreducible a' ha']
+-      use b', .red_I b'
+-    case red_K =>
+-      let ⟨a₂', ha₂'⟩ := Ka_irreducible a₂ a' ha'
+-      rw [ha₂'.2]
+-      use a₂'
+-      exact ⟨.red_K a₂' b', ha₂'.1⟩
+-    case red_S a c =>
+-      let ⟨a'', c', h⟩ := Sab_irreducible a c a' ha'
+-      rw [h.2.2]
+-      use a'' ⬝ b' ⬝ (c' ⬝ b'), .red_S a'' c' b'
+-      exact .par (.par h.1 hb') (.par h.2.1 hb')
+-  case red_I =>
+-    cases h₂
+-    case refl => use a₁; exact ⟨.refl a₁, .red_I a₁⟩
+-    case par c a₁' hc ha =>
+-      rw [I_irreducible c hc]
+-      use a₁'
+-      exact ⟨ha, .red_I a₁'⟩
+-    case red_I => use a₁; exact ⟨.refl a₁, .refl a₁⟩
+-  case red_K c =>
+-    cases h₂
+-    case refl => use a₁; exact ⟨.refl a₁, .red_K a₁ c⟩
+-    case par a' c' ha hc =>
+-      let ⟨a₁', h'⟩ := Ka_irreducible a₁ a' ha
+-      rw [h'.2]
+-      use a₁'
+-      exact ⟨h'.1, .red_K a₁' c'⟩
+-    case red_K =>
+-      use a₁; exact ⟨.refl a₁, .refl a₁⟩
+-  case red_S a b c =>
+-    cases h₂
+-    case refl =>
+-      use a ⬝ c ⬝ (b ⬝ c)
+-      exact ⟨.refl _, .red_S ..⟩
+-    case par d c' hd hc =>
+-      let ⟨a', b', h⟩ := Sab_irreducible a b d hd
+-      rw [h.2.2]
+-      use a' ⬝ c' ⬝ (b' ⬝ c')
+-      constructor
+-      · apply ParallelReduction.par
+-        · exact .par h.left hc
+-        · exact .par h.2.1 hc
+-      · exact .red_S ..
+-    case red_S => exact ⟨a ⬝ c ⬝ (b ⬝ c), .refl _, .refl _,⟩
++      obtain ⟨a₃, ha₁, ha₂⟩ := iha ha''
++      obtain ⟨b₃, hb₁, hb₂⟩ := ihb hb''
++      exact ⟨a₃ ⬝ b₃, .par ha₁ hb₁, .par ha₂ hb₂⟩
++    case red_I => exact symm (joinI _ _ (.par ha' hb'))
++    case red_K => exact symm (joinK _ _ _ (.par ha' hb'))
++    case red_S => exact symm (joinS _ _ _ _ (.par ha' hb'))

@@ -1,0 +1,41 @@
+--- /Users/parksunyoung/Desktop/study/LeanAgent/docs/research/refactoring/warmup/박선영/evidence/P8/selected.lean
++++ docs/research/refactoring/warmup/박선영/evidence/performance-search-2026-10-25/P8/c004/candidate.lean
+@@ -1,15 +1,15 @@
+ theorem parallelReduction_diamond : Diamond ParallelReduction := by
+-  intro a a₁ a₂ h₁ h₂
+-  cases h₁
++  intro a a₁ a₂ h₁
++  induction h₁ generalizing a₂ <;> intro h₂
+   case refl => exact ⟨a₂, h₂, .refl a₂⟩
+-  case par a a' b b' ha' hb' =>
++  case par a a' b b' ha' hb' iha ihb =>
+     cases h₂
+     case refl =>
+       use a' ⬝ b'
+       exact ⟨.refl (a' ⬝ b'), .par ha' hb'⟩
+     case par a'' b'' ha'' hb'' =>
+-      let ⟨a₃, ha⟩ := parallelReduction_diamond ha' ha''
+-      let ⟨b₃, hb⟩ := parallelReduction_diamond hb' hb''
++      let ⟨a₃, ha⟩ := iha ha''
++      let ⟨b₃, hb⟩ := ihb hb''
+       use a₃ ⬝ b₃
+       constructor
+       · exact .par ha.1 hb.1
+@@ -27,7 +27,7 @@
+       rw [h.2.2]
+       use a'' ⬝ b' ⬝ (c' ⬝ b'), .red_S a'' c' b'
+       exact .par (.par h.1 hb') (.par h.2.1 hb')
+-  case red_I =>
++  case red_I a₁ =>
+     cases h₂
+     case refl => use a₁; exact ⟨.refl a₁, .red_I a₁⟩
+     case par c a₁' hc ha =>
+@@ -35,7 +35,7 @@
+       use a₁'
+       exact ⟨ha, .red_I a₁'⟩
+     case red_I => use a₁; exact ⟨.refl a₁, .refl a₁⟩
+-  case red_K c =>
++  case red_K a₁ c =>
+     cases h₂
+     case refl => use a₁; exact ⟨.refl a₁, .red_K a₁ c⟩
+     case par a' c' ha hc =>
